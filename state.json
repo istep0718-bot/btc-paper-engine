@@ -1,5 +1,5 @@
 {
-  "build": "BTC_PAPER_V1_2026-10-20",
+  "build": "BTC_PAPER_V2_2026-10-20",
   "created_at": "2026-10-19T21:33:46.592471+00:00",
   "cash": 20.0,
   "peak_equity": 20.0,
@@ -11,8 +11,8 @@
   },
   "last_signal_key": null,
   "halt_reason": null,
-  "last_run_at": "2026-10-19T22:04:22.875389+00:00",
-  "last_price": 82100.0,
+  "last_run_at": "2026-10-19T22:35:34.614363+00:00",
+  "last_price": 82061.0,
   "last_signal": {
     "direction": "WAIT",
     "score": 0,
@@ -20,31 +20,25 @@
       "1時間足：EMA20がEMA50より上",
       "4時間足：EMA20がEMA50より下",
       "価格は1時間足EMA20より下",
-      "15分足RSI 60.0：ロング候補の範囲",
+      "RSI 52.8：上向きモメンタム候補",
       "資金調達率に極端な偏りなし",
       "総合スコア 0：条件不足、待機"
     ],
-    "price": 82100.0,
-    "rsi_15m": 60.0,
-    "atr_15m": 121.71428571428571,
-    "ema20_1h": 82103.22494512876,
-    "ema50_1h": 81985.76183650011,
-    "ema20_4h": 81942.15982829253,
-    "ema50_4h": 82254.4662783461,
+    "price": 82061.0,
+    "rsi_15m": 52.7775534397041,
+    "atr_15m": 154.2192285446084,
+    "ema20_1h": 82103.66967619494,
+    "ema50_1h": 81981.13987064298,
+    "ema20_4h": 81925.65033653384,
+    "ema50_4h": 82260.81184072756,
     "fib": {
       "swing_high": 83138.0,
       "swing_low": 80644.0,
-      "retracement_382": 82185.292,
+      "retracement_382": 82185.29,
       "retracement_500": 81891.0,
-      "retracement_618": 81596.708
+      "retracement_618": 81596.71
     },
     "fvgs": [
-      {
-        "type": "bearish FVG",
-        "low": 82435.0,
-        "high": 82645.0,
-        "formed_at": 1792405800000
-      },
       {
         "type": "bearish FVG",
         "low": 82236.0,
@@ -74,9 +68,15 @@
         "low": 82012.0,
         "high": 82044.0,
         "formed_at": 1792444500000
+      },
+      {
+        "type": "bullish FVG",
+        "low": 82052.0,
+        "high": 82106.0,
+        "formed_at": 1792448100000
       }
     ],
-    "candle_move_pct": 0.0889961719454807
+    "candle_move_pct": 0.0219
   },
   "metrics": {
     "equity_usd": 20.0,
@@ -86,6 +86,15 @@
     "closed_trades": 0,
     "wins": 0,
     "losses": 0,
-    "net_closed_pnl_usd": 0
-  }
+    "win_rate_pct": 0.0,
+    "net_closed_pnl_usd": 0,
+    "open_unrealized_pnl_usd": 0.0
+  },
+  "equity_history": [
+    {
+      "time": "2026-10-19T22:35:34.614363+00:00",
+      "equity_usd": 20.0,
+      "price": 82061.0
+    }
+  ]
 }
