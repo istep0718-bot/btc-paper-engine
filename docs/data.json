@@ -1,0 +1,106 @@
+{
+  "build": "BTC_PAPER_V1_2026-10-20",
+  "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
+  "generated_at": "2026-10-19T21:33:47.765809+00:00",
+  "exchange_data": "Hyperliquid public API",
+  "symbol": "BTC perpetual",
+  "price": 82063.0,
+  "funding_rate": 1.25e-05,
+  "funding_rate_pct": 0.00125,
+  "open_interest_btc": 40001.69738,
+  "premium": -0.0001717876,
+  "volume_24h_usd": 2289919142.343671,
+  "signal": {
+    "direction": "WAIT",
+    "score": 0,
+    "reasons": [
+      "1時間足：EMA20がEMA50より上",
+      "4時間足：EMA20がEMA50より下",
+      "価格は1時間足EMA20より下",
+      "15分足RSI 52.2：ロング候補の範囲",
+      "資金調達率に極端な偏りなし",
+      "総合スコア 0：条件不足、待機"
+    ],
+    "price": 82063.0,
+    "rsi_15m": 52.17391304347826,
+    "atr_15m": 136.14285714285714,
+    "ema20_1h": 82107.288723814,
+    "ema50_1h": 81982.63006672141,
+    "ema20_4h": 81938.8264949592,
+    "ema50_4h": 82253.09372932649,
+    "fib": {
+      "swing_high": 83138.0,
+      "swing_low": 80644.0,
+      "retracement_382": 82185.292,
+      "retracement_500": 81891.0,
+      "retracement_618": 81596.708
+    },
+    "fvgs": [
+      {
+        "type": "bearish FVG",
+        "low": 82435.0,
+        "high": 82645.0,
+        "formed_at": 1792405800000
+      },
+      {
+        "type": "bearish FVG",
+        "low": 82236.0,
+        "high": 82300.0,
+        "formed_at": 1792408500000
+      },
+      {
+        "type": "bearish FVG",
+        "low": 82484.0,
+        "high": 82500.0,
+        "formed_at": 1792416600000
+      },
+      {
+        "type": "bearish FVG",
+        "low": 82419.0,
+        "high": 82456.0,
+        "formed_at": 1792417500000
+      },
+      {
+        "type": "bearish FVG",
+        "low": 82117.0,
+        "high": 82167.0,
+        "formed_at": 1792424700000
+      },
+      {
+        "type": "bullish FVG",
+        "low": 82012.0,
+        "high": 82044.0,
+        "formed_at": 1792444500000
+      }
+    ],
+    "candle_move_pct": 0.0012185462742947664
+  },
+  "metrics": {
+    "equity_usd": 20.0,
+    "cash_usd": 20.0,
+    "peak_equity_usd": 20.0,
+    "drawdown_pct": 0.0,
+    "closed_trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "net_closed_pnl_usd": 0
+  },
+  "risk": {
+    "virtual_leverage": 40.0,
+    "risk_per_trade_pct": 1.0,
+    "max_margin_pct": 5.0,
+    "halt_reason": null,
+    "warning": "Simplified liquidation estimate; not an execution simulator."
+  },
+  "open_trade": null,
+  "recent_trades": [],
+  "macro_note": "経済指標は自動取得していません。CPI、米雇用統計、FOMC、FRB要人発言の前後は手動で確認してください。",
+  "method_notes": [
+    "1h・4h EMAトレンド",
+    "15m RSI・ATR",
+    "1hフィボナッチ水準",
+    "15m FVG候補",
+    "資金調達率・建玉情報",
+    "シグナルは推定であり利益を保証しない"
+  ]
+}
