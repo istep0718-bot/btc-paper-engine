@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""BTC Paper Engine V2. Paper trading only. No live orders or wallet keys."""
+"""BTC Paper Engine V3. Paper only; never places live orders."""
 
 import json
 import math
@@ -13,52 +13,51 @@ ROOT = Path(__file__).resolve().parent
 STATE_FILE = ROOT / "state.json"
 DASH_FILE = ROOT / "docs" / "data.json"
 
-BUILD = "BTC_PAPER_V2_2026-10-20"
+BUILD = "BTC_PAPER_V3_2026-10-20"
 
 INITIAL_EQUITY = 20.0
 LEVERAGE = 3.0
 RISK_PER_TRADE = 0.005
 MAX_MARGIN_FRACTION = 0.10
-MAX_DAILY_LOSS_FRACTION = 0.03
-MAX_DRAWDOWN_FRACTION = 0.10
+MAX_DAILY_LOSS = 0.03
+MAX_DRAWDOWN = 0.10
 
-FEE_RATE_PER_SIDE = 0.0005
-SLIPPAGE_RATE_PER_SIDE = 0.0002
-MAX_HOLD_HOURS = 24
+FEE_PER_SIDE = 0.0005
+SLIPPAGE_PER_SIDE = 0.0002
 MIN_NOTIONAL = 1.0
-MAX_TRADES_STORED = 500
+MAX_HOLD_HOURS = 24
+MAX_TRADES = 500
 
 
-def now():
+def utc_now():
     return datetime.now(timezone.utc)
 
 
 def iso_now():
-    return now().isoformat()
+    return utc_now().isoformat()
 
 
 def now_ms():
     return int(time.time() * 1000)
 
 
-def api_post(payload):
-    body = json.dumps(payload).encode("utf-8")
-    request = urllib.request.Request(
+def request_api(payload):
+    req = urllib.request.Request(
         API,
-        data=body,
+        data=json.dumps(payload).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "BTC-Paper-Research/2.0",
+            "User-Agent": "BTC-Paper-Research/3.0",
         },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=20) as response:
+    with urllib.request.urlopen(req, timeout=20) as response:
         return json.loads(response.read().decode("utf-8"))
 
 
-def candles(interval, hours):
+def get_candles(interval, hours):
     end = now_ms()
-    raw = api_post({
+    raw = request_api({
         "type": "candleSnapshot",
         "req": {
             "coin": "BTC",
@@ -69,38 +68,37 @@ def candles(interval, hours):
     })
 
     if not isinstance(raw, list):
-        raise RuntimeError(f"Invalid candle response: {interval}")
+        raise RuntimeError("Invalid candle API response")
 
-    result = []
+    candles = []
     for item in raw:
         try:
             c = {
                 "t": int(item["t"]),
-                "T": int(item.get("T", item["t"])),
+                "T": int(item["T"]),
                 "o": float(item["o"]),
                 "h": float(item["h"]),
                 "l": float(item["l"]),
                 "c": float(item["c"]),
                 "v": float(item["v"]),
             }
-            values = [c[k] for k in ("o", "h", "l", "c", "v")]
-            if all(math.isfinite(x) and x > 0 for x in values):
-                result.append(c)
+            prices = [c[k] for k in ("o", "h", "l", "c")]
+            if (
+                all(math.isfinite(x) and x > 0 for x in prices)
+                and math.isfinite(c["v"])
+                and c["v"] >= 0
+                and c["h"] >= max(c["o"], c["c"], c["l"])
+                and c["l"] <= min(c["o"], c["c"], c["h"])
+            ):
+                candles.append(c)
         except (KeyError, TypeError, ValueError):
             continue
 
-    result.sort(key=lambda x: x["t"])
+    # Discard the currently forming candle.
+    candles = [c for c in candles if c["T"] < now_ms()]
 
-    # Use only candles whose reported close time has passed.
-    timestamp = now_ms()
-    result = [c for c in result if c["T"] <= timestamp]
-
-    # Remove duplicate timestamps.
-    unique = {}
-    for c in result:
-        unique[c["t"]] = c
-
-    return sorted(unique.values(), key=lambda x: x["t"])
+    unique = {c["t"]: c for c in candles}
+    return sorted(unique.values(), key=lambda c: c["t"])
 
 
 def ema(values, period):
@@ -111,7 +109,7 @@ def ema(values, period):
     alpha = 2.0 / (period + 1.0)
 
     for x in values[period:]:
-        value = alpha * x + (1.0 - alpha) * value
+        value = alpha * x + (1 - alpha) * value
 
     return value
 
@@ -125,7 +123,6 @@ def rsi(values, period=14):
         values[i] - values[i - 1]
         for i in range(1, len(values))
     ]
-
     gains = [max(x, 0.0) for x in changes]
     losses = [max(-x, 0.0) for x in changes]
 
@@ -143,20 +140,16 @@ def rsi(values, period=14):
     if avg_loss == 0:
         return 100.0 if avg_gain > 0 else 50.0
 
-    rs = avg_gain / avg_loss
-    return 100.0 - 100.0 / (1.0 + rs)
+    return 100 - 100 / (1 + avg_gain / avg_loss)
 
 
-def atr(cs, period=14):
-    """Wilder ATR."""
-    if len(cs) < period + 1:
+def atr(candles, period=14):
+    if len(candles) < period + 1:
         return None
 
     ranges = []
-    for i in range(1, len(cs)):
-        cur = cs[i]
-        prev = cs[i - 1]
-
+    for i in range(1, len(candles)):
+        cur, prev = candles[i], candles[i - 1]
         ranges.append(max(
             cur["h"] - cur["l"],
             abs(cur["h"] - prev["c"]),
@@ -164,15 +157,14 @@ def atr(cs, period=14):
         ))
 
     value = sum(ranges[:period]) / period
-
     for x in ranges[period:]:
         value = (value * (period - 1) + x) / period
 
     return value
 
 
-def fib_levels(cs, lookback=96):
-    chunk = cs[-lookback:]
+def fib_levels(candles, lookback=96):
+    chunk = candles[-lookback:]
     if len(chunk) < 10:
         return {}
 
@@ -192,41 +184,34 @@ def fib_levels(cs, lookback=96):
     }
 
 
-def find_fvg(cs, price):
+def find_fvg(candles, price):
     gaps = []
 
-    for i in range(2, len(cs)):
-        a = cs[i - 2]
-        c = cs[i]
+    for i in range(2, len(candles)):
+        first = candles[i - 2]
+        third = candles[i]
 
-        if c["l"] > a["h"]:
+        if third["l"] > first["h"]:
             gaps.append({
-                "type": "bullish FVG",
-                "low": round(a["h"], 2),
-                "high": round(c["l"], 2),
-                "formed_at": c["t"],
+                "type": "bullish",
+                "low": round(first["h"], 2),
+                "high": round(third["l"], 2),
+                "formed_at": third["t"],
             })
 
-        if c["h"] < a["l"]:
+        if third["h"] < first["l"]:
             gaps.append({
-                "type": "bearish FVG",
-                "low": round(c["h"], 2),
-                "high": round(a["l"], 2),
-                "formed_at": c["t"],
+                "type": "bearish",
+                "low": round(third["h"], 2),
+                "high": round(first["l"], 2),
+                "formed_at": third["t"],
             })
 
     active = []
-
     for gap in gaps[-30:]:
-        if (
-            gap["type"] == "bullish FVG"
-            and price >= gap["low"]
-        ):
+        if gap["type"] == "bullish" and price >= gap["low"]:
             active.append(gap)
-        elif (
-            gap["type"] == "bearish FVG"
-            and price <= gap["high"]
-        ):
+        elif gap["type"] == "bearish" and price <= gap["high"]:
             active.append(gap)
 
     return active[-6:]
@@ -241,7 +226,7 @@ def default_state():
         "trades": [],
         "open_trade": None,
         "daily": {
-            "date": now().date().isoformat(),
+            "date": utc_now().date().isoformat(),
             "start_equity": INITIAL_EQUITY,
         },
         "last_signal_key": None,
@@ -255,25 +240,30 @@ def load_state():
         return default_state()
 
     try:
-        state = json.loads(
-            STATE_FILE.read_text(encoding="utf-8")
-        )
+        state = json.loads(STATE_FILE.read_text(encoding="utf-8"))
     except Exception as exc:
         raise RuntimeError(
-            "state.json could not be read. "
-            "Preserve the file and inspect it before continuing."
+            "state.json cannot be read; refusing to reset trading state"
         ) from exc
 
     if not isinstance(state, dict):
-        raise RuntimeError("state.json is not a JSON object.")
+        raise RuntimeError("Invalid state.json format")
 
-    # Preserve old records and positions during migration.
+    old_build = state.get("build", "")
+
+    # Never silently reinterpret an old open position under new rules.
+    if old_build != BUILD and state.get("open_trade"):
+        raise RuntimeError(
+            "Legacy open position detected. Preserve state.json and "
+            "review the position before migrating to this build."
+        )
+
     state.setdefault("cash", INITIAL_EQUITY)
     state.setdefault("peak_equity", float(state["cash"]))
     state.setdefault("trades", [])
     state.setdefault("open_trade", None)
     state.setdefault("daily", {
-        "date": now().date().isoformat(),
+        "date": utc_now().date().isoformat(),
         "start_equity": float(state["cash"]),
     })
     state.setdefault("last_signal_key", None)
@@ -286,25 +276,19 @@ def load_state():
 
 def save_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-
     temp = path.with_suffix(path.suffix + ".tmp")
     temp.write_text(
-        json.dumps(
-            data,
-            indent=2,
-            ensure_ascii=False,
-            allow_nan=False,
-        ),
+        json.dumps(data, indent=2, ensure_ascii=False, allow_nan=False),
         encoding="utf-8",
     )
     temp.replace(path)
 
 
 def market_context():
-    result = api_post({"type": "metaAndAssetCtxs"})
+    result = request_api({"type": "metaAndAssetCtxs"})
 
     if not isinstance(result, list) or len(result) < 2:
-        raise RuntimeError("Invalid market metadata response.")
+        raise RuntimeError("Invalid market metadata response")
 
     meta, contexts = result[0], result[1]
     universe = meta.get("universe", [])
@@ -318,28 +302,30 @@ def market_context():
     )
 
     if index is None or index >= len(contexts):
-        raise RuntimeError("BTC market data not found.")
+        raise RuntimeError("BTC market data unavailable")
 
     ctx = contexts[index]
-
-    c15 = candles("15m", 24 * 10)
-    c1 = candles("1h", 24 * 45)
-    c4 = candles("4h", 24 * 120)
+    c15 = get_candles("15m", 24 * 10)
+    c1 = get_candles("1h", 24 * 45)
+    c4 = get_candles("4h", 24 * 120)
 
     if min(len(c15), len(c1), len(c4)) < 60:
         raise RuntimeError(
-            f"Insufficient closed candles: "
-            f"15m={len(c15)}, 1h={len(c1)}, 4h={len(c4)}"
+            f"Insufficient candles: 15m={len(c15)}, "
+            f"1h={len(c1)}, 4h={len(c4)}"
         )
 
     price = float(ctx.get("markPx") or c15[-1]["c"])
+    funding = float(ctx.get("funding") or 0)
 
     if not math.isfinite(price) or price <= 0:
-        raise RuntimeError("Invalid BTC price.")
+        raise RuntimeError("Invalid mark price")
+    if not math.isfinite(funding):
+        raise RuntimeError("Invalid funding rate")
 
     return {
         "price": price,
-        "funding": float(ctx.get("funding") or 0),
+        "funding": funding,
         "open_interest_btc": float(ctx.get("openInterest") or 0),
         "premium": float(ctx.get("premium") or 0),
         "volume_24h_usd": float(ctx.get("dayNtlVlm") or 0),
@@ -349,23 +335,22 @@ def market_context():
     }
 
 
-def make_signal(m):
-    c15 = m["candles_15m"]
-    c1 = m["candles_1h"]
-    c4 = m["candles_4h"]
+def make_signal(market):
+    c15 = market["candles_15m"]
+    c1 = market["candles_1h"]
+    c4 = market["candles_4h"]
 
-    cl15 = [c["c"] for c in c15]
-    cl1 = [c["c"] for c in c1]
-    cl4 = [c["c"] for c in c4]
+    closes15 = [c["c"] for c in c15]
+    closes1 = [c["c"] for c in c1]
+    closes4 = [c["c"] for c in c4]
 
-    e20_1 = ema(cl1, 20)
-    e50_1 = ema(cl1, 50)
-    e20_4 = ema(cl4, 20)
-    e50_4 = ema(cl4, 50)
-
-    r = rsi(cl15)
-    a = atr(c15)
-    price = m["price"]
+    e20_1 = ema(closes1, 20)
+    e50_1 = ema(closes1, 50)
+    e20_4 = ema(closes4, 20)
+    e50_4 = ema(closes4, 50)
+    current_rsi = rsi(closes15)
+    current_atr = atr(c15)
+    price = market["price"]
     fib = fib_levels(c1)
     fvgs = find_fvg(c15, price)
 
@@ -374,8 +359,8 @@ def make_signal(m):
         "score": 0,
         "reasons": [],
         "price": price,
-        "rsi_15m": r,
-        "atr_15m": a,
+        "rsi_15m": current_rsi,
+        "atr_15m": current_atr,
         "ema20_1h": e20_1,
         "ema50_1h": e50_1,
         "ema20_4h": e20_4,
@@ -384,16 +369,16 @@ def make_signal(m):
         "fvgs": fvgs,
     }
 
-    indicators = [e20_1, e50_1, e20_4, e50_4, r, a]
+    indicators = [
+        e20_1, e50_1, e20_4, e50_4, current_rsi, current_atr
+    ]
 
     if (
         any(x is None or not math.isfinite(x) for x in indicators)
-        or a <= 0
+        or current_atr <= 0
         or not fib
     ):
-        signal["reasons"] = [
-            "指標データ不足または異常値のため見送り"
-        ]
+        signal["reasons"] = ["指標不足または異常値のため見送り"]
         return signal
 
     score = 0
@@ -401,17 +386,17 @@ def make_signal(m):
 
     if e20_1 > e50_1:
         score += 1
-        reasons.append("1時間足：EMA20がEMA50より上")
+        reasons.append("1時間足EMA20 > EMA50")
     else:
         score -= 1
-        reasons.append("1時間足：EMA20がEMA50より下")
+        reasons.append("1時間足EMA20 < EMA50")
 
     if e20_4 > e50_4:
         score += 1
-        reasons.append("4時間足：EMA20がEMA50より上")
+        reasons.append("4時間足EMA20 > EMA50")
     else:
         score -= 1
-        reasons.append("4時間足：EMA20がEMA50より下")
+        reasons.append("4時間足EMA20 < EMA50")
 
     if price > e20_1:
         score += 1
@@ -420,55 +405,49 @@ def make_signal(m):
         score -= 1
         reasons.append("価格は1時間足EMA20より下")
 
-    if 50 <= r <= 67:
+    if 50 <= current_rsi <= 67:
         score += 1
-        reasons.append(f"RSI {r:.1f}：上向きモメンタム候補")
-    elif 33 <= r < 50:
+        reasons.append(f"RSI {current_rsi:.1f}: 上向き候補")
+    elif 33 <= current_rsi < 50:
         score -= 1
-        reasons.append(f"RSI {r:.1f}：弱めのモメンタム")
-    elif r > 75:
-        reasons.append(f"RSI {r:.1f}：過熱のため追いかけ回避")
-    elif r < 25:
-        reasons.append(f"RSI {r:.1f}：売られ過ぎの可能性")
+        reasons.append(f"RSI {current_rsi:.1f}: 弱め")
+    else:
+        reasons.append(f"RSI {current_rsi:.1f}: 中立条件外")
 
-    funding = m["funding"]
-
-    if funding > 0.0003:
+    if market["funding"] > 0.0003:
         score -= 1
-        reasons.append("資金調達率が高め")
-    elif funding < -0.0003:
+        reasons.append("資金調達率は高め")
+    elif market["funding"] < -0.0003:
         score += 1
-        reasons.append("資金調達率が低め")
+        reasons.append("資金調達率は低め")
     else:
         reasons.append("資金調達率に極端な偏りなし")
 
     move = abs(c15[-1]["c"] - c15[-2]["c"]) / c15[-2]["c"]
 
     if move > 0.012:
-        reasons.append("直近確定15分足の変動が大きいため見送り")
+        reasons.append("直近確定足の変動が大きいため見送り")
 
     direction = "WAIT"
-
-    if score >= 3 and 30 < r < 72 and move <= 0.012:
+    if score >= 3 and 30 < current_rsi < 72 and move <= 0.012:
         direction = "LONG"
-    elif score <= -3 and 28 < r < 70 and move <= 0.012:
+    elif score <= -3 and 28 < current_rsi < 70 and move <= 0.012:
         direction = "SHORT"
     else:
-        reasons.append(f"総合スコア {score}：条件不足、待機")
+        reasons.append(f"総合スコア {score}: 条件不足")
 
     signal.update({
         "direction": direction,
         "score": score,
         "reasons": reasons,
         "candle_move_pct": round(move * 100, 4),
+        "signal_candle_time": c15[-1]["t"],
     })
-
     return signal
 
 
 def unrealized_pnl(trade, price):
     direction = 1 if trade["direction"] == "LONG" else -1
-
     return (
         float(trade["notional"])
         * direction
@@ -479,7 +458,6 @@ def unrealized_pnl(trade, price):
 
 def equity(state, price):
     trade = state.get("open_trade")
-
     if not trade:
         return float(state["cash"])
 
@@ -490,27 +468,22 @@ def equity(state, price):
     )
 
 
-def fill_price(price, direction, entering):
+def simulated_fill(price, direction, entering):
     sign = 1 if direction == "LONG" else -1
     adjustment = sign if entering else -sign
-
-    return price * (
-        1 + adjustment * SLIPPAGE_RATE_PER_SIDE
-    )
+    return price * (1 + adjustment * SLIPPAGE_PER_SIDE)
 
 
 def close_trade(state, price, reason):
     trade = state.get("open_trade")
-
     if not trade:
         return
 
-    exit_price = fill_price(
+    exit_price = simulated_fill(
         price, trade["direction"], entering=False
     )
-
     gross = unrealized_pnl(trade, exit_price)
-    fees = float(trade["notional"]) * FEE_RATE_PER_SIDE * 2
+    fees = float(trade["notional"]) * FEE_PER_SIDE * 2
     net = gross - fees
 
     state["cash"] = max(
@@ -527,28 +500,29 @@ def close_trade(state, price, reason):
         "fees_est_usd": round(fees, 6),
         "net_pnl_usd": round(net, 6),
         "return_on_margin_pct": round(
-            net / max(float(trade["margin"]), 1e-9) * 100,
-            3,
+            net / max(float(trade["margin"]), 1e-9) * 100, 3
         ),
     })
 
-    state.setdefault("trades", []).append(trade)
-    state["trades"] = state["trades"][-MAX_TRADES_STORED:]
+    state["trades"].append(trade)
+    state["trades"] = state["trades"][-MAX_TRADES:]
     state["open_trade"] = None
 
 
-def halt_reason(state, eq):
-    peak = max(float(state["peak_equity"]), eq)
-    drawdown = (peak - eq) / max(peak, 1e-9)
+def calculate_halt(state, current_equity):
+    peak = max(float(state["peak_equity"]), current_equity)
+    dd = (peak - current_equity) / max(peak, 1e-9)
 
-    start = float(state["daily"]["start_equity"])
-    daily_loss = (start - eq) / max(start, 1e-9)
+    daily_start = float(state["daily"]["start_equity"])
+    daily_loss = (
+        daily_start - current_equity
+    ) / max(daily_start, 1e-9)
 
-    if eq <= 0:
+    if current_equity <= 0:
         return "EQUITY_DEPLETED"
-    if drawdown >= MAX_DRAWDOWN_FRACTION:
+    if dd >= MAX_DRAWDOWN:
         return "MAX_DRAWDOWN_10_PERCENT"
-    if daily_loss >= MAX_DAILY_LOSS_FRACTION:
+    if daily_loss >= MAX_DAILY_LOSS:
         return "DAILY_LOSS_3_PERCENT"
 
     return None
@@ -560,49 +534,41 @@ def run():
     signal = make_signal(market)
     price = market["price"]
 
-    today = now().date().isoformat()
-
+    today = utc_now().date().isoformat()
     if state["daily"].get("date") != today:
         state["daily"] = {
             "date": today,
             "start_equity": equity(state, price),
         }
-
         if state.get("halt_reason") == "DAILY_LOSS_3_PERCENT":
             state["halt_reason"] = None
 
     eq = equity(state, price)
-    state["peak_equity"] = max(
-        float(state["peak_equity"]), eq
-    )
+    state["peak_equity"] = max(float(state["peak_equity"]), eq)
 
-    reason = halt_reason(state, eq)
+    reason = calculate_halt(state, eq)
     if reason:
         state["halt_reason"] = reason
 
-    # Manage an existing paper position even during a halt.
+    # Manage open paper positions even if new entries are halted.
     trade = state.get("open_trade")
-
     if trade:
-        direction = 1 if trade["direction"] == "LONG" else -1
-        move = (
-            direction
-            * (price - float(trade["entry_price"]))
-            / float(trade["entry_price"])
-        )
+        d = 1 if trade["direction"] == "LONG" else -1
+        entry = float(trade["entry_price"])
+        move = d * (price - entry) / entry
 
         if move <= -0.08:
             close_trade(state, price, "EMERGENCY_LOSS_GUARD")
         elif (
-            direction == 1 and price <= float(trade["stop_price"])
+            d == 1 and price <= float(trade["stop_price"])
         ) or (
-            direction == -1 and price >= float(trade["stop_price"])
+            d == -1 and price >= float(trade["stop_price"])
         ):
             close_trade(state, price, "STOP_LOSS")
         elif (
-            direction == 1 and price >= float(trade["target_price"])
+            d == 1 and price >= float(trade["target_price"])
         ) or (
-            direction == -1 and price <= float(trade["target_price"])
+            d == -1 and price <= float(trade["target_price"])
         ):
             close_trade(state, price, "TAKE_PROFIT")
         elif (
@@ -612,22 +578,21 @@ def run():
             close_trade(state, price, "MAX_HOLD_24H")
 
     eq = equity(state, price)
-    state["peak_equity"] = max(
-        float(state["peak_equity"]), eq
-    )
+    state["peak_equity"] = max(float(state["peak_equity"]), eq)
 
-    reason = halt_reason(state, eq)
+    reason = calculate_halt(state, eq)
     if reason:
         state["halt_reason"] = reason
 
-    # Entry sizing uses equity risk and a margin cap.
     if (
         not state.get("open_trade")
         and not state.get("halt_reason")
         and signal["direction"] in ("LONG", "SHORT")
     ):
-        candle_time = market["candles_15m"][-1]["t"]
-        key = f'{signal["direction"]}:{candle_time}'
+        key = (
+            f'{signal["direction"]}:'
+            f'{signal.get("signal_candle_time", 0)}'
+        )
 
         if state.get("last_signal_key") != key:
             atr_value = float(signal.get("atr_15m") or 0)
@@ -635,10 +600,10 @@ def run():
             target_dist = stop_dist * 1.8
 
             risk_usd = max(0.0, eq * RISK_PER_TRADE)
-            notional_risk = risk_usd / stop_dist
+            notional_by_risk = risk_usd / stop_dist
             margin_cap = max(0.0, eq * MAX_MARGIN_FRACTION)
             notional = min(
-                notional_risk,
+                notional_by_risk,
                 margin_cap * LEVERAGE,
             )
             margin = notional / LEVERAGE
@@ -647,21 +612,21 @@ def run():
                 not math.isfinite(notional)
                 or notional < MIN_NOTIONAL
                 or margin > float(state["cash"])
+                or stop_dist >= 0.08
             ):
                 signal["reasons"].append(
-                    "取引サイズまたは資金制限により見送り"
+                    "サイズ・資金・損切り幅の制限で見送り"
                 )
                 signal["direction"] = "WAIT"
             else:
                 direction = (
                     1 if signal["direction"] == "LONG" else -1
                 )
-                entry = fill_price(
+                entry = simulated_fill(
                     price, signal["direction"], entering=True
                 )
 
                 state["cash"] = float(state["cash"]) - margin
-
                 state["open_trade"] = {
                     "id": key,
                     "direction": signal["direction"],
@@ -678,19 +643,14 @@ def run():
                     "target_price": round(
                         entry * (1 + direction * target_dist), 2
                     ),
-                    "stop_distance_pct": round(
-                        stop_dist * 100, 3
-                    ),
+                    "stop_distance_pct": round(stop_dist * 100, 3),
                     "signal_score": signal["score"],
                     "entry_reasons": signal["reasons"],
                 }
-
                 state["last_signal_key"] = key
 
     eq = equity(state, price)
-    state["peak_equity"] = max(
-        float(state["peak_equity"]), eq
-    )
+    state["peak_equity"] = max(float(state["peak_equity"]), eq)
 
     state["last_run_at"] = iso_now()
     state["last_price"] = price
@@ -711,18 +671,16 @@ def run():
     losses = sum(
         1 for t in trades if float(t.get("net_pnl_usd", 0)) <= 0
     )
-
-    drawdown = (
+    dd = (
         (float(state["peak_equity"]) - eq)
-        / max(float(state["peak_equity"]), 1e-9)
-        * 100
+        / max(float(state["peak_equity"]), 1e-9) * 100
     )
 
-    state["metrics"] = {
+    metrics = {
         "equity_usd": round(eq, 6),
         "cash_usd": round(float(state["cash"]), 6),
         "peak_equity_usd": round(float(state["peak_equity"]), 6),
-        "drawdown_pct": round(drawdown, 3),
+        "drawdown_pct": round(dd, 3),
         "closed_trades": len(trades),
         "wins": wins,
         "losses": losses,
@@ -730,18 +688,18 @@ def run():
             wins / len(trades) * 100, 2
         ) if trades else 0.0,
         "net_closed_pnl_usd": round(
-            sum(float(t.get("net_pnl_usd", 0)) for t in trades),
-            6,
+            sum(float(t.get("net_pnl_usd", 0)) for t in trades), 6
         ),
         "open_unrealized_pnl_usd": round(
             unrealized_pnl(state["open_trade"], price), 6
         ) if state.get("open_trade") else 0.0,
     }
+    state["metrics"] = metrics
 
     dashboard = {
         "build": BUILD,
-        "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
         "generated_at": iso_now(),
+        "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
         "exchange_data": "Hyperliquid public API",
         "symbol": "BTC perpetual",
         "price": price,
@@ -751,7 +709,7 @@ def run():
         "premium": market["premium"],
         "volume_24h_usd": market["volume_24h_usd"],
         "signal": signal,
-        "metrics": state["metrics"],
+        "metrics": metrics,
         "risk": {
             "virtual_leverage": LEVERAGE,
             "risk_per_trade_pct": RISK_PER_TRADE * 100,
@@ -759,22 +717,24 @@ def run():
             "halt_reason": state.get("halt_reason"),
             "warning": (
                 "Paper simulation only. Fees, slippage and liquidation "
-                "are simplified; not for live trading."
+                "are simplified. Not suitable for live trading."
             ),
         },
         "open_trade": state.get("open_trade"),
         "recent_trades": trades[-20:],
         "equity_history": state["equity_history"][-200:],
+        "fib": signal.get("fib", {}),
+        "fvgs": signal.get("fvgs", []),
         "macro_note": (
-            "経済指標は自動取得していません。CPI、米雇用統計、"
-            "FOMCなどは別途確認してください。"
+            "経済指標は自動取得していません。CPI、雇用統計、FOMCは"
+            "別途確認してください。"
         ),
         "method_notes": [
             "確定済みローソク足を使用",
-            "Wilder RSI・Wilder ATR",
-            "1h・4h EMAトレンドと15mモメンタム",
-            "FVGは参考候補であり利益を保証しない",
-            "仮想手数料・スリッページを概算",
+            "Wilder RSI・ATR",
+            "1h・4h EMAと15mモメンタム",
+            "FVGは参考候補",
+            "仮想手数料とスリッページを概算",
             "実注文・ウォレット接続なし",
         ],
     }
@@ -788,8 +748,8 @@ def run():
         "price": price,
         "signal": signal["direction"],
         "score": signal["score"],
-        "equity": state["metrics"]["equity_usd"],
-        "closed_trades": state["metrics"]["closed_trades"],
+        "equity": metrics["equity_usd"],
+        "closed_trades": metrics["closed_trades"],
         "halt": state.get("halt_reason"),
     }, ensure_ascii=False))
 
@@ -797,10 +757,11 @@ def run():
 if __name__ == "__main__":
     try:
         run()
-    except Exception as error:
+    except Exception as exc:
         print(json.dumps({
             "ok": False,
-            "error": str(error),
+            "build": BUILD,
+            "error": str(exc),
             "time": iso_now(),
         }, ensure_ascii=False))
         raise
