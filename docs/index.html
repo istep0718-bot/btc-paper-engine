@@ -1,0 +1,90 @@
+
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTC Paper Engine</title>
+<style>
+:root{color-scheme:dark}
+body{margin:0;background:#0b1020;color:#e8eefc;font-family:-apple-system,BlinkMacSystemFont,sans-serif;padding:18px}
+main{max-width:900px;margin:auto}
+h1{font-size:25px}
+.card{background:#151d31;border:1px solid #2b3855;border-radius:14px;padding:16px;margin:12px 0}
+.label{color:#9caccb;font-size:13px}
+.value{font-size:25px;font-weight:700;margin-top:7px;overflow-wrap:anywhere}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(145px,1fr));gap:10px}
+.tag{display:inline-block;background:#263653;border-radius:7px;padding:6px 9px;margin:3px}
+li{margin:8px 0;line-height:1.5}
+small{color:#9caccb}
+.error{color:#ff9b9b}
+</style>
+</head>
+<body>
+<main>
+<h1>₿ BTC Paper Engine</h1>
+<p><span class="tag">PAPER ONLY</span><span class="tag">仮想40倍</span><span class="tag">実注文なし</span></p>
+<div class="card">
+<div class="label">BTCデータ更新</div>
+<div id="updated">読み込み中...</div>
+<div id="status"></div>
+</div>
+<div class="grid">
+<div class="card"><div class="label">BTC価格（USD）</div><div class="value" id="price">--</div></div>
+<div class="card"><div class="label">シグナル</div><div class="value" id="signal">--</div></div>
+<div class="card"><div class="label">総資産（USD）</div><div class="value" id="equity">--</div></div>
+<div class="card"><div class="label">確定損益（USD）</div><div class="value" id="pnl">--</div></div>
+<div class="card"><div class="label">RSI（15分足）</div><div class="value" id="rsi">--</div></div>
+<div class="card"><div class="label">資金調達率</div><div class="value" id="funding">--</div></div>
+<div class="card"><div class="label">勝ち / 負け</div><div class="value" id="wl">--</div></div>
+<div class="card"><div class="label">最大ドローダウン</div><div class="value" id="dd">--</div></div>
+</div>
+<div class="card"><h2>シグナルの理由</h2><ul id="reasons"><li>読み込み中...</li></ul></div>
+<div class="card"><h2>保有中の仮想ポジション</h2><div id="position">なし</div></div>
+<div class="card"><h2>リスク管理</h2><div id="risk"></div></div>
+<div class="card"><h2>フィボナッチ</h2><ul id="fib"></ul></div>
+<div class="card"><h2>FVG候補</h2><ul id="fvg"></ul></div>
+<div class="card"><h2>最近の取引</h2><div id="trades">取引履歴なし</div></div>
+<div class="card"><h2>経済指標について</h2><div id="macro"></div></div>
+<p><small>公開市場データを使った検証画面です。シグナルは予測ではなく、利益を保証しません。40倍の実取引に使用しないでください。</small></p>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const num=(v,d=2)=>Number.isFinite(Number(v))?Number(v).toLocaleString("en-US",{maximumFractionDigits:d}):"--";
+const money=v=>Number.isFinite(Number(v))?"$"+num(v,4):"--";
+const list=(id,items)=>{$(id).replaceChildren();(items||[]).forEach(x=>{const li=document.createElement("li");li.textContent=typeof x==="string"?x:JSON.stringify(x);$(id).appendChild(li)});};
+async function load(){
+try{
+const res=await fetch("./data.json?ts="+Date.now(),{cache:"no-store"});
+if(!res.ok)throw Error("data.json が見つかりません");
+const d=await res.json();
+$("updated").textContent=d.generated_at||"--";
+$("status").textContent=d.risk?.halt_reason?"停止："+d.risk.halt_reason:"停止条件に未到達（紙上検証）";
+$("price").textContent=money(d.price);
+$("signal").textContent=(d.signal?.direction||"WAIT")+" / "+(d.signal?.score??"--");
+$("equity").textContent=money(d.metrics?.equity_usd);
+$("pnl").textContent=money(d.metrics?.net_closed_pnl_usd);
+$("rsi").textContent=num(d.signal?.rsi_15m);
+$("funding").textContent=num(Number(d.funding_rate)*100,5)+"%";
+$("wl").textContent=num(d.metrics?.wins,0)+" / "+num(d.metrics?.losses,0);
+$("dd").textContent=num(d.metrics?.drawdown_pct)+"%";
+list("reasons",d.signal?.reasons);
+$("position").textContent=d.open_trade?JSON.stringify(d.open_trade,null,2):"現在ポジションなし";
+$("risk").textContent=JSON.stringify(d.risk||{},null,2);
+list("fib",Object.entries(d.signal?.fib||{}).map(([k,v])=>k+": "+num(v,2)));
+list("fvg",d.signal?.fvgs||[]);
+$("macro").textContent=d.macro_note||"経済指標データなし";
+const trades=d.recent_trades||[];
+$("trades").replaceChildren();
+if(!trades.length){$("trades").textContent="取引履歴なし"}
+trades.slice().reverse().forEach(t=>{
+const div=document.createElement("div");div.className="card";
+div.textContent=[t.direction,t.close_reason||"", "Entry "+num(t.entry_price), "Exit "+num(t.exit_price), "損益 "+money(t.net_pnl_usd)].join(" | ");
+$("trades").appendChild(div);
+});
+}catch(e){$("updated").textContent="読み込み失敗";$("status").className="error";$("status").textContent=e.message+"。GitHub Actions実行後に再読み込みしてください。"}
+}
+load();
+</script>
+</body>
+</html>
