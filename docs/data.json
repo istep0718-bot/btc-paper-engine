@@ -1,15 +1,15 @@
 {
-  "build": "BTC_PAPER_V3_2026-10-20",
-  "generated_at": "2026-10-20T04:33:31.781801+00:00",
+  "build": "BTC_PAPER_V4_2026-10-20",
+  "generated_at": "2026-10-20T04:48:54.290087+00:00",
   "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
   "exchange_data": "Hyperliquid public API",
   "symbol": "BTC perpetual",
-  "price": 82124.0,
+  "price": 82066.8,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
-  "open_interest_btc": 39681.60508,
-  "premium": -0.0002373894,
-  "volume_24h_usd": 1914678633.8197594,
+  "open_interest_btc": 39720.79366,
+  "premium": -0.0003045735,
+  "volume_24h_usd": 1913541883.8265584,
   "signal": {
     "direction": "WAIT",
     "score": 2,
@@ -17,13 +17,13 @@
       "1時間足EMA20 > EMA50",
       "4時間足EMA20 < EMA50",
       "価格は1時間足EMA20より上",
-      "RSI 56.8: 上向き候補",
+      "RSI 56.3: 上向き候補",
       "資金調達率に極端な偏りなし",
-      "総合スコア 2: 条件不足"
+      "上位足の方向または総合スコアが不一致"
     ],
-    "price": 82124.0,
-    "rsi_15m": 56.77320166621989,
-    "atr_15m": 194.25575007636021,
+    "price": 82066.8,
+    "rsi_15m": 56.30982275961617,
+    "atr_15m": 187.95176792804878,
     "ema20_1h": 82008.75217058697,
     "ema50_1h": 81962.10489017525,
     "ema20_4h": 81943.15594441886,
@@ -37,12 +37,6 @@
     },
     "fvgs": [
       {
-        "type": "bearish",
-        "low": 82117.0,
-        "high": 82167.0,
-        "formed_at": 1792424700000
-      },
-      {
         "type": "bullish",
         "low": 82012.0,
         "high": 82044.0,
@@ -53,6 +47,12 @@
         "low": 82052.0,
         "high": 82106.0,
         "formed_at": 1792448100000
+      },
+      {
+        "type": "bearish",
+        "low": 82092.0,
+        "high": 82106.0,
+        "formed_at": 1792449900000
       },
       {
         "type": "bullish",
@@ -73,27 +73,38 @@
         "formed_at": 1792467900000
       }
     ],
-    "candle_move_pct": 0.0682,
-    "signal_candle_time": 1792469700000
+    "candle_move_pct": 0.0134,
+    "signal_candle_time": 1792470600000
   },
   "metrics": {
+    "closed_trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "breakeven_trades": 0,
+    "win_rate_pct": 0.0,
+    "net_closed_pnl_usd": 0,
+    "gross_profit_usd": 0,
+    "gross_loss_usd": 0,
+    "profit_factor": null,
+    "average_win_usd": 0.0,
+    "average_loss_usd": 0.0,
+    "best_trade_usd": 0.0,
+    "worst_trade_usd": 0.0,
+    "expectancy_usd": 0.0,
     "equity_usd": 20.0,
     "cash_usd": 20.0,
     "peak_equity_usd": 20.0,
     "drawdown_pct": 0.0,
-    "closed_trades": 0,
-    "wins": 0,
-    "losses": 0,
-    "win_rate_pct": 0.0,
-    "net_closed_pnl_usd": 0,
     "open_unrealized_pnl_usd": 0.0
   },
   "risk": {
     "virtual_leverage": 3.0,
     "risk_per_trade_pct": 0.5,
     "max_margin_pct": 10.0,
+    "max_daily_loss_pct": 3.0,
+    "max_drawdown_pct": 10.0,
     "halt_reason": null,
-    "warning": "Paper simulation only. Fees, slippage and liquidation are simplified. Not suitable for live trading."
+    "warning": "Paper simulation only. Fees, slippage, execution and liquidation are simplified. Not suitable for live trading."
   },
   "open_trade": null,
   "recent_trades": [],
@@ -157,6 +168,11 @@
       "time": "2026-10-20T04:33:31.781775+00:00",
       "equity_usd": 20.0,
       "price": 82124.0
+    },
+    {
+      "time": "2026-10-20T04:48:54.290056+00:00",
+      "equity_usd": 20.0,
+      "price": 82066.8
     }
   ],
   "fib": {
@@ -168,12 +184,6 @@
   },
   "fvgs": [
     {
-      "type": "bearish",
-      "low": 82117.0,
-      "high": 82167.0,
-      "formed_at": 1792424700000
-    },
-    {
       "type": "bullish",
       "low": 82012.0,
       "high": 82044.0,
@@ -184,6 +194,12 @@
       "low": 82052.0,
       "high": 82106.0,
       "formed_at": 1792448100000
+    },
+    {
+      "type": "bearish",
+      "low": 82092.0,
+      "high": 82106.0,
+      "formed_at": 1792449900000
     },
     {
       "type": "bullish",
@@ -209,8 +225,9 @@
     "確定済みローソク足を使用",
     "Wilder RSI・ATR",
     "1h・4h EMAと15mモメンタム",
-    "FVGは参考候補",
+    "1h・4hトレンド不一致時は新規エントリーを見送り",
     "仮想手数料とスリッページを概算",
+    "検証指標: 勝率、平均利益・損失、PF、期待値",
     "実注文・ウォレット接続なし"
   ]
 }
