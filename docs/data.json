@@ -1,30 +1,31 @@
 {
   "build": "BTC_PAPER_V4_2026-10-20",
-  "generated_at": "2026-10-20T13:44:14.952514+00:00",
+  "generated_at": "2026-10-20T14:37:06.058016+00:00",
   "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
   "exchange_data": "Hyperliquid public API",
   "symbol": "BTC perpetual",
-  "price": 81637.0,
+  "price": 83181.0,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
-  "open_interest_btc": 41602.74188,
-  "premium": -0.0001359376,
-  "volume_24h_usd": 1924511743.3556185,
+  "open_interest_btc": 41707.09836,
+  "premium": 1.20195e-05,
+  "volume_24h_usd": 2260065946.7772837,
   "signal": {
-    "direction": "SHORT",
-    "score": -4,
+    "direction": "WAIT",
+    "score": -1,
     "reasons": [
       "1時間足EMA20 < EMA50",
       "4時間足EMA20 < EMA50",
-      "価格は1時間足EMA20より下",
-      "RSI 43.6: 弱め",
-      "資金調達率に極端な偏りなし"
+      "価格は1時間足EMA20より上",
+      "RSI 72.2: 中立条件外",
+      "資金調達率に極端な偏りなし",
+      "上位足の方向または総合スコアが不一致"
     ],
-    "price": 81637.0,
-    "rsi_15m": 43.570483401459356,
-    "atr_15m": 180.8258520247792,
-    "ema20_1h": 81767.66618049362,
-    "ema50_1h": 81858.81149741568,
+    "price": 83181.0,
+    "rsi_15m": 72.15160674526766,
+    "atr_15m": 308.1794085714212,
+    "ema20_1h": 81802.74559187517,
+    "ema50_1h": 81869.68163477193,
     "ema20_4h": 81863.98026289164,
     "ema50_4h": 82185.72575570733,
     "fib": {
@@ -36,65 +37,65 @@
     },
     "fvgs": [
       {
-        "type": "bearish",
-        "low": 82022.0,
-        "high": 82028.0,
-        "formed_at": 1792473300000
+        "type": "bullish",
+        "low": 81924.0,
+        "high": 81979.0,
+        "formed_at": 1792467900000
       },
       {
-        "type": "bearish",
-        "low": 81965.0,
-        "high": 81976.0,
-        "formed_at": 1792474200000
-      },
-      {
-        "type": "bearish",
+        "type": "bullish",
         "low": 81719.0,
-        "high": 81813.0,
-        "formed_at": 1792476000000
-      },
-      {
-        "type": "bearish",
-        "low": 81739.0,
-        "high": 81760.0,
-        "formed_at": 1792480500000
-      },
-      {
-        "type": "bearish",
-        "low": 81629.0,
-        "high": 81739.0,
-        "formed_at": 1792481400000
+        "high": 81740.0,
+        "formed_at": 1792477800000
       },
       {
         "type": "bullish",
         "low": 81449.0,
         "high": 81460.0,
         "formed_at": 1792490400000
+      },
+      {
+        "type": "bullish",
+        "low": 81521.0,
+        "high": 81630.0,
+        "formed_at": 1792503900000
+      },
+      {
+        "type": "bullish",
+        "low": 81754.0,
+        "high": 82091.0,
+        "formed_at": 1792504800000
+      },
+      {
+        "type": "bullish",
+        "low": 82170.0,
+        "high": 82820.0,
+        "formed_at": 1792505700000
       }
     ],
-    "candle_move_pct": 0.0025,
-    "signal_candle_time": 1792502100000
+    "candle_move_pct": 0.298,
+    "signal_candle_time": 1792505700000
   },
   "metrics": {
-    "closed_trades": 0,
+    "closed_trades": 1,
     "wins": 0,
-    "losses": 0,
+    "losses": 1,
     "breakeven_trades": 0,
     "win_rate_pct": 0.0,
-    "net_closed_pnl_usd": 0,
+    "net_closed_pnl_usd": -0.126347,
     "gross_profit_usd": 0,
-    "gross_loss_usd": 0,
-    "profit_factor": null,
+    "gross_loss_usd": 0.126347,
+    "profit_factor": 0.0,
     "average_win_usd": 0.0,
-    "average_loss_usd": 0.0,
-    "best_trade_usd": 0.0,
-    "worst_trade_usd": 0.0,
-    "expectancy_usd": 0.0,
-    "equity_usd": 19.994459,
-    "cash_usd": 18.0,
+    "average_loss_usd": -0.126347,
+    "best_trade_usd": -0.126347,
+    "worst_trade_usd": -0.126347,
+    "expectancy_usd": -0.126347,
+    "equity_usd": 19.873653,
+    "cash_usd": 19.873653,
     "peak_equity_usd": 20.01182,
-    "drawdown_pct": 0.087,
-    "open_unrealized_pnl_usd": -0.005541
+    "drawdown_pct": 0.69,
+    "open_unrealized_pnl_usd": 0.0
   },
   "risk": {
     "virtual_leverage": 3.0,
@@ -105,29 +106,39 @@
     "halt_reason": null,
     "warning": "Paper simulation only. Fees, slippage, execution and liquidation are simplified. Not suitable for live trading."
   },
-  "open_trade": {
-    "id": "SHORT:1792484100000",
-    "direction": "SHORT",
-    "mark_entry_price": 81578.0,
-    "entry_price": 81561.68,
-    "opened_at": "2026-10-20T08:37:26.720862+00:00",
-    "opened_at_ms": 1792485446720,
-    "notional": 6.0,
-    "margin": 2.0,
-    "leverage_virtual": 3.0,
-    "stop_price": 81969.49,
-    "target_price": 80827.63,
-    "stop_distance_pct": 0.5,
-    "signal_score": -4,
-    "entry_reasons": [
-      "1時間足EMA20 < EMA50",
-      "4時間足EMA20 < EMA50",
-      "価格は1時間足EMA20より下",
-      "RSI 39.5: 弱め",
-      "資金調達率に極端な偏りなし"
-    ]
-  },
-  "recent_trades": [],
+  "open_trade": null,
+  "recent_trades": [
+    {
+      "id": "SHORT:1792484100000",
+      "direction": "SHORT",
+      "mark_entry_price": 81578.0,
+      "entry_price": 81561.68,
+      "opened_at": "2026-10-20T08:37:26.720862+00:00",
+      "opened_at_ms": 1792485446720,
+      "notional": 6.0,
+      "margin": 2.0,
+      "leverage_virtual": 3.0,
+      "stop_price": 81969.49,
+      "target_price": 80827.63,
+      "stop_distance_pct": 0.5,
+      "signal_score": -4,
+      "entry_reasons": [
+        "1時間足EMA20 < EMA50",
+        "4時間足EMA20 < EMA50",
+        "価格は1時間足EMA20より下",
+        "RSI 39.5: 弱め",
+        "資金調達率に極端な偏りなし"
+      ],
+      "mark_exit_price": 83181.0,
+      "exit_price": 83197.64,
+      "closed_at": "2026-10-20T14:37:06.057971+00:00",
+      "close_reason": "STOP_LOSS",
+      "gross_pnl_usd": -0.120347,
+      "fees_est_usd": 0.006,
+      "net_pnl_usd": -0.126347,
+      "return_on_margin_pct": -6.317
+    }
+  ],
   "equity_history": [
     {
       "time": "2026-10-19T22:35:34.614363+00:00",
@@ -248,6 +259,11 @@
       "time": "2026-10-20T13:44:14.952485+00:00",
       "equity_usd": 19.994459,
       "price": 81637.0
+    },
+    {
+      "time": "2026-10-20T14:37:06.057989+00:00",
+      "equity_usd": 19.873653,
+      "price": 83181.0
     }
   ],
   "fib": {
@@ -259,40 +275,40 @@
   },
   "fvgs": [
     {
-      "type": "bearish",
-      "low": 82022.0,
-      "high": 82028.0,
-      "formed_at": 1792473300000
+      "type": "bullish",
+      "low": 81924.0,
+      "high": 81979.0,
+      "formed_at": 1792467900000
     },
     {
-      "type": "bearish",
-      "low": 81965.0,
-      "high": 81976.0,
-      "formed_at": 1792474200000
-    },
-    {
-      "type": "bearish",
+      "type": "bullish",
       "low": 81719.0,
-      "high": 81813.0,
-      "formed_at": 1792476000000
-    },
-    {
-      "type": "bearish",
-      "low": 81739.0,
-      "high": 81760.0,
-      "formed_at": 1792480500000
-    },
-    {
-      "type": "bearish",
-      "low": 81629.0,
-      "high": 81739.0,
-      "formed_at": 1792481400000
+      "high": 81740.0,
+      "formed_at": 1792477800000
     },
     {
       "type": "bullish",
       "low": 81449.0,
       "high": 81460.0,
       "formed_at": 1792490400000
+    },
+    {
+      "type": "bullish",
+      "low": 81521.0,
+      "high": 81630.0,
+      "formed_at": 1792503900000
+    },
+    {
+      "type": "bullish",
+      "low": 81754.0,
+      "high": 82091.0,
+      "formed_at": 1792504800000
+    },
+    {
+      "type": "bullish",
+      "low": 82170.0,
+      "high": 82820.0,
+      "formed_at": 1792505700000
     }
   ],
   "macro_note": "経済指標は自動取得していません。CPI、雇用統計、FOMCは別途確認してください。",
