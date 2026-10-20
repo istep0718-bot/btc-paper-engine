@@ -1,33 +1,33 @@
 {
   "build": "BTC_PAPER_V4_2026-10-20",
-  "generated_at": "2026-10-20T15:14:39.441498+00:00",
+  "generated_at": "2026-10-20T16:11:08.424164+00:00",
   "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
   "exchange_data": "Hyperliquid public API",
   "symbol": "BTC perpetual",
-  "price": 82306.0,
+  "price": 82494.0,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
-  "open_interest_btc": 41827.37642,
-  "premium": 0.0,
-  "volume_24h_usd": 2452620525.3578854,
+  "open_interest_btc": 40672.05368,
+  "premium": -0.0004119814,
+  "volume_24h_usd": 2590289673.72724,
   "signal": {
     "direction": "WAIT",
-    "score": 1,
+    "score": 2,
     "reasons": [
       "1時間足EMA20 > EMA50",
       "4時間足EMA20 < EMA50",
       "価格は1時間足EMA20より上",
-      "RSI 74.9: 中立条件外",
+      "RSI 58.7: 上向き候補",
       "資金調達率に極端な偏りなし",
       "上位足の方向または総合スコアが不一致"
     ],
-    "price": 82306.0,
-    "rsi_15m": 74.89775288820346,
-    "atr_15m": 326.5679594314806,
-    "ema20_1h": 81940.96029741087,
-    "ema50_1h": 81923.96862948676,
-    "ema20_4h": 81863.98026289164,
-    "ema50_4h": 82185.72575570733,
+    "price": 82494.0,
+    "rsi_15m": 58.65874582143683,
+    "atr_15m": 371.5798232330934,
+    "ema20_1h": 82002.20217384792,
+    "ema50_1h": 81949.85221264414,
+    "ema20_4h": 81932.55357118767,
+    "ema50_4h": 82201.34435352267,
     "fib": {
       "swing_high": 83425.0,
       "swing_low": 80644.0,
@@ -36,12 +36,6 @@
       "retracement_618": 81706.34
     },
     "fvgs": [
-      {
-        "type": "bullish",
-        "low": 81924.0,
-        "high": 81979.0,
-        "formed_at": 1792467900000
-      },
       {
         "type": "bullish",
         "low": 81719.0,
@@ -71,10 +65,16 @@
         "low": 82170.0,
         "high": 82820.0,
         "formed_at": 1792505700000
+      },
+      {
+        "type": "bearish",
+        "low": 82627.0,
+        "high": 82979.0,
+        "formed_at": 1792509300000
       }
     ],
-    "candle_move_pct": 0.1431,
-    "signal_candle_time": 1792507500000
+    "candle_move_pct": 0.1479,
+    "signal_candle_time": 1792511100000
   },
   "metrics": {
     "closed_trades": 1,
@@ -269,6 +269,11 @@
       "time": "2026-10-20T15:14:39.441463+00:00",
       "equity_usd": 19.873653,
       "price": 82306.0
+    },
+    {
+      "time": "2026-10-20T16:11:08.424133+00:00",
+      "equity_usd": 19.873653,
+      "price": 82494.0
     }
   ],
   "fib": {
@@ -279,12 +284,6 @@
     "retracement_618": 81706.34
   },
   "fvgs": [
-    {
-      "type": "bullish",
-      "low": 81924.0,
-      "high": 81979.0,
-      "formed_at": 1792467900000
-    },
     {
       "type": "bullish",
       "low": 81719.0,
@@ -314,6 +313,12 @@
       "low": 82170.0,
       "high": 82820.0,
       "formed_at": 1792505700000
+    },
+    {
+      "type": "bearish",
+      "low": 82627.0,
+      "high": 82979.0,
+      "formed_at": 1792509300000
     }
   ],
   "macro_note": "経済指標は自動取得していません。CPI、雇用統計、FOMCは別途確認してください。",
