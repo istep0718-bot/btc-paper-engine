@@ -1,498 +1,407 @@
-<!doctype html>
+
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#0b1020">
-<title>BTC Paper Engine</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTC PAPER ENGINE V6</title>
 <style>
 :root {
   color-scheme: dark;
-  --bg:#0b1020;
-  --panel:#151e31;
-  --border:#2a3853;
-  --text:#edf3ff;
-  --muted:#aab9d2;
-  --green:#58d6a0;
-  --red:#ff8585;
+  --bg: #0b1020;
+  --panel: #151d31;
+  --line: #293550;
+  --text: #edf2ff;
+  --muted: #9eacc7;
+  --green: #35d49a;
+  --red: #ff6b78;
+  --blue: #72a7ff;
 }
-* { box-sizing:border-box; }
+* { box-sizing: border-box; }
 body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font:16px/1.55 system-ui,-apple-system,sans-serif;
+  margin: 0;
+  padding: 16px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-main { max-width:1000px; margin:auto; padding:20px 14px 40px; }
-h1 { font-size:25px; margin:0 0 8px; }
-h2 { font-size:18px; margin:0 0 14px; }
-p { margin:5px 0; }
-.small,.muted { color:var(--muted); }
-.small { font-size:12px; }
-.pills { display:flex; flex-wrap:wrap; gap:7px; margin:10px 0; }
-.pill {
-  background:#25334f;
-  border:1px solid var(--border);
-  border-radius:8px;
-  padding:5px 9px;
-  font-size:12px;
-}
+main { max-width: 1100px; margin: auto; }
+header { margin: 8px 0 20px; }
+h1 { font-size: 24px; margin: 0 0 6px; }
+h2 { font-size: 16px; margin: 0 0 14px; }
+.sub, .muted { color: var(--muted); font-size: 12px; }
 .status {
-  padding:12px;
-  border:1px solid var(--border);
-  border-radius:12px;
-  background:var(--panel);
-  margin:14px 0;
-  overflow-wrap:anywhere;
+  display: inline-block;
+  margin-top: 8px;
+  padding: 5px 9px;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  font-size: 12px;
 }
 .grid {
-  display:grid;
-  grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
 }
-.card {
-  min-width:0;
-  background:var(--panel);
-  border:1px solid var(--border);
-  border-radius:13px;
-  padding:15px;
-  margin:10px 0;
+.panel {
+  min-width: 0;
+  padding: 16px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  margin-bottom: 12px;
 }
-.metric .label { font-size:12px; color:var(--muted); }
-.metric .value {
-  font-size:25px;
-  font-weight:750;
-  overflow-wrap:anywhere;
+.metric-label { color: var(--muted); font-size: 12px; }
+.metric-value {
+  font-size: clamp(20px, 5vw, 28px);
+  font-weight: 750;
+  margin-top: 8px;
+  overflow-wrap: anywhere;
 }
-.green { color:var(--green); }
-.red { color:var(--red); }
-ul { padding-left:21px; margin:0; }
-li { margin:7px 0; overflow-wrap:anywhere; }
-table { width:100%; border-collapse:collapse; font-size:13px; }
-th,td {
-  text-align:left;
-  padding:9px 6px;
-  border-bottom:1px solid var(--border);
-  overflow-wrap:anywhere;
+.positive { color: var(--green); }
+.negative { color: var(--red); }
+.neutral { color: var(--blue); }
+canvas {
+  display: block;
+  width: 100%;
+  height: 230px;
 }
-th { color:var(--muted); }
-.tablewrap { overflow-x:auto; }
-canvas { display:block; width:100%; height:220px; }
-.kv {
-  display:grid;
-  grid-template-columns:minmax(0,1fr) auto;
-  gap:7px;
-  border-bottom:1px solid var(--border);
-  padding:7px 0;
+.table-wrap { overflow-x: auto; }
+table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 12px;
+  white-space: nowrap;
 }
-.kv span:first-child { color:var(--muted); }
-.notice { font-size:12px; color:var(--muted); margin-top:20px; }
-.error { color:var(--red); }
-.good { color:var(--green); }
-@media(min-width:650px) {
-  .grid { grid-template-columns:repeat(4,minmax(0,1fr)); }
-  main { padding:28px 22px 50px; }
+th, td {
+  padding: 10px 8px;
+  border-bottom: 1px solid var(--line);
+  text-align: left;
+}
+th { color: var(--muted); font-weight: 600; }
+.notice {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+@media (min-width: 700px) {
+  .grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 </style>
 </head>
 <body>
 <main>
-<header>
-  <h1>₿ BTC Paper Engine</h1>
-  <div class="pills">
-    <span class="pill">PAPER ONLY</span>
-    <span class="pill">仮想3倍</span>
-    <span class="pill">実注文なし</span>
-  </div>
-  <div id="status" class="status">データを読み込んでいます…</div>
-</header>
+  <header>
+    <h1>₿ BTC PAPER ENGINE <span class="neutral">V6</span></h1>
+    <div class="sub">BTC Perpetual · Paper Trading Dashboard</div>
+    <div class="status" id="status">データを読み込み中…</div>
+    <div class="sub" id="updated" style="margin-top:8px">更新日時：--</div>
+  </header>
 
-<section class="grid">
-  <div class="card metric">
-    <div class="label">BTC価格 (USD)</div>
-    <div id="price" class="value">—</div>
-  </div>
-  <div class="card metric">
-    <div class="label">シグナル</div>
-    <div id="signal" class="value">—</div>
-    <div id="score" class="small"></div>
-  </div>
-  <div class="card metric">
-    <div class="label">総資産 (USD)</div>
-    <div id="equity" class="value">—</div>
-  </div>
-  <div class="card metric">
-    <div class="label">累計確定損益 (USD)</div>
-    <div id="pnl" class="value">—</div>
-  </div>
-  <div class="card metric">
-    <div class="label">RSI (15分足)</div>
-    <div id="rsi" class="value">—</div>
-  </div>
-  <div class="card metric">
-    <div class="label">資金調達率</div>
-    <div id="funding" class="value">—</div>
-  </div>
-  <div class="card metric">
-    <div class="label">勝ち / 負け</div>
-    <div id="wins" class="value">—</div>
-    <div id="winrate" class="small"></div>
-  </div>
-  <div class="card metric">
-    <div class="label">最大ドローダウン</div>
-    <div id="dd" class="value">—</div>
-  </div>
-</section>
+  <section class="grid">
+    <div class="panel">
+      <div class="metric-label">現在のBTC価格</div>
+      <div class="metric-value" id="price">--</div>
+    </div>
+    <div class="panel">
+      <div class="metric-label">口座資産（仮想）</div>
+      <div class="metric-value" id="equity">--</div>
+    </div>
+    <div class="panel">
+      <div class="metric-label">累計損益</div>
+      <div class="metric-value" id="pnl">--</div>
+    </div>
+    <div class="panel">
+      <div class="metric-label">勝率</div>
+      <div class="metric-value" id="winrate">--</div>
+    </div>
+  </section>
 
-<section class="card">
-  <h2>シグナルの理由</h2>
-  <ul id="reasons"><li>—</li></ul>
-</section>
+  <section class="panel">
+    <h2>資産推移グラフ</h2>
+    <canvas id="equityChart"></canvas>
+    <div class="notice">取引履歴に記録された資産推移を表示します。データが少ない場合、グラフは短くなります。</div>
+  </section>
 
-<section class="card">
-  <h2>資産推移（仮想）</h2>
-  <canvas id="chart" width="900" height="300"
-    aria-label="仮想資産の推移グラフ"></canvas>
-  <p class="small">保存された実行時点の資産推移です。予測ではありません。</p>
-</section>
+  <section class="grid">
+    <div class="panel">
+      <div class="metric-label">現在のシグナル</div>
+      <div class="metric-value neutral" id="signal">--</div>
+      <div class="sub" id="score">スコア：--</div>
+    </div>
+    <div class="panel">
+      <div class="metric-label">ポジション</div>
+      <div class="metric-value" id="position">--</div>
+      <div class="sub" id="positionDetail">--</div>
+    </div>
+    <div class="panel">
+      <div class="metric-label">勝ち / 負け</div>
+      <div class="metric-value" id="winslosses">--</div>
+      <div class="sub" id="closedTrades">決済数：--</div>
+    </div>
+    <div class="panel">
+      <div class="metric-label">プロフィットファクター</div>
+      <div class="metric-value" id="pf">--</div>
+      <div class="sub" id="halt">停止状態：--</div>
+    </div>
+  </section>
 
-<section class="card">
-  <h2>保有中の仮想ポジション</h2>
-  <div id="position">現在ポジションなし</div>
-</section>
+  <section class="panel">
+    <h2>取引履歴</h2>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>日時</th>
+            <th>方向</th>
+            <th>エントリー</th>
+            <th>決済</th>
+            <th>損益</th>
+            <th>決済理由</th>
+          </tr>
+        </thead>
+        <tbody id="trades">
+          <tr><td colspan="6">読み込み中…</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
-<section class="card">
-  <h2>リスク管理</h2>
-  <div id="risk"></div>
-</section>
-
-<section class="card">
-  <h2>フィボナッチ水準</h2>
-  <div id="fib"></div>
-</section>
-
-<section class="card">
-  <h2>FVG候補</h2>
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr>
-          <th>方向</th><th>下限</th><th>上限</th><th>発生時刻 (UTC)</th>
-        </tr>
-      </thead>
-      <tbody id="fvgs"></tbody>
-    </table>
+  <div class="notice">
+    ※ この画面は仮想売買の記録です。実際の資金移動・注文は行いません。
+    表示内容はGitHub Actionsが生成する docs/data.json に依存します。
   </div>
-</section>
-
-<section class="card">
-  <h2>最近の決済取引</h2>
-  <div class="tablewrap">
-    <table>
-      <thead>
-        <tr>
-          <th>方向</th><th>エントリー</th><th>決済</th><th>損益 USD</th><th>理由</th>
-        </tr>
-      </thead>
-      <tbody id="trades"></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="card">
-  <h2>経済指標について</h2>
-  <p id="macro" class="small">—</p>
-</section>
-
-<p class="notice">
-  公開市場データを使った検証用ページです。シグナルは予測であり、
-  利益を保証しません。手数料・スリッページ・清算条件は簡略化されています。
-  実取引には使用しないでください。
-</p>
 </main>
 
 <script>
-"use strict";
+const DATA_URL = "./data.json";
 
-const $ = id => document.getElementById(id);
+function first(obj, keys, fallback = null) {
+  for (const key of keys) {
+    if (obj && obj[key] !== undefined && obj[key] !== null) return obj[key];
+  }
+  return fallback;
+}
 
-const num = (x, digits=2) => {
-  const n = Number(x);
+function money(value, digits = 2) {
+  const n = Number(value);
+  return Number.isFinite(n)
+    ? "$" + n.toLocaleString("en-US", {
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
+      })
+    : "--";
+}
+
+function number(value, digits = 2) {
+  const n = Number(value);
   return Number.isFinite(n)
     ? n.toLocaleString("en-US", {
-        minimumFractionDigits:digits,
-        maximumFractionDigits:digits
+        minimumFractionDigits: digits,
+        maximumFractionDigits: digits
       })
-    : "—";
-};
-
-const usd = x => "$" + num(x,2);
-const safe = x => String(x ?? "—");
-
-function kv(label,value) {
-  const row = document.createElement("div");
-  row.className = "kv";
-
-  const left = document.createElement("span");
-  left.textContent = label;
-
-  const right = document.createElement("strong");
-  right.textContent = value;
-
-  row.append(left,right);
-  return row;
+    : "--";
 }
 
-function setRows(id, rows) {
-  const el = $(id);
-  el.replaceChildren();
-  rows.forEach(row => el.appendChild(row));
+function setText(id, value) {
+  document.getElementById(id).textContent = value;
 }
 
-function drawChart(points) {
-  const canvas = $("chart");
+function setSigned(id, value) {
+  const el = document.getElementById(id);
+  const n = Number(value);
+  el.textContent = Number.isFinite(n)
+    ? (n > 0 ? "+" : "") + money(n)
+    : "--";
+  el.classList.remove("positive", "negative");
+  if (Number.isFinite(n)) {
+    el.classList.add(n >= 0 ? "positive" : "negative");
+  }
+}
+
+function drawChart(history, currentEquity) {
+  const canvas = document.getElementById("equityChart");
   const ctx = canvas.getContext("2d");
-  const w = canvas.width;
-  const h = canvas.height;
+  const rect = canvas.getBoundingClientRect();
+  const ratio = window.devicePixelRatio || 1;
+  canvas.width = Math.max(1, rect.width * ratio);
+  canvas.height = 230 * ratio;
+  ctx.setTransform(ratio, 0, 0, ratio, 0, 0);
 
-  ctx.clearRect(0,0,w,h);
+  const width = rect.width;
+  const height = 230;
+  ctx.clearRect(0, 0, width, height);
 
-  const valid = Array.isArray(points)
-    ? points.filter(p => Number.isFinite(Number(p.equity_usd)))
-    : [];
+  let values = (Array.isArray(history) ? history : [])
+    .map(item => {
+      if (typeof item === "number") return item;
+      return Number(first(item, ["equity", "balance", "value"], NaN));
+    })
+    .filter(Number.isFinite);
 
-  if (valid.length < 2) {
-    ctx.fillStyle = "#aab9d2";
-    ctx.font = "18px sans-serif";
-    ctx.fillText("資産履歴を蓄積中…",20,40);
+  if (values.length === 0 && Number.isFinite(Number(currentEquity))) {
+    values = [Number(currentEquity)];
+  }
+
+  if (values.length === 0) {
+    ctx.fillStyle = "#9eacc7";
+    ctx.font = "13px sans-serif";
+    ctx.fillText("資産推移データはまだありません", 10, 30);
     return;
   }
 
-  const values = valid.map(p => Number(p.equity_usd));
+  const pad = { left: 12, right: 12, top: 18, bottom: 24 };
   const min = Math.min(...values);
   const max = Math.max(...values);
-  const span = Math.max(max-min,0.01);
+  const spread = max - min || Math.max(Math.abs(max) * 0.02, 1);
+  const low = min - spread * 0.12;
+  const high = max + spread * 0.12;
+  const plotW = Math.max(1, width - pad.left - pad.right);
+  const plotH = height - pad.top - pad.bottom;
 
-  ctx.strokeStyle = "#2a3853";
+  ctx.strokeStyle = "#293550";
   ctx.lineWidth = 1;
-
-  for (let i=0;i<5;i++) {
-    const y = 15+i*(h-35)/4;
+  for (let i = 0; i < 4; i++) {
+    const y = pad.top + plotH * i / 3;
     ctx.beginPath();
-    ctx.moveTo(55,y);
-    ctx.lineTo(w-10,y);
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(width - pad.right, y);
     ctx.stroke();
   }
 
-  ctx.fillStyle = "#aab9d2";
-  ctx.font = "13px sans-serif";
-  ctx.fillText("$"+max.toFixed(2),3,20);
-  ctx.fillText("$"+min.toFixed(2),3,h-18);
+  ctx.fillStyle = "#9eacc7";
+  ctx.font = "11px sans-serif";
+  ctx.fillText(money(max), pad.left, 12);
+  ctx.fillText(money(min), pad.left, height - 4);
 
-  ctx.strokeStyle = "#58d6a0";
-  ctx.lineWidth = 3;
+  const points = values.map((v, i) => ({
+    x: pad.left + (values.length === 1 ? plotW / 2 : i / (values.length - 1) * plotW),
+    y: pad.top + (high - v) / (high - low) * plotH
+  }));
+
   ctx.beginPath();
-
-  values.forEach((v,i) => {
-    const x = 55+i*(w-65)/(values.length-1);
-    const y = 15+(max-v)/span*(h-35);
-
-    if (i===0) ctx.moveTo(x,y);
-    else ctx.lineTo(x,y);
+  points.forEach((p, i) => {
+    if (i === 0) ctx.moveTo(p.x, p.y);
+    else ctx.lineTo(p.x, p.y);
   });
-
+  ctx.strokeStyle = values[values.length - 1] >= values[0] ? "#35d49a" : "#ff6b78";
+  ctx.lineWidth = 2.5;
   ctx.stroke();
+
+  points.forEach(p => {
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+    ctx.fillStyle = ctx.strokeStyle;
+    ctx.fill();
+  });
 }
 
-function render(d) {
-  const s = d.signal || {};
-  const m = d.metrics || {};
-  const r = d.risk || {};
+function renderTrades(trades) {
+  const body = document.getElementById("trades");
+  body.replaceChildren();
 
-  $("status").replaceChildren();
-
-  const statusLines = [
-    "データ更新：" + safe(d.generated_at),
-    "ビルド：" + safe(d.build)
-  ];
-
-  statusLines.forEach((line,i) => {
-    if (i) $("status").appendChild(document.createElement("br"));
-    $("status").appendChild(document.createTextNode(line));
-  });
-
-  const statusLine = document.createElement("div");
-  statusLine.textContent = r.halt_reason
-    ? "状態：停止 — " + safe(r.halt_reason)
-    : "状態：停止条件に未到達（紙上検証）";
-
-  statusLine.className = r.halt_reason ? "error" : "good";
-  $("status").appendChild(document.createElement("br"));
-  $("status").appendChild(statusLine);
-
-  $("price").textContent = usd(d.price);
-  $("signal").textContent = safe(s.direction);
-  $("signal").className = "value" +
-    (s.direction==="LONG" ? " green" :
-     s.direction==="SHORT" ? " red" : "");
-
-  $("score").textContent = "スコア " + safe(s.score);
-  $("equity").textContent = usd(m.equity_usd);
-  $("pnl").textContent = usd(m.net_closed_pnl_usd);
-
-  $("pnl").className = "value" +
-    (Number(m.net_closed_pnl_usd)>0 ? " green" :
-     Number(m.net_closed_pnl_usd)<0 ? " red" : "");
-
-  $("rsi").textContent = num(s.rsi_15m,2);
-  $("funding").textContent = num(d.funding_rate_pct,5)+"%";
-  $("wins").textContent = safe(m.wins)+" / "+safe(m.losses);
-  $("winrate").textContent =
-    "勝率 "+num(m.win_rate_pct,2)+"%・決済 "+safe(m.closed_trades)+"件";
-  $("dd").textContent = num(m.drawdown_pct,2)+"%";
-
-  const reasons = $("reasons");
-  reasons.replaceChildren();
-
-  (s.reasons || []).forEach(reason => {
-    const li = document.createElement("li");
-    li.textContent = reason;
-    reasons.appendChild(li);
-  });
-
-  if (!reasons.children.length) {
-    const li = document.createElement("li");
-    li.textContent = "理由データなし";
-    reasons.appendChild(li);
+  if (!Array.isArray(trades) || trades.length === 0) {
+    const row = body.insertRow();
+    const cell = row.insertCell();
+    cell.colSpan = 6;
+    cell.textContent = "決済済みの取引はまだありません";
+    return;
   }
 
-  const p = d.open_trade;
+  trades.slice().reverse().slice(0, 50).forEach(trade => {
+    const row = body.insertRow();
+    const pnl = Number(first(trade, ["pnl", "profit", "realized_pnl"], NaN));
+    const values = [
+      first(trade, ["closed_at", "exit_time", "timestamp", "time"], "--"),
+      first(trade, ["side", "direction"], "--"),
+      first(trade, ["entry_price", "entry"], null),
+      first(trade, ["exit_price", "exit"], null),
+      Number.isFinite(pnl) ? (pnl > 0 ? "+" : "") + money(pnl) : "--",
+      first(trade, ["reason", "exit_reason", "close_reason"], "--")
+    ];
 
-  setRows("position", p ? [
-    kv("方向",safe(p.direction)),
-    kv("エントリー",usd(p.entry_price)),
-    kv("数量相当",usd(p.notional)),
-    kv("証拠金",usd(p.margin)),
-    kv("損切り",usd(p.stop_price)),
-    kv("利確",usd(p.target_price))
-  ] : []);
-
-  if (!p) $("position").textContent = "現在ポジションなし";
-
-  setRows("risk", [
-    kv("仮想レバレッジ",num(r.virtual_leverage,1)+"倍"),
-    kv("1回あたりのリスク上限",num(r.risk_per_trade_pct,2)+"%"),
-    kv("証拠金上限",num(r.max_margin_pct,1)+"%"),
-    kv("未実現損益",usd(m.open_unrealized_pnl_usd)),
-    kv("停止理由",safe(r.halt_reason || "なし"))
-  ]);
-
-  const riskNote = document.createElement("p");
-  riskNote.className = "small";
-  riskNote.textContent = safe(r.warning);
-  $("risk").appendChild(riskNote);
-
-  const f = d.fib || {};
-  const fibRows = [
-    ["スイング高値",f.swing_high],
-    ["スイング安値",f.swing_low],
-    ["38.2%",f.retracement_382],
-    ["50.0%",f.retracement_500],
-    ["61.8%",f.retracement_618]
-  ].filter(item => item[1] !== undefined)
-   .map(item => kv(item[0],usd(item[1])));
-
-  setRows("fib",fibRows);
-  if (!fibRows.length) $("fib").textContent = "フィボナッチデータなし";
-
-  const gaps = d.fvgs || s.fvgs || [];
-  const gapBody = $("fvgs");
-  gapBody.replaceChildren();
-
-  if (gaps.length) {
-    gaps.forEach(g => {
-      const tr = document.createElement("tr");
-      const values = [
-        g.type==="bullish" ? "上昇" :
-        g.type==="bearish" ? "下降" : safe(g.type),
-        usd(g.low),
-        usd(g.high),
-        Number.isFinite(Number(g.formed_at))
-          ? new Date(Number(g.formed_at)).toISOString()
-              .replace("T"," ").slice(0,19)
-          : "—"
-      ];
-
-      values.forEach(value => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        tr.appendChild(td);
-      });
-
-      gapBody.appendChild(tr);
+    values.forEach((value, index) => {
+      const cell = row.insertCell();
+      if (index === 2 || index === 3) {
+        cell.textContent = value === null ? "--" : number(value, 2);
+      } else {
+        cell.textContent = String(value);
+      }
+      if (index === 4 && Number.isFinite(pnl)) {
+        cell.className = pnl >= 0 ? "positive" : "negative";
+      }
     });
-  } else {
-    gapBody.innerHTML = '<tr><td colspan="4">候補なし</td></tr>';
-  }
-
-  const trades = d.recent_trades || [];
-  const tradeBody = $("trades");
-  tradeBody.replaceChildren();
-
-  if (trades.length) {
-    trades.slice().reverse().forEach(t => {
-      const tr = document.createElement("tr");
-      [
-        safe(t.direction),
-        usd(t.entry_price),
-        usd(t.exit_price),
-        usd(t.net_pnl_usd),
-        safe(t.close_reason)
-      ].forEach(value => {
-        const td = document.createElement("td");
-        td.textContent = value;
-        tr.appendChild(td);
-      });
-      tradeBody.appendChild(tr);
-    });
-  } else {
-    tradeBody.innerHTML =
-      '<tr><td colspan="5">取引履歴なし（まだ決済取引がありません）</td></tr>';
-  }
-
-  $("macro").textContent =
-    d.macro_note || "経済指標データは取得されていません。";
-
-  drawChart(d.equity_history || []);
+  });
 }
 
-async function load() {
+async function loadDashboard() {
+  const status = document.getElementById("status");
   try {
-    const response = await fetch("./data.json?ts="+Date.now(), {
-      cache:"no-store"
-    });
-
-    if (!response.ok) {
-      throw new Error("data.json HTTP "+response.status);
-    }
+    const response = await fetch(DATA_URL + "?t=" + Date.now(), { cache: "no-store" });
+    if (!response.ok) throw new Error("HTTP " + response.status);
 
     const data = await response.json();
+    const account = first(data, ["account", "metrics"], {});
+    const market = first(data, ["market"], {});
+    const position = first(data, ["position", "open_position"], null);
+    const stats = first(data, ["stats", "performance"], {});
+    const history = first(data, ["equity_history", "equityHistory", "history"], []);
+    const trades = first(data, ["trades", "closed_trades", "trade_history"], []);
 
-    if (!data.build) {
-      throw new Error("ビルド情報がありません");
+    const price = first(data, ["price", "btc_price"], first(market, ["price", "btc_price"], null));
+    const equity = first(data, ["equity", "account_equity"], first(account, ["equity", "balance"], null));
+    const pnl = first(data, ["total_pnl", "pnl", "realized_pnl"], first(account, ["total_pnl", "pnl"], null));
+    const signal = first(data, ["signal"], first(market, ["signal"], "--"));
+    const score = first(data, ["score"], first(market, ["score"], "--"));
+    const closed = Number(first(data, ["closed_trades_count", "closed_trades"], Array.isArray(trades) ? trades.length : 0));
+    const wins = Number(first(data, ["wins"], first(stats, ["wins"], 0)));
+    const losses = Number(first(data, ["losses"], first(stats, ["losses"], 0)));
+    const winRate = first(data, ["win_rate", "winrate"], first(stats, ["win_rate", "winrate"], null));
+    const pf = first(data, ["profit_factor", "profitFactor"], first(stats, ["profit_factor"], null));
+    const halt = first(data, ["halt", "halt_reason", "stopped"], null);
+
+    setText("price", price === null ? "--" : money(price, 2));
+    setText("equity", equity === null ? "--" : money(equity, 2));
+    setSigned("pnl", pnl);
+    setText("signal", String(signal));
+    setText("score", "スコア：" + score);
+    setText("winslosses", wins + " / " + losses);
+    setText("closedTrades", "決済数：" + (Number.isFinite(closed) ? closed : "--"));
+    setText("winrate", winRate === null
+      ? (closed > 0 ? number(wins / closed * 100, 1) + "%" : "--")
+      : (Number(winRate) <= 1 ? number(Number(winRate) * 100, 1) : number(winRate, 1)) + "%");
+    setText("pf", pf === null ? "--" : number(pf, 2));
+    setText("halt", "停止状態：" + (halt ? String(halt) : "なし"));
+
+    if (position && typeof position === "object") {
+      setText("position", String(first(position, ["side", "direction"], "保有中")));
+      setText("positionDetail", "数量：" + first(position, ["size", "quantity", "qty"], "--") +
+        " / エントリー：" + number(first(position, ["entry_price", "entry"], NaN), 2));
+    } else {
+      setText("position", "なし");
+      setText("positionDetail", "現在ポジションなし");
     }
 
-    render(data);
+    const timestamp = first(data, ["updated_at", "timestamp", "last_updated"], null);
+    setText("updated", "更新日時：" + (timestamp || "データ内に日時なし"));
+    drawChart(history, equity);
+
+    const statusText = halt ? "停止中" : "データ取得成功";
+    status.textContent = statusText;
+    status.style.color = halt ? "#ff6b78" : "#35d49a";
+    renderTrades(trades);
   } catch (error) {
-    $("status").textContent =
-      "データ読み込み失敗：" + safe(error.message) +
-      "。Actionsの実行結果とdocs/data.jsonを確認してください。";
-    $("status").className = "status error";
+    status.textContent = "データ読み込み失敗";
+    status.style.color = "#ff6b78";
+    setText("updated", "docs/data.json を確認してください");
+    document.getElementById("trades").innerHTML =
+      '<tr><td colspan="6">データを読み込めません。GitHub Actionsの実行結果を確認してください。</td></tr>';
+    console.error(error);
   }
 }
 
-load();
-setInterval(load,60000);
+loadDashboard();
+window.addEventListener("resize", loadDashboard);
 </script>
 </body>
 </html>
