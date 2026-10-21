@@ -1,24 +1,521 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#f8d5f5">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f7d5ff">
 <title>萌え萌えキュン♡ BTC冒険記</title>
 <style>
+:root{
+ --bg:#fff3fc;--card:#fffafd;--ink:#633b7d;
+ --pink:#ff86cf;--purple:#a47aff;--line:#efd6f5;
+ --green:#0c9c71;--red:#e4527b;--muted:#9a82a8;
+}
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;background:#fff0fb}
-body{font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",sans-serif}
-main{width:100%;max-width:1600px;margin:auto}
-img{display:block;width:100%;height:auto}
-.note{padding:12px;text-align:center;font-size:12px;color:#89549b}
+body{
+ margin:0;color:var(--ink);
+ font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",sans-serif;
+ background:linear-gradient(145deg,#fff1fb,#f2edff 55%,#fff7fc);
+}
+header{
+ padding:22px 12px 19px;text-align:center;color:white;
+ background:linear-gradient(120deg,#ff83ce,#ae82ff);
+ border-radius:0 0 26px 26px;
+ box-shadow:0 5px 20px #b27bd533;
+}
+header h1{font-size:clamp(22px,5vw,34px);margin:0}
+header p{font-size:12px;margin:7px 0 0}
+.wrap{max-width:1100px;margin:auto;padding:13px}
+.notice,.card{
+ background:var(--card);border:1px solid var(--line);
+ border-radius:17px;box-shadow:0 5px 16px #aa79b20c;
+}
+.notice{padding:12px;margin-bottom:12px;font-size:12px;line-height:1.8}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.card{padding:13px;min-width:0}
+.card h2{font-size:13px;margin:0 0 10px;color:#9663b2}
+.big{font-size:clamp(19px,4.5vw,27px);font-weight:850;overflow-wrap:anywhere}
+.sub{font-size:11px;color:var(--muted);margin-top:6px;overflow-wrap:anywhere}
+.full{grid-column:1/-1}
+.section{font-size:17px;margin:22px 2px 10px}
+.good{color:var(--green)!important}
+.bad{color:var(--red)!important}
+.pill{display:inline-block;padding:5px 10px;border-radius:18px;background:#f4e6ff;font-size:12px;font-weight:800}
+.bar{height:9px;background:#f0e4f5;border-radius:9px;overflow:hidden;margin-top:8px}
+.bar span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--pink),var(--purple))}
+canvas{width:100%;height:210px;display:block}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
+td,th{text-align:left;padding:9px 7px;border-bottom:1px solid #f2e6f5;white-space:nowrap}
+th{color:#9874a9}
+dl{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0}
+dt{font-size:11px;color:var(--muted);margin-bottom:4px}
+dd{margin:0;font-size:13px;font-weight:700;overflow-wrap:anywhere}
+ul{padding-left:19px;font-size:13px;line-height:1.6}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:24px 8px}
+@media(min-width:700px){
+ .cards{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
 </style>
 </head>
 <body>
-<main>
-  <img src="./reference-dashboard.jpeg"
-       alt="萌え萌えキュン BTC冒険記 ダッシュボード">
-  <div class="note">BTC冒険記・デザイン見本</div>
+<header>
+ <h1>✨ 萌え萌えキュン♡ BTC冒険記 ✨</h1>
+ <p>魔法少女のBTCペーパートレード冒険帳</p>
+ <p>MARKET DATA · PAPER TRADING ONLY · LIVE ORDERS DISABLED</p>
+</header>
+
+<main class="wrap">
+ <div class="notice">
+  <b>エンジン状態：</b><span id="status">データ取得中…</span><br>
+  <b>データ更新時刻：</b><span id="updated">--</span><br>
+  <b>データ版：</b><span id="build">--</span>
+  <span> ／ 画面自動更新：60秒ごと</span><br>
+  <b>USD/JPY：</b><span id="fxStatus">為替レート取得中…</span>
+ </div>
+
+ <div class="cards">
+  <section class="card">
+   <h2>💎 BTC 現在価格</h2>
+   <div class="big" id="price">--</div>
+   <div class="sub" id="priceJpy">¥--</div>
+   <div class="sub" id="priceTime">市場データ</div>
+  </section>
+
+  <section class="card">
+   <h2>💖 仮想総資産</h2>
+   <div class="big" id="equity">--</div>
+   <div class="sub" id="equityJpy">¥--</div>
+   <div class="sub" id="initial">初期資金：--</div>
+  </section>
+
+  <section class="card">
+   <h2>🌸 確定損益</h2>
+   <div class="big" id="pnl">--</div>
+   <div class="sub" id="pnlJpy">¥--</div>
+   <div class="sub">決済済みトレードの損益合計</div>
+  </section>
+
+  <section class="card">
+   <h2>🎀 勝率</h2>
+   <div class="big" id="winrate">--</div>
+   <div class="sub" id="wins">勝ち -- ／ 負け --</div>
+   <div class="sub" id="breakeven">引き分け --</div>
+  </section>
+
+  <section class="card">
+   <h2>🔮 売買シグナル</h2>
+   <div class="big" id="signal">--</div>
+   <div class="sub" id="score">スコア：--</div>
+   <div class="sub" id="scores">LONG -- ／ SHORT --</div>
+  </section>
+
+  <section class="card">
+   <h2>🛡️ ドローダウン</h2>
+   <div class="big" id="dd">--</div>
+   <div class="bar"><span id="ddBar"></span></div>
+   <div class="sub">資産ピークからの下落率</div>
+  </section>
+
+  <section class="card">
+   <h2>⚔️ 決済トレード数</h2>
+   <div class="big" id="trades">--</div>
+   <div class="sub" id="pf">Profit Factor：--</div>
+  </section>
+
+  <section class="card">
+   <h2>🌙 未確定損益</h2>
+   <div class="big" id="unrealized">--</div>
+   <div class="sub" id="unrealizedJpy">¥--</div>
+   <div class="sub">保有中の仮想ポジション</div>
+  </section>
+
+  <section class="card full">
+   <h2>📈 仮想資産の推移</h2>
+   <canvas id="equityChart"></canvas>
+   <div class="sub" id="equityChartNote">履歴データを読み込み中…</div>
+  </section>
+
+  <section class="card full">
+   <h2>💎 BTC価格の推移</h2>
+   <canvas id="priceChart"></canvas>
+   <div class="sub" id="priceChartNote">履歴データを読み込み中…</div>
+  </section>
+
+  <section class="card full">
+   <h2>🪄 魔法のテクニカル分析</h2>
+   <dl>
+    <div><dt>RSI（15分足）</dt><dd id="rsi">--</dd></div>
+    <div><dt>ATR（15分足）</dt><dd id="atr">--</dd></div>
+    <div><dt>ATR変動率</dt><dd id="atrPct">--</dd></div>
+    <div><dt>3本モメンタム</dt><dd id="mom3">--</dd></div>
+    <div><dt>12本モメンタム</dt><dd id="mom12">--</dd></div>
+    <div><dt>資金調達率</dt><dd id="funding">--</dd></div>
+    <div><dt>EMA 9（15分足）</dt><dd id="ema9">--</dd></div>
+    <div><dt>EMA 21（15分足）</dt><dd id="ema21">--</dd></div>
+    <div><dt>1時間足トレンド</dt><dd id="trend1h">--</dd></div>
+    <div><dt>4時間足トレンド</dt><dd id="trend4h">--</dd></div>
+    <div><dt>15分足トレンド</dt><dd id="trend15">--</dd></div>
+    <div><dt>ローソク足数</dt><dd id="candles">--</dd></div>
+   </dl>
+   <h2 style="margin-top:20px">📜 シグナルの根拠</h2>
+   <ul id="reasons"><li>読み込み中…</li></ul>
+  </section>
+
+  <section class="card full">
+   <h2>⚔️ 現在の仮想ポジション</h2>
+   <div id="position">読み込み中…</div>
+  </section>
+
+  <section class="card full">
+   <h2>🛡️ リスク管理・停止状態</h2>
+   <dl>
+    <div><dt>仮想レバレッジ上限</dt><dd id="leverage">--</dd></div>
+    <div><dt>1回あたりのリスク設定</dt><dd id="riskTrade">--</dd></div>
+    <div><dt>証拠金使用上限</dt><dd id="marginCap">--</dd></div>
+    <div><dt>日次損失上限</dt><dd id="dailyCap">--</dd></div>
+    <div><dt>最大DD上限</dt><dd id="ddCap">--</dd></div>
+    <div><dt>実注文</dt><dd class="good">無効</dd></div>
+   </dl>
+   <p><b>稼働・停止理由：</b><span id="halt">--</span></p>
+   <p><span class="pill" id="paperOnly">PAPER ONLY</span></p>
+  </section>
+
+  <section class="card full">
+   <h2>📚 最近の仮想トレード履歴</h2>
+   <div class="table-scroll">
+    <table>
+     <thead>
+      <tr><th>決済日時</th><th>方向</th><th>エントリー</th>
+      <th>決済価格</th><th>損益 USD</th><th>損益 JPY</th><th>理由</th></tr>
+     </thead>
+     <tbody id="history">
+      <tr><td colspan="7">履歴を読み込み中…</td></tr>
+     </tbody>
+    </table>
+   </div>
+   <div class="sub">直近の決済履歴を表示。保有中の取引は上のポジション欄に表示されます。</div>
+  </section>
+ </div>
 </main>
+
+<footer>
+ BTC冒険記 ♡ Hyperliquid公開市場データ<br>
+ これは仮想取引の研究用ダッシュボードです。実注文・ウォレット接続はありません。<br>
+ 損益は仮想計算であり、将来の利益を保証するものではありません。
+</footer>
+
+<script>
+"use strict";
+
+const $ = id => document.getElementById(id);
+const DATA_URL = "./data.json";
+let fxRate = null;
+let fxUpdated = null;
+let lastData = null;
+
+function n(v){
+ if(v===null || v===undefined || v==="") return null;
+ const x=Number(v);
+ return Number.isFinite(x)?x:null;
+}
+function first(...xs){
+ return xs.find(x=>x!==null && x!==undefined && x!=="");
+}
+function fmt(v,d=2){
+ const x=n(v);
+ return x===null?"--":x.toLocaleString("ja-JP",{
+  maximumFractionDigits:d
+ });
+}
+function usd(v){
+ const x=n(v);
+ return x===null?"--":x.toLocaleString("en-US",{
+  style:"currency",currency:"USD",maximumFractionDigits:2
+ });
+}
+function jpy(v){
+ const x=n(v);
+ if(x===null || fxRate===null) return "¥--";
+ return "¥"+Math.round(x*fxRate).toLocaleString("ja-JP");
+}
+function signedUsd(v){
+ const x=n(v);
+ if(x===null) return "--";
+ return (x>0?"+":x<0?"−":"")+usd(Math.abs(x));
+}
+function signedJpy(v){
+ const x=n(v);
+ if(x===null || fxRate===null) return "¥--";
+ return (x>0?"+":x<0?"−":"")+jpy(Math.abs(x));
+}
+function colorValue(el,v){
+ el.classList.remove("good","bad");
+ const x=n(v);
+ if(x!==null && x>0) el.classList.add("good");
+ if(x!==null && x<0) el.classList.add("bad");
+}
+function set(id,value){
+ $(id).textContent=value===null||value===undefined?"--":String(value);
+}
+function date(v){
+ if(!v) return "--";
+ const d=new Date(v);
+ return Number.isNaN(d.getTime())?String(v):d.toLocaleString("ja-JP",{
+  timeZone:"Asia/Tokyo"
+ });
+}
+function trend(v){
+ const x=n(v);
+ if(x===null) return "--";
+ return x>0?"上向き":x<0?"下向き":"中立";
+}
+function setSigned(id,v){
+ set(id,signedUsd(v));
+ colorValue($(id),v);
+}
+function setJPYPair(id,v){
+ set(id,jpy(v));
+}
+async function loadFx(){
+ try{
+  const r=await fetch("https://open.er-api.com/v6/latest/USD",{
+   cache:"no-store"
+  });
+  if(!r.ok) throw new Error("為替API HTTP "+r.status);
+  const d=await r.json();
+  const rate=n(d && d.rates && d.rates.JPY);
+  if(d.result!=="success" || rate===null || rate<=0)
+   throw new Error("為替データが無効");
+  fxRate=rate;
+  fxUpdated=new Date();
+  set("fxStatus","1 USD = ¥"+rate.toLocaleString("ja-JP")+
+   " ／ "+fxUpdated.toLocaleTimeString("ja-JP"));
+  if(lastData) render(lastData);
+ }catch(e){
+  set("fxStatus","取得できません（USD表示は継続）");
+ }
+}
+function drawChart(canvasId,noteId,raw,key,label){
+ const canvas=$(canvasId);
+ const ctx=canvas.getContext("2d");
+ const w=Math.max(canvas.clientWidth,260),h=210;
+ const ratio=window.devicePixelRatio||1;
+ canvas.width=w*ratio;canvas.height=h*ratio;
+ ctx.setTransform(ratio,0,0,ratio,0,0);
+ ctx.clearRect(0,0,w,h);
+
+ const values=(Array.isArray(raw)?raw:[])
+  .map(p=>n(p && p[key]))
+  .filter(v=>v!==null);
+ if(values.length<2){
+  ctx.fillStyle="#9873a7";
+  ctx.font="13px sans-serif";
+  ctx.fillText("履歴が2件以上たまるとグラフが表示されます",10,30);
+  set(noteId,"記録："+values.length+"件");
+  return;
+ }
+
+ const pad={l:12,r:12,t:14,b:20};
+ const plotW=w-pad.l-pad.r,plotH=h-pad.t-pad.b;
+ const min=Math.min(...values),max=Math.max(...values);
+ const range=max-min||Math.max(Math.abs(max)*0.001,1);
+ const points=values.map((v,i)=>({
+  x:pad.l+plotW*i/(values.length-1),
+  y:pad.t+plotH*(max-v)/range
+ }));
+
+ ctx.strokeStyle="#f0dff4";
+ ctx.lineWidth=1;
+ for(let i=0;i<4;i++){
+  const y=pad.t+plotH*i/3;
+  ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(w-pad.r,y);ctx.stroke();
+ }
+
+ const grad=ctx.createLinearGradient(0,pad.t,0,h-pad.b);
+ grad.addColorStop(0,"#ff8bd155");
+ grad.addColorStop(1,"#a878ff05");
+ ctx.beginPath();
+ points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+ ctx.lineTo(points[points.length-1].x,h-pad.b);
+ ctx.lineTo(points[0].x,h-pad.b);
+ ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+
+ ctx.beginPath();
+ points.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
+ ctx.strokeStyle="#ad70e8";ctx.lineWidth=2.5;ctx.stroke();
+
+ ctx.fillStyle="#896a9b";ctx.font="10px sans-serif";
+ ctx.fillText(fmt(max,2),pad.l,pad.t+10);
+ ctx.fillText(fmt(min,2),pad.l,h-3);
+ set(noteId,`記録 ${values.length}件 ／ 最新 ${label}：${fmt(values[values.length-1],2)}`);
+}
+function render(d){
+ lastData=d;
+ const m=d.metrics||{},s=d.signal||{},r=d.risk||{},market=d.market||{};
+ const price=n(d.price);
+ const equity=n(m.equity_usd);
+ const cash=n(m.cash_usd);
+ const pnl=n(m.net_closed_pnl_usd);
+ const unreal=n(m.open_unrealized_pnl_usd);
+ const dd=n(m.drawdown_pct);
+ const win=n(m.win_rate_pct);
+
+ set("build",d.build||"--");
+ set("updated",date(d.generated_at));
+ set("price",usd(price));
+ setJPYPair("priceJpy",price);
+ set("priceTime","公開市場データ");
+ set("equity",usd(equity));
+ setJPYPair("equityJpy",equity);
+ set("initial","現金残高："+usd(cash));
+ setSigned("pnl",pnl);
+ set("pnlJpy",signedJpy(pnl));
+ colorValue($("pnlJpy"),pnl);
+ set("winrate",win===null?"--":fmt(win)+"%");
+ set("wins",`勝ち ${fmt(m.wins,0)} ／ 負け ${fmt(m.losses,0)}`);
+ set("breakeven","引き分け "+fmt(m.breakeven_trades,0));
+
+ const direction=String(first(s.direction,"不明"));
+ set("signal",direction==="LONG"?"🟢 LONG":direction==="SHORT"?"🔴 SHORT":direction==="WAIT"?"🟣 WAIT":direction);
+ set("score","総合スコア："+fmt(s.score,0));
+ set("scores",`LONG ${fmt(s.long_score,0)} ／ SHORT ${fmt(s.short_score,0)}`);
+
+ set("dd",dd===null?"--":fmt(dd)+"%");
+ $("ddBar").style.width=Math.max(0,Math.min(100,dd||0))+"%";
+ set("trades",fmt(m.closed_trades,0));
+ const pf=n(m.profit_factor);
+ set("pf","Profit Factor："+(pf===null?"--":fmt(pf,4)));
+ setSigned("unrealized",unreal);
+ set("unrealizedJpy",signedJpy(unreal));
+ colorValue($("unrealizedJpy"),unreal);
+
+ set("rsi",fmt(s.rsi_15m));
+ set("atr",usd(s.atr_15m));
+ set("atrPct",s.atr_pct_15m===null||s.atr_pct_15m===undefined?"--":fmt(s.atr_pct_15m)+"%");
+ set("mom3",s.momentum_3bar_pct===null||s.momentum_3bar_pct===undefined?"--":fmt(s.momentum_3bar_pct)+"%");
+ set("mom12",s.momentum_12bar_pct===null||s.momentum_12bar_pct===undefined?"--":fmt(s.momentum_12bar_pct)+"%");
+ set("funding",d.funding_rate_pct===null||d.funding_rate_pct===undefined?"--":fmt(d.funding_rate_pct,6)+"%");
+ set("ema9",usd(s.ema_9_15m));
+ set("ema21",usd(s.ema_21_15m));
+ set("trend1h",trend(s.trend_1h));
+ set("trend4h",trend(s.trend_4h));
+ set("trend15",trend(s.trend_15m));
+ set("candles",`15m ${fmt(market.candles_15m,0)} ／ 1h ${fmt(market.candles_1h,0)} ／ 4h ${fmt(market.candles_4h,0)}`);
+
+ const reasons=$("reasons");
+ reasons.replaceChildren();
+ const list=Array.isArray(s.reasons)?s.reasons:[];
+ if(list.length){
+  list.forEach(reason=>{
+   const li=document.createElement("li");
+   li.textContent=String(reason);
+   reasons.appendChild(li);
+  });
+ }else{
+  const li=document.createElement("li");
+  li.textContent="理由データはありません";
+  reasons.appendChild(li);
+ }
+
+ const t=d.open_trade;
+ const pos=$("position");
+ pos.replaceChildren();
+ if(t && typeof t==="object"){
+  const items=[
+   ["方向",t.direction],
+   ["エントリー価格",usd(t.entry_price)],
+   ["数量 BTC",t.qty_btc===undefined?"--":fmt(t.qty_btc,8)],
+   ["仮想レバレッジ",t.leverage_virtual===undefined?"--":fmt(t.leverage_virtual)+"倍"],
+   ["仮想証拠金",usd(t.margin_usd)],
+   ["損切り価格",usd(t.stop_price)],
+   ["利確目標",usd(t.target_price)],
+   ["トレーリング",t.trail_active?"有効":"未発動"],
+   ["エントリー日時",date(t.opened_at)]
+  ];
+  const dl=document.createElement("dl");
+  items.forEach(([k,v])=>{
+   const div=document.createElement("div");
+   const dt=document.createElement("dt");dt.textContent=k;
+   const dd=document.createElement("dd");dd.textContent=String(v??"--");
+   div.append(dt,dd);dl.appendChild(div);
+  });
+  pos.appendChild(dl);
+ }else{
+  pos.textContent="現在、保有中の仮想ポジションはありません";
+ }
+
+ set("leverage",fmt(r.virtual_leverage)+"倍");
+ set("riskTrade",fmt(r.risk_per_trade_pct)+"%");
+ set("marginCap",fmt(r.max_margin_fraction_pct)+"%");
+ set("dailyCap",fmt(r.max_daily_loss_pct)+"%");
+ set("ddCap",fmt(r.max_drawdown_pct)+"%");
+ set("halt",r.halt_reason||"現在、記録された停止理由はありません");
+ set("paperOnly",r.paper_only===true?"PAPER ONLY：実注文無効":"状態を確認してください");
+
+ const tbody=$("history");
+ tbody.replaceChildren();
+ const trades=Array.isArray(d.recent_trades)?[...d.recent_trades].reverse():[];
+ if(!trades.length){
+  const tr=document.createElement("tr");
+  const td=document.createElement("td");
+  td.colSpan=7;td.textContent="決済済みトレードはまだありません";
+  tr.appendChild(td);tbody.appendChild(tr);
+ }else{
+  trades.slice(0,50).forEach(t=>{
+   const tr=document.createElement("tr");
+   const p=n(t.net_pnl_usd);
+   const vals=[
+    date(t.closed_at),
+    t.direction||"--",
+    usd(t.entry_price),
+    usd(t.exit_price),
+    signedUsd(p),
+    signedJpy(p),
+    t.close_reason||"--"
+   ];
+   vals.forEach((v,i)=>{
+    const td=document.createElement("td");
+    td.textContent=String(v);
+    if(i===4||i===5)colorValue(td,p);
+    tr.appendChild(td);
+   });
+   tbody.appendChild(tr);
+  });
+ }
+
+ const hist=Array.isArray(d.equity_history)?d.equity_history:[];
+ drawChart("equityChart","equityChartNote",hist,"equity_usd","USD");
+ drawChart("priceChart","priceChartNote",hist,"price","USD");
+
+ const generated=new Date(d.generated_at);
+ const age=Number.isNaN(generated.getTime())?Infinity:Date.now()-generated.getTime();
+ if(age>60*60*1000){
+  set("status","データは取得できたが、更新から1時間以上経過");
+ }else{
+  set("status",r.halt_reason?"リスク管理による停止・制限あり":"データ取得成功");
+ }
+}
+async function loadData(){
+ try{
+  const res=await fetch(DATA_URL+"?t="+Date.now(),{cache:"no-store"});
+  if(!res.ok)throw new Error("data.json HTTP "+res.status);
+  const data=await res.json();
+  if(!data || typeof data!=="object" || !("metrics" in data))
+   throw new Error("data.jsonの形式が想定と異なります");
+  render(data);
+ }catch(e){
+  set("status","データ取得失敗："+e.message);
+ }
+}
+loadData();
+loadFx();
+setInterval(loadData,60000);
+setInterval(loadFx,6*60*60*1000);
+window.addEventListener("resize",()=>{
+ if(lastData)render(lastData);
+});
+</script>
 </body>
 </html>
