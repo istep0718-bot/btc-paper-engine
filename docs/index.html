@@ -1,298 +1,348 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>BTC PAPER ENGINE V7</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BTC Paper Engine V7</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1020;--panel:#151f33;--line:#2b3854;--text:#eef3ff;--muted:#a4b1cc;--green:#36d6a0;--red:#ff707e;--blue:#79aaff}
+:root{color-scheme:dark;--bg:#0b1020;--card:#151d31;--line:#293550;--text:#eef3ff;--muted:#9aa9c5;--green:#35d49a;--red:#ff7185;--blue:#75a7ff}
 *{box-sizing:border-box}
-body{margin:0;padding:16px;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
-main{max-width:1100px;margin:auto}
-header{margin:6px 0 20px}
-h1{font-size:24px;margin:0 0 8px}
-.sub,.muted{color:var(--muted);font-size:12px}
-.status,.tag{display:inline-block;padding:6px 10px;border:1px solid var(--line);border-radius:18px;margin:8px 5px 0 0;font-size:12px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.panel{min-width:0;padding:15px;margin-bottom:12px;background:var(--panel);border:1px solid var(--line);border-radius:15px}
-.metric-label{color:var(--muted);font-size:12px}
-.metric-value{font-size:clamp(19px,5vw,28px);font-weight:750;margin-top:8px;overflow-wrap:anywhere}
-.subvalue{font-size:14px;color:var(--muted);margin-top:5px}
-.positive{color:var(--green)}.negative{color:var(--red)}.blue{color:var(--blue)}
-canvas{display:block;width:100%;height:240px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px;white-space:nowrap}
-th,td{padding:10px 7px;text-align:left;border-bottom:1px solid var(--line)}
+body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:16px}
+main{max-width:1000px;margin:auto}
+h1{font-size:24px;margin:8px 0}
+h2{font-size:17px;margin:0 0 14px}
+p{color:var(--muted)}
+header,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
+header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.metric{background:#0e1629;border:1px solid var(--line);border-radius:10px;padding:13px;min-width:0}
+.label{font-size:12px;color:var(--muted)}
+.value{font-size:21px;font-weight:700;margin-top:7px;overflow-wrap:anywhere}
+.small{font-size:12px;color:var(--muted);margin-top:6px}
+button{border:1px solid #48669c;background:#21375b;color:white;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:650;cursor:pointer}
+button:active{opacity:.75}
+button.secondary{background:#172238;border-color:var(--line)}
+.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}
+.hidden{display:none!important}
+#chart{width:100%;height:260px;display:block}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
 th{color:var(--muted)}
-details{margin-top:12px}
-summary{cursor:pointer;color:var(--blue)}
-li{margin:6px 0}
-.notice{color:var(--muted);font-size:12px;line-height:1.8;margin:12px 0}
-@media(min-width:700px){.grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.tablewrap{overflow-x:auto}
+.level{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.level div{padding:12px;background:#0e1629;border:1px solid var(--line);border-radius:9px}
+.level strong{display:block;font-size:17px;margin-top:5px}
+.status{font-size:12px;color:var(--muted)}
+@media(max-width:600px){body{padding:10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.value{font-size:18px}header h1{font-size:21px}.level{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
 <main>
 <header>
-<h1>₿ BTC PAPER ENGINE <span class="blue">V7</span></h1>
-<div class="sub">BTC Perpetual · 仮想売買専用</div>
-<div id="status" class="status">データ読み込み中…</div>
-<div id="updated" class="sub">更新日時：--</div>
-<span class="tag">実注文なし</span>
-<span class="tag">無料枠向け</span>
-<span class="tag">USD＋JPY</span>
+  <div>
+    <h1>BTC Paper Engine V7</h1>
+    <div class="status" id="updated">データ読み込み中...</div>
+  </div>
+  <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button id="fibButton" type="button" aria-expanded="false">フィボナッチ表示</button>
+    <button id="refreshButton" class="secondary" type="button">更新</button>
+  </div>
 </header>
 
 <section class="grid">
-<div class="panel"><div class="metric-label">BTC価格</div><div id="price" class="metric-value">--</div><div id="priceJpy" class="subvalue">--</div></div>
-<div class="panel"><div class="metric-label">仮想口座資産</div><div id="equity" class="metric-value">--</div><div id="equityJpy" class="subvalue">--</div><div id="cash" class="sub">利用可能資金：--</div></div>
-<div class="panel"><div class="metric-label">累計確定損益</div><div id="pnl" class="metric-value">--</div><div id="pnlJpy" class="subvalue">--</div></div>
-<div class="panel"><div class="metric-label">勝率 / 決済数</div><div id="winrate" class="metric-value">--</div><div id="tradeCount" class="sub">--</div></div>
+  <div class="metric"><div class="label">BTC価格</div><div class="value" id="price">--</div><div class="small" id="priceJpy">--</div></div>
+  <div class="metric"><div class="label">仮想資産（USD）</div><div class="value" id="equity">--</div><div class="small" id="equityJpy">--</div></div>
+  <div class="metric"><div class="label">確定損益</div><div class="value" id="pnl">--</div><div class="small" id="pnlJpy">--</div></div>
+  <div class="metric"><div class="label">勝率</div><div class="value" id="winrate">--</div><div class="small" id="tradeCount">--</div></div>
+  <div class="metric"><div class="label">含み損益</div><div class="value" id="unrealized">--</div><div class="small" id="unrealizedJpy">--</div></div>
+  <div class="metric"><div class="label">最大ドローダウン</div><div class="value" id="drawdown">--</div><div class="small" id="pf">PF: --</div></div>
 </section>
 
-<section class="panel">
-<h2>仮想資産推移</h2>
-<canvas id="chart"></canvas>
-<div id="chartInfo" class="sub">--</div>
+<section class="card">
+  <h2>フィボナッチ・リトレースメント</h2>
+  <p id="fibStatus">ボタンを押すと表示します。</p>
+  <div id="fibPanel" class="hidden">
+    <div class="level" id="fibLevels"></div>
+    <p class="small" id="fibNote"></p>
+  </div>
 </section>
 
-<section class="grid">
-<div class="panel"><div class="metric-label">現在のシグナル</div><div id="signal" class="metric-value blue">--</div><div id="score" class="sub">--</div></div>
-<div class="panel"><div class="metric-label">現在のポジション</div><div id="position" class="metric-value">--</div><div id="positionInfo" class="sub">--</div></div>
-<div class="panel"><div class="metric-label">勝ち / 負け</div><div id="winsLosses" class="metric-value">--</div><div id="breakeven" class="sub">--</div></div>
-<div class="panel"><div class="metric-label">PF / 最大ドローダウン</div><div id="pf" class="metric-value">--</div><div id="drawdown" class="sub">--</div></div>
+<section class="card">
+  <h2>資産推移（USD）</h2>
+  <canvas id="chart"></canvas>
+  <div class="small" id="chartInfo">資産履歴データを読み込みます。</div>
 </section>
 
-<section class="grid">
-<div class="panel"><div class="metric-label">仮想レバレッジ上限</div><div id="leverage" class="metric-value">--</div><div class="sub">上限であり、毎回この倍率で取引する意味ではありません。</div></div>
-<div class="panel"><div class="metric-label">1回の想定リスク</div><div id="risk" class="metric-value">--</div><div class="sub">損失上限を保証するものではありません。</div></div>
-<div class="panel"><div class="metric-label">未実現損益</div><div id="unrealized" class="metric-value">--</div><div id="unrealizedJpy" class="subvalue">--</div></div>
-<div class="panel"><div class="metric-label">稼働状態</div><div id="halt" class="metric-value">--</div><div id="build" class="sub">--</div></div>
+<section class="card">
+  <h2>現在のシグナル</h2>
+  <div class="grid">
+    <div class="metric"><div class="label">方向</div><div class="value" id="signal">--</div></div>
+    <div class="metric"><div class="label">スコア</div><div class="value" id="score">--</div></div>
+    <div class="metric"><div class="label">RSI（15分）</div><div class="value" id="rsi">--</div></div>
+  </div>
+  <p id="reasons">--</p>
 </section>
 
-<section class="panel">
-<h2>シグナル詳細</h2>
-<div class="grid">
-<div><div class="metric-label">RSI（15分足）</div><div id="rsi" class="metric-value">--</div></div>
-<div><div class="metric-label">ATR（15分足）</div><div id="atr" class="metric-value">--</div></div>
-<div><div class="metric-label">資金調達率</div><div id="funding" class="metric-value">--</div></div>
-<div><div class="metric-label">24時間取引高</div><div id="volume" class="metric-value">--</div></div>
-</div>
-<details><summary>シグナル判定理由</summary><ul id="reasons"></ul></details>
-<details><summary>フィボナッチ水準（USD / JPY）</summary><ul id="fibList"></ul></details>
+<section class="card">
+  <h2>オープンポジション</h2>
+  <div id="openTrade">ポジションなし</div>
 </section>
 
-<section class="panel">
-<h2>取引履歴（USD / JPY）</h2>
-<div class="table-wrap">
-<table>
-<thead><tr><th>日時</th><th>方向</th><th>倍率</th><th>エントリー</th><th>決済</th><th>純損益</th><th>理由</th></tr></thead>
-<tbody id="trades"><tr><td colspan="7">読み込み中…</td></tr></tbody>
-</table>
-</div>
+<section class="card">
+  <h2>最近の取引</h2>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>日時</th><th>方向</th><th>倍率</th><th>エントリー</th><th>決済</th><th>損益 USD</th><th>損益 円</th><th>理由</th></tr></thead>
+      <tbody id="trades"><tr><td colspan="8">データを読み込み中...</td></tr></tbody>
+    </table>
+  </div>
 </section>
-
-<div class="notice">
-為替は表示用です。売買ロジックと仮想損益はUSD基準です。
-実注文・資金移動・ウォレット接続は行いません。
-仮想成績は実取引の利益を保証しません。
-</div>
+<p class="small">ペーパートレード専用。表示は実際の取引や将来の利益を保証するものではありません。</p>
 </main>
 
 <script>
-const $=id=>document.getElementById(id);
-let fx=150;
+"use strict";
 
-const valid=v=>v!==null&&v!==undefined&&v!==''&&Number.isFinite(Number(v));
-const num=(v,d=2)=>valid(v)?Number(v).toLocaleString('ja-JP',{minimumFractionDigits:d,maximumFractionDigits:d}):'--';
-const usd=v=>valid(v)?'$'+num(v,2):'--';
-const jpy=v=>valid(v)?'¥'+num(Number(v)*fx,0):'--';
-const both=v=>valid(v)?usd(v)+' / '+jpy(v):'--';
-const signed=v=>valid(v)?(Number(v)>0?'+':'')+usd(v):'--';
+let DATA = null;
+let USDJPY = 150;
+let fibOpen = false;
 
-function setPnl(id,v){
-  $(id).textContent=signed(v);
-  $(id).classList.remove('positive','negative');
-  if(valid(v))$(id).classList.add(Number(v)>=0?'positive':'negative');
-}
+const $ = id => document.getElementById(id);
+const num = v => Number.isFinite(Number(v)) ? Number(v) : null;
+const fmt = (v,d=2) => num(v) === null ? "--" : num(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
+const usd = v => num(v) === null ? "--" : "$" + fmt(v);
+const jpy = v => num(v) === null ? "--" : "¥" + Math.round(Number(v)*USDJPY).toLocaleString("ja-JP");
+const signed = v => num(v) === null ? "--" : (v>0?"+":"") + fmt(v);
+const setText = (id,v) => { $(id).textContent = v; };
+const setPnlColor = (id,v) => {
+  $(id).classList.remove("green","red");
+  if(num(v)!==null) $(id).classList.add(Number(v)>=0?"green":"red");
+};
+const first = (...values) => values.find(v => v !== undefined && v !== null && v !== "");
 
-function dateLabel(v){
-  if(!v)return '--';
-  const d=new Date(v);
-  return Number.isNaN(d.getTime())?String(v):d.toLocaleString('ja-JP',{timeZone:'Asia/Tokyo'});
-}
-
-async function getFx(){
+async function loadFx(){
   try{
-    const r=await fetch('https://open.er-api.com/v6/latest/USD',{cache:'no-store'});
-    if(!r.ok)throw Error('為替API unavailable');
-    const d=await r.json();
-    if(d.result==='success'&&valid(d.rates?.JPY)&&Number(d.rates.JPY)>0){
-      fx=Number(d.rates.JPY);
-    }
+    const r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
+    if(!r.ok) throw Error("FX request failed");
+    const x=await r.json();
+    if(x && x.rates && num(x.rates.JPY)>0) USDJPY=Number(x.rates.JPY);
   }catch(e){
-    // 為替取得に失敗した場合は概算レートを使用し、画面表示を継続
+    // 為替APIが利用できない場合は仮の換算レートを使用
   }
 }
 
-function draw(history,current){
-  const c=$('chart'),ctx=c.getContext('2d');
-  const w=c.clientWidth||300,h=240,r=window.devicePixelRatio||1;
-  c.width=w*r;c.height=h*r;
-  ctx.setTransform(r,0,0,r,0,0);
+async function loadData(){
+  setText("updated","データ読み込み中...");
+  try{
+    const r=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok) throw Error("data.json HTTP "+r.status);
+    const d=await r.json();
+    DATA=d;
+    render(d);
+    setText("updated","最終更新: "+(d.generated_at || "日時不明")+" / "+(d.build || "build不明"));
+  }catch(e){
+    setText("updated","データ読込エラー: "+e.message);
+  }
+}
+
+function render(d){
+  const m=d.metrics||{};
+  const s=d.signal||{};
+  const o=d.open_trade||null;
+
+  const price=num(d.price);
+  setText("price",price===null?"--":usd(price));
+  setText("priceJpy",price===null?"--":jpy(price));
+
+  const eq=num(m.equity_usd);
+  setText("equity",usd(eq));
+  setText("equityJpy",jpy(eq));
+
+  const pnl=num(m.net_closed_pnl_usd);
+  setText("pnl",pnl===null?"--":signed(pnl)+" USD");
+  setText("pnlJpy",pnl===null?"--":signed(Math.round(pnl*USDJPY))+" 円");
+  setPnlColor("pnl",pnl);
+
+  setText("winrate",num(m.win_rate_pct)===null?"--":fmt(m.win_rate_pct)+"%");
+  setText("tradeCount","決済回数: "+(m.closed_trades??"--"));
+
+  const un=num(m.open_unrealized_pnl_usd);
+  setText("unrealized",un===null?"--":signed(un)+" USD");
+  setText("unrealizedJpy",un===null?"--":signed(Math.round(un*USDJPY))+" 円");
+  setPnlColor("unrealized",un);
+
+  setText("drawdown",num(m.drawdown_pct)===null?"--":fmt(m.drawdown_pct)+"%");
+  setText("pf","PF: "+(num(m.profit_factor)===null?"--":fmt(m.profit_factor)));
+
+  setText("signal",first(s.direction,"WAIT"));
+  setText("score",num(s.score)===null?"--":fmt(s.score,0));
+  setText("rsi",num(s.rsi_15m)===null?"--":fmt(s.rsi_15m,1));
+  setText("reasons",Array.isArray(s.reasons)?s.reasons.join(" / "):(s.reasons||"理由データなし"));
+
+  if(o){
+    $("openTrade").textContent =
+      "方向: "+first(o.direction,"--")+
+      " / エントリー: "+usd(o.entry_price)+
+      " / ストップ: "+usd(o.stop_price)+
+      " / 利確目標: "+usd(o.target_price);
+  }else{
+    $("openTrade").textContent="ポジションなし";
+  }
+
+  renderTrades(d.recent_trades||[]);
+  drawChart(d.equity_history||[]);
+  renderFib(d);
+}
+
+function renderTrades(trades){
+  const body=$("trades");
+  body.replaceChildren();
+  if(!trades.length){
+    const tr=document.createElement("tr");
+    const td=document.createElement("td");
+    td.colSpan=8; td.textContent="取引履歴なし";
+    tr.appendChild(td); body.appendChild(tr); return;
+  }
+  trades.slice(0,30).forEach(t=>{
+    const tr=document.createElement("tr");
+    const pnl=num(t.net_pnl_usd);
+    const vals=[
+      first(t.closed_at,t.opened_at,"--"),
+      first(t.direction,"--"),
+      num(t.leverage_virtual)===null?"--":fmt(t.leverage_virtual,1)+"x",
+      usd(t.entry_price),
+      usd(t.exit_price),
+      pnl===null?"--":signed(pnl),
+      pnl===null?"--":signed(Math.round(pnl*USDJPY)),
+      first(t.close_reason,"--")
+    ];
+    vals.forEach((v,i)=>{
+      const td=document.createElement("td");
+      td.textContent=String(v);
+      if(i===5||i===6){
+        if(pnl!==null) td.className=pnl>=0?"green":"red";
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+}
+
+function drawChart(history){
+  const canvas=$("chart");
+  const ctx=canvas.getContext("2d");
+  const rect=canvas.getBoundingClientRect();
+  const ratio=window.devicePixelRatio||1;
+  canvas.width=Math.max(300,rect.width*ratio);
+  canvas.height=260*ratio;
+  ctx.scale(ratio,ratio);
+  const w=canvas.width/ratio, h=260;
   ctx.clearRect(0,0,w,h);
 
-  let pts=(Array.isArray(history)?history:[])
-    .map(x=>({t:x.time||'',v:Number(x.equity_usd)}))
-    .filter(x=>Number.isFinite(x.v));
+  const values=history.map(x=>num(typeof x==="number"?x:first(x.equity_usd,x.equity,x.value))).filter(v=>v!==null);
+  if(values.length<2){
+    ctx.fillStyle="#9aa9c5";
+    ctx.font="14px sans-serif";
+    ctx.fillText("資産履歴がまだ不足しています",12,35);
+    setText("chartInfo","記録数: "+values.length);
+    return;
+  }
+  const min=Math.min(...values), max=Math.max(...values);
+  const span=max-min||1;
+  const pad=24;
+  ctx.strokeStyle="#293550";ctx.lineWidth=1;
+  for(let i=0;i<5;i++){
+    const y=pad+(h-pad*2)*i/4;
+    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
+  }
+  ctx.strokeStyle="#75a7ff";ctx.lineWidth=2;ctx.beginPath();
+  values.forEach((v,i)=>{
+    const x=pad+(w-pad*2)*i/(values.length-1);
+    const y=h-pad-(v-min)/span*(h-pad*2);
+    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  ctx.fillStyle="#9aa9c5";ctx.font="11px sans-serif";
+  ctx.fillText("$"+fmt(max),5,14);
+  ctx.fillText("$"+fmt(min),5,h-5);
+  setText("chartInfo","記録数: "+values.length+" / 最新資産: "+usd(values[values.length-1]));
+}
 
-  pts.sort((a,b)=>new Date(a.t)-new Date(b.t));
-
-  if(!pts.length&&valid(current))pts=[{t:'',v:Number(current)}];
-  if(pts.length===1)pts=[{t:'開始',v:100},...pts];
-
-  if(!pts.length){
-    ctx.fillStyle='#a4b1cc';
-    ctx.fillText('資産履歴がありません',10,25);
-    $('chartInfo').textContent='履歴データ待ち';
+function renderFib(d){
+  const s=d.signal||{};
+  const fib=s.fib||d.fib||null;
+  const panel=$("fibPanel");
+  const levels=$("fibLevels");
+  levels.replaceChildren();
+  if(fib && typeof fib==="object"){
+    const entries=[
+      ["0%",first(fib.level_0,fib["0"],fib.zero)],
+      ["23.6%",first(fib.level_236,fib["0.236"],fib["23.6"])],
+      ["38.2%",first(fib.level_382,fib["0.382"],fib["38.2"])],
+      ["50%",first(fib.level_500,fib["0.5"],fib["50"])],
+      ["61.8%",first(fib.level_618,fib["0.618"],fib["61.8"])],
+      ["78.6%",first(fib.level_786,fib["0.786"],fib["78.6"])],
+      ["100%",first(fib.level_100,fib["1"],fib.one)]
+    ];
+    entries.forEach(([label,value])=>{
+      if(num(value)===null)return;
+      const box=document.createElement("div");
+      box.textContent=label;
+      const strong=document.createElement("strong");
+      strong.textContent=usd(value)+" / "+jpy(value);
+      box.appendChild(strong);levels.appendChild(box);
+    });
+    setText("fibStatus",levels.children.length?"bot.pyが出力したフィボナッチ値":"フィボナッチの数値形式を認識できません");
+    setText("fibNote","値の計算元がスイング高値・安値かどうかは、bot.py側の計算仕様を確認してください。");
     return;
   }
 
-  const vals=pts.map(p=>p.v);
-  let lo=Math.min(...vals),hi=Math.max(...vals);
-  if(lo===hi){lo-=1;hi+=1}
-  else{const pad=(hi-lo)*.15;lo-=pad;hi+=pad}
-
-  const px=i=>12+i*(w-24)/Math.max(pts.length-1,1);
-  const py=v=>h-18-(v-lo)/(hi-lo)*(h-36);
-
-  ctx.strokeStyle='#79aaff';
-  ctx.lineWidth=2;
-  ctx.beginPath();
-  pts.forEach((p,i)=>i?ctx.lineTo(px(i),py(p.v)):ctx.moveTo(px(i),py(p.v)));
-  ctx.stroke();
-
-  ctx.fillStyle='#a4b1cc';
-  ctx.font='11px sans-serif';
-  ctx.fillText('最低 '+both(Math.min(...vals)),8,13);
-  ctx.fillText('最高 '+both(Math.max(...vals)),8,h-3);
-  $('chartInfo').textContent='記録数：'+pts.length+' ／ 現在 '+both(current);
-}
-
-function addCell(row,value){
-  const td=document.createElement('td');
-  td.textContent=value==null?'--':String(value);
-  row.appendChild(td);
-}
-
-async function main(){
-  $('status').textContent='データ読み込み中…';
-  await getFx();
-
-  try{
-    const res=await fetch('./data.json?v='+Date.now(),{cache:'no-store'});
-    if(!res.ok)throw Error('data.json HTTP '+res.status);
-
-    const d=await res.json();
-    const m=d.metrics||{},s=d.signal||{},t=d.open_trade;
-
-    $('status').textContent='データ取得成功 · USD/JPY '+num(fx,2);
-    $('updated').textContent='更新日時：'+dateLabel(d.generated_at)+'（日本時間）';
-
-    $('price').textContent=usd(d.price);
-    $('priceJpy').textContent=jpy(d.price);
-
-    $('equity').textContent=usd(m.equity_usd);
-    $('equityJpy').textContent=jpy(m.equity_usd);
-    $('cash').textContent='利用可能資金：'+both(m.cash_usd);
-
-    setPnl('pnl',m.net_closed_pnl_usd);
-    $('pnlJpy').textContent=jpy(m.net_closed_pnl_usd);
-
-    $('winrate').textContent=valid(m.win_rate_pct)?num(m.win_rate_pct)+'%':'--';
-    $('tradeCount').textContent='決済数：'+(m.closed_trades??0);
-
-    $('signal').textContent=s.direction||'WAIT';
-    $('score').textContent='スコア：'+(s.score??'--');
-
-    $('position').textContent=t?(t.direction||'保有中'):'ノーポジション';
-    $('positionInfo').textContent=t
-      ?'建値 '+both(t.entry_price)+' / 損切 '+both(t.stop_price)+' / 利確 '+both(t.target_price)
-      :'保有ポジションなし';
-
-    $('winsLosses').textContent=(m.wins??0)+' / '+(m.losses??0);
-    $('breakeven').textContent='引き分け：'+(m.breakeven_trades??0);
-    $('pf').textContent=m.profit_factor==null?'--':num(m.profit_factor,3);
-    $('drawdown').textContent='最大資産からの下落：'+num(m.drawdown_pct)+'%';
-
-    $('leverage').textContent=num(d.risk?.virtual_leverage??30,1)+'倍';
-    $('risk').textContent=num(d.risk?.risk_per_trade_pct??0.5)+'%';
-
-    setPnl('unrealized',m.open_unrealized_pnl_usd??0);
-    $('unrealizedJpy').textContent=jpy(m.open_unrealized_pnl_usd??0);
-
-    $('halt').textContent=d.risk?.halt_reason||'稼働中';
-    $('build').textContent='Build：'+(d.build||'--');
-
-    $('rsi').textContent=num(s.rsi_15m,1);
-    $('atr').textContent=both(s.atr_15m);
-    $('funding').textContent=valid(d.funding_rate_pct)?num(d.funding_rate_pct,5)+'%':'--';
-    $('volume').textContent=both(d.volume_24h_usd);
-
-    $('reasons').replaceChildren();
-    (s.reasons||[]).forEach(x=>{
-      const li=document.createElement('li');
-      li.textContent=x;
-      $('reasons').appendChild(li);
-    });
-
-    $('fibList').replaceChildren();
-    Object.entries(s.fib||d.fib||{}).forEach(([k,v])=>{
-      const li=document.createElement('li');
-      li.textContent=k+': '+both(v);
-      $('fibList').appendChild(li);
-    });
-
-    $('trades').replaceChildren();
-    const ts=Array.isArray(d.recent_trades)?d.recent_trades.slice().reverse():[];
-
-    if(!ts.length){
-      const tr=document.createElement('tr');
-      addCell(tr,'取引履歴はまだありません');
-      const td=tr.firstChild;
-      td.colSpan=7;
-      $('trades').appendChild(tr);
-    }
-
-    ts.forEach(x=>{
-      const tr=document.createElement('tr');
-      [
-        dateLabel(x.closed_at||x.opened_at),
-        x.direction||'--',
-        valid(x.leverage_virtual)?num(x.leverage_virtual,1)+'x':'--',
-        both(x.entry_price),
-        both(x.exit_price),
-        both(x.net_pnl_usd),
-        x.close_reason||'--'
-      ].forEach(v=>addCell(tr,v));
-      $('trades').appendChild(tr);
-    });
-
-    draw(d.equity_history,m.equity_usd);
-  }catch(e){
-    $('status').textContent='読み込み失敗：'+e.message;
-    $('status').classList.add('negative');
+  const price=num(d.price);
+  const atr=num(s.atr_15m);
+  if(price===null||atr===null||atr<=0){
+    setText("fibStatus","フィボナッチを計算できません。data.jsonにpriceとsignal.atr_15mが必要です。");
+    setText("fibNote","");
+    return;
   }
+
+  // 暫定参考値。スイング高値・安値に基づく正式なフィボナッチではない。
+  const low=price-atr*3;
+  const high=price;
+  const ratios=[0,0.236,0.382,0.5,0.618,0.786,1];
+  ratios.forEach(r=>{
+    const v=high-(high-low)*r;
+    const box=document.createElement("div");
+    box.textContent=(r*100).toFixed(1).replace(".0","")+"%";
+    const strong=document.createElement("strong");
+    strong.textContent=usd(v)+" / "+jpy(v);
+    box.appendChild(strong);levels.appendChild(box);
+  });
+  setText("fibStatus","暫定参考値を表示中");
+  setText("fibNote","注意：直近のスイング高値・安値を使った正式なフィボナッチではありません。現在価格とATRからの参考計算です。正式版にはbot.py側で高値・安値の出力が必要です。");
 }
 
-main();
-window.addEventListener('resize',()=>{
-  fetch('./data.json',{cache:'no-store'})
-    .then(r=>r.json())
-    .then(d=>draw(d.equity_history,d.metrics?.equity_usd))
-    .catch(()=>{});
+$("fibButton").addEventListener("click",()=>{
+  fibOpen=!fibOpen;
+  $("fibPanel").classList.toggle("hidden",!fibOpen);
+  $("fibButton").setAttribute("aria-expanded",String(fibOpen));
+  $("fibButton").textContent=fibOpen?"フィボナッチを閉じる":"フィボナッチ表示";
+  if(fibOpen&&DATA)renderFib(DATA);
 });
+
+$("refreshButton").addEventListener("click",async()=>{
+  await loadFx();
+  await loadData();
+});
+
+window.addEventListener("resize",()=>{
+  if(DATA)drawChart(DATA.equity_history||[]);
+});
+
+(async()=>{
+  await loadFx();
+  await loadData();
+})();
 </script>
 </body>
 </html>
