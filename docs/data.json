@@ -1,42 +1,43 @@
 {
   "build": "BTC_PAPER_V7_2026-10-21",
-  "generated_at": "2026-10-21T12:48:00.547427+00:00",
-  "price": 83521.0,
+  "generated_at": "2026-10-21T13:31:57.164713+00:00",
+  "price": 83508.0,
   "funding_rate_pct": 0.00125,
   "signal": {
     "direction": "LONG",
     "score": 6,
     "long_score": 6,
-    "short_score": 0,
+    "short_score": 1,
     "reasons": [
       "1時間足のEMAは上向き",
-      "4時間足のトレンドは上向き"
+      "4時間足のトレンドは上向き",
+      "決済後のクールダウン中"
     ],
-    "rsi_15m": 61.27,
-    "atr_15m": 163.0707,
-    "atr_pct_15m": 0.1952,
-    "momentum_3bar_pct": -0.0168,
-    "momentum_12bar_pct": 0.1319,
+    "rsi_15m": 54.56,
+    "atr_15m": 189.2486,
+    "atr_pct_15m": 0.2266,
+    "momentum_3bar_pct": 0.0228,
+    "momentum_12bar_pct": 0.0539,
     "trend_1h": 1,
     "trend_4h": 1,
     "trend_15m": 1,
-    "ema_9_15m": 83508.7,
-    "ema_21_15m": 83380.53,
-    "ema_9_1h": 83242.38,
-    "ema_21_1h": 82950.57
+    "ema_9_15m": 83579.31,
+    "ema_21_15m": 83451.01,
+    "ema_9_1h": 83289.22,
+    "ema_21_1h": 82998.02
   },
   "metrics": {
-    "equity_usd": 100.62399355,
-    "cash_usd": 93.86321819,
-    "net_closed_pnl_usd": 0,
-    "closed_trades": 0,
-    "wins": 0,
+    "equity_usd": 100.90438906,
+    "cash_usd": 100.90438906,
+    "net_closed_pnl_usd": 0.90438906,
+    "closed_trades": 1,
+    "wins": 1,
     "losses": 0,
     "breakeven_trades": 0,
-    "win_rate_pct": 0.0,
-    "profit_factor": null,
-    "drawdown_pct": 0.1877,
-    "open_unrealized_pnl_usd": 0.62399355
+    "win_rate_pct": 100.0,
+    "profit_factor": 99.0,
+    "drawdown_pct": 0.0,
+    "open_unrealized_pnl_usd": 0.0
   },
   "risk": {
     "virtual_leverage": 30.0,
@@ -44,27 +45,33 @@
     "max_margin_fraction_pct": 10.0,
     "max_daily_loss_pct": 3.0,
     "max_drawdown_pct": 10.0,
-    "halt_reason": null,
+    "halt_reason": "決済後のクールダウン中",
     "paper_only": true
   },
-  "open_trade": {
-    "direction": "LONG",
-    "opened_at": "2026-10-21T07:45:45.777140+00:00",
-    "entry_price": 83122.62,
-    "qty_btc": 0.0022148417787908165,
-    "notional_usd": 184.10345419636323,
-    "margin_usd": 6.136781806545441,
-    "leverage_virtual": 30.0,
-    "entry_fee_usd": 0.09205172709818162,
-    "entry_slippage_usd": 0.036813328173624926,
-    "stop_price": 83312.95,
-    "target_price": 83664.42,
-    "initial_stop_price": 82896.87,
-    "trail_active": true,
-    "risk_usd": 0.5,
-    "signal_candle_time": "1792568700000"
-  },
-  "recent_trades": [],
+  "open_trade": null,
+  "recent_trades": [
+    {
+      "direction": "LONG",
+      "opened_at": "2026-10-21T07:45:45.777140+00:00",
+      "entry_price": 83122.62,
+      "qty_btc": 0.0022148417787908165,
+      "notional_usd": 184.10345419636323,
+      "margin_usd": 6.136781806545441,
+      "leverage_virtual": 30.0,
+      "entry_fee_usd": 0.09205172709818162,
+      "entry_slippage_usd": 0.036813328173624926,
+      "stop_price": 83312.95,
+      "target_price": 83664.42,
+      "initial_stop_price": 82896.87,
+      "trail_active": true,
+      "risk_usd": 0.5,
+      "signal_candle_time": "1792568700000",
+      "exit_price": 83647.69,
+      "closed_at": "2026-10-21T13:31:57.164713+00:00",
+      "net_pnl_usd": 0.90438906,
+      "close_reason": "利確"
+    }
+  ],
   "equity_history": [
     {
       "time": "2026-10-21T02:11:43.671398+00:00",
@@ -175,12 +182,17 @@
       "time": "2026-10-21T12:48:00.547427+00:00",
       "equity_usd": 100.62399355,
       "price": 83521.0
+    },
+    {
+      "time": "2026-10-21T13:31:57.164713+00:00",
+      "equity_usd": 100.90438906,
+      "price": 83508.0
     }
   ],
   "market": {
     "candles_15m": 181,
     "candles_1h": 181,
     "candles_4h": 181,
-    "last_candle_time": "1792586700000"
+    "last_candle_time": "1792589400000"
   }
 }
