@@ -4,680 +4,331 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<meta name="theme-color" content="#170e35">
-<title>BTC MAGIC ENGINE</title>
+<title>萌え萌えキュン♡ BTC冒険記</title>
 <style>
-:root{
-  --bg:#100b24;--panel:#20163e;--panel2:#2b1d50;
-  --pink:#ff83d5;--purple:#b89aff;--cyan:#79e8ff;
-  --gold:#ffdc8a;--green:#75f0bd;--red:#ff829e;
-  --text:#fff6ff;--muted:#b9a9d4;--line:#50386f;
-}
 *{box-sizing:border-box}
-body{
-  margin:0;background:
-  radial-gradient(ellipse at 50% 0%,#49306f 0,transparent 45%),
-  linear-gradient(160deg,#100b24,#17102e 60%,#0d1028);
-  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,
-  "Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;
-  font-size:13px;min-height:100vh
+html,body{margin:0;padding:0;background:#fff0fb}
+body{font-family:Arial,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif}
+#stage{
+  position:relative;width:100%;max-width:1536px;margin:auto;
+  aspect-ratio:1536/1024;overflow:hidden;background:#ffe9fa;
 }
-button{font:inherit}
-.topbar{
-  min-height:175px;position:relative;overflow:hidden;
-  padding:24px 28px;display:flex;align-items:center;gap:22px;
-  border-bottom:1px solid #bb8dff66;
-  background:
-    radial-gradient(circle at 77% 45%,#ff9fe455,transparent 19%),
-    radial-gradient(circle at 90% 20%,#8c73ff77,transparent 30%),
-    linear-gradient(110deg,#28134e,#5c277c 48%,#21144b);
+#reference{
+  position:absolute;inset:0;width:100%;height:100%;object-fit:fill;
 }
-.topbar:before{
-  content:"";position:absolute;inset:0;opacity:.16;
-  background-image:
-    radial-gradient(circle,#fff 1px,transparent 2px);
-  background-size:31px 31px;
-  pointer-events:none
+.overlay{
+  position:absolute;overflow:hidden;
+  color:#392477;font-size:clamp(7px,1.05vw,15px);
+  font-weight:700;text-align:center;
+  display:flex;align-items:center;justify-content:center;
+  overflow-wrap:anywhere;
 }
-.hero-art{
-  width:115px;height:130px;flex-shrink:0;border-radius:55% 55% 42% 42%;
-  display:grid;place-items:center;font-size:75px;
-  background:linear-gradient(145deg,#ffd6f6,#bca1ff 55%,#6b4cb0);
-  border:2px solid #ffe6ff;box-shadow:0 0 28px #ff8fe999;
-  position:relative
+.value{
+  background:rgba(255,250,255,.96);
+  border:1px solid #f0b9e8;border-radius:5px;
+  padding:0 2px;min-width:0;
 }
-.hero-art:after{
-  content:"✦";position:absolute;right:-13px;top:-15px;
-  color:#fff1a8;font-size:34px;text-shadow:0 0 18px #fff
+#status{
+ position:absolute;left:78%;top:1%;width:20%;height:3%;
+ font-size:clamp(7px,.8vw,11px);color:#6739a5;
 }
-.hero-copy{position:relative;z-index:1;min-width:0}
-.eyebrow{letter-spacing:3px;color:#ffd9fa;font-size:10px;font-weight:800}
-h1{font-size:clamp(24px,4vw,42px);margin:8px 0 6px;line-height:1.1}
-h1 span{color:#ffb9eb;text-shadow:0 0 20px #ff7fe8}
-.subtitle{color:#eadbff;font-size:12px}
-.hero-tags{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.tag{border:1px solid #e4baff77;background:#321a54aa;padding:6px 10px;
-  border-radius:99px;color:#ffe9ff;font-size:10px}
-.top-status{margin-left:auto;position:relative;text-align:right;min-width:135px}
-.live-dot{display:inline-block;width:8px;height:8px;border-radius:50%;
-  background:var(--green);box-shadow:0 0 10px var(--green);margin-right:6px}
-.top-status strong{display:block;font-size:22px;color:var(--gold);margin:10px 0 4px}
-.small{font-size:10px;color:var(--muted)}
-.layout{display:grid;grid-template-columns:205px minmax(0,1fr) 270px;
-  gap:14px;padding:14px;max-width:1800px;margin:auto}
-.panel{
-  background:linear-gradient(145deg,#281c48ed,#19132feF);
-  border:1px solid var(--line);border-radius:15px;padding:14px;
-  box-shadow:0 8px 24px #07041455;min-width:0
+#price{left:14.5%;top:34.7%;width:8.8%;height:3.1%}
+#price-yen{left:14.5%;top:37.6%;width:8.8%;height:2.6%}
+#equity{left:24.4%;top:34.7%;width:8.8%;height:3.1%}
+#equity-yen{left:24.4%;top:37.6%;width:8.8%;height:2.6%}
+#pnl{left:34.3%;top:34.7%;width:8.4%;height:3.1%}
+#pnl-yen{left:34.3%;top:37.6%;width:8.4%;height:2.6%}
+#winrate{left:44.3%;top:34.7%;width:7.9%;height:3.1%}
+#closed{left:44.3%;top:37.6%;width:7.9%;height:2.6%}
+#unrealized{left:54.1%;top:34.7%;width:7.9%;height:3.1%}
+#unrealized-yen{left:54.1%;top:37.6%;width:7.9%;height:2.6%}
+#dd{left:64%;top:34.7%;width:7.8%;height:3.1%}
+#pf{left:64%;top:37.6%;width:7.8%;height:2.6%}
+#chart-area{
+ position:absolute;left:18.9%;top:53%;width:33.4%;height:16.8%;
+ background:rgba(255,252,255,.96);border:1px solid #f3c5ec;
+ border-radius:3px;
 }
-.panel-title{font-size:13px;font-weight:900;display:flex;align-items:center;
-  justify-content:space-between;gap:8px;margin:0 0 13px}
-.panel-title .symbol{color:var(--pink);margin-right:6px}
-.pill{font-size:10px;padding:4px 7px;border-radius:99px;
-  background:#55366d;color:#f6dcff;white-space:nowrap}
-.sidebar{display:flex;flex-direction:column;gap:12px}
-.avatar-card{text-align:center;overflow:hidden;
-  background:radial-gradient(ellipse at 50% 10%,#8a4caa,#281d4c 65%)}
-.avatar{font-size:74px;margin:5px auto 7px;filter:drop-shadow(0 0 14px #ffa8f5)}
-.avatar-name{font-weight:900;font-size:16px}
-.level{color:var(--gold);font-size:11px;margin-top:5px}
-.bar-label{display:flex;justify-content:space-between;font-size:10px;
-  color:#e8d9ff;margin:11px 0 5px}
-.bar{height:9px;border-radius:99px;background:#100b24;overflow:hidden;
-  border:1px solid #ffffff20}
-.bar>i{height:100%;display:block;border-radius:99px;width:0;
-  background:linear-gradient(90deg,#ff6fc8,#ffb5e8);transition:width .5s}
-.bar.xp>i{background:linear-gradient(90deg,#7a7cff,#80e8ff)}
-.nav{display:grid;gap:7px}
-.nav-item{padding:10px 11px;border:1px solid transparent;border-radius:9px;
-  color:#d9c9f2;background:#ffffff05;display:flex;gap:9px;align-items:center}
-.nav-item.active{background:linear-gradient(90deg,#a44caa55,#7d64df22);
-  border-color:#f19de977;color:white}
-.nav-icon{width:19px;text-align:center;font-size:16px}
-.mini-stat{display:flex;justify-content:space-between;gap:8px;
-  padding:9px 0;border-bottom:1px solid #ffffff10}
-.mini-stat:last-child{border:0}
-.mini-stat span{color:var(--muted)}
-.mini-stat b{font-variant-numeric:tabular-nums;text-align:right}
-.maincol,.rightcol{display:flex;flex-direction:column;gap:14px;min-width:0}
-.stats-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px}
-.stat{
-  padding:13px;border-radius:12px;border:1px solid #5b417b;
-  background:linear-gradient(140deg,#342253,#211738);min-width:0
+#chart{width:100%;height:100%;display:block}
+#chart-note{
+ position:absolute;left:24%;top:71.2%;width:26%;height:2.2%;
+ background:rgba(255,247,255,.95);font-size:clamp(6px,.7vw,10px);
 }
-.stat-label{font-size:10px;color:var(--muted);margin-bottom:9px}
-.stat-value{font-size:clamp(16px,2vw,24px);font-weight:900;
-  letter-spacing:-.5px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
-.stat-sub{font-size:10px;color:var(--muted);margin-top:6px}
-.pink{color:var(--pink)}.gold{color:var(--gold)}.cyan{color:var(--cyan)}
-.green{color:var(--green)}.red{color:var(--red)}
-.chart-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
-.big-number{font-size:clamp(23px,3vw,35px);font-weight:900;
-  font-variant-numeric:tabular-nums;margin:7px 0}
-.chart-wrap{height:255px;position:relative;margin-top:14px;
-  border-radius:10px;overflow:hidden;
-  background:linear-gradient(180deg,#9e62db12,#f777d208)}
-.chart-wrap svg{width:100%;height:100%;display:block;overflow:visible}
-.chart-empty{position:absolute;inset:0;display:grid;place-items:center;
-  color:var(--muted);font-size:12px;pointer-events:none}
-.legend{display:flex;gap:15px;flex-wrap:wrap;color:var(--muted);font-size:10px}
-.legend i{display:inline-block;width:8px;height:8px;border-radius:50%;
-  background:var(--pink);margin-right:5px}
-.chart-foot{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;
-  color:var(--muted);font-size:10px;margin-top:10px}
-.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.signal-box{border:1px solid #6d4b8e;background:#211638;
-  border-radius:12px;padding:15px}
-.signal-word{font-size:26px;font-weight:1000;margin:7px 0}
-.signal-reasons{color:#d7c8ec;line-height:1.8;font-size:11px}
-.score-track{height:7px;border-radius:20px;background:#100b24;margin-top:9px;overflow:hidden}
-.score-track i{display:block;height:100%;background:linear-gradient(90deg,#a58aff,#ff89d9)}
-.forecast{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:12px}
-.forecast div{background:#ffffff07;border:1px solid #ffffff12;
-  padding:10px 6px;border-radius:9px;text-align:center}
-.forecast b{display:block;font-size:15px;margin-top:5px}
-.mapboard{display:grid;grid-template-columns:repeat(5,1fr);gap:5px}
-.tile{min-height:54px;border:1px solid #725a9b;border-radius:8px;
-  background:linear-gradient(145deg,#39295c,#21183c);
-  display:flex;flex-direction:column;justify-content:center;align-items:center;
-  text-align:center;font-size:9px;color:#d9c7fa;gap:4px}
-.tile b{font-size:17px;color:#ffe5a5}
-.tile.current{background:linear-gradient(145deg,#a54a9b,#6740a1);
-  border-color:#ffb6ef;box-shadow:0 0 14px #e78dff55}
-.tile.finish{border-color:#e8c77c;color:#ffe7a2}
-.map-caption{font-size:10px;color:var(--muted);margin-top:9px;line-height:1.6}
-.magic-area{height:205px;display:grid;place-items:center;position:relative;overflow:hidden}
-.magic-circle{width:180px;height:180px;border-radius:50%;position:relative;
-  display:grid;place-items:center;
-  border:1px solid #c69bff;box-shadow:0 0 22px #9c65ff22,inset 0 0 20px #a974ff22}
-.magic-circle:before,.magic-circle:after{content:"";position:absolute;inset:15px;
-  border:1px solid #dbb3ff;border-radius:50%}
-.magic-circle:after{inset:31px;border-color:#ff9bdf;transform:rotate(45deg);
-  border-radius:22%}
-.magic-inner{font-size:42px;text-shadow:0 0 20px #ff8ee9}
-.rune{position:absolute;color:#ffd8ff;font-size:12px}
-.r1{top:4px;left:82px}.r2{bottom:3px;left:82px}
-.r3{left:3px;top:82px}.r4{right:3px;top:82px}
-.risk-list{display:grid;gap:8px}
-.risk-row{display:flex;justify-content:space-between;gap:10px;
-  border-bottom:1px solid #ffffff10;padding-bottom:8px}
-.risk-row span{color:var(--muted)}
-.table-wrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;font-size:11px;white-space:nowrap}
-th{text-align:left;color:#c8b2e7;font-weight:700;background:#ffffff07}
-th,td{padding:10px 9px;border-bottom:1px solid #ffffff10}
-td.num{text-align:right;font-variant-numeric:tabular-nums}
-.empty{text-align:center;color:var(--muted);padding:22px}
-.footer{padding:10px 16px 24px;text-align:center;color:#9887b7;font-size:10px}
-#toast{color:var(--muted);font-size:10px}
-@media(max-width:1100px){
- .layout{grid-template-columns:175px minmax(0,1fr)}
- .rightcol{grid-column:2;display:grid;grid-template-columns:1fr 1fr}
- .stats-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#signal{left:56.4%;top:57.5%;width:6.2%;height:5.2%;
+ font-size:clamp(10px,1.6vw,23px);color:#14a88d}
+#score{left:63.2%;top:57.5%;width:6.4%;height:5.2%}
+#rsi{left:69.7%;top:57.5%;width:6.5%;height:5.2%}
+#reason{
+ left:55.7%;top:64.3%;width:20.9%;height:4.3%;
+ background:rgba(255,250,255,.97);font-size:clamp(6px,.75vw,10px);
 }
-@media(max-width:650px){
- .topbar{padding:17px 14px;min-height:135px;gap:12px}
- .hero-art{width:72px;height:85px;font-size:48px}
- .top-status{min-width:78px}
- .top-status strong{font-size:15px}
- .eyebrow{letter-spacing:1px;font-size:8px}
- .subtitle{font-size:10px}
- .hero-tags{margin-top:8px}
- .tag{font-size:9px;padding:5px 7px}
- .layout{display:flex;flex-direction:column;padding:9px;gap:10px}
- .sidebar{display:grid;grid-template-columns:1fr 1fr;gap:9px}
- .avatar-card{grid-row:span 2}
- .nav{grid-template-columns:1fr 1fr}
- .nav-item{font-size:10px;padding:8px 6px}
- .nav-item:last-child{grid-column:span 2}
- .panel{padding:12px}
- .stats-grid{gap:7px}
- .stat{padding:10px}
- .stat-value{font-size:19px}
- .chart-wrap{height:210px}
- .two-col{grid-template-columns:1fr}
- .rightcol{display:flex}
- .magic-area{height:190px}
- .footer{padding-bottom:18px}
+#current-price{left:79.5%;top:60%;width:17.5%;height:2.5%;
+ font-size:clamp(7px,.9vw,12px)}
+#fib{
+ position:absolute;left:79.3%;top:62.4%;width:12%;height:18%;
+ display:flex;flex-direction:column;justify-content:space-around;
+ background:rgba(255,249,255,.96);border-radius:5px;
+ border:1px solid #f5c9ed;padding:1px 4px;
+ font-size:clamp(6px,.72vw,10px);color:#55338b
+}
+.fibrow{display:flex;justify-content:space-between;gap:3px}
+#trade-body{
+ position:absolute;left:33.8%;top:81.2%;width:43.5%;height:14.4%;
+ background:rgba(255,252,255,.97);overflow:hidden;
+ border:1px solid #efc0e8;border-radius:4px;
+}
+#trades{width:100%;height:100%;border-collapse:collapse;
+ font-size:clamp(5px,.65vw,9px);color:#38265f;table-layout:fixed}
+#trades th,#trades td{
+ border-bottom:1px solid #f1d8ef;padding:2px 1px;
+ text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis
+}
+#trades th{background:#fce9f9;color:#7952a1}
+#trades th:nth-child(1){width:17%}
+#trades th:nth-child(2){width:9%}
+#trades th:nth-child(3){width:9%}
+#trades th:nth-child(4){width:13%}
+#trades th:nth-child(5){width:13%}
+#trades th:nth-child(6){width:13%}
+#trades th:nth-child(7){width:13%}
+#trades th:nth-child(8){width:13%}
+.win{color:#079f8a}.loss{color:#ed5ba9}
+#battle{
+ position:absolute;left:15%;top:81.3%;width:16.5%;height:14%;
+ display:flex;align-items:center;justify-content:center;
+ background:rgba(255,249,255,.95);border:1px solid #efc0e8;
+ border-radius:9px;font-size:clamp(7px,.85vw,12px);text-align:center;
+}
+#battle-text{line-height:1.8}
+#battle-pos{font-size:clamp(10px,1.2vw,17px);color:#6a3ca1}
+#last-update{
+ position:absolute;left:65%;top:97%;width:30%;height:1.7%;
+ color:#775b9d;background:rgba(255,249,255,.75);
+ font-size:clamp(5px,.55vw,8px);text-align:right;
+}
+@media(max-width:600px){
+ #status{font-size:7px}
+ #trade-body{height:14.4%}
 }
 </style>
 </head>
 <body>
+<div id="stage">
+  <img id="reference" src="./reference-dashboard.jpeg"
+       alt="BTC冒険記の見本レイアウト">
+  <div id="status">DATA: 読み込み中</div>
 
-<header class="topbar">
-  <div class="hero-art" aria-hidden="true">🪄</div>
-  <div class="hero-copy">
-    <div class="eyebrow">✦ MAGICAL QUANT LAB ✦ BTC PAPER TRADING ✦</div>
-    <h1>BTC <span>MAGIC ENGINE</span></h1>
-    <div class="subtitle">魔法少女と挑む、データ駆動型トレード冒険譚</div>
-    <div class="hero-tags">
-      <span class="tag">✧ PAPER TRADING ONLY</span>
-      <span class="tag">✧ BTC / USD</span>
-      <span class="tag">✧ AUTO UPDATE</span>
+  <div id="price" class="overlay value">--</div>
+  <div id="price-yen" class="overlay value">¥ --</div>
+  <div id="equity" class="overlay value">--</div>
+  <div id="equity-yen" class="overlay value">¥ --</div>
+  <div id="pnl" class="overlay value">--</div>
+  <div id="pnl-yen" class="overlay value">¥ --</div>
+  <div id="winrate" class="overlay value">--</div>
+  <div id="closed" class="overlay value">決済回数: --</div>
+  <div id="unrealized" class="overlay value">--</div>
+  <div id="unrealized-yen" class="overlay value">¥ --</div>
+  <div id="dd" class="overlay value">--</div>
+  <div id="pf" class="overlay value">PF: --</div>
+
+  <div id="chart-area">
+    <svg id="chart" viewBox="0 0 500 170"
+      preserveAspectRatio="none"></svg>
+  </div>
+  <div id="chart-note" class="overlay">
+    履歴: -- 件 / 最新資産: --
+  </div>
+
+  <div id="signal" class="overlay value">WAIT</div>
+  <div id="score" class="overlay value">-- / 100</div>
+  <div id="rsi" class="overlay value">--</div>
+  <div id="reason" class="overlay">シグナル情報を読み込み中…</div>
+
+  <div id="current-price" class="overlay value">現在価格: --</div>
+  <div id="fib">
+    <div class="fibrow"><span>0%</span><b id="fib0">--</b></div>
+    <div class="fibrow"><span>23.6%</span><b id="fib1">--</b></div>
+    <div class="fibrow"><span>38.2%</span><b id="fib2">--</b></div>
+    <div class="fibrow"><span>50%</span><b id="fib3">--</b></div>
+    <div class="fibrow"><span>61.8%</span><b id="fib4">--</b></div>
+    <div class="fibrow"><span>78.6%</span><b id="fib5">--</b></div>
+    <div class="fibrow"><span>100%</span><b id="fib6">--</b></div>
+  </div>
+
+  <div id="battle">
+    <div id="battle-text">
+      <div>⚔️ 現在のバトル</div>
+      <div id="battle-pos">ポジションなし</div>
+      <div id="battle-pnl">含み損益: --</div>
     </div>
   </div>
-  <div class="top-status">
-    <span class="small"><i class="live-dot"></i><span id="connection">接続確認中</span></span>
-    <strong id="top-price">$ --</strong>
-    <div class="small">BTC MARK PRICE</div>
-    <div class="small" id="updated">更新待機中</div>
+
+  <div id="trade-body">
+    <table id="trades">
+      <thead><tr>
+        <th>日時</th><th>結果</th><th>倍率</th><th>エントリー</th>
+        <th>決済</th><th>損益 USD</th><th>損益 円</th><th>理由</th>
+      </tr></thead>
+      <tbody id="trade-rows">
+        <tr><td colspan="8">取引履歴を読み込み中…</td></tr>
+      </tbody>
+    </table>
   </div>
-</header>
-
-<div class="layout">
-  <aside class="sidebar">
-    <section class="panel avatar-card">
-      <div class="avatar">🧙🏻‍♀️</div>
-      <div class="avatar-name">トレード魔法使い</div>
-      <div class="level">✦ PAPER ENGINE ✦</div>
-      <div class="bar-label"><span>HP / 資産維持</span><b id="hp-label">--</b></div>
-      <div class="bar"><i id="hp-bar"></i></div>
-      <div class="bar-label"><span>EXP / 取引経験</span><b id="xp-label">--</b></div>
-      <div class="bar xp"><i id="xp-bar"></i></div>
-      <p class="small">実データに基づいてステータスを更新</p>
-    </section>
-
-    <nav class="panel nav">
-      <div class="nav-item active"><span class="nav-icon">🏰</span>冒険ホーム</div>
-      <div class="nav-item"><span class="nav-icon">📈</span>損益チャート</div>
-      <div class="nav-item"><span class="nav-icon">🔮</span>魔法シグナル</div>
-      <div class="nav-item"><span class="nav-icon">🗺️</span>冒険マップ</div>
-      <div class="nav-item"><span class="nav-icon">⚔️</span>バトルログ</div>
-    </nav>
-
-    <section class="panel">
-      <h2 class="panel-title">✦ 冒険者ステータス</h2>
-      <div class="mini-stat"><span>開始資産</span><b id="initial">$100.00</b></div>
-      <div class="mini-stat"><span>現在資産</span><b id="side-equity">--</b></div>
-      <div class="mini-stat"><span>確定損益</span><b id="side-pnl">--</b></div>
-      <div class="mini-stat"><span>勝率</span><b id="side-win">--</b></div>
-      <div class="mini-stat"><span>決済回数</span><b id="side-trades">--</b></div>
-    </section>
-  </aside>
-
-  <main class="maincol">
-    <section class="stats-grid">
-      <div class="stat">
-        <div class="stat-label">💎 総資産 / EQUITY</div>
-        <div class="stat-value gold" id="equity">$ --</div>
-        <div class="stat-sub" id="equity-jpy">¥ --</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">⚔️ 確定損益 / NET PNL</div>
-        <div class="stat-value" id="pnl">$ --</div>
-        <div class="stat-sub" id="pnl-jpy">¥ --</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">🏆 勝率 / WIN RATE</div>
-        <div class="stat-value pink" id="winrate">--%</div>
-        <div class="stat-sub" id="win-count">勝ち -- / 負け --</div>
-      </div>
-      <div class="stat">
-        <div class="stat-label">🌑 最大資産下落率</div>
-        <div class="stat-value cyan" id="drawdown">--%</div>
-        <div class="stat-sub">現在のドローダウン</div>
-      </div>
-    </section>
-
-    <section class="panel">
-      <div class="chart-head">
-        <div>
-          <h2 class="panel-title">✦ 資産の軌跡 — MAGIC EQUITY</h2>
-          <div class="big-number" id="chart-equity">$ --</div>
-          <div class="small" id="chart-sub">記録された資産履歴を表示</div>
-        </div>
-        <div class="legend"><span><i></i>総資産 USD</span></div>
-      </div>
-      <div class="chart-wrap">
-        <svg id="equity-chart" viewBox="0 0 800 250" preserveAspectRatio="none"
-          role="img" aria-label="実際に記録された資産履歴のグラフ"></svg>
-        <div id="chart-empty" class="chart-empty">資産履歴を読み込み中…</div>
-      </div>
-      <div class="chart-foot">
-        <span id="history-count">履歴：-- 件</span>
-        <span>※ 未来の値や架空の損益は表示しません</span>
-      </div>
-    </section>
-
-    <section class="two-col">
-      <div class="panel">
-        <h2 class="panel-title">🔮 魔法シグナル <span class="pill">BOT DATA</span></h2>
-        <div class="signal-box">
-          <div class="small">現在の判断</div>
-          <div class="signal-word" id="signal">WAIT</div>
-          <div class="signal-reasons" id="signal-reasons">データを読み込んでいます…</div>
-          <div class="bar-label"><span>シグナルスコア</span><b id="score">--</b></div>
-          <div class="score-track"><i id="score-bar"></i></div>
-        </div>
-        <div class="forecast">
-          <div><span class="small">RSI 15m</span><b id="rsi">--</b></div>
-          <div><span class="small">15m変動率</span><b id="momentum">--</b></div>
-          <div><span class="small">資金調達率</span><b id="funding">--</b></div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h2 class="panel-title">⚔️ バトル予測 <span class="pill">RISK CONTROL</span></h2>
-        <div class="risk-list">
-          <div class="risk-row"><span>仮想レバレッジ上限</span><b id="leverage">--</b></div>
-          <div class="risk-row"><span>1回あたりのリスク</span><b id="risk-trade">--</b></div>
-          <div class="risk-row"><span>1日の損失上限</span><b id="risk-day">--</b></div>
-          <div class="risk-row"><span>最大DD上限</span><b id="risk-dd">--</b></div>
-          <div class="risk-row"><span>現在のポジション</span><b id="position">なし</b></div>
-          <div class="risk-row"><span>含み損益</span><b id="unrealized">--</b></div>
-        </div>
-        <p class="small" id="halt-reason" style="margin-top:12px;line-height:1.7">
-          リスク情報を読み込み中…
-        </p>
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 class="panel-title">📜 バトルログ / RECENT TRADES
-        <span class="pill">最大50件</span>
-      </h2>
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>日時</th><th>方向</th><th>エントリー</th>
-              <th>決済</th><th>損益 USD</th><th>損益 JPY</th><th>結果</th>
-            </tr>
-          </thead>
-          <tbody id="trade-rows">
-            <tr><td colspan="7" class="empty">取引履歴を読み込み中…</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="chart-foot">
-        <span id="trade-summary">決済済み取引を表示</span>
-        <span>※ ペーパートレード。実際の注文は行いません。</span>
-      </div>
-    </section>
-  </main>
-
-  <aside class="rightcol">
-    <section class="panel">
-      <h2 class="panel-title">🗺️ 魔法の冒険マップ <span class="pill">QUEST</span></h2>
-      <div class="mapboard">
-        <div class="tile current"><b>🏰</b>START</div>
-        <div class="tile"><b>✦</b>分析</div>
-        <div class="tile"><b>💎</b>資産</div>
-        <div class="tile"><b>🌙</b>休息</div>
-        <div class="tile finish"><b>👑</b>GOAL</div>
-        <div class="tile"><b>📜</b>記録</div>
-        <div class="tile"><b>🪄</b>魔法</div>
-        <div class="tile"><b>🛡️</b>防御</div>
-        <div class="tile"><b>⚔️</b>戦闘</div>
-        <div class="tile"><b>⭐</b>報酬</div>
-      </div>
-      <div class="map-caption">
-        このマップは画面演出です。マス目は実際の利益や勝利を示すものではありません。
-      </div>
-    </section>
-
-    <section class="panel">
-      <h2 class="panel-title">✨ フィボナッチ魔法陣</h2>
-      <div class="magic-area">
-        <div class="magic-circle">
-          <span class="rune r1">✦</span><span class="rune r2">✧</span>
-          <span class="rune r3">ᚠ</span><span class="rune r4">ᛟ</span>
-          <div class="magic-inner">🔮</div>
-        </div>
-      </div>
-      <div class="mini-stat"><span>EMA 9 / 15m</span><b id="ema9">--</b></div>
-      <div class="mini-stat"><span>EMA 21 / 15m</span><b id="ema21">--</b></div>
-      <div class="mini-stat"><span>トレンド 1h</span><b id="trend1">--</b></div>
-      <div class="mini-stat"><span>トレンド 4h</span><b id="trend4">--</b></div>
-      <p class="small" style="line-height:1.7;margin-bottom:0">
-        魔法陣は装飾です。EMAとトレンドの値はBOTが出力した値を表示します。
-      </p>
-    </section>
-
-    <section class="panel">
-      <h2 class="panel-title">📡 エンジン稼働状況</h2>
-      <div class="mini-stat"><span>BOTビルド</span><b id="build">--</b></div>
-      <div class="mini-stat"><span>15m足</span><b id="bars15">--</b></div>
-      <div class="mini-stat"><span>1h足</span><b id="bars1">--</b></div>
-      <div class="mini-stat"><span>4h足</span><b id="bars4">--</b></div>
-      <div class="mini-stat"><span>更新時刻</span><b id="right-updated">--</b></div>
-      <div class="mini-stat"><span>モード</span><b class="green">PAPER ONLY</b></div>
-    </section>
-  </aside>
-</div>
-
-<div class="footer">
-  BTC MAGIC ENGINE · PAPER TRADING ONLY · 市場データおよび履歴はBOT出力に基づきます。
-  <br><span id="toast">data.json 接続待機中</span>
+  <div id="last-update">更新: --</div>
 </div>
 
 <script>
 "use strict";
+const $=id=>document.getElementById(id);
+let fx=null,last=null;
 
-const $ = id => document.getElementById(id);
-let fxRate = null;
-let latestData = null;
-
-function num(v){
-  if(v === null || v === undefined || v === "") return null;
-  const n = Number(v);
-  return Number.isFinite(n) ? n : null;
+function n(v){
+ if(v===null||v===undefined||v==="")return null;
+ const x=Number(v);return Number.isFinite(x)?x:null;
 }
-function first(...values){
-  for(const v of values){
-    if(v !== null && v !== undefined && v !== "") return v;
-  }
-  return null;
+function pick(...v){return v.find(x=>x!==null&&x!==undefined&&x!=="")??null}
+function usd(v){
+ const x=n(v);
+ return x===null?"--":"$"+x.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
 }
-function money(v, currency="USD"){
-  const n = num(v);
-  if(n === null) return "--";
-  if(currency === "JPY") return "¥" + Math.round(n).toLocaleString("ja-JP");
-  return "$" + n.toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-}
-function yen(v){
-  const n = num(v);
-  return n === null || fxRate === null ? "¥ --" : money(n * fxRate,"JPY");
+function jpy(v){
+ const x=n(v);
+ return x===null||fx===null?"¥ --":"¥"+Math.round(x*fx).toLocaleString("ja-JP");
 }
 function pct(v){
-  const n = num(v);
-  return n === null ? "--" : n.toFixed(2) + "%";
+ const x=n(v);return x===null?"--":x.toFixed(1)+"%";
 }
-function setText(id, value){
-  const el = $(id);
-  if(el) el.textContent = value === null || value === undefined ? "--" : String(value);
+function put(id,v){$(id).textContent=v===null||v===undefined?"--":String(v)}
+function dt(v){
+ if(!v)return "--";
+ const d=new Date(v);
+ return Number.isNaN(d.getTime())?String(v):d.toLocaleString("ja-JP",{
+  month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false
+ });
 }
-function setMoneyClass(id, value){
-  const el = $(id);
-  if(!el) return;
-  el.classList.remove("green","red","gold");
-  const n = num(value);
-  if(n !== null) el.classList.add(n > 0 ? "green" : n < 0 ? "red" : "gold");
+function priceOf(t){return n(pick(t.entry_price,t.entry,t.open_price))}
+function exitOf(t){return n(pick(t.exit_price,t.exit,t.close_price))}
+function pnlOf(t){return n(pick(t.net_pnl_usd,t.pnl_usd,t.pnl,t.profit_usd,t.realized_pnl_usd))}
+function timeOf(t){return pick(t.close_time,t.closed_at,t.exit_time,t.timestamp,t.time,t.open_time)}
+function drawChart(history){
+ const svg=$("chart");svg.innerHTML="";
+ const rows=(Array.isArray(history)?history:[]).map(x=>({
+  t:pick(x.timestamp,x.time,x.date,x.generated_at),
+  v:n(pick(x.equity_usd,x.equity,x.balance_usd))
+ })).filter(x=>x.v!==null);
+ put("chart-note","履歴: "+rows.length+" 件 / 最新資産: "+(rows.length?usd(rows[rows.length-1].v):"--"));
+ if(rows.length<2){
+  svg.innerHTML='<text x="250" y="85" text-anchor="middle" fill="#9d7ab4" font-size="12">記録された資産履歴が2件以上になるとグラフが表示されます</text>';
+  return;
+ }
+ const vals=rows.map(x=>x.v);
+ let min=Math.min(...vals),max=Math.max(...vals);
+ if(min===max){min-=1;max+=1}
+ const pad=(max-min)*.08;min-=pad;max+=pad;
+ const X=i=>10+i*480/(vals.length-1);
+ const Y=v=>8+(max-v)*150/(max-min);
+ const line=vals.map((v,i)=>(i?"L":"M")+X(i)+" "+Y(v)).join(" ");
+ const ns="http://www.w3.org/2000/svg";
+ const add=(tag,attrs)=>{
+  const e=document.createElementNS(ns,tag);
+  Object.entries(attrs).forEach(([k,v])=>e.setAttribute(k,v));
+  svg.appendChild(e);return e;
+ };
+ for(let i=0;i<5;i++){
+  const y=8+i*37.5;
+  add("line",{x1:0,y1:y,x2:500,y2:y,stroke:"#efd8f2","stroke-width":1});
+ }
+ const defs=document.createElementNS(ns,"defs");
+ defs.innerHTML='<linearGradient id="pinkfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#ee77ce" stop-opacity=".35"/><stop offset="100%" stop-color="#ee77ce" stop-opacity=".02"/></linearGradient>';
+ svg.appendChild(defs);
+ add("path",{d:line+" L 490 165 L 10 165 Z",fill:"url(#pinkfill)"});
+ add("path",{d:line,fill:"none",stroke:"#d85cc1","stroke-width":2.5});
+ add("circle",{cx:X(vals.length-1),cy:Y(vals[vals.length-1]),r:3.5,fill:"#e958bc"});
 }
-function dateText(value){
-  if(!value) return "--";
-  const d = new Date(value);
-  if(Number.isNaN(d.getTime())) return String(value);
-  return d.toLocaleString("ja-JP",{month:"2-digit",day:"2-digit",
-    hour:"2-digit",minute:"2-digit",hour12:false});
-}
-function safeArray(v){ return Array.isArray(v) ? v : []; }
-function trendText(v){
-  const n = num(v);
-  if(n === null) return "--";
-  return n > 0 ? "上昇 ↑" : n < 0 ? "下降 ↓" : "横ばい →";
-}
-function getPnl(t){
-  return num(first(t.net_pnl_usd,t.pnl_usd,t.pnl,t.profit_usd,t.realized_pnl_usd));
-}
-function getTime(t){
-  return first(t.close_time,t.closed_at,t.exit_time,t.timestamp,t.time,t.open_time,t.entry_time);
-}
-function getEntry(t){
-  return num(first(t.entry_price,t.entry,t.open_price));
-}
-function getExit(t){
-  return num(first(t.exit_price,t.exit,t.close_price));
-}
-function getDirection(t){
-  return String(first(t.direction,t.side,t.position_side,"--")).toUpperCase();
-}
-
-async function loadFX(){
-  try{
-    const res = await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
-    if(!res.ok) throw new Error("FX request failed");
-    const j = await res.json();
-    const rate = num(j && j.rates && j.rates.JPY);
-    if(rate) fxRate = rate;
-    if(latestData) render(latestData);
-  }catch(e){
-    // 為替取得に失敗した場合は換算値を捏造しない
-    setText("toast","為替レートを取得できません。USD表示は継続します。");
-  }
-}
-
-function renderChart(history){
-  const svg = $("equity-chart");
-  const empty = $("chart-empty");
-  svg.innerHTML = "";
-  const rows = safeArray(history).filter(x =>
-    num(first(x.equity_usd,x.equity,x.balance_usd)) !== null
-  );
-  setText("history-count","履歴："+rows.length+" 件");
-  if(rows.length < 2){
-    empty.style.display = "grid";
-    empty.textContent = rows.length === 1
-      ? "履歴は1件です。次回以降の記録でグラフが伸びます。"
-      : "資産履歴はまだありません。BOTの記録を待っています。";
-    return;
-  }
-  empty.style.display = "none";
-  const values = rows.map(x => num(first(x.equity_usd,x.equity,x.balance_usd)));
-  let min = Math.min(...values), max = Math.max(...values);
-  if(min === max){min -= 1; max += 1;}
-  const pad = (max-min)*0.12;
-  min -= pad; max += pad;
-  const W=800,H=250,L=18,R=12,T=14,B=22;
-  const x = i => L + i*(W-L-R)/(values.length-1);
-  const y = v => T+(max-v)*(H-T-B)/(max-min);
-  let line = values.map((v,i)=>(i?"L":"M")+x(i).toFixed(2)+" "+y(v).toFixed(2)).join(" ");
-  const area = line+" L "+x(values.length-1)+" "+(H-B)+" L "+L+" "+(H-B)+" Z";
-  const NS="http://www.w3.org/2000/svg";
-  function add(tag,attrs){
-    const el=document.createElementNS(NS,tag);
-    for(const [k,v] of Object.entries(attrs)) el.setAttribute(k,v);
-    svg.appendChild(el); return el;
-  }
-  for(let i=0;i<5;i++){
-    const yy=T+i*(H-T-B)/4;
-    add("line",{x1:L,y1:yy,x2:W-R,y2:yy,stroke:"#72558e",
-      "stroke-opacity":".35","stroke-dasharray":"4 5"});
-  }
-  const defs=document.createElementNS(NS,"defs");
-  defs.innerHTML='<linearGradient id="areaFill" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#ff83d5" stop-opacity=".35"/><stop offset="100%" stop-color="#b89aff" stop-opacity=".01"/></linearGradient>';
-  svg.appendChild(defs);
-  add("path",{d:area,fill:"url(#areaFill)"});
-  add("path",{d:line,fill:"none",stroke:"#ff83d5","stroke-width":"3",
-    "stroke-linejoin":"round","stroke-linecap":"round"});
-  add("circle",{cx:x(values.length-1),cy:y(values[values.length-1]),r:5,
-    fill:"#fff2ff",stroke:"#ff83d5","stroke-width":"3"});
-  setText("chart-sub","最初："+money(values[0])+"　→　最新："+money(values[values.length-1]));
-}
-
 function renderTrades(trades){
-  const tbody=$("trade-rows");
-  tbody.innerHTML="";
-  const list=safeArray(trades).slice().reverse().slice(0,20);
-  if(!list.length){
-    const tr=document.createElement("tr"),td=document.createElement("td");
-    td.colSpan=7;td.className="empty";td.textContent="決済済み取引はまだありません。";
-    tr.appendChild(td);tbody.appendChild(tr);
-    setText("trade-summary","決済済み取引：0件");
-    return;
-  }
-  list.forEach(t=>{
-    const pnl=getPnl(t), direction=getDirection(t);
-    const vals=[
-      dateText(getTime(t)),direction,
-      money(getEntry(t)),money(getExit(t)),
-      pnl===null?"--":money(pnl),pnl===null?"--":yen(pnl),
-      pnl===null?"記録なし":pnl>0?"WIN":pnl<0?"LOSE":"DRAW"
-    ];
-    const tr=document.createElement("tr");
-    vals.forEach((v,i)=>{
-      const td=document.createElement("td");
-      td.textContent=v;
-      if(i>=2 && i<=5) td.className="num";
-      if(i===4 || i===5 || i===6){
-        if(pnl!==null) td.classList.add(pnl>0?"green":pnl<0?"red":"gold");
-      }
-      if(i===1) td.className=direction==="LONG"?"green":direction==="SHORT"?"pink":"";
-      tr.appendChild(td);
-    });
-    tbody.appendChild(tr);
+ const body=$("trade-rows");body.innerHTML="";
+ const list=(Array.isArray(trades)?trades:[]).slice().reverse().slice(0,5);
+ if(!list.length){
+  body.innerHTML='<tr><td colspan="8">決済済み取引はまだありません</td></tr>';return;
+ }
+ list.forEach(t=>{
+  const p=pnlOf(t),dir=String(pick(t.direction,t.side,"--")).toUpperCase();
+  const result=p===null?"--":p>0?"WIN":p<0?"LOSS":"DRAW";
+  const values=[
+   dt(timeOf(t)),result,
+   pick(t.leverage,t.leverage_x)===null?"--":pick(t.leverage,t.leverage_x)+"x",
+   usd(priceOf(t)),usd(exitOf(t)),usd(p),p===null?"--":jpy(p),
+   pick(t.reason,t.exit_reason,t.signal_reason,"--")
+  ];
+  const tr=document.createElement("tr");
+  values.forEach((v,i)=>{
+   const td=document.createElement("td");td.textContent=v;
+   if(i===1)td.className=p>0?"win":p<0?"loss":"";
+   if(i===5||i===6)td.className=p>0?"win":p<0?"loss":"";
+   tr.appendChild(td);
   });
-  setText("trade-summary","表示中："+list.length+"件（最新順）");
+  body.appendChild(tr);
+ });
 }
-
 function render(d){
-  latestData=d;
-  const m=d.metrics||{},s=d.signal||{},r=d.risk||{},market=d.market||{};
-  const hist=safeArray(d.equity_history);
-  const trades=safeArray(d.recent_trades);
-  const equity=num(m.equity_usd);
-  const pnl=num(m.net_closed_pnl_usd);
-  const wins=num(m.wins),losses=num(m.losses);
-  const wr=num(m.win_rate_pct),dd=num(m.drawdown_pct);
-  const price=num(d.price);
-
-  setText("connection","データ接続済み");
-  setText("top-price",money(price));
-  setText("updated",dateText(d.generated_at));
-  setText("right-updated",dateText(d.generated_at));
-  setText("build",d.build||"--");
-
-  setText("equity",money(equity));
-  setText("equity-jpy",yen(equity));
-  setText("pnl",money(pnl));
-  setMoneyClass("pnl",pnl);
-  setText("pnl-jpy",yen(pnl));
-  setText("winrate",wr===null?"--":pct(wr));
-  setText("win-count","勝ち "+(wins===null?"--":wins)+" / 負け "+(losses===null?"--":losses));
-  setText("drawdown",pct(dd));
-  setText("chart-equity",money(equity));
-  setText("side-equity",money(equity));
-  setText("side-pnl",money(pnl));
-  setMoneyClass("side-pnl",pnl);
-  setText("side-win",wr===null?"--":pct(wr));
-  setText("side-trades",m.closed_trades===undefined?"--":m.closed_trades+"回");
-
-  const initial=100;
-  setText("initial",money(initial));
-  const hp=equity===null?0:Math.max(0,Math.min(100,equity/initial*100));
-  $("hp-bar").style.width=hp+"%";
-  setText("hp-label",equity===null?"--":pct(hp));
-  const closed=num(m.closed_trades)||0;
-  const xp=closed%100;
-  $("xp-bar").style.width=xp+"%";
-  setText("xp-label",closed+" 回");
-
-  const direction=String(s.direction||"WAIT").toUpperCase();
-  setText("signal",direction);
-  $("signal").className="signal-word "+(direction==="LONG"?"green":direction==="SHORT"?"pink":"gold");
-  const reasons=safeArray(s.reasons);
-  setText("signal-reasons",reasons.length?reasons.join(" · "):"BOTが出力したシグナル情報");
-  const score=num(s.score);
-  setText("score",score===null?"--":score);
-  $("score-bar").style.width=Math.max(0,Math.min(100,(score||0)/8*100))+"%";
-  setText("rsi",s.rsi_15m===undefined?"--":s.rsi_15m);
-  setText("momentum",pct(s.momentum_3bar_pct));
-  setText("funding",d.funding_rate_pct===undefined?"--":pct(d.funding_rate_pct));
-  setText("ema9",money(s.ema_9_15m));
-  setText("ema21",money(s.ema_21_15m));
-  setText("trend1",trendText(s.trend_1h));
-  setText("trend4",trendText(s.trend_4h));
-
-  setText("leverage",r.virtual_leverage===undefined?"--":r.virtual_leverage+"x");
-  setText("risk-trade",pct(r.risk_per_trade_pct));
-  setText("risk-day",pct(r.max_daily_loss_pct));
-  setText("risk-dd",pct(r.max_drawdown_pct));
-  const t=d.open_trade;
-  setText("position",t?(t.direction||"保有中"):"なし");
-  setText("unrealized",money(m.open_unrealized_pnl_usd));
-  setMoneyClass("unrealized",m.open_unrealized_pnl_usd);
-  setText("halt-reason",r.halt_reason?"停止・制限："+r.halt_reason:
-    "リスク制限：BOTが出力した設定値を表示中。売買注文は送信していません。");
-
-  setText("bars15",market.candles_15m===undefined?"--":market.candles_15m);
-  setText("bars1",market.candles_1h===undefined?"--":market.candles_1h);
-  setText("bars4",market.candles_4h===undefined?"--":market.candles_4h);
-  renderChart(hist);
-  renderTrades(trades);
-  setText("toast","data.json 読み込み成功 · "+new Date().toLocaleTimeString("ja-JP"));
+ last=d;
+ const m=d.metrics||{},s=d.signal||{},r=d.risk||{};
+ const hist=Array.isArray(d.equity_history)?d.equity_history:[];
+ const trades=Array.isArray(d.recent_trades)?d.recent_trades:[];
+ const price=n(d.price),eq=n(m.equity_usd),pnl=n(m.net_closed_pnl_usd);
+ const wr=n(m.win_rate_pct),dd=n(m.drawdown_pct);
+ put("status","● DATA CONNECTED · "+dt(d.generated_at));
+ put("price",usd(price));put("price-yen",jpy(price));
+ put("equity",usd(eq));put("equity-yen",jpy(eq));
+ put("pnl",pnl===null?"--":(pnl>0?"+ ":"")+usd(pnl));
+ put("pnl-yen",pnl===null?"¥ --":(pnl>0?"+ ":"")+jpy(pnl));
+ put("winrate",pct(wr));
+ put("closed","決済回数: "+pick(m.closed_trades,trades.length,"--"));
+ put("unrealized",usd(m.open_unrealized_pnl_usd));
+ put("unrealized-yen",jpy(m.open_unrealized_pnl_usd));
+ put("dd",pct(dd));
+ put("pf","PF: "+(n(m.profit_factor)===null?"--":n(m.profit_factor).toFixed(2)));
+ const direction=String(pick(s.direction,"WAIT")).toUpperCase();
+ put("signal",direction);
+ $("signal").style.color=direction==="LONG"||direction==="BUY"?"#10a58a":direction==="SHORT"||direction==="SELL"?"#e65da7":"#8b70aa";
+ put("score",n(s.score)===null?"--":Math.round(n(s.score))+" / 100");
+ put("rsi",n(s.rsi_15m)===null?"--":n(s.rsi_15m).toFixed(1));
+ const reasons=Array.isArray(s.reasons)?s.reasons.join(" / "):pick(s.reason,s.message,"BOTのシグナル情報");
+ put("reason","理由: "+reasons);
+ put("current-price","現在価格: "+usd(price));
+ const open=d.open_trade;
+ put("battle-pos",open?pick(open.direction,open.side,"ポジション保有中"):"ポジションなし");
+ put("battle-pnl","含み損益: "+usd(m.open_unrealized_pnl_usd));
+ drawChart(hist);renderTrades(trades);
+ const levels=Array.isArray(d.fibonacci_levels)?d.fibonacci_levels:[];
+ levels.slice(0,7).forEach((v,i)=>put("fib"+i,usd(pick(v.price,v.value,v))));
+ put("last-update","最終更新: "+dt(d.generated_at));
 }
-
-async function loadData(){
-  try{
-    const res=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});
-    if(!res.ok) throw new Error("HTTP "+res.status);
-    const data=await res.json();
-    if(!data || typeof data!=="object") throw new Error("JSON形式が不正です");
-    render(data);
-  }catch(e){
-    setText("connection","接続エラー");
-    setText("toast","data.json を読めません。GitHub Actionsの成功状態と docs/data.json を確認してください。");
-    if(!$("chart-empty").textContent.includes("履歴")){
-      $("chart-empty").style.display="grid";
-      $("chart-empty").textContent="データを読み込めません。";
-    }
-    console.error("data.json load failed:",e);
-  }
+async function load(){
+ try{
+  const res=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});
+  if(!res.ok)throw new Error("HTTP "+res.status);
+  const data=await res.json();
+  render(data);
+ }catch(e){
+  put("status","DATA ERROR");
+  put("last-update","data.jsonを読み込めません");
+  console.error(e);
+ }
 }
-
-loadFX();
-loadData();
-setInterval(loadData,60000);
+async function loadFX(){
+ try{
+  const r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
+  if(!r.ok)throw Error("FX");
+  const d=await r.json();
+  fx=n(d.rates&&d.rates.JPY);
+  if(last)render(last);
+ }catch(e){console.warn("JPY conversion unavailable",e)}
+}
+$("reference").addEventListener("error",()=>{
+ $("stage").innerHTML='<div style="padding:30px;color:#8b247e">見本画像が見つかりません。docs/reference-dashboard.jpeg が存在するか確認してください。</div>';
+});
+load();loadFX();setInterval(load,60000);
 </script>
 </body>
 </html>
