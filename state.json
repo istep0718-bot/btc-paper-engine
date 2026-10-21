@@ -1,9 +1,113 @@
 {
-  "build": "BTC_PAPER_V4_2026-10-20",
+  "build": "BTC_PAPER_V5_2026-10-21",
   "created_at": "2026-10-19T21:33:46.592471+00:00",
-  "cash": 19.87365258685206,
-  "peak_equity": 20.01182025676764,
-  "trades": [
+  "cash": 100.0,
+  "peak_equity": 100.0,
+  "trades": [],
+  "open_trade": null,
+  "daily": {
+    "date": "2026-10-21",
+    "start_equity": 100.0
+  },
+  "last_signal_key": null,
+  "halt_reason": null,
+  "last_run_at": "2026-10-21T02:02:54.827632+00:00",
+  "last_price": 83004.0,
+  "last_signal": {
+    "direction": "WAIT",
+    "score": 2,
+    "reasons": [
+      "1時間足EMA20 > EMA50",
+      "4時間足EMA20 < EMA50",
+      "価格は1時間足EMA20より上",
+      "RSI 55.0: 上向き候補",
+      "資金調達率に極端な偏りなし",
+      "上位足の方向またはスコアが不一致"
+    ],
+    "price": 83004.0,
+    "rsi_15m": 55.00061948021134,
+    "atr_15m": 170.91825004962175,
+    "ema20_1h": 82560.34616640156,
+    "ema50_1h": 82250.49378037028,
+    "ema20_4h": 82086.29441995181,
+    "ema50_4h": 82245.33325367451,
+    "fib": {
+      "swing_high": 83425.0,
+      "swing_low": 80644.0,
+      "retracement_382": 82362.66,
+      "retracement_500": 82034.5,
+      "retracement_618": 81706.34
+    },
+    "fvgs": [
+      {
+        "type": "bullish",
+        "low": 82783.0,
+        "high": 82786.0,
+        "formed_at": 1792530000000
+      },
+      {
+        "type": "bullish",
+        "low": 82826.0,
+        "high": 82873.0,
+        "formed_at": 1792530900000
+      },
+      {
+        "type": "bullish",
+        "low": 82902.0,
+        "high": 82922.0,
+        "formed_at": 1792533600000
+      },
+      {
+        "type": "bullish",
+        "low": 82981.0,
+        "high": 83009.0,
+        "formed_at": 1792534500000
+      },
+      {
+        "type": "bearish",
+        "low": 83013.0,
+        "high": 83092.0,
+        "formed_at": 1792544400000
+      },
+      {
+        "type": "bearish",
+        "low": 82974.0,
+        "high": 83013.0,
+        "formed_at": 1792545300000
+      }
+    ],
+    "candle_move_pct": 0.0386,
+    "signal_candle_time": 1792547100000
+  },
+  "metrics": {
+    "closed_trades": 0,
+    "wins": 0,
+    "losses": 0,
+    "breakeven_trades": 0,
+    "win_rate_pct": 0.0,
+    "net_closed_pnl_usd": 0,
+    "gross_profit_usd": 0,
+    "gross_loss_usd": 0,
+    "profit_factor": null,
+    "average_win_usd": 0.0,
+    "average_loss_usd": 0.0,
+    "best_trade_usd": 0.0,
+    "worst_trade_usd": 0.0,
+    "expectancy_usd": 0.0,
+    "equity_usd": 100.0,
+    "cash_usd": 100.0,
+    "peak_equity_usd": 100.0,
+    "drawdown_pct": 0.0,
+    "open_unrealized_pnl_usd": 0.0
+  },
+  "equity_history": [
+    {
+      "time": "2026-10-21T02:02:54.827632+00:00",
+      "equity_usd": 100.0,
+      "price": 83004.0
+    }
+  ],
+  "archived_trades": [
     {
       "id": "SHORT:1792484100000",
       "direction": "SHORT",
@@ -35,103 +139,7 @@
       "return_on_margin_pct": -6.317
     }
   ],
-  "open_trade": null,
-  "daily": {
-    "date": "2026-10-21",
-    "start_equity": 19.87365258685206
-  },
-  "last_signal_key": "SHORT:1792484100000",
-  "halt_reason": null,
-  "last_run_at": "2026-10-21T01:39:11.109977+00:00",
-  "last_price": 82866.0,
-  "last_signal": {
-    "direction": "WAIT",
-    "score": 2,
-    "reasons": [
-      "1時間足EMA20 > EMA50",
-      "4時間足EMA20 < EMA50",
-      "価格は1時間足EMA20より上",
-      "RSI 52.8: 上向き候補",
-      "資金調達率に極端な偏りなし",
-      "上位足の方向または総合スコアが不一致"
-    ],
-    "price": 82866.0,
-    "rsi_15m": 52.800961850149754,
-    "atr_15m": 167.3844793474903,
-    "ema20_1h": 82515.2247102333,
-    "ema50_1h": 82220.35066936497,
-    "ema20_4h": 82086.29441995181,
-    "ema50_4h": 82245.33325367451,
-    "fib": {
-      "swing_high": 83425.0,
-      "swing_low": 80644.0,
-      "retracement_382": 82362.66,
-      "retracement_500": 82034.5,
-      "retracement_618": 81706.34
-    },
-    "fvgs": [
-      {
-        "type": "bullish",
-        "low": 82635.0,
-        "high": 82709.0,
-        "formed_at": 1792529100000
-      },
-      {
-        "type": "bullish",
-        "low": 82783.0,
-        "high": 82786.0,
-        "formed_at": 1792530000000
-      },
-      {
-        "type": "bullish",
-        "low": 82826.0,
-        "high": 82873.0,
-        "formed_at": 1792530900000
-      },
-      {
-        "type": "bearish",
-        "low": 82968.0,
-        "high": 82982.0,
-        "formed_at": 1792538100000
-      },
-      {
-        "type": "bearish",
-        "low": 83013.0,
-        "high": 83092.0,
-        "formed_at": 1792544400000
-      },
-      {
-        "type": "bearish",
-        "low": 82974.0,
-        "high": 83013.0,
-        "formed_at": 1792545300000
-      }
-    ],
-    "candle_move_pct": 0.1485,
-    "signal_candle_time": 1792545300000
-  },
-  "metrics": {
-    "closed_trades": 1,
-    "wins": 0,
-    "losses": 1,
-    "breakeven_trades": 0,
-    "win_rate_pct": 0.0,
-    "net_closed_pnl_usd": -0.126347,
-    "gross_profit_usd": 0,
-    "gross_loss_usd": 0.126347,
-    "profit_factor": 0.0,
-    "average_win_usd": 0.0,
-    "average_loss_usd": -0.126347,
-    "best_trade_usd": -0.126347,
-    "worst_trade_usd": -0.126347,
-    "expectancy_usd": -0.126347,
-    "equity_usd": 19.873653,
-    "cash_usd": 19.873653,
-    "peak_equity_usd": 20.01182,
-    "drawdown_pct": 0.69,
-    "open_unrealized_pnl_usd": 0.0
-  },
-  "equity_history": [
+  "archived_equity_history": [
     {
       "time": "2026-10-19T22:35:34.614363+00:00",
       "equity_usd": 20.0,
@@ -337,5 +345,6 @@
       "equity_usd": 19.873653,
       "price": 82866.0
     }
-  ]
+  ],
+  "account_started_at": "2026-10-21T02:02:52.580114+00:00"
 }

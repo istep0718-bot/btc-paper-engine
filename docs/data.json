@@ -1,15 +1,15 @@
 {
-  "build": "BTC_PAPER_V4_2026-10-20",
-  "generated_at": "2026-10-21T01:39:11.110012+00:00",
+  "build": "BTC_PAPER_V5_2026-10-21",
+  "generated_at": "2026-10-21T02:02:54.827661+00:00",
   "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
   "exchange_data": "Hyperliquid public API",
   "symbol": "BTC perpetual",
-  "price": 82866.0,
+  "price": 83004.0,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
-  "open_interest_btc": 41046.16666,
-  "premium": -0.0002340426,
-  "volume_24h_usd": 2582548238.697,
+  "open_interest_btc": 41200.53034,
+  "premium": -0.0001361162,
+  "volume_24h_usd": 2611558038.68754,
   "signal": {
     "direction": "WAIT",
     "score": 2,
@@ -17,15 +17,15 @@
       "1時間足EMA20 > EMA50",
       "4時間足EMA20 < EMA50",
       "価格は1時間足EMA20より上",
-      "RSI 52.8: 上向き候補",
+      "RSI 55.0: 上向き候補",
       "資金調達率に極端な偏りなし",
-      "上位足の方向または総合スコアが不一致"
+      "上位足の方向またはスコアが不一致"
     ],
-    "price": 82866.0,
-    "rsi_15m": 52.800961850149754,
-    "atr_15m": 167.3844793474903,
-    "ema20_1h": 82515.2247102333,
-    "ema50_1h": 82220.35066936497,
+    "price": 83004.0,
+    "rsi_15m": 55.00061948021134,
+    "atr_15m": 170.91825004962175,
+    "ema20_1h": 82560.34616640156,
+    "ema50_1h": 82250.49378037028,
     "ema20_4h": 82086.29441995181,
     "ema50_4h": 82245.33325367451,
     "fib": {
@@ -36,12 +36,6 @@
       "retracement_618": 81706.34
     },
     "fvgs": [
-      {
-        "type": "bullish",
-        "low": 82635.0,
-        "high": 82709.0,
-        "formed_at": 1792529100000
-      },
       {
         "type": "bullish",
         "low": 82783.0,
@@ -55,10 +49,16 @@
         "formed_at": 1792530900000
       },
       {
-        "type": "bearish",
-        "low": 82968.0,
-        "high": 82982.0,
-        "formed_at": 1792538100000
+        "type": "bullish",
+        "low": 82902.0,
+        "high": 82922.0,
+        "formed_at": 1792533600000
+      },
+      {
+        "type": "bullish",
+        "low": 82981.0,
+        "high": 83009.0,
+        "formed_at": 1792534500000
       },
       {
         "type": "bearish",
@@ -73,38 +73,38 @@
         "formed_at": 1792545300000
       }
     ],
-    "candle_move_pct": 0.1485,
-    "signal_candle_time": 1792545300000
+    "candle_move_pct": 0.0386,
+    "signal_candle_time": 1792547100000
   },
   "metrics": {
-    "closed_trades": 1,
+    "closed_trades": 0,
     "wins": 0,
-    "losses": 1,
+    "losses": 0,
     "breakeven_trades": 0,
     "win_rate_pct": 0.0,
-    "net_closed_pnl_usd": -0.126347,
+    "net_closed_pnl_usd": 0,
     "gross_profit_usd": 0,
-    "gross_loss_usd": 0.126347,
-    "profit_factor": 0.0,
+    "gross_loss_usd": 0,
+    "profit_factor": null,
     "average_win_usd": 0.0,
-    "average_loss_usd": -0.126347,
-    "best_trade_usd": -0.126347,
-    "worst_trade_usd": -0.126347,
-    "expectancy_usd": -0.126347,
-    "equity_usd": 19.873653,
-    "cash_usd": 19.873653,
-    "peak_equity_usd": 20.01182,
-    "drawdown_pct": 0.69,
+    "average_loss_usd": 0.0,
+    "best_trade_usd": 0.0,
+    "worst_trade_usd": 0.0,
+    "expectancy_usd": 0.0,
+    "equity_usd": 100.0,
+    "cash_usd": 100.0,
+    "peak_equity_usd": 100.0,
+    "drawdown_pct": 0.0,
     "open_unrealized_pnl_usd": 0.0
   },
   "risk": {
-    "virtual_leverage": 3.0,
+    "virtual_leverage": 30.0,
     "risk_per_trade_pct": 0.5,
     "max_margin_pct": 10.0,
     "max_daily_loss_pct": 3.0,
     "max_drawdown_pct": 10.0,
     "halt_reason": null,
-    "warning": "Paper simulation only. Fees, slippage, execution and liquidation are simplified. Not suitable for live trading."
+    "warning": "Paper simulation only. Execution, liquidation, fees and slippage are simplified; no live trading."
   },
   "open_trade": null,
   "recent_trades": [
@@ -141,209 +141,9 @@
   ],
   "equity_history": [
     {
-      "time": "2026-10-19T22:35:34.614363+00:00",
-      "equity_usd": 20.0,
-      "price": 82061.0
-    },
-    {
-      "time": "2026-10-19T23:04:31.284002+00:00",
-      "equity_usd": 20.0,
-      "price": 82087.0
-    },
-    {
-      "time": "2026-10-19T23:05:12.701527+00:00",
-      "equity_usd": 20.0,
-      "price": 82080.7
-    },
-    {
-      "time": "2026-10-19T23:09:43.851857+00:00",
-      "equity_usd": 20.0,
-      "price": 82007.0
-    },
-    {
-      "time": "2026-10-19T23:21:51.523125+00:00",
-      "equity_usd": 20.0,
-      "price": 81964.0
-    },
-    {
-      "time": "2026-10-20T00:02:49.546144+00:00",
-      "equity_usd": 20.0,
-      "price": 81892.0
-    },
-    {
-      "time": "2026-10-20T00:46:07.406329+00:00",
-      "equity_usd": 20.0,
-      "price": 81637.0
-    },
-    {
-      "time": "2026-10-20T01:38:16.170549+00:00",
-      "equity_usd": 20.0,
-      "price": 81570.1
-    },
-    {
-      "time": "2026-10-20T02:32:44.381920+00:00",
-      "equity_usd": 20.0,
-      "price": 81672.0
-    },
-    {
-      "time": "2026-10-20T03:06:49.840925+00:00",
-      "equity_usd": 20.0,
-      "price": 81821.0
-    },
-    {
-      "time": "2026-10-20T03:38:29.419797+00:00",
-      "equity_usd": 20.0,
-      "price": 82044.0
-    },
-    {
-      "time": "2026-10-20T04:33:31.781775+00:00",
-      "equity_usd": 20.0,
-      "price": 82124.0
-    },
-    {
-      "time": "2026-10-20T04:48:54.290056+00:00",
-      "equity_usd": 20.0,
-      "price": 82066.8
-    },
-    {
-      "time": "2026-10-20T05:07:36.881126+00:00",
-      "equity_usd": 20.0,
-      "price": 81990.0
-    },
-    {
-      "time": "2026-10-20T06:05:51.888019+00:00",
-      "equity_usd": 20.0,
-      "price": 81643.0
-    },
-    {
-      "time": "2026-10-20T06:44:32.495550+00:00",
-      "equity_usd": 20.0,
-      "price": 81846.0
-    },
-    {
-      "time": "2026-10-20T07:43:30.305734+00:00",
-      "equity_usd": 20.0,
-      "price": 81592.0
-    },
-    {
-      "time": "2026-10-20T08:37:26.720879+00:00",
-      "equity_usd": 19.998799,
-      "price": 81578.0
-    },
-    {
-      "time": "2026-10-20T09:35:46.352151+00:00",
-      "equity_usd": 20.01182,
-      "price": 81401.0
-    },
-    {
-      "time": "2026-10-20T10:09:09.983653+00:00",
-      "equity_usd": 20.001374,
-      "price": 81543.0
-    },
-    {
-      "time": "2026-10-20T11:06:17.085048+00:00",
-      "equity_usd": 20.001227,
-      "price": 81545.0
-    },
-    {
-      "time": "2026-10-20T11:38:35.487675+00:00",
-      "equity_usd": 20.004317,
-      "price": 81503.0
-    },
-    {
-      "time": "2026-10-20T12:43:11.273652+00:00",
-      "equity_usd": 19.993179,
-      "price": 81654.4
-    },
-    {
-      "time": "2026-10-20T13:44:14.952485+00:00",
-      "equity_usd": 19.994459,
-      "price": 81637.0
-    },
-    {
-      "time": "2026-10-20T14:37:06.057989+00:00",
-      "equity_usd": 19.873653,
-      "price": 83181.0
-    },
-    {
-      "time": "2026-10-20T15:14:39.441463+00:00",
-      "equity_usd": 19.873653,
-      "price": 82306.0
-    },
-    {
-      "time": "2026-10-20T16:11:08.424133+00:00",
-      "equity_usd": 19.873653,
-      "price": 82494.0
-    },
-    {
-      "time": "2026-10-20T17:12:19.496087+00:00",
-      "equity_usd": 19.873653,
-      "price": 82737.0
-    },
-    {
-      "time": "2026-10-20T18:04:43.733215+00:00",
-      "equity_usd": 19.873653,
-      "price": 82696.0
-    },
-    {
-      "time": "2026-10-20T18:40:51.087251+00:00",
-      "equity_usd": 19.873653,
-      "price": 82539.0
-    },
-    {
-      "time": "2026-10-20T19:36:48.075596+00:00",
-      "equity_usd": 19.873653,
-      "price": 82463.0
-    },
-    {
-      "time": "2026-10-20T20:06:28.747194+00:00",
-      "equity_usd": 19.873653,
-      "price": 82571.0
-    },
-    {
-      "time": "2026-10-20T20:40:01.962822+00:00",
-      "equity_usd": 19.873653,
-      "price": 82731.0
-    },
-    {
-      "time": "2026-10-20T21:34:44.269690+00:00",
-      "equity_usd": 19.873653,
-      "price": 82838.0
-    },
-    {
-      "time": "2026-10-20T22:06:41.411998+00:00",
-      "equity_usd": 19.873653,
-      "price": 83024.7
-    },
-    {
-      "time": "2026-10-20T22:37:00.145565+00:00",
-      "equity_usd": 19.873653,
-      "price": 82999.0
-    },
-    {
-      "time": "2026-10-20T23:06:03.902033+00:00",
-      "equity_usd": 19.873653,
-      "price": 83018.0
-    },
-    {
-      "time": "2026-10-20T23:34:20.259249+00:00",
-      "equity_usd": 19.873653,
-      "price": 82892.0
-    },
-    {
-      "time": "2026-10-20T23:59:56.489144+00:00",
-      "equity_usd": 19.873653,
-      "price": 82990.0
-    },
-    {
-      "time": "2026-10-21T00:43:07.909707+00:00",
-      "equity_usd": 19.873653,
-      "price": 83091.0
-    },
-    {
-      "time": "2026-10-21T01:39:11.109977+00:00",
-      "equity_usd": 19.873653,
-      "price": 82866.0
+      "time": "2026-10-21T02:02:54.827632+00:00",
+      "equity_usd": 100.0,
+      "price": 83004.0
     }
   ],
   "fib": {
@@ -354,12 +154,6 @@
     "retracement_618": 81706.34
   },
   "fvgs": [
-    {
-      "type": "bullish",
-      "low": 82635.0,
-      "high": 82709.0,
-      "formed_at": 1792529100000
-    },
     {
       "type": "bullish",
       "low": 82783.0,
@@ -373,10 +167,16 @@
       "formed_at": 1792530900000
     },
     {
-      "type": "bearish",
-      "low": 82968.0,
-      "high": 82982.0,
-      "formed_at": 1792538100000
+      "type": "bullish",
+      "low": 82902.0,
+      "high": 82922.0,
+      "formed_at": 1792533600000
+    },
+    {
+      "type": "bullish",
+      "low": 82981.0,
+      "high": 83009.0,
+      "formed_at": 1792534500000
     },
     {
       "type": "bearish",
@@ -396,9 +196,10 @@
     "確定済みローソク足を使用",
     "Wilder RSI・ATR",
     "1h・4h EMAと15mモメンタム",
-    "1h・4hトレンド不一致時は新規エントリーを見送り",
+    "上位足の方向が一致しない場合は見送り",
     "仮想手数料とスリッページを概算",
     "検証指標: 勝率、平均利益・損失、PF、期待値",
+    "初期資金100 USD、仮想レバレッジ上限30倍",
     "実注文・ウォレット接続なし"
   ]
 }
