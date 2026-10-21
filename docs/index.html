@@ -1,430 +1,262 @@
 
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#fff0f8">
-<title>♡ BTCトレーダーRPG ♡</title>
+<meta name="theme-color" content="#ffd5f0">
+<title>萌え萌えキュン♡ BTC冒険記</title>
 <style>
-:root{
- --pink:#ff78b7;--pink2:#ffb7d8;--purple:#a78bfa;
- --bg:#fff5fb;--card:#ffffff;--ink:#59465f;
- --muted:#a18ba5;--green:#21b88a;--red:#f05d83;
- --gold:#f4bc49;--line:#f5d9e9;
-}
+:root{--p:#f16fbd;--pale:#fff0fa;--purple:#9664d9;--ink:#52367d;--line:#efb8e2;--green:#0aa991;--red:#e84e9b}
 *{box-sizing:border-box}
-body{
- margin:0;color:var(--ink);background:
- radial-gradient(circle at 10% 5%,#ffe0f0 0,transparent 28%),
- radial-gradient(circle at 95% 30%,#eee5ff 0,transparent 28%),var(--bg);
- font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
- padding:12px;
-}
-main{max-width:1000px;margin:auto}
-.card,.hero{
- background:rgba(255,255,255,.94);border:2px solid var(--line);
- border-radius:22px;padding:16px;margin-bottom:14px;
- box-shadow:0 5px 16px #e8b5d326;
-}
-.hero{
- background:linear-gradient(135deg,#ffe1f0,#f3e7ff 65%,#fff8d9);
- border-color:#ffc4e0;text-align:center;overflow:hidden;
-}
-h1{font-size:25px;margin:4px 0;color:#e65a9c}
-h2{font-size:17px;margin:0 0 12px;color:#c45591}
-p{line-height:1.65}
-.sub{font-size:12px;color:var(--muted)}
-.mascot{font-size:66px;line-height:1.2;filter:drop-shadow(0 4px 2px #e6a4c5)}
-.speech{
- display:inline-block;background:white;border:2px solid #ffc6e1;
- border-radius:16px;padding:10px 15px;margin:8px auto;font-weight:bold;
-}
-.badge{
- display:inline-block;border-radius:999px;padding:6px 12px;
- background:#fff;color:#c45591;border:1px solid #ffc6e1;
- font-size:12px;font-weight:bold;margin:3px;
-}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
-.metric{background:#fff8fc;border:1px solid var(--line);border-radius:15px;padding:12px;min-width:0}
-.label{font-size:12px;color:var(--muted)}
-.value{font-size:20px;font-weight:800;margin-top:6px;overflow-wrap:anywhere}
-.small{font-size:12px;color:var(--muted);margin-top:5px}
-.green{color:var(--green)}.red{color:var(--red)}.purple{color:#9270e8}
-button{
- border:0;border-radius:13px;padding:11px 14px;background:linear-gradient(135deg,#ff82bb,#dca4ff);
- color:white;font-size:13px;font-weight:bold;cursor:pointer;
- box-shadow:0 3px 7px #d89acb38;
-}
-button.secondary{background:#fff;color:#b75a98;border:1px solid var(--line);box-shadow:none}
-button:active{transform:scale(.98)}
-.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.hpbar,.xpbar{height:15px;background:#f7e2ee;border-radius:99px;overflow:hidden;margin:8px 0 12px}
-.hpfill{height:100%;width:100%;background:linear-gradient(90deg,#ff608c,#ff9ecb);border-radius:99px;transition:width .5s}
-.xpfill{height:100%;width:0;background:linear-gradient(90deg,#a88aff,#d4a7ff);border-radius:99px;transition:width .5s}
-.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:14px}
-.tile{
- min-height:70px;background:#fff7fc;border:2px solid #f3d5e8;
- border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;
- font-size:11px;color:#b58da8;text-align:center;padding:4px;
-}
-.tile .emoji{font-size:23px}
-.tile.current{background:#ffe0ef;border-color:#ff71b2;box-shadow:0 0 0 3px #ffb6d6aa;transform:translateY(-2px)}
-.tile.done{background:#f0e9ff;border-color:#c6b0ff;color:#8b69d1}
-.tile.boss{background:#fff3d4;border-color:#f6d176}
-#chart{width:100%;height:230px;display:block}
+body{margin:0;background:linear-gradient(145deg,#fff6fc,#f1e7ff 65%,#fff0f9);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px}
+main{max-width:1600px;margin:auto;padding:12px}
+.hero{height:180px;position:relative;overflow:hidden;border:2px solid white;border-radius:22px;background:linear-gradient(100deg,#ffb6df,#e7c7ff 55%,#b5e5ff);display:flex;align-items:center;justify-content:space-between;padding:20px 28px;box-shadow:0 5px 20px #c67bc633}
+.hero:before{content:"🏰　🌸　✨　🌙　💖　🏰";position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;font-size:35px;opacity:.32}
+.heroText{position:relative;z-index:1}
+h1{font-size:clamp(25px,4vw,45px);line-height:1.1;margin:0;color:white;text-shadow:2px 3px 0 #a958ca,0 0 12px #e46fc9}
+.hero p{font-weight:800;color:#8144a9;margin:10px 0}
+.heroGirl{font-size:clamp(62px,10vw,115px);filter:drop-shadow(0 5px 4px #b45ac455);z-index:1}
+.pill,.tag{display:inline-block;background:#fffC;border:1px solid white;border-radius:99px;padding:5px 10px;font-weight:800;font-size:11px}
+.layout{display:grid;grid-template-columns:180px minmax(0,1fr) 285px;gap:12px;margin-top:12px}
+aside,.middle,.right{min-width:0}
+.card,.menu,.girlbox{background:#ffffffdf;border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 4px 15px #ad73c512;min-width:0}
+.menu{padding:7px;margin-bottom:10px}
+.nav{padding:13px 9px;border-bottom:1px solid #f8e3f3;font-weight:800;color:#a65aaf}
+.nav:first-child{background:#ffe0f3;border-radius:12px;color:#df50a9}
+.girlbox{text-align:center;background:linear-gradient(#ffe5f4,#f1e4ff);margin-bottom:10px}
+.girl{font-size:78px;line-height:1.4}
+.girlbox b{color:#d552a8}
+h2{font-size:15px;margin:0 0 10px;color:#914bb7}
+h3{font-size:12px;margin:0 0 7px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
+.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:10px 0}
+.stat{background:linear-gradient(145deg,#fff,#fff3fb);border:1px solid #f1c8e9;border-radius:12px;padding:10px;min-width:0}
+.k{font-size:10px;font-weight:800;color:#9d81b0}
+.v{font-size:clamp(16px,1.7vw,23px);font-weight:900;overflow-wrap:anywhere;margin:5px 0;color:#62429b}
+.sub{font-size:10px;color:#987fb0;overflow-wrap:anywhere}
+.green{color:var(--green)!important}.red{color:var(--red)!important}
+.row{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
+.chart{width:100%;height:235px;display:block}
+.legend{display:flex;justify-content:space-between;flex-wrap:wrap;font-size:10px;color:#9d81b0}
+.bar{height:12px;border-radius:99px;background:#f4dff2;overflow:hidden;margin:7px 0}
+.bar span{display:block;height:100%;background:linear-gradient(90deg,#ff6fbd,#a66eff);border-radius:99px;transition:width .3s}
+.map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
+.tile{height:55px;display:flex;align-items:center;justify-content:center;flex-direction:column;border:1px solid #e6d1ff;border-radius:10px;background:linear-gradient(#fff,#f3eaff);font-size:19px}
+.tile small{font-size:9px;color:#9879b5}
+.tile.current{border:2px solid #ec69bc;background:#ffd9f0;box-shadow:0 0 9px #ffb8df}
+.tile.passed{background:#fff0f8;border-color:#f5afd8}
+.tile.goal{background:#fff2c9}
+button{border:0;border-radius:99px;padding:11px 14px;background:linear-gradient(90deg,#ff7abd,#b17aff);color:white;font-weight:900;width:100%;cursor:pointer}
+.magic{background:linear-gradient(135deg,#fff8ff,#f3eaff);border:1px solid #e7d0fa;border-radius:13px;padding:11px}
+table{width:100%;border-collapse:collapse;font-size:10px}
+th,td{text-align:left;padding:8px 5px;border-bottom:1px solid #f0e2f5;white-space:nowrap}
+th{background:#fff6fc;color:#9879b2}
 .tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:12px}
-th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
-th{color:var(--muted)}
-.hidden{display:none!important}
-.fibgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.fibitem{padding:10px;background:#fff8fc;border:1px solid var(--line);border-radius:12px}
-.fibitem strong{display:block;margin-top:5px;font-size:14px}
-.flash{animation:flash .55s ease}
-@keyframes flash{0%{transform:scale(1)}35%{transform:scale(1.04)}100%{transform:scale(1)}}
-.footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
-@media(max-width:600px){
- body{padding:8px}.card,.hero{padding:12px;border-radius:17px}
- .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .value{font-size:18px}h1{font-size:22px}
- .board{gap:4px}.tile{min-height:62px;font-size:10px;border-radius:10px}
- .tile .emoji{font-size:20px}
-}
+.fibrow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3dfef;font-size:11px;gap:8px}
+.note{padding:10px;border:1px solid #f3d8a2;background:#fff8e6;color:#896c41;border-radius:12px;font-size:10px;margin-top:10px}
+.foot{text-align:center;font-size:10px;color:#a38ab7;padding:16px 5px}
+@media(max-width:1100px){.layout{grid-template-columns:145px minmax(0,1fr)}.right{grid-column:2}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{height:155px}}
+@media(max-width:700px){main{padding:6px}.layout{grid-template-columns:1fr}.left{display:none}.right{grid-column:auto}.row{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{height:145px;padding:15px}.heroGirl{font-size:64px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.v{font-size:18px}.chart{height:210px}}
 </style>
 </head>
 <body>
 <main>
-<section class="hero" id="hero">
- <div class="badge">♡ FREE PAPER TRADING RPG ♡</div>
- <h1>萌え萌えキュン♡ BTC冒険記</h1>
- <div class="mascot" id="mascot">🐰</div>
- <div class="speech" id="speech">ご主人さま、冒険に出発だよっ♡</div>
- <div>
-  <span class="badge" id="stageBadge">🏰 STAGE 1</span>
-  <span class="badge" id="levelBadge">⭐ LV.1</span>
+<header class="hero">
+ <div class="heroText">
+  <h1>萌え萌えキュン♡<br>BTC冒険記</h1>
+  <p>— 魔法少女の仮想通貨RPG — ✨</p>
+  <span class="pill">🪄 PAPER TRADE ONLY</span>
  </div>
- <p class="sub" id="updated">データを読み込み中...</p>
+ <div class="heroGirl">🧙🏻‍♀️💖✨</div>
+ <div style="position:relative;z-index:1;text-align:center">
+  <div style="font-size:28px">🏰</div><b id="stageTop">STAGE 1</b>
+  <div class="bar" style="background:#ffffff99;width:150px"><span id="xpBar" style="width:0%"></span></div>
+  <small id="xpTop">0 / 500 XP</small>
+ </div>
+</header>
+
+<div class="layout">
+<aside class="left">
+ <div class="menu">
+  <div class="nav">⌂　ホーム</div><div class="nav">⚔️　バトルログ</div>
+  <div class="nav">📈　資産グラフ</div><div class="nav">✧　フィボナッチ</div>
+  <div class="nav">⚙️　設定</div>
+ </div>
+ <div class="girlbox">
+  <div class="sub">小さな一歩が<br>大きな夢を叶えるよ♡</div>
+  <div class="girl">👸🏻🪄</div>
+  <b>一緒に冒険しよう♡</b><div>🌸✨💖</div>
+ </div>
+ <div class="girlbox"><div style="font-size:28px">🌙⭐</div><b>夢は、きっと叶うよ♡</b><p class="sub">焦らず、冷静に！</p></div>
+</aside>
+
+<section class="middle">
+ <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
+  <div class="card"><h2>💗 HP</h2><div class="v" id="hp">100 / 100</div><div class="bar"><span id="hpBar" style="width:100%"></span></div><div class="sub" id="hpMsg">元気いっぱい！</div></div>
+  <div class="card"><h2>⭐ 経験値</h2><div class="v" id="xp">0 XP</div><div class="bar"><span id="xpBar2" style="width:0%"></span></div><div class="sub">勝利すると経験値を獲得。10勝で次のステージへ！</div></div>
+ </div>
+
+ <div class="stats">
+  <div class="stat"><div class="k">₿ BTC価格</div><div class="v" id="price">$—</div><div class="sub" id="priceJ">¥—</div></div>
+  <div class="stat"><div class="k">🐷 仮想資産</div><div class="v" id="equity">$—</div><div class="sub" id="equityJ">¥—</div></div>
+  <div class="stat"><div class="k">💞 確定損益</div><div class="v" id="pnl">$—</div><div class="sub" id="pnlJ">¥—</div></div>
+  <div class="stat"><div class="k">👤 勝率</div><div class="v" id="winrate">—%</div><div class="sub" id="count">決済回数 —</div></div>
+  <div class="stat"><div class="k">✨ 含み損益</div><div class="v" id="unreal">$—</div><div class="sub" id="unrealJ">¥—</div></div>
+  <div class="stat"><div class="k">💗 最大DD</div><div class="v" id="dd">—%</div><div class="sub">資産下落率</div></div>
+ </div>
+
+ <div class="row">
+  <section class="card">
+   <h2>📊 資産の冒険グラフ (USD)</h2>
+   <canvas id="chart" class="chart"></canvas>
+   <div class="legend"><span>♡ 資産推移</span><span id="chartCount">履歴 —件</span></div>
+  </section>
+  <section class="card">
+   <h2>💎 現在の戦闘予報</h2>
+   <div class="magic">
+    <div class="grid">
+     <div class="stat"><div class="k">シグナル</div><div class="v" id="signal">WAIT</div></div>
+     <div class="stat"><div class="k">スコア</div><div class="v" id="score">—</div></div>
+     <div class="stat"><div class="k">RSI 15分</div><div class="v" id="rsi">—</div></div>
+    </div>
+    <div class="sub" id="reasons">判定理由を読み込み中…</div>
+   </div>
+   <div class="stat" style="margin-top:9px"><div class="k">プロフィットファクター</div><div class="v" id="pf">—</div><div class="sub">勝ち合計 ÷ 負け合計</div></div>
+  </section>
+ </div>
+
+ <div class="row">
+  <section class="card">
+   <h2>⚔️ 現在のバトル</h2>
+   <div class="magic" id="position"><div style="font-size:30px">🪄💫</div>ポジションを確認中…</div>
+  </section>
+  <section class="card">
+   <h2>📜 最近のバトルログ</h2>
+   <div class="tablewrap"><table><thead><tr><th>日時</th><th>結果</th><th>方向</th><th>損益USD</th></tr></thead><tbody id="trades"><tr><td colspan="4">読み込み中…</td></tr></tbody></table></div>
+  </section>
+ </div>
 </section>
 
-<section class="card">
- <div class="row">
-  <h2>💗 冒険者のHP</h2>
-  <span id="hpText">100 / 100 HP</span>
- </div>
- <div class="hpbar"><div id="hpFill" class="hpfill"></div></div>
- <div class="row">
-  <span class="sub" id="hpMessage">元気いっぱい！</span>
-  <span class="badge" id="coinBadge">🪙 0 COIN</span>
- </div>
- <div class="row" style="margin-top:14px">
-  <h2>✨ 経験値</h2><span id="xpText">0 XP</span>
- </div>
- <div class="xpbar"><div id="xpFill" class="xpfill"></div></div>
- <div class="sub">勝利すると経験値を獲得。10勝で次のステージへ！</div>
-</section>
-
-<section class="card">
- <div class="row">
+<aside class="right">
+ <section class="card" style="margin-bottom:10px">
   <h2>🎲 すごろく冒険マップ</h2>
-  <span id="progressText" class="badge">0 / 10 マス</span>
- </div>
- <div class="board" id="board"></div>
- <p class="sub" id="mapMessage">勝利を重ねてゴールを目指そう！</p>
-</section>
+  <div class="sub" style="text-align:right" id="mapCount">0 / 10 マス</div>
+  <div class="map" id="map"></div>
+  <p class="sub" id="mapMsg">勝利を重ねてゴールを目指そう！</p>
+  <div style="font-size:40px;text-align:right">🧚🏻‍♀️✨</div>
+ </section>
+ <section class="card" style="margin-bottom:10px">
+  <h2>🔮 フィボナッチの魔法</h2>
+  <div class="magic">
+   <div style="font-size:36px;text-align:center">🔮</div>
+   <div class="sub">現在価格</div><div class="v" id="fibPrice">$—</div>
+   <div id="fibLevels"></div>
+   <div class="sub" id="fibRange" style="margin-top:8px"></div>
+  </div>
+ </section>
+ <section class="card">
+  <h2>🛡️ リスクの結界</h2>
+  <div class="stat"><div class="k">仮想レバレッジ上限</div><div class="v">30x</div></div>
+  <div class="stat" style="margin-top:8px"><div class="k">最大証拠金比率</div><div class="v">10%</div></div>
+  <div class="stat" style="margin-top:8px"><div class="k">日次損失上限</div><div class="v">3%</div></div>
+  <p class="sub" id="risk">ペーパートレード専用</p>
+ </section>
+</aside>
+</div>
 
-<section class="grid">
- <div class="metric"><div class="label">₿ BTC価格</div><div class="value" id="price">--</div><div class="small" id="priceJpy">--</div></div>
- <div class="metric"><div class="label">💰 仮想資産</div><div class="value" id="equity">--</div><div class="small" id="equityJpy">--</div></div>
- <div class="metric"><div class="label">⚔️ 確定損益</div><div class="value" id="pnl">--</div><div class="small" id="pnlJpy">--</div></div>
- <div class="metric"><div class="label">🏆 勝率</div><div class="value" id="winrate">--</div><div class="small" id="tradeCount">決済回数: --</div></div>
- <div class="metric"><div class="label">💥 含み損益</div><div class="value" id="unrealized">--</div><div class="small" id="unrealizedJpy">--</div></div>
- <div class="metric"><div class="label">🛡️ 最大DD</div><div class="value" id="drawdown">--</div><div class="small" id="pf">PF: --</div></div>
-</section>
-
-<section class="card">
- <h2>📈 資産の冒険グラフ（USD）</h2>
- <canvas id="chart"></canvas>
- <div class="small" id="chartInfo">資産履歴を読み込み中...</div>
-</section>
-
-<section class="card">
- <h2>🔮 フィボナッチの魔法</h2>
- <button id="fibButton" type="button">✨ 魔法陣をひらく</button>
- <div id="fibPanel" class="hidden" style="margin-top:12px">
-  <div id="fibStatus" class="sub"></div>
-  <div id="fibLevels" class="fibgrid" style="margin-top:10px"></div>
-  <p id="fibNote" class="sub"></p>
- </div>
-</section>
-
-<section class="card">
- <h2>🔍 現在の戦闘予報</h2>
- <div class="grid">
-  <div class="metric"><div class="label">シグナル</div><div class="value" id="signal">--</div></div>
-  <div class="metric"><div class="label">スコア</div><div class="value" id="score">--</div></div>
-  <div class="metric"><div class="label">RSI 15分</div><div class="value" id="rsi">--</div></div>
- </div>
- <p id="reasons" class="sub">--</p>
-</section>
-
-<section class="card">
- <h2>🗡️ 現在のバトル</h2>
- <div id="openTrade">ポジションなし。今は休憩中だよ♡</div>
-</section>
-
-<section class="card">
- <h2>📜 最近のバトルログ</h2>
- <div class="sub" style="margin-bottom:10px">新しい決済結果がゲーム内のHP・経験値・マップに反映されるよ。</div>
- <div class="tablewrap">
-  <table>
-   <thead><tr><th>日時</th><th>結果</th><th>倍率</th><th>エントリー</th><th>決済</th><th>損益 USD</th><th>損益 円</th><th>理由</th></tr></thead>
-   <tbody id="trades"><tr><td colspan="8">読み込み中...</td></tr></tbody>
-  </table>
- </div>
-</section>
-
-<section class="footer">
- ♡ ゲームのHP・コイン・レベルは演出用です。実際の資産とは別管理です。<br>
- ペーパートレード専用。利益を保証せず、実際の注文は行いません。
-</section>
+<div class="note">⚠️ このページは仮想取引の記録を表示します。実注文・ウォレット接続は行いません。円換算は参考値です。ゲーム内HP・経験値・コインは演出用で、実際の資産とは別です。</div>
+<div class="foot">♡ ゲームのHP・コイン・レベルは演出用です。実際の資産とは別管理です。♡　ペーパートレード専用</div>
 </main>
 
 <script>
 "use strict";
-
 const $=id=>document.getElementById(id);
-const SAVE_KEY="btc_moe_rpg_v1";
-let DATA=null,USDJPY=150,fibOpen=false;
-let game={hp:100,xp:0,wins:0,losses:0,coins:0,seen:[],initialized:false,lastEvent:"start"};
-
-function n(v){return v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))?Number(v):null}
-function first(...v){return v.find(x=>x!==undefined&&x!==null&&x!=="")}
-function fmt(v,d=2){return n(v)===null?"--":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d})}
-function usd(v){return n(v)===null?"--":"$"+fmt(v)}
-function yen(v){return n(v)===null?"--":"¥"+Math.round(Number(v)*USDJPY).toLocaleString("ja-JP")}
-function signed(v){return n(v)===null?"--":(Number(v)>0?"+":"")+fmt(v)}
-function set(id,v){$(id).textContent=String(v)}
-function pnlColor(id,v){
- $(id).classList.remove("green","red");
- if(n(v)!==null)$(id).classList.add(Number(v)>=0?"green":"red");
+let rate=150,dataNow=null;
+const GAME="btc_magical_girl_v2";
+const num=v=>{let n=Number(v);return Number.isFinite(n)?n:null};
+const usd=v=>num(v)===null?"—":"$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const jpy=v=>num(v)===null?"—":"¥"+Math.round(Number(v)*rate).toLocaleString("ja-JP");
+const pct=v=>num(v)===null?"—":Number(v).toFixed(2)+"%";
+const signed=v=>num(v)===null?"—":(v>0?"+":v<0?"−":"")+usd(Math.abs(v));
+const signedJ=v=>num(v)===null?"—":(v>0?"+":v<0?"−":"")+jpy(Math.abs(v));
+const safe=v=>String(v??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+function game(){
+ try{let g=JSON.parse(localStorage.getItem(GAME)||"{}");return{hp:Number.isFinite(g.hp)?g.hp:100,xp:g.xp||0,coins:g.coins||0,step:g.step||0,wins:g.wins||0,seen:Array.isArray(g.seen)?g.seen:[]}}
+ catch(e){return{hp:100,xp:0,coins:0,step:0,wins:0,seen:[]}}
 }
-function loadGame(){
- try{
-  const saved=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");
-  if(saved&&typeof saved==="object"){
-   game={...game,...saved};
-   if(!Array.isArray(game.seen))game.seen=[];
-  }
- }catch(e){}
-}
-function saveGame(){
- try{localStorage.setItem(SAVE_KEY,JSON.stringify(game))}catch(e){}
-}
-function tradeKey(t){
- return String(first(t.closed_at,t.closedAt,t.timestamp,t.opened_at,""))+"|"+
- String(first(t.direction,""))+"|"+String(first(t.entry_price,""))+"|"+
- String(first(t.exit_price,""))+"|"+String(first(t.net_pnl_usd,""));
-}
-function processNewTrades(trades){
- const keys=trades.map(tradeKey);
- if(!game.initialized){
-  game.seen=[...new Set(keys)].slice(0,100);
-  game.initialized=true;
-  saveGame();
-  return;
+function save(g){try{localStorage.setItem(GAME,JSON.stringify(g))}catch(e){}}
+function updateGame(trades){
+ let g=game(),changed=false;
+ for(let t of trades||[]){
+  let id=String(t.closed_at||"")+"|"+String(t.net_pnl_usd??"");
+  if(g.seen.includes(id))continue;
+  g.seen.push(id);changed=true;
+  let p=Number(t.net_pnl_usd||0);
+  if(p>0){g.wins++;g.xp+=100;g.coins+=10;g.hp=Math.min(100,g.hp+8);g.step=(g.step+1)%10}
+  else if(p<0)g.hp=Math.max(0,g.hp-Math.min(35,Math.max(5,Math.round(Math.abs(p)*2))));
  }
- const fresh=trades.filter(t=>!game.seen.includes(tradeKey(t)));
- // 古い取引から順に反映し、画面の表示順に依存しにくくする
- fresh.reverse().forEach(t=>{
-  const p=n(t.net_pnl_usd);
-  if(p===null)return;
-  if(p>0){
-   game.wins++;
-   game.xp+=100;
-   game.coins+=10;
-   game.hp=Math.min(100,game.hp+8);
-   game.lastEvent="win";
-  }else if(p<0){
-   game.losses++;
-   const damage=Math.max(5,Math.min(35,Math.round(Math.abs(p)*2)));
-   game.hp=Math.max(0,game.hp-damage);
-   game.lastEvent="loss";
-  }else{
-   game.lastEvent="draw";
-  }
-  game.seen.push(tradeKey(t));
-  game.seen=game.seen.slice(-100);
- });
- saveGame();
+ g.seen=g.seen.slice(-400);if(changed)save(g);return g;
 }
-function renderGame(){
- const stage=Math.floor(game.wins/10)+1;
- const step=game.wins%10;
- const level=Math.floor(game.xp/500)+1;
- set("stageBadge","🏰 STAGE "+stage);
- set("levelBadge","⭐ LV."+level);
- set("hpText",game.hp+" / 100 HP");
- $("hpFill").style.width=game.hp+"%";
- $("hpFill").style.background=game.hp<=25?
-  "linear-gradient(90deg,#ed4165,#ff9a9a)":"linear-gradient(90deg,#ff608c,#ff9ecb)";
- set("xpText",game.xp+" XP");
- $("xpFill").style.width=(game.xp%500)/5+"%";
- set("coinBadge","🪙 "+game.coins+" COIN");
- set("progressText",step+" / 10 マス");
- set("hpMessage",game.hp===0?"HP 0！ピンチ演出中。次の勝利で復活できるよ":
-  game.hp<=25?"危険！回復が必要だよ…":"元気いっぱい！今日も冒険だ♡");
-
- const board=$("board");board.replaceChildren();
- const tiles=[
-  ["🏁","START"],["🌸","1"],["🍬","2"],["⭐","3"],["💎","4"],
-  ["🎁","宝箱"],["🌷","6"],["🍓","7"],["✨","8"],["👑","GOAL"]
- ];
- tiles.forEach((tile,i)=>{
-  const el=document.createElement("div");
-  el.className="tile"+(i===step?" current":"")+(i<step?" done":"")+(i===5||i===9?" boss":"");
-  const em=document.createElement("div");em.className="emoji";
-  em.textContent=i===step?"🐰":(i<step?"💖":tile[0]);
-  const label=document.createElement("div");label.textContent=i===step?"YOU":tile[1];
-  el.append(em,label);board.appendChild(el);
- });
- let mascot="🐰",speech="ご主人さま、次の勝利を待ってるよっ♡",msg="勝利を重ねてゴールを目指そう！";
- if(game.lastEvent==="win"){mascot="🥳";speech="やったぁぁ♡ 勝利だよ！ "+game.wins+"勝！";msg="前に進んだよ！次のバトルもがんばろう♡";}
- if(game.lastEvent==="loss"){mascot=game.hp<=25?"😭":"🥺";speech=game.hp===0?"きゃーっ！HPがゼロだよ…！":"いたたっ！ダメージを受けちゃった…";msg="敗北も経験値の一部。無理せず様子を見よう。";}
- if(game.lastEvent==="draw"){mascot="🤔";speech="引き分けかな？次のチャンスを待とう♡";}
- if(game.wins>0&&step===0){mascot="👑";speech="ステージクリア！新しい冒険が始まるよ♡";msg="おめでとう！新しいステージに到達！";}
- if(game.hp===0&&game.lastEvent!=="win"){mascot="😭";}
- set("mascot",mascot);set("speech",speech);set("mapMessage",msg);
+function drawMap(g){
+ let icons=["🌸","❄️","💎","🌷","⭐","🧰","🌙","💖","✨","🏰"];
+ $("map").innerHTML=icons.map((ic,i)=>`<div class="tile ${i<g.step?"passed":""} ${i===g.step?"current":""} ${i===9?"goal":""}">${i===g.step?"🧚🏻‍♀️":ic}<small>${i===9?"GOAL":i+1}</small></div>`).join("");
+ $("mapCount").textContent=g.step+" / 10 マス";
+ $("mapMsg").textContent=g.wins?"勝利 "+g.wins+"回！ゴールを目指そう♡":"勝利を重ねてゴールを目指そう！";
+ $("stageTop").textContent="STAGE "+(Math.floor(g.wins/10)+1);
+ $("hp").textContent=g.hp+" / 100";$("hpBar").style.width=g.hp+"%";
+ $("hpMsg").textContent=g.hp===0?"HPゼロ！次の勝利で回復♡":"✦ 元気いっぱい！";
+ $("xp").textContent=g.xp+" XP";$("xpBar2").style.width=(g.xp%500)/5+"%";
+ $("xpBar").style.width=(g.xp%500)/5+"%";$("xpTop").textContent=(g.xp%500)+" / 500 XP";
 }
-function renderTrades(trades){
- const body=$("trades");body.replaceChildren();
- if(!trades.length){
-  const tr=document.createElement("tr"),td=document.createElement("td");
-  td.colSpan=8;td.textContent="まだバトルログがないよ♡";tr.appendChild(td);body.appendChild(tr);return;
- }
- trades.slice(0,30).forEach(t=>{
-  const tr=document.createElement("tr"),p=n(t.net_pnl_usd);
-  const vals=[
-   first(t.closed_at,t.opened_at,"--"),
-   p===null?"--":p>0?"🏆 WIN":p<0?"💥 DAMAGE":"DRAW",
-   n(t.leverage_virtual)===null?"--":fmt(t.leverage_virtual,1)+"x",
-   usd(t.entry_price),usd(t.exit_price),
-   p===null?"--":signed(p),p===null?"--":signed(Math.round(p*USDJPY)),
-   first(t.close_reason,"--")
-  ];
-  vals.forEach((v,i)=>{
-   const td=document.createElement("td");td.textContent=String(v);
-   if(i===5||i===6){if(p!==null)td.className=p>0?"green":p<0?"red":"";}
-   tr.appendChild(td);
-  });
-  body.appendChild(tr);
- });
-}
-function drawChart(history){
- const c=$("chart"),ctx=c.getContext("2d"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;
- c.width=Math.max(300,rect.width*ratio);c.height=230*ratio;
- ctx.setTransform(ratio,0,0,ratio,0,0);
- const w=c.width/ratio,h=230;ctx.clearRect(0,0,w,h);
- const values=history.map(x=>n(typeof x==="number"?x:first(x.equity_usd,x.equity,x.value))).filter(v=>v!==null);
- if(values.length<2){
-  ctx.fillStyle="#a18ba5";ctx.font="14px sans-serif";ctx.fillText("資産履歴がたまるとグラフが出るよ♡",10,30);
-  set("chartInfo","記録数: "+values.length);return;
- }
- const min=Math.min(...values),max=Math.max(...values),span=max-min||1,pad=25;
- ctx.strokeStyle="#f5d9e9";
- for(let i=0;i<5;i++){const y=pad+(h-pad*2)*i/4;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
- ctx.strokeStyle="#ed7db7";ctx.lineWidth=3;ctx.beginPath();
- values.forEach((v,i)=>{
-  const x=pad+(w-pad*2)*i/(values.length-1),y=h-pad-(v-min)/span*(h-pad*2);
-  if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
- });
- ctx.stroke();ctx.fillStyle="#a18ba5";ctx.font="11px sans-serif";
- ctx.fillText("$"+fmt(max),5,14);ctx.fillText("$"+fmt(min),5,h-5);
- set("chartInfo","記録数: "+values.length+" / 最新資産: "+usd(values[values.length-1]));
-}
-function renderFib(d){
- const s=d.signal||{},fib=s.fib||d.fib||null,levels=$("fibLevels");levels.replaceChildren();
- if(fib&&typeof fib==="object"){
-  const arr=[
-   ["0%",first(fib.level_0,fib["0"],fib.zero)],
-   ["23.6%",first(fib.level_236,fib["0.236"],fib["23.6"])],
-   ["38.2%",first(fib.level_382,fib["0.382"],fib["38.2"])],
-   ["50%",first(fib.level_500,fib["0.5"],fib["50"])],
-   ["61.8%",first(fib.level_618,fib["0.618"],fib["61.8"])],
-   ["78.6%",first(fib.level_786,fib["0.786"],fib["78.6"])],
-   ["100%",first(fib.level_100,fib["1"],fib.one)]
-  ];
-  arr.forEach(([label,v])=>{
-   if(n(v)===null)return;
-   const el=document.createElement("div");el.className="fibitem";
-   el.textContent=label;const st=document.createElement("strong");st.textContent=usd(v)+" / "+yen(v);
-   el.appendChild(st);levels.appendChild(el);
-  });
-  set("fibStatus",levels.children.length?"bot.py出力のフィボナッチ値":"数値形式を認識できません");
-  set("fibNote","計算元がスイング高値・安値かどうかはbot.py側の仕様確認が必要です。");
-  return;
- }
- const price=n(d.price),atr=n(s.atr_15m);
- if(price===null||atr===null||atr<=0){
-  set("fibStatus","必要なデータがありません。");set("fibNote","data.jsonのpriceとsignal.atr_15mを確認してください。");return;
- }
- const low=price-atr*3,high=price;
- [0,.236,.382,.5,.618,.786,1].forEach(r=>{
-  const v=high-(high-low)*r,el=document.createElement("div");el.className="fibitem";
-  el.textContent=(r*100).toFixed(1).replace(".0","")+"%";
-  const st=document.createElement("strong");st.textContent=usd(v)+" / "+yen(v);
-  el.appendChild(st);levels.appendChild(el);
- });
- set("fibStatus","暫定参考値");
- set("fibNote","注意：スイング高値・安値に基づく正式なフィボナッチではありません。現在価格とATRからの参考計算です。");
+function chart(points){
+ let c=$("chart"),ctx=c.getContext("2d"),w=Math.max(c.clientWidth,250),h=c.clientHeight,dpr=devicePixelRatio||1;
+ c.width=w*dpr;c.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
+ let a=(points||[]).map(p=>num(p.equity_usd)).filter(v=>v!==null);
+ if(a.length<2){ctx.fillStyle="#997bb0";ctx.font="12px sans-serif";ctx.fillText("資産履歴が増えるとグラフが表示されます",8,h/2);$("chartCount").textContent="履歴 "+a.length+"件";return}
+ let lo=Math.min(...a),hi=Math.max(...a),span=hi-lo||1,L=49,R=8,T=12,B=22,cw=w-L-R,ch=h-T-B;
+ ctx.font="10px sans-serif";ctx.fillStyle="#987bb1";ctx.strokeStyle="#f0deef";
+ for(let i=0;i<4;i++){let y=T+ch*i/3;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(usd(hi-span*i/3),2,y+3)}
+ let pts=a.map((v,i)=>({x:L+cw*i/(a.length-1),y:T+ch*(hi-v)/span}));
+ let grad=ctx.createLinearGradient(0,T,0,h-B);grad.addColorStop(0,"#ff82c988");grad.addColorStop(1,"#d3aaff05");
+ ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.lineTo(pts.at(-1).x,h-B);ctx.lineTo(pts[0].x,h-B);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
+ ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle="#ed6cba";ctx.lineWidth=2.5;ctx.stroke();
+ pts.forEach((p,i)=>{if(i%Math.max(1,Math.floor(pts.length/20))===0||i===pts.length-1){ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,7);ctx.fillStyle="#e96cbd";ctx.fill()}});
+ $("chartCount").textContent="記録数："+a.length;
 }
 function render(d){
- const m=d.metrics||{},s=d.signal||{},o=d.open_trade||null;
- const price=n(d.price),eq=n(m.equity_usd),pnl=n(m.net_closed_pnl_usd),un=n(m.open_unrealized_pnl_usd);
- set("price",usd(price));set("priceJpy",yen(price));
- set("equity",usd(eq));set("equityJpy",yen(eq));
- set("pnl",pnl===null?"--":signed(pnl)+" USD");set("pnlJpy",pnl===null?"--":signed(Math.round(pnl*USDJPY))+" 円");pnlColor("pnl",pnl);
- set("winrate",n(m.win_rate_pct)===null?"--":fmt(m.win_rate_pct)+"%");
- set("tradeCount","決済回数: "+first(m.closed_trades,"--"));
- set("unrealized",un===null?"--":signed(un)+" USD");set("unrealizedJpy",un===null?"--":signed(Math.round(un*USDJPY))+" 円");pnlColor("unrealized",un);
- set("drawdown",n(m.drawdown_pct)===null?"--":fmt(m.drawdown_pct)+"%");
- set("pf","PF: "+(n(m.profit_factor)===null?"--":fmt(m.profit_factor)));
- set("signal",first(s.direction,"WAIT"));set("score",n(s.score)===null?"--":fmt(s.score,0));
- set("rsi",n(s.rsi_15m)===null?"--":fmt(s.rsi_15m,1));
- set("reasons",Array.isArray(s.reasons)?s.reasons.join(" / "):first(s.reasons,"今はシグナルの理由なし"));
- set("openTrade",o?
-  "方向: "+first(o.direction,"--")+" / エントリー: "+usd(o.entry_price)+
-  " / ストップ: "+usd(o.stop_price)+" / 利確目標: "+usd(o.target_price):
-  "ポジションなし。今は休憩中だよ♡");
- renderTrades(d.recent_trades||[]);
- drawChart(d.equity_history||[]);
- renderFib(d);
- set("updated","更新: "+first(d.generated_at,"日時不明")+" / "+first(d.build,"build不明"));
+ dataNow=d;let m=d.metrics||{},s=d.signal||{},g=updateGame(d.recent_trades||[]);
+ $("price").textContent=usd(d.price);$("priceJ").textContent=jpy(d.price);
+ $("equity").textContent=usd(m.equity_usd);$("equityJ").textContent=jpy(m.equity_usd);
+ $("pnl").textContent=signed(m.net_closed_pnl_usd);$("pnlJ").textContent=signedJ(m.net_closed_pnl_usd);
+ $("winrate").textContent=pct(m.win_rate_pct);$("count").textContent="決済回数："+(m.closed_trades??0);
+ $("unreal").textContent=signed(m.open_unrealized_pnl_usd);$("unrealJ").textContent=signedJ(m.open_unrealized_pnl_usd);
+ $("dd").textContent=pct(m.drawdown_pct);$("pf").textContent=m.profit_factor==null?"—":Number(m.profit_factor)>=99?"∞":Number(m.profit_factor).toFixed(2);
+ ["pnl","unreal"].forEach(id=>{let el=$(id),v=id==="pnl"?m.net_closed_pnl_usd:m.open_unrealized_pnl_usd;el.className="v "+(Number(v)>0?"green":Number(v)<0?"red":"")});
+ $("signal").textContent=s.direction||"WAIT";$("signal").className="v "+(s.direction==="LONG"?"green":s.direction==="SHORT"?"red":"");
+ $("score").textContent=(s.score??"—")+"/ 5";
+ $("rsi").textContent=num(s.rsi_15m)===null?"—":Number(s.rsi_15m).toFixed(1);
+ $("reasons").innerHTML=(s.reasons||[]).map(x=>"✧ "+safe(x)).join("<br>")||"判定理由なし";
+ let t=d.open_trade;
+ $("position").innerHTML=t?`<b>${safe(t.direction)} ポジション保有中</b><div class="grid" style="margin-top:8px"><div class="stat"><div class="k">エントリー</div><b>${usd(t.entry_price)}</b></div><div class="stat"><div class="k">損切り</div><b>${usd(t.stop_price)}</b></div><div class="stat"><div class="k">利確目標</div><b>${usd(t.target_price)}</b></div></div><div class="sub">仮想倍率 ${t.leverage_virtual||30}x · 実注文なし</div>`:'<div style="font-size:30px">🪄💫</div><b>ポジションなし</b><p class="sub">次のチャンスを待機中だよ♡</p>';
+ $("trades").innerHTML=(d.recent_trades||[]).slice().reverse().slice(0,8).map(t=>{let p=Number(t.net_pnl_usd||0);return `<tr><td>${t.closed_at?safe(new Date(t.closed_at).toLocaleString("ja-JP",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})):"—"}</td><td class="${p>=0?"green":"red"}">${p>0?"WIN":p<0?"LOSS":"DRAW"}</td><td>${safe(t.direction)}</td><td class="${p>=0?"green":"red"}">${signed(p)}</td></tr>`}).join("")||'<tr><td colspan="4">決済履歴はまだありません♡</td></tr>';
+ $("fibPrice").textContent=usd(d.price);
+ let f=d.fib||{};
+ let levels=[["0%","swing_high"],["38.2%","retracement_382"],["50%","retracement_500"],["61.8%","retracement_618"],["100%","swing_low"]];
+ $("fibLevels").innerHTML=levels.filter(x=>num(f[x[1]])!==null).map(x=>`<div class="fibrow"><span>${x[0]}</span><b>${usd(f[x[1]])}</b></div>`).join("")||'<div class="sub">フィボナッチデータ待ち</div>';
+ $("fibRange").textContent=num(f.swing_high)!==null&&num(f.swing_low)!==null?"高値 "+usd(f.swing_high)+" / 安値 "+usd(f.swing_low):"";
+ $("risk").textContent=d.risk?.halt_reason?"🛑 停止理由: "+d.risk.halt_reason:"🟢 現在、停止理由はありません（仮想取引）";
+ drawMap(g);chart(d.equity_history||[]);
 }
-async function loadFx(){
- try{
-  const r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
-  if(!r.ok)throw Error("FX");
-  const d=await r.json();if(n(d?.rates?.JPY)>0)USDJPY=Number(d.rates.JPY);
- }catch(e){/* 為替APIが失敗した場合は参考レート150円 */}
+async function loadRate(){
+ try{let r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});let x=await r.json();if(Number(x?.rates?.JPY)>0)rate=Number(x.rates.JPY)}catch(e){}
 }
 async function loadData(){
- try{
-  const r=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});
-  if(!r.ok)throw Error("data.json HTTP "+r.status);
-  const d=await r.json();DATA=d;
-  processNewTrades(d.recent_trades||[]);
-  render(d);renderGame();
- }catch(e){set("updated","読み込みエラー: "+e.message);}
+ try{let r=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);let d=await r.json();if(!d.metrics||!d.signal)throw Error("data.json形式");render(d);document.title="萌え萌えキュン♡ BTC冒険記"}catch(e){$("reasons").textContent="データ読込エラー: "+e.message+"。GitHub Actionsと docs/data.json を確認してください。"}
 }
-$("fibButton").addEventListener("click",()=>{
- fibOpen=!fibOpen;$("fibPanel").classList.toggle("hidden",!fibOpen);
- $("fibButton").textContent=fibOpen?"💖 魔法陣をとじる":"✨ 魔法陣をひらく";
- if(fibOpen&&DATA)renderFib(DATA);
-});
-window.addEventListener("resize",()=>{if(DATA)drawChart(DATA.equity_history||[])});
-loadGame();renderGame();
-(async()=>{await loadFx();await loadData();})();
+async function start(){await loadRate();await loadData()}
+window.addEventListener("resize",()=>{if(dataNow)chart(dataNow.equity_history||[])});
+start();
 </script>
 </body>
 </html>
