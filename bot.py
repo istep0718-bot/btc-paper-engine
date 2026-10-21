@@ -1,335 +1,565 @@
 #!/usr/bin/env python3
-"""BTC Paper Engine V6 — paper trading only; no wallet or live orders."""
-import json, math, time, urllib.request
+"""
+BTC PAPER ENGINE V7
+Paper trading only. No wallet, private key, or live orders.
+Uses Hyperliquid public market-data endpoints and writes state.json + docs/data.json.
+Designed for GitHub Actions Free: one compact run, no external packages.
+"""
+import json
+import math
+import os
+import time
+import urllib.request
+import urllib.error
 from datetime import datetime, timezone
 from pathlib import Path
 
+BUILD = "BTC_PAPER_V7_2026-10-21"
 API = "https://api.hyperliquid.xyz/info"
 ROOT = Path(__file__).resolve().parent
-STATE_FILE = ROOT / "state.json"
-DASH_FILE = ROOT / "docs" / "data.json"
-BUILD = "BTC_PAPER_V6_2026-10-21"
+STATE_PATH = ROOT / "state.json"
+DATA_PATH = ROOT / "docs" / "data.json"
 
 INITIAL_EQUITY = 100.0
-LEVERAGE = 30.0                 # maximum virtual leverage; not a target
-RISK_PER_TRADE = 0.005           # 0.5% of equity
-MAX_MARGIN_FRACTION = 0.10       # at most 10% of equity as margin
+FEE_RATE = 0.0005       # per side
+SLIPPAGE_RATE = 0.0002  # per side
+RISK_PER_TRADE = 0.005  # 0.5% of equity at stop
+MAX_MARGIN_FRACTION = 0.10
+MAX_VIRTUAL_LEVERAGE = 30.0
 MAX_DAILY_LOSS = 0.03
 MAX_DRAWDOWN = 0.10
-FEE_PER_SIDE = 0.0005
-SLIPPAGE_PER_SIDE = 0.0002
-MIN_NOTIONAL = 1.0
+MAX_CONSECUTIVE_LOSSES = 4
+COOLDOWN_MINUTES = 60
 MAX_HOLD_HOURS = 24
-MAX_TRADES = 500
-MAX_HISTORY = 2000
-MAX_ARCHIVE = 2000
+MIN_BARS = 60
+REQUEST_TIMEOUT = 12
+USER_AGENT = "BTC-Paper-Engine-V7/1.0"
 
-def now():
-    return datetime.now(timezone.utc)
+def now_iso():
+    return datetime.now(timezone.utc).isoformat()
 
-def iso_now():
-    return now().isoformat()
-
-def now_ms():
-    return int(time.time() * 1000)
-
-def finite(x):
+def parse_dt(value):
     try:
-        return math.isfinite(float(x))
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+def request_json(payload):
+    req = urllib.request.Request(
+        API,
+        data=json.dumps(payload).encode("utf-8"),
+        headers={"Content-Type": "application/json", "User-Agent": USER_AGENT},
+        method="POST",
+    )
+    with urllib.request.urlopen(req, timeout=REQUEST_TIMEOUT) as response:
+        return json.loads(response.read().decode("utf-8"))
+
+def get_candles(interval, count=180):
+    end_ms = int(time.time() * 1000)
+    minutes = {"15m": 15, "1h": 60, "4h": 240}[interval]
+    start_ms = end_ms - minutes * 60_000 * count
+    rows = request_json({
+        "type": "candleSnapshot",
+        "req": {"coin": "BTC", "interval": interval, "startTime": start_ms, "endTime": end_ms},
+    })
+    candles = []
+    for x in rows if isinstance(rows, list) else []:
+        try:
+            candles.append({
+                "time": int(x["t"]),
+                "open": float(x["o"]),
+                "high": float(x["h"]),
+                "low": float(x["l"]),
+                "close": float(x["c"]),
+                "volume": float(x.get("v", 0)),
+            })
+        except (KeyError, TypeError, ValueError):
+            continue
+    candles.sort(key=lambda c: c["time"])
+    # Deduplicate candle timestamps.
+    unique = {}
+    for c in candles:
+        unique[c["time"]] = c
+    return list(unique.values())
+
+def get_market_context():
+    meta = request_json({"type": "metaAndAssetCtxs"})
+    contexts = meta[1] if isinstance(meta, list) and len(meta) > 1 else []
+    funding = None
+    mark_price = None
+    if contexts:
+        ctx = contexts[0]
+        try:
+            funding = float(ctx.get("funding"))
+        except (TypeError, ValueError):
+            pass
+        for key in ("markPx", "midPx", "oraclePx"):
+            try:
+                if ctx.get(key) is not None:
+                    mark_price = float(ctx[key])
+                    break
+            except (TypeError, ValueError):
+                pass
+    return funding, mark_price
+
+def ema(values, period):
+    if not values:
+        return []
+    alpha = 2.0 / (period + 1.0)
+    out = [float(values[0])]
+    for value in values[1:]:
+        out.append(float(value) * alpha + out[-1] * (1.0 - alpha))
+    return out
+
+def rsi(values, period=14):
+    if len(values) < period + 1:
+        return None
+    gains, losses = [], []
+    for i in range(1, len(values)):
+        delta = values[i] - values[i - 1]
+        gains.append(max(delta, 0.0))
+        losses.append(max(-delta, 0.0))
+    avg_gain = sum(gains[:period]) / period
+    avg_loss = sum(losses[:period]) / period
+    for i in range(period, len(gains)):
+        avg_gain = (avg_gain * (period - 1) + gains[i]) / period
+        avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+    if avg_loss == 0:
+        return 100.0
+    rs = avg_gain / avg_loss
+    return 100.0 - (100.0 / (1.0 + rs))
+
+def atr(candles, period=14):
+    if len(candles) < period + 1:
+        return None
+    tr = []
+    for i in range(1, len(candles)):
+        c, prev = candles[i], candles[i - 1]
+        tr.append(max(c["high"] - c["low"], abs(c["high"] - prev["close"]), abs(c["low"] - prev["close"])))
+    value = sum(tr[:period]) / period
+    for x in tr[period:]:
+        value = (value * (period - 1) + x) / period
+    return value
+
+def pct_change(a, b):
+    return ((a / b) - 1.0) * 100.0 if b else 0.0
+
+def get_signal(c15, c1h, c4h):
+    closes15 = [x["close"] for x in c15]
+    closes1h = [x["close"] for x in c1h]
+    closes4h = [x["close"] for x in c4h]
+    price = closes15[-1]
+    e9_15, e21_15 = ema(closes15, 9), ema(closes15, 21)
+    e9_1h, e21_1h, e50_1h = ema(closes1h, 9), ema(closes1h, 21), ema(closes1h, 50)
+    e20_4h, e50_4h = ema(closes4h, 20), ema(closes4h, 50)
+    r = rsi(closes15, 14)
+    a = atr(c15, 14)
+    mom3 = pct_change(closes15[-1], closes15[-4])
+    mom12 = pct_change(closes15[-1], closes15[-13])
+    trend1h = 1 if e9_1h[-1] > e21_1h[-1] > e50_1h[-1] else (-1 if e9_1h[-1] < e21_1h[-1] < e50_1h[-1] else 0)
+    trend4h = 1 if e20_4h[-1] > e50_4h[-1] else (-1 if e20_4h[-1] < e50_4h[-1] else 0)
+    trend15 = 1 if e9_15[-1] > e21_15[-1] else (-1 if e9_15[-1] < e21_15[-1] else 0)
+
+    long_score = 0
+    short_score = 0
+    reasons = []
+    if trend1h == 1: long_score += 2; reasons.append("1時間足のEMAは上向き")
+    elif trend1h == -1: short_score += 2; reasons.append("1時間足のEMAは下向き")
+    if trend4h == 1: long_score += 2; reasons.append("4時間足のトレンドは上向き")
+    elif trend4h == -1: short_score += 2; reasons.append("4時間足のトレンドは下向き")
+    if trend15 == 1: long_score += 1
+    elif trend15 == -1: short_score += 1
+    if mom3 > 0.08: long_score += 1
+    elif mom3 < -0.08: short_score += 1
+    if mom12 > 0.15: long_score += 1
+    elif mom12 < -0.15: short_score += 1
+    if r is not None:
+        if 42 <= r <= 68: long_score += 1
+        if 32 <= r <= 58: short_score += 1
+        if r > 78: long_score -= 2; reasons.append("RSI過熱のためロングを抑制")
+        if r < 22: short_score -= 2; reasons.append("RSI売られ過ぎのためショートを抑制")
+    # Avoid chasing very extended moves; retain signals in normal volatility.
+    atr_pct = (a / price * 100.0) if a and price else 0.0
+    if atr_pct > 1.8:
+        long_score -= 1
+        short_score -= 1
+        reasons.append("15分足の変動が大きいためスコアを抑制")
+
+    direction = "WAIT"
+    score = max(long_score, short_score)
+    # 1h alignment plus at least one supporting timeframe/filter. Less restrictive
+    # than a full 4h+1h+15m unanimity to allow more paper-trade opportunities.
+    if long_score >= 4 and trend1h == 1 and long_score >= short_score + 2:
+        direction = "LONG"
+    elif short_score >= 4 and trend1h == -1 and short_score >= long_score + 2:
+        direction = "SHORT"
+
+    return {
+        "direction": direction,
+        "score": int(score),
+        "long_score": int(long_score),
+        "short_score": int(short_score),
+        "reasons": reasons or ["複数時間足の条件が十分に一致していません"],
+        "rsi_15m": round(r, 2) if r is not None else None,
+        "atr_15m": round(a, 4) if a is not None else None,
+        "atr_pct_15m": round(atr_pct, 4),
+        "momentum_3bar_pct": round(mom3, 4),
+        "momentum_12bar_pct": round(mom12, 4),
+        "trend_1h": trend1h,
+        "trend_4h": trend4h,
+        "trend_15m": trend15,
+        "ema_9_15m": round(e9_15[-1], 2),
+        "ema_21_15m": round(e21_15[-1], 2),
+        "ema_9_1h": round(e9_1h[-1], 2),
+        "ema_21_1h": round(e21_1h[-1], 2),
+    }
+
+def default_state():
+    return {
+        "build": BUILD,
+        "initial_equity_usd": INITIAL_EQUITY,
+        "cash_usd": INITIAL_EQUITY,
+        "open_trade": None,
+        "recent_trades": [],
+        "equity_history": [],
+        "day_start_equity_usd": INITIAL_EQUITY,
+        "day_key": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+        "peak_equity_usd": INITIAL_EQUITY,
+        "consecutive_losses": 0,
+        "last_close_time": None,
+        "last_processed_candle": None,
+        "last_price": None,
+        "last_funding_rate": None,
+    }
+
+def load_state():
+    if not STATE_PATH.exists():
+        return default_state()
+    try:
+        with STATE_PATH.open("r", encoding="utf-8") as f:
+            old = json.load(f)
+    except Exception:
+        # Preserve the damaged file for inspection; do not silently overwrite it.
+        backup = STATE_PATH.with_name("state_corrupt_" + datetime.now(timezone.utc).strftime("%Y%m%d%H%M%S") + ".json")
+        try:
+            STATE_PATH.replace(backup)
+        except OSError:
+            pass
+        return default_state()
+
+    # Migrate V6 state without wiping the account/history.
+    state = default_state()
+    state["initial_equity_usd"] = float(old.get("initial_equity_usd", INITIAL_EQUITY))
+    state["cash_usd"] = float(old.get("cash_usd", old.get("cash", state["initial_equity_usd"])))
+    state["open_trade"] = old.get("open_trade")
+    state["recent_trades"] = old.get("recent_trades", old.get("trades", [])) or []
+    state["equity_history"] = old.get("equity_history", []) or []
+    state["day_start_equity_usd"] = float(old.get("day_start_equity_usd", old.get("day_start_equity", state["initial_equity_usd"])))
+    state["day_key"] = old.get("day_key", datetime.now(timezone.utc).strftime("%Y-%m-%d"))
+    state["peak_equity_usd"] = float(old.get("peak_equity_usd", old.get("peak_equity", state["initial_equity_usd"])))
+    state["consecutive_losses"] = int(old.get("consecutive_losses", 0))
+    state["last_close_time"] = old.get("last_close_time")
+    state["last_processed_candle"] = old.get("last_processed_candle")
+    state["last_price"] = old.get("last_price")
+    state["last_funding_rate"] = old.get("last_funding_rate")
+    state["build"] = BUILD
+    return state
+
+def save_json(path, obj):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp = path.with_suffix(path.suffix + ".tmp")
+    with tmp.open("w", encoding="utf-8") as f:
+        json.dump(obj, f, ensure_ascii=False, indent=2, allow_nan=False)
+    tmp.replace(path)
+
+def trade_pnl(trade, exit_price):
+    side = 1.0 if trade["direction"] == "LONG" else -1.0
+    qty = float(trade["qty_btc"])
+    entry = float(trade["entry_price"])
+    gross = (exit_price - entry) * qty * side
+    exit_fee = abs(exit_price * qty) * FEE_RATE
+    exit_slippage = abs(exit_price * qty) * SLIPPAGE_RATE
+    return gross - float(trade.get("entry_fee_usd", 0.0)) - float(trade.get("entry_slippage_usd", 0.0)) - exit_fee - exit_slippage
+
+def equity_of(state, price):
+    cash = float(state["cash_usd"])
+    t = state.get("open_trade")
+    if not t:
+        return cash
+    # Cash already has margin removed on entry. Add reserved margin plus unrealized PnL.
+    margin = float(t.get("margin_usd", 0.0))
+    side = 1.0 if t["direction"] == "LONG" else -1.0
+    gross = (price - float(t["entry_price"])) * float(t["qty_btc"]) * side
+    close_cost = abs(price * float(t["qty_btc"])) * (FEE_RATE + SLIPPAGE_RATE)
+    unrealized = gross - float(t.get("entry_fee_usd", 0)) - float(t.get("entry_slippage_usd", 0)) - close_cost
+    return cash + margin + unrealized
+
+def close_trade(state, price, reason, stamp):
+    t = state.get("open_trade")
+    if not t:
+        return
+    pnl = trade_pnl(t, price)
+    state["cash_usd"] = float(state["cash_usd"]) + float(t.get("margin_usd", 0.0)) + pnl
+    item = dict(t)
+    item.update({
+        "exit_price": round(price, 2),
+        "closed_at": stamp,
+        "net_pnl_usd": round(pnl, 8),
+        "close_reason": reason,
+    })
+    state["recent_trades"].append(item)
+    state["recent_trades"] = state["recent_trades"][-300:]
+    state["open_trade"] = None
+    state["last_close_time"] = stamp
+    if pnl < 0:
+        state["consecutive_losses"] = int(state.get("consecutive_losses", 0)) + 1
+    else:
+        state["consecutive_losses"] = 0
+
+def can_open(state, equity, stamp):
+    dt = parse_dt(stamp)
+    day_key = dt.strftime("%Y-%m-%d") if dt else datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    if state.get("day_key") != day_key:
+        state["day_key"] = day_key
+        state["day_start_equity_usd"] = equity
+    day_start = max(float(state.get("day_start_equity_usd", equity)), 1e-9)
+    daily_loss = (day_start - equity) / day_start
+    peak = max(float(state.get("peak_equity_usd", equity)), 1e-9)
+    drawdown = (peak - equity) / peak
+    if daily_loss >= MAX_DAILY_LOSS:
+        return False, "日次損失上限に到達"
+    if drawdown >= MAX_DRAWDOWN:
+        return False, "最大ドローダウン上限に到達"
+    if int(state.get("consecutive_losses", 0)) >= MAX_CONSECUTIVE_LOSSES:
+        last = parse_dt(state.get("last_close_time"))
+        if last and dt and (dt - last).total_seconds() < COOLDOWN_MINUTES * 60:
+            return False, "連敗クールダウン中"
+        # Once cooldown has passed, allow a new trade but reset the streak.
+        state["consecutive_losses"] = 0
+    last = parse_dt(state.get("last_close_time"))
+    if last and dt and (dt - last).total_seconds() < 15 * 60:
+        return False, "決済後のクールダウン中"
+    return True, "稼働中"
+
+def open_trade(state, direction, price, atr_value, equity, stamp, candle_time):
+    if not atr_value or atr_value <= 0 or price <= 0:
+        return False
+    # Stop distance is volatility-adjusted, bounded to avoid microscopic/huge stops.
+    stop_dist = max(atr_value * 1.6, price * 0.0015)
+    stop_dist = min(stop_dist, price * 0.012)
+    target_dist = stop_dist * 2.4
+    risk_dollars = max(equity, 0.0) * RISK_PER_TRADE
+    qty_by_risk = risk_dollars / stop_dist if stop_dist > 0 else 0
+    margin_cap = max(equity, 0.0) * MAX_MARGIN_FRACTION
+    notional_cap = margin_cap * MAX_VIRTUAL_LEVERAGE
+    qty_by_cap = notional_cap / price if price > 0 else 0
+    qty = min(qty_by_risk, qty_by_cap)
+    if not math.isfinite(qty) or qty <= 0:
+        return False
+    notional = qty * price
+    margin = notional / MAX_VIRTUAL_LEVERAGE
+    if margin > state["cash_usd"] or notional < 10:
+        return False
+    # Conservative fill model: adverse entry slippage.
+    fill = price * (1 + SLIPPAGE_RATE if direction == "LONG" else 1 - SLIPPAGE_RATE)
+    notional = qty * fill
+    margin = notional / MAX_VIRTUAL_LEVERAGE
+    if margin > state["cash_usd"]:
+        return False
+    fee = notional * FEE_RATE
+    slip_cost = abs(qty * (fill - price))
+    state["cash_usd"] = float(state["cash_usd"]) - margin
+    state["open_trade"] = {
+        "direction": direction,
+        "opened_at": stamp,
+        "entry_price": round(fill, 2),
+        "qty_btc": qty,
+        "notional_usd": notional,
+        "margin_usd": margin,
+        "leverage_virtual": MAX_VIRTUAL_LEVERAGE,
+        "entry_fee_usd": fee,
+        "entry_slippage_usd": slip_cost,
+        "stop_price": round(fill - stop_dist if direction == "LONG" else fill + stop_dist, 2),
+        "target_price": round(fill + target_dist if direction == "LONG" else fill - target_dist, 2),
+        "initial_stop_price": round(fill - stop_dist if direction == "LONG" else fill + stop_dist, 2),
+        "trail_active": False,
+        "risk_usd": risk_dollars,
+        "signal_candle_time": candle_time,
+    }
+    return True
+
+def manage_open_trade(state, candles, price, stamp):
+    t = state.get("open_trade")
+    if not t:
+        return
+    direction = t["direction"]
+    # Use candle high/low to detect stops/targets. If both touched in same candle,
+    # assume the stop occurred first (conservative).
+    last = candles[-1]
+    high, low = last["high"], last["low"]
+    stop = float(t["stop_price"])
+    target = float(t["target_price"])
+    exit_price = None
+    reason = None
+    if direction == "LONG":
+        if low <= stop:
+            exit_price, reason = stop * (1 - SLIPPAGE_RATE), "損切り"
+        elif high >= target:
+            exit_price, reason = target * (1 - SLIPPAGE_RATE), "利確"
+        else:
+            # Once price moves +1.2R, trail stop to protect some profit.
+            entry = float(t["entry_price"])
+            initial_stop = float(t.get("initial_stop_price", stop))
+            r = max(entry - initial_stop, 1e-9)
+            if high >= entry + 1.2 * r:
+                t["trail_active"] = True
+                t["stop_price"] = round(max(float(t["stop_price"]), high - 1.4 * r), 2)
+            opened = parse_dt(t.get("opened_at"))
+            now = parse_dt(stamp)
+            if opened and now and (now - opened).total_seconds() >= MAX_HOLD_HOURS * 3600:
+                exit_price, reason = price * (1 - SLIPPAGE_RATE), "保有時間上限"
+    else:
+        if high >= stop:
+            exit_price, reason = stop * (1 + SLIPPAGE_RATE), "損切り"
+        elif low <= target:
+            exit_price, reason = target * (1 + SLIPPAGE_RATE), "利確"
+        else:
+            entry = float(t["entry_price"])
+            initial_stop = float(t.get("initial_stop_price", stop))
+            r = max(initial_stop - entry, 1e-9)
+            if low <= entry - 1.2 * r:
+                t["trail_active"] = True
+                t["stop_price"] = round(min(float(t["stop_price"]), low + 1.4 * r), 2)
+            opened = parse_dt(t.get("opened_at"))
+            now = parse_dt(stamp)
+            if opened and now and (now - opened).total_seconds() >= MAX_HOLD_HOURS * 3600:
+                exit_price, reason = price * (1 + SLIPPAGE_RATE), "保有時間上限"
+    if exit_price is not None:
+        close_trade(state, exit_price, reason, stamp)
+
+def build_metrics(state, price):
+    equity = equity_of(state, price)
+    trades = state.get("recent_trades", [])
+    pnls = [float(t.get("net_pnl_usd", 0)) for t in trades if valid_num(t.get("net_pnl_usd"))]
+    wins = sum(1 for p in pnls if p > 0)
+    losses = sum(1 for p in pnls if p < 0)
+    breakeven = len(pnls) - wins - losses
+    gross_win = sum(p for p in pnls if p > 0)
+    gross_loss = abs(sum(p for p in pnls if p < 0))
+    peak = max(float(state.get("peak_equity_usd", equity)), equity)
+    state["peak_equity_usd"] = peak
+    dd = max(0.0, (peak - equity) / peak * 100.0) if peak > 0 else 0.0
+    t = state.get("open_trade")
+    unrealized = 0.0
+    if t:
+        side = 1.0 if t["direction"] == "LONG" else -1.0
+        gross = (price - float(t["entry_price"])) * float(t["qty_btc"]) * side
+        costs = float(t.get("entry_fee_usd", 0)) + float(t.get("entry_slippage_usd", 0)) + abs(price * float(t["qty_btc"])) * (FEE_RATE + SLIPPAGE_RATE)
+        unrealized = gross - costs
+    return {
+        "equity_usd": round(equity, 8),
+        "cash_usd": round(float(state["cash_usd"]), 8),
+        "net_closed_pnl_usd": round(sum(pnls), 8),
+        "closed_trades": len(pnls),
+        "wins": wins,
+        "losses": losses,
+        "breakeven_trades": breakeven,
+        "win_rate_pct": round(wins / len(pnls) * 100, 2) if pnls else 0.0,
+        "profit_factor": round(gross_win / gross_loss, 4) if gross_loss > 0 else (None if gross_win == 0 else 99.0),
+        "drawdown_pct": round(dd, 4),
+        "open_unrealized_pnl_usd": round(unrealized, 8),
+    }
+
+def valid_num(v):
+    try:
+        return v is not None and math.isfinite(float(v))
     except (TypeError, ValueError):
         return False
 
-def api(payload):
-    req = urllib.request.Request(
-        API, data=json.dumps(payload).encode(),
-        headers={"Content-Type": "application/json", "User-Agent": "BTC-Paper-Research/6.0"},
-        method="POST")
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return json.loads(r.read().decode())
+def main():
+    stamp = now_iso()
+    state = load_state()
+    c15 = get_candles("15m", 180)
+    c1h = get_candles("1h", 180)
+    c4h = get_candles("4h", 180)
+    if min(len(c15), len(c1h), len(c4h)) < MIN_BARS:
+        raise RuntimeError(f"ローソク足データ不足: 15m={len(c15)}, 1h={len(c1h)}, 4h={len(c4h)}")
 
-def candles(interval, hours):
-    end = now_ms()
-    raw = api({"type":"candleSnapshot","req":{"coin":"BTC","interval":interval,
-        "startTime":end-hours*3600000,"endTime":end}})
-    if not isinstance(raw, list):
-        raise RuntimeError("Invalid candle response")
-    out = []
-    for x in raw:
-        try:
-            c = {k: float(x[k]) for k in ("o","h","l","c","v")}
-            c["t"], c["T"] = int(x["t"]), int(x["T"])
-            if (all(math.isfinite(c[k]) and c[k] > 0 for k in ("o","h","l","c"))
-                and math.isfinite(c["v"]) and c["v"] >= 0
-                and c["h"] >= max(c["o"],c["c"],c["l"])
-                and c["l"] <= min(c["o"],c["c"],c["h"])
-                and c["T"] < now_ms()):
-                out.append(c)
-        except (KeyError, TypeError, ValueError):
-            continue
-    return sorted({c["t"]:c for c in out}.values(), key=lambda z:z["t"])
+    funding, mark_price = get_market_context()
+    price = float(mark_price or c15[-1]["close"])
+    signal = get_signal(c15, c1h, c4h)
+    atr_value = signal.get("atr_15m")
+    candle_time = str(c15[-1]["time"])
 
-def ema(values, period):
-    if len(values) < period: return None
-    v = sum(values[:period])/period
-    a = 2/(period+1)
-    for x in values[period:]: v = a*x+(1-a)*v
-    return v
+    # Prevent duplicate entries on repeated workflow runs for the same candle.
+    # Open trades are still managed on every run, even if the candle is unchanged.
+    manage_open_trade(state, c15, price, stamp)
+    if not state.get("open_trade") and state.get("last_processed_candle") != candle_time:
+        equity_now = equity_of(state, price)
+        allowed, halt_reason = can_open(state, equity_now, stamp)
+        if allowed and signal["direction"] in ("LONG", "SHORT"):
+            opened = open_trade(state, signal["direction"], price, float(atr_value or 0), equity_now, stamp, candle_time)
+            if opened:
+                state["last_processed_candle"] = candle_time
+        elif not allowed:
+            signal["reasons"].append(halt_reason)
+        if signal["direction"] == "WAIT":
+            state["last_processed_candle"] = candle_time
+    else:
+        allowed, halt_reason = can_open(state, equity_of(state, price), stamp)
+    if state.get("open_trade"):
+        state["last_processed_candle"] = candle_time
 
-def rsi(values, period=14):
-    if len(values) < period+1: return None
-    d = [values[i]-values[i-1] for i in range(1,len(values))]
-    gains, losses = [max(x,0) for x in d], [max(-x,0) for x in d]
-    ag, al = sum(gains[:period])/period, sum(losses[:period])/period
-    for i in range(period,len(d)):
-        ag = (ag*(period-1)+gains[i])/period
-        al = (al*(period-1)+losses[i])/period
-    if al == 0: return 100.0 if ag else 50.0
-    return 100-100/(1+ag/al)
+    state["last_price"] = price
+    state["last_funding_rate"] = funding
+    equity = equity_of(state, price)
+    state["peak_equity_usd"] = max(float(state.get("peak_equity_usd", equity)), equity)
+    state["equity_history"].append({"time": stamp, "equity_usd": round(equity, 8), "price": round(price, 2)})
+    state["equity_history"] = state["equity_history"][-500:]
+    metrics = build_metrics(state, price)
 
-def atr(cs, period=14):
-    if len(cs) < period+1: return None
-    ranges=[]
-    for i in range(1,len(cs)):
-        cur, prev=cs[i],cs[i-1]
-        ranges.append(max(cur["h"]-cur["l"],abs(cur["h"]-prev["c"]),abs(cur["l"]-prev["c"])))
-    v=sum(ranges[:period])/period
-    for x in ranges[period:]: v=(v*(period-1)+x)/period
-    return v
+    data = {
+        "build": BUILD,
+        "generated_at": stamp,
+        "price": round(price, 2),
+        "funding_rate_pct": round(funding * 100, 6) if funding is not None else None,
+        "signal": signal,
+        "metrics": metrics,
+        "risk": {
+            "virtual_leverage": MAX_VIRTUAL_LEVERAGE,
+            "risk_per_trade_pct": RISK_PER_TRADE * 100,
+            "max_margin_fraction_pct": MAX_MARGIN_FRACTION * 100,
+            "max_daily_loss_pct": MAX_DAILY_LOSS * 100,
+            "max_drawdown_pct": MAX_DRAWDOWN * 100,
+            "halt_reason": halt_reason if not allowed else None,
+            "paper_only": True,
+        },
+        "open_trade": state.get("open_trade"),
+        "recent_trades": state.get("recent_trades", [])[-50:],
+        "equity_history": state.get("equity_history", []),
+        "market": {
+            "candles_15m": len(c15),
+            "candles_1h": len(c1h),
+            "candles_4h": len(c4h),
+            "last_candle_time": candle_time,
+        },
+    }
+    save_json(STATE_PATH, state)
+    save_json(DATA_PATH, data)
+    print(json.dumps({
+        "build": BUILD,
+        "price": price,
+        "signal": signal["direction"],
+        "score": signal["score"],
+        "equity_usd": metrics["equity_usd"],
+        "closed_trades": metrics["closed_trades"],
+        "open_position": state.get("open_trade") is not None,
+        "paper_only": True,
+    }, ensure_ascii=False))
 
-def fib_levels(cs, lookback=96):
-    chunk=cs[-lookback:]
-    if len(chunk)<10: return {}
-    hi,lo=max(x["h"] for x in chunk),min(x["l"] for x in chunk)
-    span=hi-lo
-    if span<=0: return {}
-    return {"swing_high":round(hi,2),"swing_low":round(lo,2),
-        "retracement_382":round(hi-span*.382,2),"retracement_500":round(hi-span*.5,2),
-        "retracement_618":round(hi-span*.618,2)}
-
-def find_fvg(cs, price):
-    gaps=[]
-    for i in range(2,len(cs)):
-        a,c=cs[i-2],cs[i]
-        if c["l"]>a["h"]:
-            gaps.append({"type":"bullish","low":round(a["h"],2),"high":round(c["l"],2),"formed_at":c["t"]})
-        if c["h"]<a["l"]:
-            gaps.append({"type":"bearish","low":round(c["h"],2),"high":round(a["l"],2),"formed_at":c["t"]})
-    active=[]
-    for g in gaps[-30:]:
-        if (g["type"]=="bullish" and price>=g["low"]) or (g["type"]=="bearish" and price<=g["high"]):
-            active.append(g)
-    return active[-6:]
-
-def default_state():
-    return {"build":BUILD,"created_at":iso_now(),"account_started_at":iso_now(),
-        "cash":INITIAL_EQUITY,"peak_equity":INITIAL_EQUITY,"trades":[],"archived_trades":[],
-        "open_trade":None,"daily":{"date":now().date().isoformat(),"start_equity":INITIAL_EQUITY},
-        "last_signal_key":None,"halt_reason":None,"equity_history":[],"archived_equity_history":[]}
-
-def load_state():
-    if not STATE_FILE.exists(): return default_state()
-    try: s=json.loads(STATE_FILE.read_text(encoding="utf-8"))
-    except Exception as e: raise RuntimeError("state.json could not be read; refusing reset") from e
-    if not isinstance(s,dict): raise RuntimeError("Invalid state.json")
-    if s.get("open_trade") and s.get("build") != BUILD:
-        raise RuntimeError("Open position detected during version change; review state.json before upgrading")
-    for k,default in (("trades",[]),("archived_trades",[]),("equity_history",[]),("archived_equity_history",[])):
-        s.setdefault(k,default)
-    if s.get("build") != BUILD:
-        if s.get("open_trade"): raise RuntimeError("Cannot reset account with open position")
-        s["archived_trades"]=(s.get("archived_trades",[])+s.get("trades",[]))[-MAX_ARCHIVE:]
-        s["archived_equity_history"]=(s.get("archived_equity_history",[])+s.get("equity_history",[]))[-MAX_ARCHIVE:]
-        s.update({"cash":INITIAL_EQUITY,"peak_equity":INITIAL_EQUITY,"trades":[],"open_trade":None,
-            "equity_history":[],"daily":{"date":now().date().isoformat(),"start_equity":INITIAL_EQUITY},
-            "last_signal_key":None,"halt_reason":None,"account_started_at":iso_now()})
-    s.setdefault("cash",INITIAL_EQUITY); s.setdefault("peak_equity",float(s["cash"]))
-    s.setdefault("daily",{"date":now().date().isoformat(),"start_equity":float(s["cash"])})
-    s.setdefault("last_signal_key",None); s.setdefault("halt_reason",None)
-    if not all(isinstance(s[k],list) for k in ("trades","archived_trades","equity_history","archived_equity_history")):
-        raise RuntimeError("Invalid state lists")
-    s["build"]=BUILD
-    return s
-
-def save_json(path,data):
-    path.parent.mkdir(parents=True,exist_ok=True)
-    tmp=path.with_suffix(path.suffix+".tmp")
-    tmp.write_text(json.dumps(data,indent=2,ensure_ascii=False,allow_nan=False),encoding="utf-8")
-    tmp.replace(path)
-
-def market_data():
-    r=api({"type":"metaAndAssetCtxs"})
-    if not isinstance(r,list) or len(r)<2: raise RuntimeError("Invalid market response")
-    meta,ctxs=r[0],r[1]
-    idx=next((i for i,a in enumerate(meta.get("universe",[])) if a.get("name")=="BTC"),None)
-    if idx is None or idx>=len(ctxs): raise RuntimeError("BTC market unavailable")
-    ctx=ctxs[idx]
-    c15,c1,c4=candles("15m",240),candles("1h",1080),candles("4h",2880)
-    if min(len(c15),len(c1),len(c4))<60: raise RuntimeError("Insufficient candle history")
-    price=float(ctx.get("markPx") or c15[-1]["c"])
-    vals={"funding":float(ctx.get("funding") or 0),"open_interest_btc":float(ctx.get("openInterest") or 0),
-          "premium":float(ctx.get("premium") or 0),"volume_24h_usd":float(ctx.get("dayNtlVlm") or 0)}
-    if not finite(price) or price<=0 or not all(finite(v) for v in vals.values()): raise RuntimeError("Invalid market data")
-    return {"price":price,**vals,"candles_15m":c15,"candles_1h":c1,"candles_4h":c4}
-
-def make_signal(m):
-    c15,c1,c4=m["candles_15m"],m["candles_1h"],m["candles_4h"]
-    p15,p1,p4=[x["c"] for x in c15],[x["c"] for x in c1],[x["c"] for x in c4]
-    e20_1,e50_1,e20_4,e50_4=ema(p1,20),ema(p1,50),ema(p4,20),ema(p4,50)
-    rv,av=rsi(p15),atr(c15); price=m["price"]
-    sig={"direction":"WAIT","score":0,"reasons":[],"price":price,"rsi_15m":rv,"atr_15m":av,
-        "ema20_1h":e20_1,"ema50_1h":e50_1,"ema20_4h":e20_4,"ema50_4h":e50_4,
-        "fib":fib_levels(c1),"fvgs":find_fvg(c15,price)}
-    if any(x is None or not finite(x) for x in (e20_1,e50_1,e20_4,e50_4,rv,av)) or av<=0:
-        sig["reasons"]=["指標不足のため見送り"]; return sig
-    t1=1 if e20_1>e50_1 else -1; t4=1 if e20_4>e50_4 else -1
-    score=t1+t4; reasons=[
-        "1時間足EMA20 > EMA50" if t1>0 else "1時間足EMA20 < EMA50",
-        "4時間足EMA20 > EMA50" if t4>0 else "4時間足EMA20 < EMA50"]
-    if price>e20_1: score+=1; reasons.append("価格は1時間足EMA20より上")
-    else: score-=1; reasons.append("価格は1時間足EMA20より下")
-    if 50<=rv<=67: score+=1; reasons.append(f"RSI {rv:.1f}: 上向き候補")
-    elif 33<=rv<50: score-=1; reasons.append(f"RSI {rv:.1f}: 弱め")
-    else: reasons.append(f"RSI {rv:.1f}: 中立条件外")
-    if m["funding"]>.0003: score-=1; reasons.append("資金調達率は高め")
-    elif m["funding"]<-.0003: score+=1; reasons.append("資金調達率は低め")
-    else: reasons.append("資金調達率に極端な偏りなし")
-    move=abs(p15[-1]-p15[-2])/p15[-2]
-    direction="WAIT"
-    if t1==t4==1 and score>=3:
-        if 50<=rv<=68 and move<=.012: direction="LONG"
-        else: reasons.append("LONG条件不一致")
-    elif t1==t4==-1 and score<=-3:
-        if 32<=rv<=50 and move<=.012: direction="SHORT"
-        else: reasons.append("SHORT条件不一致")
-    else: reasons.append("上位足の方向またはスコアが不一致")
-    sig.update({"direction":direction,"score":score,"reasons":reasons,
-        "candle_move_pct":round(move*100,4),"signal_candle_time":c15[-1]["t"]})
-    return sig
-
-def unrealized(t,price):
-    sign=1 if t["direction"]=="LONG" else -1
-    return float(t["notional"])*sign*(price-float(t["entry_price"]))/float(t["entry_price"])
-
-def equity(s,price):
-    t=s.get("open_trade")
-    return float(s["cash"]) if not t else float(s["cash"])+float(t["margin"])+unrealized(t,price)
-
-def fill_price(price,direction,entering):
-    sign=1 if direction=="LONG" else -1
-    return price*(1+(sign if entering else -sign)*SLIPPAGE_PER_SIDE)
-
-def close_trade(s,price,reason):
-    t=s.get("open_trade")
-    if not t: return
-    exitp=fill_price(price,t["direction"],False)
-    gross=unrealized(t,exitp)
-    fees=float(t["notional"])*FEE_PER_SIDE*2
-    net=gross-fees
-    s["cash"]=max(0.0,float(s["cash"])+float(t["margin"])+net)
-    t.update({"mark_exit_price":price,"exit_price":round(exitp,2),"closed_at":iso_now(),
-        "close_reason":reason,"gross_pnl_usd":round(gross,6),"fees_est_usd":round(fees,6),
-        "net_pnl_usd":round(net,6),"return_on_margin_pct":round(net/max(float(t["margin"]),1e-9)*100,3)})
-    s["trades"]=(s["trades"]+[t])[-MAX_TRADES:]
-    s["open_trade"]=None
-
-def halt_check(s,eq):
-    peak=max(float(s["peak_equity"]),eq)
-    dd=(peak-eq)/max(peak,1e-9)
-    daily=float(s["daily"]["start_equity"])
-    loss=(daily-eq)/max(daily,1e-9)
-    if eq<=0: return "EQUITY_DEPLETED"
-    if dd>=MAX_DRAWDOWN: return "MAX_DRAWDOWN_10_PERCENT"
-    if loss>=MAX_DAILY_LOSS: return "DAILY_LOSS_3_PERCENT"
-    return None
-
-def calc_metrics(trades):
-    pnls=[float(t.get("net_pnl_usd",0)) for t in trades if finite(t.get("net_pnl_usd",0))]
-    wins=[x for x in pnls if x>0]; losses=[x for x in pnls if x<0]
-    gp,gl=sum(wins),abs(sum(losses)); pf=gp/gl if gl else (None if gp==0 else 999.0); n=len(pnls)
-    return {"closed_trades":n,"wins":len(wins),"losses":len(losses),"breakeven_trades":sum(x==0 for x in pnls),
-        "win_rate_pct":round(len(wins)/n*100,2) if n else 0.0,"net_closed_pnl_usd":round(sum(pnls),6),
-        "gross_profit_usd":round(gp,6),"gross_loss_usd":round(gl,6),"profit_factor":round(pf,4) if pf is not None else None,
-        "average_win_usd":round(gp/len(wins),6) if wins else 0.0,
-        "average_loss_usd":round(sum(losses)/len(losses),6) if losses else 0.0,
-        "best_trade_usd":round(max(pnls),6) if pnls else 0.0,"worst_trade_usd":round(min(pnls),6) if pnls else 0.0,
-        "expectancy_usd":round(sum(pnls)/n,6) if n else 0.0}
-
-def run():
-    s=load_state(); m=market_data(); sig=make_signal(m); price=m["price"]
-    today=now().date().isoformat()
-    if s["daily"].get("date")!=today:
-        s["daily"]={"date":today,"start_equity":equity(s,price)}
-        if s.get("halt_reason")=="DAILY_LOSS_3_PERCENT": s["halt_reason"]=None
-    # Mark equity before managing the position; stops are evaluated on live mark price.
-    eq=equity(s,price); s["peak_equity"]=max(float(s["peak_equity"]),eq)
-    why=halt_check(s,eq)
-    if why: s["halt_reason"]=why
-    t=s.get("open_trade")
-    if t:
-        sign=1 if t["direction"]=="LONG" else -1
-        move=sign*(price-float(t["entry_price"]))/float(t["entry_price"])
-        if move<=-.08: close_trade(s,price,"EMERGENCY_LOSS_GUARD")
-        elif (sign==1 and price<=float(t["stop_price"])) or (sign==-1 and price>=float(t["stop_price"])):
-            close_trade(s,price,"STOP_LOSS")
-        elif (sign==1 and price>=float(t["target_price"])) or (sign==-1 and price<=float(t["target_price"])):
-            close_trade(s,price,"TAKE_PROFIT")
-        elif now_ms()-int(t.get("opened_at_ms",now_ms()))>=MAX_HOLD_HOURS*3600000:
-            close_trade(s,price,"MAX_HOLD_24H")
-    eq=equity(s,price); s["peak_equity"]=max(float(s["peak_equity"]),eq)
-    why=halt_check(s,eq)
-    if why: s["halt_reason"]=why
-    if not s.get("open_trade") and not s.get("halt_reason") and sig["direction"] in ("LONG","SHORT"):
-        key=f'{sig["direction"]}:{sig.get("signal_candle_time",0)}'
-        if s.get("last_signal_key")!=key:
-            av=float(sig.get("atr_15m") or 0)
-            stop_dist=max(1.5*av/price,.005)
-            target_dist=stop_dist*1.8
-            risk_usd=max(0,eq*RISK_PER_TRADE)
-            notional=min(risk_usd/stop_dist,max(0,eq*MAX_MARGIN_FRACTION)*LEVERAGE)
-            margin=notional/LEVERAGE
-            if not finite(notional) or notional<MIN_NOTIONAL or margin>float(s["cash"]) or stop_dist>=.08:
-                sig["reasons"].append("資金・サイズ制限で見送り"); sig["direction"]="WAIT"
-            else:
-                direction=sig["direction"]; sign=1 if direction=="LONG" else -1
-                entry=fill_price(price,direction,True)
-                s["cash"]=float(s["cash"])-margin
-                s["open_trade"]={"id":key,"direction":direction,"mark_entry_price":price,
-                    "entry_price":round(entry,2),"opened_at":iso_now(),"opened_at_ms":now_ms(),
-                    "notional":round(notional,6),"margin":round(margin,6),"leverage_virtual":LEVERAGE,
-                    "stop_price":round(entry*(1-sign*stop_dist),2),
-                    "target_price":round(entry*(1+sign*target_dist),2),
-                    "stop_distance_pct":round(stop_dist*100,3),"signal_score":sig["score"],"entry_reasons":sig["reasons"]}
-                s["last_signal_key"]=key
-    eq=equity(s,price); s["peak_equity"]=max(float(s["peak_equity"]),eq)
-    s["last_run_at"]=iso_now(); s["last_price"]=price; s["last_signal"]=sig
-    s["equity_history"]=(s.setdefault("equity_history",[])+[{"time":s["last_run_at"],"equity_usd":round(eq,6),"price":price}])[-MAX_HISTORY:]
-    metrics=calc_metrics(s["trades"])
-    metrics.update({"equity_usd":round(eq,6),"cash_usd":round(float(s["cash"]),6),
-        "peak_equity_usd":round(float(s["peak_equity"]),6),
-        "drawdown_pct":round((float(s["peak_equity"])-eq)/max(float(s["peak_equity"]),1e-9)*100,3),
-        "open_unrealized_pnl_usd":round(unrealized(s["open_trade"],price),6) if s.get("open_trade") else 0.0})
-    s["metrics"]=metrics
-    dash={"build":BUILD,"generated_at":iso_now(),"mode":"PAPER ONLY — LIVE ORDERS DISABLED",
-        "exchange_data":"Hyperliquid public API","symbol":"BTC perpetual","price":price,
-        "funding_rate":m["funding"],"funding_rate_pct":m["funding"]*100,
-        "open_interest_btc":m["open_interest_btc"],"premium":m["premium"],"volume_24h_usd":m["volume_24h_usd"],
-        "signal":sig,"metrics":metrics,"risk":{"virtual_leverage":LEVERAGE,"risk_per_trade_pct":RISK_PER_TRADE*100,
-        "max_margin_pct":MAX_MARGIN_FRACTION*100,"max_daily_loss_pct":MAX_DAILY_LOSS*100,
-        "max_drawdown_pct":MAX_DRAWDOWN*100,"halt_reason":s.get("halt_reason"),
-        "warning":"Paper simulation only. Fees, execution and liquidation are simplified; no live trading."},
-        "open_trade":s.get("open_trade"),"recent_trades":s.get("archived_trades",[])[-5:]+s["trades"][-15:],
-        "equity_history":s["equity_history"][-200:],"fib":sig.get("fib",{}),"fvgs":sig.get("fvgs",[]),
-        "macro_note":"経済指標は自動取得していません。CPI、雇用統計、FOMCは別途確認してください。",
-        "method_notes":["確定済みローソク足を使用","Wilder RSI・ATR","1h・4h EMAと15mモメンタム",
-        "上位足の方向が一致しない場合は見送り","仮想手数料とスリッページを概算",
-        "初期資金100 USD、仮想レバレッジ上限30倍","実注文・ウォレット接続なし"]}
-    save_json(STATE_FILE,s); save_json(DASH_FILE,dash)
-    print(json.dumps({"ok":True,"build":BUILD,"price":price,"signal":sig["direction"],"score":sig["score"],
-        "equity":metrics["equity_usd"],"closed_trades":metrics["closed_trades"],
-        "profit_factor":metrics["profit_factor"],"virtual_leverage":LEVERAGE,"halt":s.get("halt_reason")},ensure_ascii=False))
-
-if __name__=="__main__":
-    try: run()
-    except Exception as e:
-        print(json.dumps({"ok":False,"build":BUILD,"error":str(e),"time":iso_now()},ensure_ascii=False))
+if __name__ == "__main__":
+    try:
+        main()
+    except (urllib.error.URLError, TimeoutError) as exc:
+        print(f"Public market-data request failed: {exc}")
         raise
