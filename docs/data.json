@@ -1,144 +1,54 @@
 {
-  "build": "BTC_PAPER_V6_2026-10-21",
-  "generated_at": "2026-10-21T02:33:40.018609+00:00",
-  "mode": "PAPER ONLY — LIVE ORDERS DISABLED",
-  "exchange_data": "Hyperliquid public API",
-  "symbol": "BTC perpetual",
-  "price": 82782.0,
-  "funding_rate": 1.25e-05,
+  "build": "BTC_PAPER_V7_2026-10-21",
+  "generated_at": "2026-10-21T02:37:06.858954+00:00",
+  "price": 82806.0,
   "funding_rate_pct": 0.00125,
-  "open_interest_btc": 41051.02916,
-  "premium": -0.0002850049,
-  "volume_24h_usd": 2616171690.816441,
   "signal": {
     "direction": "WAIT",
-    "score": 0,
+    "score": 6,
+    "long_score": 3,
+    "short_score": 6,
     "reasons": [
-      "1時間足EMA20 > EMA50",
-      "4時間足EMA20 < EMA50",
-      "価格は1時間足EMA20より上",
-      "RSI 45.1: 弱め",
-      "資金調達率に極端な偏りなし",
-      "上位足の方向またはスコアが不一致"
+      "1時間足のEMAは上向き",
+      "4時間足のトレンドは下向き"
     ],
-    "price": 82782.0,
-    "rsi_15m": 45.1430666610288,
-    "atr_15m": 175.89379723666366,
-    "ema20_1h": 82560.34616640156,
-    "ema50_1h": 82250.49378037028,
-    "ema20_4h": 82086.29441995181,
-    "ema50_4h": 82245.33325367451,
-    "fib": {
-      "swing_high": 83425.0,
-      "swing_low": 80644.0,
-      "retracement_382": 82362.66,
-      "retracement_500": 82034.5,
-      "retracement_618": 81706.34
-    },
-    "fvgs": [
-      {
-        "type": "bullish",
-        "low": 82660.0,
-        "high": 82661.0,
-        "formed_at": 1792515600000
-      },
-      {
-        "type": "bullish",
-        "low": 82635.0,
-        "high": 82709.0,
-        "formed_at": 1792529100000
-      },
-      {
-        "type": "bearish",
-        "low": 82968.0,
-        "high": 82982.0,
-        "formed_at": 1792538100000
-      },
-      {
-        "type": "bearish",
-        "low": 83013.0,
-        "high": 83092.0,
-        "formed_at": 1792544400000
-      },
-      {
-        "type": "bearish",
-        "low": 82974.0,
-        "high": 83013.0,
-        "formed_at": 1792545300000
-      },
-      {
-        "type": "bearish",
-        "low": 82870.0,
-        "high": 82957.0,
-        "formed_at": 1792548900000
-      }
-    ],
-    "candle_move_pct": 0.0362,
-    "signal_candle_time": 1792548900000
+    "rsi_15m": 48.06,
+    "atr_15m": 170.8299,
+    "atr_pct_15m": 0.2063,
+    "momentum_3bar_pct": -0.2157,
+    "momentum_12bar_pct": -0.1928,
+    "trend_1h": 1,
+    "trend_4h": -1,
+    "trend_15m": -1,
+    "ema_9_15m": 82878.25,
+    "ema_21_15m": 82884.86,
+    "ema_9_1h": 82835.79,
+    "ema_21_1h": 82566.51
   },
   "metrics": {
+    "equity_usd": 100.0,
+    "cash_usd": 100.0,
+    "net_closed_pnl_usd": 0,
     "closed_trades": 0,
     "wins": 0,
     "losses": 0,
     "breakeven_trades": 0,
     "win_rate_pct": 0.0,
-    "net_closed_pnl_usd": 0,
-    "gross_profit_usd": 0,
-    "gross_loss_usd": 0,
     "profit_factor": null,
-    "average_win_usd": 0.0,
-    "average_loss_usd": 0.0,
-    "best_trade_usd": 0.0,
-    "worst_trade_usd": 0.0,
-    "expectancy_usd": 0.0,
-    "equity_usd": 100.0,
-    "cash_usd": 100.0,
-    "peak_equity_usd": 100.0,
     "drawdown_pct": 0.0,
     "open_unrealized_pnl_usd": 0.0
   },
   "risk": {
     "virtual_leverage": 30.0,
     "risk_per_trade_pct": 0.5,
-    "max_margin_pct": 10.0,
+    "max_margin_fraction_pct": 10.0,
     "max_daily_loss_pct": 3.0,
     "max_drawdown_pct": 10.0,
     "halt_reason": null,
-    "warning": "Paper simulation only. Fees, execution and liquidation are simplified; no live trading."
+    "paper_only": true
   },
   "open_trade": null,
-  "recent_trades": [
-    {
-      "id": "SHORT:1792484100000",
-      "direction": "SHORT",
-      "mark_entry_price": 81578.0,
-      "entry_price": 81561.68,
-      "opened_at": "2026-10-20T08:37:26.720862+00:00",
-      "opened_at_ms": 1792485446720,
-      "notional": 6.0,
-      "margin": 2.0,
-      "leverage_virtual": 3.0,
-      "stop_price": 81969.49,
-      "target_price": 80827.63,
-      "stop_distance_pct": 0.5,
-      "signal_score": -4,
-      "entry_reasons": [
-        "1時間足EMA20 < EMA50",
-        "4時間足EMA20 < EMA50",
-        "価格は1時間足EMA20より下",
-        "RSI 39.5: 弱め",
-        "資金調達率に極端な偏りなし"
-      ],
-      "mark_exit_price": 83181.0,
-      "exit_price": 83197.64,
-      "closed_at": "2026-10-20T14:37:06.057971+00:00",
-      "close_reason": "STOP_LOSS",
-      "gross_pnl_usd": -0.120347,
-      "fees_est_usd": 0.006,
-      "net_pnl_usd": -0.126347,
-      "return_on_margin_pct": -6.317
-    }
-  ],
+  "recent_trades": [],
   "equity_history": [
     {
       "time": "2026-10-21T02:11:43.671398+00:00",
@@ -154,61 +64,17 @@
       "time": "2026-10-21T02:33:40.018578+00:00",
       "equity_usd": 100.0,
       "price": 82782.0
+    },
+    {
+      "time": "2026-10-21T02:37:06.858954+00:00",
+      "equity_usd": 100.0,
+      "price": 82806.0
     }
   ],
-  "fib": {
-    "swing_high": 83425.0,
-    "swing_low": 80644.0,
-    "retracement_382": 82362.66,
-    "retracement_500": 82034.5,
-    "retracement_618": 81706.34
-  },
-  "fvgs": [
-    {
-      "type": "bullish",
-      "low": 82660.0,
-      "high": 82661.0,
-      "formed_at": 1792515600000
-    },
-    {
-      "type": "bullish",
-      "low": 82635.0,
-      "high": 82709.0,
-      "formed_at": 1792529100000
-    },
-    {
-      "type": "bearish",
-      "low": 82968.0,
-      "high": 82982.0,
-      "formed_at": 1792538100000
-    },
-    {
-      "type": "bearish",
-      "low": 83013.0,
-      "high": 83092.0,
-      "formed_at": 1792544400000
-    },
-    {
-      "type": "bearish",
-      "low": 82974.0,
-      "high": 83013.0,
-      "formed_at": 1792545300000
-    },
-    {
-      "type": "bearish",
-      "low": 82870.0,
-      "high": 82957.0,
-      "formed_at": 1792548900000
-    }
-  ],
-  "macro_note": "経済指標は自動取得していません。CPI、雇用統計、FOMCは別途確認してください。",
-  "method_notes": [
-    "確定済みローソク足を使用",
-    "Wilder RSI・ATR",
-    "1h・4h EMAと15mモメンタム",
-    "上位足の方向が一致しない場合は見送り",
-    "仮想手数料とスリッページを概算",
-    "初期資金100 USD、仮想レバレッジ上限30倍",
-    "実注文・ウォレット接続なし"
-  ]
+  "market": {
+    "candles_15m": 181,
+    "candles_1h": 181,
+    "candles_4h": 181,
+    "last_candle_time": "1792549800000"
+  }
 }
