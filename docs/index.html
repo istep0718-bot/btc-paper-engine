@@ -1,262 +1,27 @@
 
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#ffd5f0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#f8d5f5">
 <title>萌え萌えキュン♡ BTC冒険記</title>
 <style>
-:root{--p:#f16fbd;--pale:#fff0fa;--purple:#9664d9;--ink:#52367d;--line:#efb8e2;--green:#0aa991;--red:#e84e9b}
 *{box-sizing:border-box}
-body{margin:0;background:linear-gradient(145deg,#fff6fc,#f1e7ff 65%,#fff0f9);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;font-size:13px}
-main{max-width:1600px;margin:auto;padding:12px}
-.hero{height:180px;position:relative;overflow:hidden;border:2px solid white;border-radius:22px;background:linear-gradient(100deg,#ffb6df,#e7c7ff 55%,#b5e5ff);display:flex;align-items:center;justify-content:space-between;padding:20px 28px;box-shadow:0 5px 20px #c67bc633}
-.hero:before{content:"🏰　🌸　✨　🌙　💖　🏰";position:absolute;inset:0;display:flex;align-items:center;justify-content:space-around;font-size:35px;opacity:.32}
-.heroText{position:relative;z-index:1}
-h1{font-size:clamp(25px,4vw,45px);line-height:1.1;margin:0;color:white;text-shadow:2px 3px 0 #a958ca,0 0 12px #e46fc9}
-.hero p{font-weight:800;color:#8144a9;margin:10px 0}
-.heroGirl{font-size:clamp(62px,10vw,115px);filter:drop-shadow(0 5px 4px #b45ac455);z-index:1}
-.pill,.tag{display:inline-block;background:#fffC;border:1px solid white;border-radius:99px;padding:5px 10px;font-weight:800;font-size:11px}
-.layout{display:grid;grid-template-columns:180px minmax(0,1fr) 285px;gap:12px;margin-top:12px}
-aside,.middle,.right{min-width:0}
-.card,.menu,.girlbox{background:#ffffffdf;border:1px solid var(--line);border-radius:17px;padding:13px;box-shadow:0 4px 15px #ad73c512;min-width:0}
-.menu{padding:7px;margin-bottom:10px}
-.nav{padding:13px 9px;border-bottom:1px solid #f8e3f3;font-weight:800;color:#a65aaf}
-.nav:first-child{background:#ffe0f3;border-radius:12px;color:#df50a9}
-.girlbox{text-align:center;background:linear-gradient(#ffe5f4,#f1e4ff);margin-bottom:10px}
-.girl{font-size:78px;line-height:1.4}
-.girlbox b{color:#d552a8}
-h2{font-size:15px;margin:0 0 10px;color:#914bb7}
-h3{font-size:12px;margin:0 0 7px}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}
-.stats{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:8px;margin:10px 0}
-.stat{background:linear-gradient(145deg,#fff,#fff3fb);border:1px solid #f1c8e9;border-radius:12px;padding:10px;min-width:0}
-.k{font-size:10px;font-weight:800;color:#9d81b0}
-.v{font-size:clamp(16px,1.7vw,23px);font-weight:900;overflow-wrap:anywhere;margin:5px 0;color:#62429b}
-.sub{font-size:10px;color:#987fb0;overflow-wrap:anywhere}
-.green{color:var(--green)!important}.red{color:var(--red)!important}
-.row{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:10px;margin-bottom:10px}
-.chart{width:100%;height:235px;display:block}
-.legend{display:flex;justify-content:space-between;flex-wrap:wrap;font-size:10px;color:#9d81b0}
-.bar{height:12px;border-radius:99px;background:#f4dff2;overflow:hidden;margin:7px 0}
-.bar span{display:block;height:100%;background:linear-gradient(90deg,#ff6fbd,#a66eff);border-radius:99px;transition:width .3s}
-.map{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:5px}
-.tile{height:55px;display:flex;align-items:center;justify-content:center;flex-direction:column;border:1px solid #e6d1ff;border-radius:10px;background:linear-gradient(#fff,#f3eaff);font-size:19px}
-.tile small{font-size:9px;color:#9879b5}
-.tile.current{border:2px solid #ec69bc;background:#ffd9f0;box-shadow:0 0 9px #ffb8df}
-.tile.passed{background:#fff0f8;border-color:#f5afd8}
-.tile.goal{background:#fff2c9}
-button{border:0;border-radius:99px;padding:11px 14px;background:linear-gradient(90deg,#ff7abd,#b17aff);color:white;font-weight:900;width:100%;cursor:pointer}
-.magic{background:linear-gradient(135deg,#fff8ff,#f3eaff);border:1px solid #e7d0fa;border-radius:13px;padding:11px}
-table{width:100%;border-collapse:collapse;font-size:10px}
-th,td{text-align:left;padding:8px 5px;border-bottom:1px solid #f0e2f5;white-space:nowrap}
-th{background:#fff6fc;color:#9879b2}
-.tablewrap{overflow-x:auto}
-.fibrow{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid #f3dfef;font-size:11px;gap:8px}
-.note{padding:10px;border:1px solid #f3d8a2;background:#fff8e6;color:#896c41;border-radius:12px;font-size:10px;margin-top:10px}
-.foot{text-align:center;font-size:10px;color:#a38ab7;padding:16px 5px}
-@media(max-width:1100px){.layout{grid-template-columns:145px minmax(0,1fr)}.right{grid-column:2}.stats{grid-template-columns:repeat(3,minmax(0,1fr))}.hero{height:155px}}
-@media(max-width:700px){main{padding:6px}.layout{grid-template-columns:1fr}.left{display:none}.right{grid-column:auto}.row{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{height:145px;padding:15px}.heroGirl{font-size:64px}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}.v{font-size:18px}.chart{height:210px}}
+html,body{margin:0;padding:0;background:#fff0fb}
+body{font-family:-apple-system,BlinkMacSystemFont,"Yu Gothic",sans-serif}
+main{width:100%;max-width:1600px;margin:auto}
+img{display:block;width:100%;height:auto}
+.note{padding:12px;text-align:center;font-size:12px;color:#89549b}
 </style>
 </head>
 <body>
 <main>
-<header class="hero">
- <div class="heroText">
-  <h1>萌え萌えキュン♡<br>BTC冒険記</h1>
-  <p>— 魔法少女の仮想通貨RPG — ✨</p>
-  <span class="pill">🪄 PAPER TRADE ONLY</span>
- </div>
- <div class="heroGirl">🧙🏻‍♀️💖✨</div>
- <div style="position:relative;z-index:1;text-align:center">
-  <div style="font-size:28px">🏰</div><b id="stageTop">STAGE 1</b>
-  <div class="bar" style="background:#ffffff99;width:150px"><span id="xpBar" style="width:0%"></span></div>
-  <small id="xpTop">0 / 500 XP</small>
- </div>
-</header>
-
-<div class="layout">
-<aside class="left">
- <div class="menu">
-  <div class="nav">⌂　ホーム</div><div class="nav">⚔️　バトルログ</div>
-  <div class="nav">📈　資産グラフ</div><div class="nav">✧　フィボナッチ</div>
-  <div class="nav">⚙️　設定</div>
- </div>
- <div class="girlbox">
-  <div class="sub">小さな一歩が<br>大きな夢を叶えるよ♡</div>
-  <div class="girl">👸🏻🪄</div>
-  <b>一緒に冒険しよう♡</b><div>🌸✨💖</div>
- </div>
- <div class="girlbox"><div style="font-size:28px">🌙⭐</div><b>夢は、きっと叶うよ♡</b><p class="sub">焦らず、冷静に！</p></div>
-</aside>
-
-<section class="middle">
- <div class="grid" style="grid-template-columns:repeat(2,minmax(0,1fr))">
-  <div class="card"><h2>💗 HP</h2><div class="v" id="hp">100 / 100</div><div class="bar"><span id="hpBar" style="width:100%"></span></div><div class="sub" id="hpMsg">元気いっぱい！</div></div>
-  <div class="card"><h2>⭐ 経験値</h2><div class="v" id="xp">0 XP</div><div class="bar"><span id="xpBar2" style="width:0%"></span></div><div class="sub">勝利すると経験値を獲得。10勝で次のステージへ！</div></div>
- </div>
-
- <div class="stats">
-  <div class="stat"><div class="k">₿ BTC価格</div><div class="v" id="price">$—</div><div class="sub" id="priceJ">¥—</div></div>
-  <div class="stat"><div class="k">🐷 仮想資産</div><div class="v" id="equity">$—</div><div class="sub" id="equityJ">¥—</div></div>
-  <div class="stat"><div class="k">💞 確定損益</div><div class="v" id="pnl">$—</div><div class="sub" id="pnlJ">¥—</div></div>
-  <div class="stat"><div class="k">👤 勝率</div><div class="v" id="winrate">—%</div><div class="sub" id="count">決済回数 —</div></div>
-  <div class="stat"><div class="k">✨ 含み損益</div><div class="v" id="unreal">$—</div><div class="sub" id="unrealJ">¥—</div></div>
-  <div class="stat"><div class="k">💗 最大DD</div><div class="v" id="dd">—%</div><div class="sub">資産下落率</div></div>
- </div>
-
- <div class="row">
-  <section class="card">
-   <h2>📊 資産の冒険グラフ (USD)</h2>
-   <canvas id="chart" class="chart"></canvas>
-   <div class="legend"><span>♡ 資産推移</span><span id="chartCount">履歴 —件</span></div>
-  </section>
-  <section class="card">
-   <h2>💎 現在の戦闘予報</h2>
-   <div class="magic">
-    <div class="grid">
-     <div class="stat"><div class="k">シグナル</div><div class="v" id="signal">WAIT</div></div>
-     <div class="stat"><div class="k">スコア</div><div class="v" id="score">—</div></div>
-     <div class="stat"><div class="k">RSI 15分</div><div class="v" id="rsi">—</div></div>
-    </div>
-    <div class="sub" id="reasons">判定理由を読み込み中…</div>
-   </div>
-   <div class="stat" style="margin-top:9px"><div class="k">プロフィットファクター</div><div class="v" id="pf">—</div><div class="sub">勝ち合計 ÷ 負け合計</div></div>
-  </section>
- </div>
-
- <div class="row">
-  <section class="card">
-   <h2>⚔️ 現在のバトル</h2>
-   <div class="magic" id="position"><div style="font-size:30px">🪄💫</div>ポジションを確認中…</div>
-  </section>
-  <section class="card">
-   <h2>📜 最近のバトルログ</h2>
-   <div class="tablewrap"><table><thead><tr><th>日時</th><th>結果</th><th>方向</th><th>損益USD</th></tr></thead><tbody id="trades"><tr><td colspan="4">読み込み中…</td></tr></tbody></table></div>
-  </section>
- </div>
-</section>
-
-<aside class="right">
- <section class="card" style="margin-bottom:10px">
-  <h2>🎲 すごろく冒険マップ</h2>
-  <div class="sub" style="text-align:right" id="mapCount">0 / 10 マス</div>
-  <div class="map" id="map"></div>
-  <p class="sub" id="mapMsg">勝利を重ねてゴールを目指そう！</p>
-  <div style="font-size:40px;text-align:right">🧚🏻‍♀️✨</div>
- </section>
- <section class="card" style="margin-bottom:10px">
-  <h2>🔮 フィボナッチの魔法</h2>
-  <div class="magic">
-   <div style="font-size:36px;text-align:center">🔮</div>
-   <div class="sub">現在価格</div><div class="v" id="fibPrice">$—</div>
-   <div id="fibLevels"></div>
-   <div class="sub" id="fibRange" style="margin-top:8px"></div>
+  <img src="./reference-dashboard.jpeg"
+       alt="萌え萌えキュン BTC冒険記 ダッシュボード">
+  <div class="note">
+    BTC冒険記・デザイン見本
   </div>
- </section>
- <section class="card">
-  <h2>🛡️ リスクの結界</h2>
-  <div class="stat"><div class="k">仮想レバレッジ上限</div><div class="v">30x</div></div>
-  <div class="stat" style="margin-top:8px"><div class="k">最大証拠金比率</div><div class="v">10%</div></div>
-  <div class="stat" style="margin-top:8px"><div class="k">日次損失上限</div><div class="v">3%</div></div>
-  <p class="sub" id="risk">ペーパートレード専用</p>
- </section>
-</aside>
-</div>
-
-<div class="note">⚠️ このページは仮想取引の記録を表示します。実注文・ウォレット接続は行いません。円換算は参考値です。ゲーム内HP・経験値・コインは演出用で、実際の資産とは別です。</div>
-<div class="foot">♡ ゲームのHP・コイン・レベルは演出用です。実際の資産とは別管理です。♡　ペーパートレード専用</div>
 </main>
-
-<script>
-"use strict";
-const $=id=>document.getElementById(id);
-let rate=150,dataNow=null;
-const GAME="btc_magical_girl_v2";
-const num=v=>{let n=Number(v);return Number.isFinite(n)?n:null};
-const usd=v=>num(v)===null?"—":"$"+Number(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
-const jpy=v=>num(v)===null?"—":"¥"+Math.round(Number(v)*rate).toLocaleString("ja-JP");
-const pct=v=>num(v)===null?"—":Number(v).toFixed(2)+"%";
-const signed=v=>num(v)===null?"—":(v>0?"+":v<0?"−":"")+usd(Math.abs(v));
-const signedJ=v=>num(v)===null?"—":(v>0?"+":v<0?"−":"")+jpy(Math.abs(v));
-const safe=v=>String(v??"—").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-function game(){
- try{let g=JSON.parse(localStorage.getItem(GAME)||"{}");return{hp:Number.isFinite(g.hp)?g.hp:100,xp:g.xp||0,coins:g.coins||0,step:g.step||0,wins:g.wins||0,seen:Array.isArray(g.seen)?g.seen:[]}}
- catch(e){return{hp:100,xp:0,coins:0,step:0,wins:0,seen:[]}}
-}
-function save(g){try{localStorage.setItem(GAME,JSON.stringify(g))}catch(e){}}
-function updateGame(trades){
- let g=game(),changed=false;
- for(let t of trades||[]){
-  let id=String(t.closed_at||"")+"|"+String(t.net_pnl_usd??"");
-  if(g.seen.includes(id))continue;
-  g.seen.push(id);changed=true;
-  let p=Number(t.net_pnl_usd||0);
-  if(p>0){g.wins++;g.xp+=100;g.coins+=10;g.hp=Math.min(100,g.hp+8);g.step=(g.step+1)%10}
-  else if(p<0)g.hp=Math.max(0,g.hp-Math.min(35,Math.max(5,Math.round(Math.abs(p)*2))));
- }
- g.seen=g.seen.slice(-400);if(changed)save(g);return g;
-}
-function drawMap(g){
- let icons=["🌸","❄️","💎","🌷","⭐","🧰","🌙","💖","✨","🏰"];
- $("map").innerHTML=icons.map((ic,i)=>`<div class="tile ${i<g.step?"passed":""} ${i===g.step?"current":""} ${i===9?"goal":""}">${i===g.step?"🧚🏻‍♀️":ic}<small>${i===9?"GOAL":i+1}</small></div>`).join("");
- $("mapCount").textContent=g.step+" / 10 マス";
- $("mapMsg").textContent=g.wins?"勝利 "+g.wins+"回！ゴールを目指そう♡":"勝利を重ねてゴールを目指そう！";
- $("stageTop").textContent="STAGE "+(Math.floor(g.wins/10)+1);
- $("hp").textContent=g.hp+" / 100";$("hpBar").style.width=g.hp+"%";
- $("hpMsg").textContent=g.hp===0?"HPゼロ！次の勝利で回復♡":"✦ 元気いっぱい！";
- $("xp").textContent=g.xp+" XP";$("xpBar2").style.width=(g.xp%500)/5+"%";
- $("xpBar").style.width=(g.xp%500)/5+"%";$("xpTop").textContent=(g.xp%500)+" / 500 XP";
-}
-function chart(points){
- let c=$("chart"),ctx=c.getContext("2d"),w=Math.max(c.clientWidth,250),h=c.clientHeight,dpr=devicePixelRatio||1;
- c.width=w*dpr;c.height=h*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.clearRect(0,0,w,h);
- let a=(points||[]).map(p=>num(p.equity_usd)).filter(v=>v!==null);
- if(a.length<2){ctx.fillStyle="#997bb0";ctx.font="12px sans-serif";ctx.fillText("資産履歴が増えるとグラフが表示されます",8,h/2);$("chartCount").textContent="履歴 "+a.length+"件";return}
- let lo=Math.min(...a),hi=Math.max(...a),span=hi-lo||1,L=49,R=8,T=12,B=22,cw=w-L-R,ch=h-T-B;
- ctx.font="10px sans-serif";ctx.fillStyle="#987bb1";ctx.strokeStyle="#f0deef";
- for(let i=0;i<4;i++){let y=T+ch*i/3;ctx.beginPath();ctx.moveTo(L,y);ctx.lineTo(w-R,y);ctx.stroke();ctx.fillText(usd(hi-span*i/3),2,y+3)}
- let pts=a.map((v,i)=>({x:L+cw*i/(a.length-1),y:T+ch*(hi-v)/span}));
- let grad=ctx.createLinearGradient(0,T,0,h-B);grad.addColorStop(0,"#ff82c988");grad.addColorStop(1,"#d3aaff05");
- ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.lineTo(pts.at(-1).x,h-B);ctx.lineTo(pts[0].x,h-B);ctx.closePath();ctx.fillStyle=grad;ctx.fill();
- ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));ctx.strokeStyle="#ed6cba";ctx.lineWidth=2.5;ctx.stroke();
- pts.forEach((p,i)=>{if(i%Math.max(1,Math.floor(pts.length/20))===0||i===pts.length-1){ctx.beginPath();ctx.arc(p.x,p.y,2.5,0,7);ctx.fillStyle="#e96cbd";ctx.fill()}});
- $("chartCount").textContent="記録数："+a.length;
-}
-function render(d){
- dataNow=d;let m=d.metrics||{},s=d.signal||{},g=updateGame(d.recent_trades||[]);
- $("price").textContent=usd(d.price);$("priceJ").textContent=jpy(d.price);
- $("equity").textContent=usd(m.equity_usd);$("equityJ").textContent=jpy(m.equity_usd);
- $("pnl").textContent=signed(m.net_closed_pnl_usd);$("pnlJ").textContent=signedJ(m.net_closed_pnl_usd);
- $("winrate").textContent=pct(m.win_rate_pct);$("count").textContent="決済回数："+(m.closed_trades??0);
- $("unreal").textContent=signed(m.open_unrealized_pnl_usd);$("unrealJ").textContent=signedJ(m.open_unrealized_pnl_usd);
- $("dd").textContent=pct(m.drawdown_pct);$("pf").textContent=m.profit_factor==null?"—":Number(m.profit_factor)>=99?"∞":Number(m.profit_factor).toFixed(2);
- ["pnl","unreal"].forEach(id=>{let el=$(id),v=id==="pnl"?m.net_closed_pnl_usd:m.open_unrealized_pnl_usd;el.className="v "+(Number(v)>0?"green":Number(v)<0?"red":"")});
- $("signal").textContent=s.direction||"WAIT";$("signal").className="v "+(s.direction==="LONG"?"green":s.direction==="SHORT"?"red":"");
- $("score").textContent=(s.score??"—")+"/ 5";
- $("rsi").textContent=num(s.rsi_15m)===null?"—":Number(s.rsi_15m).toFixed(1);
- $("reasons").innerHTML=(s.reasons||[]).map(x=>"✧ "+safe(x)).join("<br>")||"判定理由なし";
- let t=d.open_trade;
- $("position").innerHTML=t?`<b>${safe(t.direction)} ポジション保有中</b><div class="grid" style="margin-top:8px"><div class="stat"><div class="k">エントリー</div><b>${usd(t.entry_price)}</b></div><div class="stat"><div class="k">損切り</div><b>${usd(t.stop_price)}</b></div><div class="stat"><div class="k">利確目標</div><b>${usd(t.target_price)}</b></div></div><div class="sub">仮想倍率 ${t.leverage_virtual||30}x · 実注文なし</div>`:'<div style="font-size:30px">🪄💫</div><b>ポジションなし</b><p class="sub">次のチャンスを待機中だよ♡</p>';
- $("trades").innerHTML=(d.recent_trades||[]).slice().reverse().slice(0,8).map(t=>{let p=Number(t.net_pnl_usd||0);return `<tr><td>${t.closed_at?safe(new Date(t.closed_at).toLocaleString("ja-JP",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})):"—"}</td><td class="${p>=0?"green":"red"}">${p>0?"WIN":p<0?"LOSS":"DRAW"}</td><td>${safe(t.direction)}</td><td class="${p>=0?"green":"red"}">${signed(p)}</td></tr>`}).join("")||'<tr><td colspan="4">決済履歴はまだありません♡</td></tr>';
- $("fibPrice").textContent=usd(d.price);
- let f=d.fib||{};
- let levels=[["0%","swing_high"],["38.2%","retracement_382"],["50%","retracement_500"],["61.8%","retracement_618"],["100%","swing_low"]];
- $("fibLevels").innerHTML=levels.filter(x=>num(f[x[1]])!==null).map(x=>`<div class="fibrow"><span>${x[0]}</span><b>${usd(f[x[1]])}</b></div>`).join("")||'<div class="sub">フィボナッチデータ待ち</div>';
- $("fibRange").textContent=num(f.swing_high)!==null&&num(f.swing_low)!==null?"高値 "+usd(f.swing_high)+" / 安値 "+usd(f.swing_low):"";
- $("risk").textContent=d.risk?.halt_reason?"🛑 停止理由: "+d.risk.halt_reason:"🟢 現在、停止理由はありません（仮想取引）";
- drawMap(g);chart(d.equity_history||[]);
-}
-async function loadRate(){
- try{let r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});let x=await r.json();if(Number(x?.rates?.JPY)>0)rate=Number(x.rates.JPY)}catch(e){}
-}
-async function loadData(){
- try{let r=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});if(!r.ok)throw Error("HTTP "+r.status);let d=await r.json();if(!d.metrics||!d.signal)throw Error("data.json形式");render(d);document.title="萌え萌えキュン♡ BTC冒険記"}catch(e){$("reasons").textContent="データ読込エラー: "+e.message+"。GitHub Actionsと docs/data.json を確認してください。"}
-}
-async function start(){await loadRate();await loadData()}
-window.addEventListener("resize",()=>{if(dataNow)chart(dataNow.equity_history||[])});
-start();
-</script>
 </body>
 </html>
