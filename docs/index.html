@@ -3,346 +3,428 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>BTC Paper Engine V7</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#fff0f8">
+<title>♡ BTCトレーダーRPG ♡</title>
 <style>
-:root{color-scheme:dark;--bg:#0b1020;--card:#151d31;--line:#293550;--text:#eef3ff;--muted:#9aa9c5;--green:#35d49a;--red:#ff7185;--blue:#75a7ff}
+:root{
+ --pink:#ff78b7;--pink2:#ffb7d8;--purple:#a78bfa;
+ --bg:#fff5fb;--card:#ffffff;--ink:#59465f;
+ --muted:#a18ba5;--green:#21b88a;--red:#f05d83;
+ --gold:#f4bc49;--line:#f5d9e9;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;padding:16px}
+body{
+ margin:0;color:var(--ink);background:
+ radial-gradient(circle at 10% 5%,#ffe0f0 0,transparent 28%),
+ radial-gradient(circle at 95% 30%,#eee5ff 0,transparent 28%),var(--bg);
+ font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Yu Gothic",sans-serif;
+ padding:12px;
+}
 main{max-width:1000px;margin:auto}
-h1{font-size:24px;margin:8px 0}
-h2{font-size:17px;margin:0 0 14px}
-p{color:var(--muted)}
-header,.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px}
-header{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
-.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
-.metric{background:#0e1629;border:1px solid var(--line);border-radius:10px;padding:13px;min-width:0}
+.card,.hero{
+ background:rgba(255,255,255,.94);border:2px solid var(--line);
+ border-radius:22px;padding:16px;margin-bottom:14px;
+ box-shadow:0 5px 16px #e8b5d326;
+}
+.hero{
+ background:linear-gradient(135deg,#ffe1f0,#f3e7ff 65%,#fff8d9);
+ border-color:#ffc4e0;text-align:center;overflow:hidden;
+}
+h1{font-size:25px;margin:4px 0;color:#e65a9c}
+h2{font-size:17px;margin:0 0 12px;color:#c45591}
+p{line-height:1.65}
+.sub{font-size:12px;color:var(--muted)}
+.mascot{font-size:66px;line-height:1.2;filter:drop-shadow(0 4px 2px #e6a4c5)}
+.speech{
+ display:inline-block;background:white;border:2px solid #ffc6e1;
+ border-radius:16px;padding:10px 15px;margin:8px auto;font-weight:bold;
+}
+.badge{
+ display:inline-block;border-radius:999px;padding:6px 12px;
+ background:#fff;color:#c45591;border:1px solid #ffc6e1;
+ font-size:12px;font-weight:bold;margin:3px;
+}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.metric{background:#fff8fc;border:1px solid var(--line);border-radius:15px;padding:12px;min-width:0}
 .label{font-size:12px;color:var(--muted)}
-.value{font-size:21px;font-weight:700;margin-top:7px;overflow-wrap:anywhere}
-.small{font-size:12px;color:var(--muted);margin-top:6px}
-button{border:1px solid #48669c;background:#21375b;color:white;padding:11px 14px;border-radius:9px;font-size:14px;font-weight:650;cursor:pointer}
-button:active{opacity:.75}
-button.secondary{background:#172238;border-color:var(--line)}
-.green{color:var(--green)}.red{color:var(--red)}.blue{color:var(--blue)}
-.hidden{display:none!important}
-#chart{width:100%;height:260px;display:block}
-table{width:100%;border-collapse:collapse;font-size:13px}
+.value{font-size:20px;font-weight:800;margin-top:6px;overflow-wrap:anywhere}
+.small{font-size:12px;color:var(--muted);margin-top:5px}
+.green{color:var(--green)}.red{color:var(--red)}.purple{color:#9270e8}
+button{
+ border:0;border-radius:13px;padding:11px 14px;background:linear-gradient(135deg,#ff82bb,#dca4ff);
+ color:white;font-size:13px;font-weight:bold;cursor:pointer;
+ box-shadow:0 3px 7px #d89acb38;
+}
+button.secondary{background:#fff;color:#b75a98;border:1px solid var(--line);box-shadow:none}
+button:active{transform:scale(.98)}
+.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.hpbar,.xpbar{height:15px;background:#f7e2ee;border-radius:99px;overflow:hidden;margin:8px 0 12px}
+.hpfill{height:100%;width:100%;background:linear-gradient(90deg,#ff608c,#ff9ecb);border-radius:99px;transition:width .5s}
+.xpfill{height:100%;width:0;background:linear-gradient(90deg,#a88aff,#d4a7ff);border-radius:99px;transition:width .5s}
+.board{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-top:14px}
+.tile{
+ min-height:70px;background:#fff7fc;border:2px solid #f3d5e8;
+ border-radius:14px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+ font-size:11px;color:#b58da8;text-align:center;padding:4px;
+}
+.tile .emoji{font-size:23px}
+.tile.current{background:#ffe0ef;border-color:#ff71b2;box-shadow:0 0 0 3px #ffb6d6aa;transform:translateY(-2px)}
+.tile.done{background:#f0e9ff;border-color:#c6b0ff;color:#8b69d1}
+.tile.boss{background:#fff3d4;border-color:#f6d176}
+#chart{width:100%;height:230px;display:block}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:12px}
 th,td{text-align:left;padding:10px 7px;border-bottom:1px solid var(--line);white-space:nowrap}
 th{color:var(--muted)}
-.tablewrap{overflow-x:auto}
-.level{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.level div{padding:12px;background:#0e1629;border:1px solid var(--line);border-radius:9px}
-.level strong{display:block;font-size:17px;margin-top:5px}
-.status{font-size:12px;color:var(--muted)}
-@media(max-width:600px){body{padding:10px}.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.value{font-size:18px}header h1{font-size:21px}.level{grid-template-columns:1fr 1fr}}
+.hidden{display:none!important}
+.fibgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.fibitem{padding:10px;background:#fff8fc;border:1px solid var(--line);border-radius:12px}
+.fibitem strong{display:block;margin-top:5px;font-size:14px}
+.flash{animation:flash .55s ease}
+@keyframes flash{0%{transform:scale(1)}35%{transform:scale(1.04)}100%{transform:scale(1)}}
+.footer{text-align:center;color:var(--muted);font-size:11px;padding:12px}
+@media(max-width:600px){
+ body{padding:8px}.card,.hero{padding:12px;border-radius:17px}
+ .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .value{font-size:18px}h1{font-size:22px}
+ .board{gap:4px}.tile{min-height:62px;font-size:10px;border-radius:10px}
+ .tile .emoji{font-size:20px}
+}
 </style>
 </head>
 <body>
 <main>
-<header>
-  <div>
-    <h1>BTC Paper Engine V7</h1>
-    <div class="status" id="updated">データ読み込み中...</div>
-  </div>
-  <div style="display:flex;gap:8px;flex-wrap:wrap">
-    <button id="fibButton" type="button" aria-expanded="false">フィボナッチ表示</button>
-    <button id="refreshButton" class="secondary" type="button">更新</button>
-  </div>
-</header>
+<section class="hero" id="hero">
+ <div class="badge">♡ FREE PAPER TRADING RPG ♡</div>
+ <h1>萌え萌えキュン♡ BTC冒険記</h1>
+ <div class="mascot" id="mascot">🐰</div>
+ <div class="speech" id="speech">ご主人さま、冒険に出発だよっ♡</div>
+ <div>
+  <span class="badge" id="stageBadge">🏰 STAGE 1</span>
+  <span class="badge" id="levelBadge">⭐ LV.1</span>
+ </div>
+ <p class="sub" id="updated">データを読み込み中...</p>
+</section>
+
+<section class="card">
+ <div class="row">
+  <h2>💗 冒険者のHP</h2>
+  <span id="hpText">100 / 100 HP</span>
+ </div>
+ <div class="hpbar"><div id="hpFill" class="hpfill"></div></div>
+ <div class="row">
+  <span class="sub" id="hpMessage">元気いっぱい！</span>
+  <span class="badge" id="coinBadge">🪙 0 COIN</span>
+ </div>
+ <div class="row" style="margin-top:14px">
+  <h2>✨ 経験値</h2><span id="xpText">0 XP</span>
+ </div>
+ <div class="xpbar"><div id="xpFill" class="xpfill"></div></div>
+ <div class="sub">勝利すると経験値を獲得。10勝で次のステージへ！</div>
+</section>
+
+<section class="card">
+ <div class="row">
+  <h2>🎲 すごろく冒険マップ</h2>
+  <span id="progressText" class="badge">0 / 10 マス</span>
+ </div>
+ <div class="board" id="board"></div>
+ <p class="sub" id="mapMessage">勝利を重ねてゴールを目指そう！</p>
+</section>
 
 <section class="grid">
-  <div class="metric"><div class="label">BTC価格</div><div class="value" id="price">--</div><div class="small" id="priceJpy">--</div></div>
-  <div class="metric"><div class="label">仮想資産（USD）</div><div class="value" id="equity">--</div><div class="small" id="equityJpy">--</div></div>
-  <div class="metric"><div class="label">確定損益</div><div class="value" id="pnl">--</div><div class="small" id="pnlJpy">--</div></div>
-  <div class="metric"><div class="label">勝率</div><div class="value" id="winrate">--</div><div class="small" id="tradeCount">--</div></div>
-  <div class="metric"><div class="label">含み損益</div><div class="value" id="unrealized">--</div><div class="small" id="unrealizedJpy">--</div></div>
-  <div class="metric"><div class="label">最大ドローダウン</div><div class="value" id="drawdown">--</div><div class="small" id="pf">PF: --</div></div>
+ <div class="metric"><div class="label">₿ BTC価格</div><div class="value" id="price">--</div><div class="small" id="priceJpy">--</div></div>
+ <div class="metric"><div class="label">💰 仮想資産</div><div class="value" id="equity">--</div><div class="small" id="equityJpy">--</div></div>
+ <div class="metric"><div class="label">⚔️ 確定損益</div><div class="value" id="pnl">--</div><div class="small" id="pnlJpy">--</div></div>
+ <div class="metric"><div class="label">🏆 勝率</div><div class="value" id="winrate">--</div><div class="small" id="tradeCount">決済回数: --</div></div>
+ <div class="metric"><div class="label">💥 含み損益</div><div class="value" id="unrealized">--</div><div class="small" id="unrealizedJpy">--</div></div>
+ <div class="metric"><div class="label">🛡️ 最大DD</div><div class="value" id="drawdown">--</div><div class="small" id="pf">PF: --</div></div>
 </section>
 
 <section class="card">
-  <h2>フィボナッチ・リトレースメント</h2>
-  <p id="fibStatus">ボタンを押すと表示します。</p>
-  <div id="fibPanel" class="hidden">
-    <div class="level" id="fibLevels"></div>
-    <p class="small" id="fibNote"></p>
-  </div>
+ <h2>📈 資産の冒険グラフ（USD）</h2>
+ <canvas id="chart"></canvas>
+ <div class="small" id="chartInfo">資産履歴を読み込み中...</div>
 </section>
 
 <section class="card">
-  <h2>資産推移（USD）</h2>
-  <canvas id="chart"></canvas>
-  <div class="small" id="chartInfo">資産履歴データを読み込みます。</div>
+ <h2>🔮 フィボナッチの魔法</h2>
+ <button id="fibButton" type="button">✨ 魔法陣をひらく</button>
+ <div id="fibPanel" class="hidden" style="margin-top:12px">
+  <div id="fibStatus" class="sub"></div>
+  <div id="fibLevels" class="fibgrid" style="margin-top:10px"></div>
+  <p id="fibNote" class="sub"></p>
+ </div>
 </section>
 
 <section class="card">
-  <h2>現在のシグナル</h2>
-  <div class="grid">
-    <div class="metric"><div class="label">方向</div><div class="value" id="signal">--</div></div>
-    <div class="metric"><div class="label">スコア</div><div class="value" id="score">--</div></div>
-    <div class="metric"><div class="label">RSI（15分）</div><div class="value" id="rsi">--</div></div>
-  </div>
-  <p id="reasons">--</p>
+ <h2>🔍 現在の戦闘予報</h2>
+ <div class="grid">
+  <div class="metric"><div class="label">シグナル</div><div class="value" id="signal">--</div></div>
+  <div class="metric"><div class="label">スコア</div><div class="value" id="score">--</div></div>
+  <div class="metric"><div class="label">RSI 15分</div><div class="value" id="rsi">--</div></div>
+ </div>
+ <p id="reasons" class="sub">--</p>
 </section>
 
 <section class="card">
-  <h2>オープンポジション</h2>
-  <div id="openTrade">ポジションなし</div>
+ <h2>🗡️ 現在のバトル</h2>
+ <div id="openTrade">ポジションなし。今は休憩中だよ♡</div>
 </section>
 
 <section class="card">
-  <h2>最近の取引</h2>
-  <div class="tablewrap">
-    <table>
-      <thead><tr><th>日時</th><th>方向</th><th>倍率</th><th>エントリー</th><th>決済</th><th>損益 USD</th><th>損益 円</th><th>理由</th></tr></thead>
-      <tbody id="trades"><tr><td colspan="8">データを読み込み中...</td></tr></tbody>
-    </table>
-  </div>
+ <h2>📜 最近のバトルログ</h2>
+ <div class="sub" style="margin-bottom:10px">新しい決済結果がゲーム内のHP・経験値・マップに反映されるよ。</div>
+ <div class="tablewrap">
+  <table>
+   <thead><tr><th>日時</th><th>結果</th><th>倍率</th><th>エントリー</th><th>決済</th><th>損益 USD</th><th>損益 円</th><th>理由</th></tr></thead>
+   <tbody id="trades"><tr><td colspan="8">読み込み中...</td></tr></tbody>
+  </table>
+ </div>
 </section>
-<p class="small">ペーパートレード専用。表示は実際の取引や将来の利益を保証するものではありません。</p>
+
+<section class="footer">
+ ♡ ゲームのHP・コイン・レベルは演出用です。実際の資産とは別管理です。<br>
+ ペーパートレード専用。利益を保証せず、実際の注文は行いません。
+</section>
 </main>
 
 <script>
 "use strict";
 
-let DATA = null;
-let USDJPY = 150;
-let fibOpen = false;
+const $=id=>document.getElementById(id);
+const SAVE_KEY="btc_moe_rpg_v1";
+let DATA=null,USDJPY=150,fibOpen=false;
+let game={hp:100,xp:0,wins:0,losses:0,coins:0,seen:[],initialized:false,lastEvent:"start"};
 
-const $ = id => document.getElementById(id);
-const num = v => Number.isFinite(Number(v)) ? Number(v) : null;
-const fmt = (v,d=2) => num(v) === null ? "--" : num(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
-const usd = v => num(v) === null ? "--" : "$" + fmt(v);
-const jpy = v => num(v) === null ? "--" : "¥" + Math.round(Number(v)*USDJPY).toLocaleString("ja-JP");
-const signed = v => num(v) === null ? "--" : (v>0?"+":"") + fmt(v);
-const setText = (id,v) => { $(id).textContent = v; };
-const setPnlColor = (id,v) => {
-  $(id).classList.remove("green","red");
-  if(num(v)!==null) $(id).classList.add(Number(v)>=0?"green":"red");
-};
-const first = (...values) => values.find(v => v !== undefined && v !== null && v !== "");
-
-async function loadFx(){
-  try{
-    const r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
-    if(!r.ok) throw Error("FX request failed");
-    const x=await r.json();
-    if(x && x.rates && num(x.rates.JPY)>0) USDJPY=Number(x.rates.JPY);
-  }catch(e){
-    // 為替APIが利用できない場合は仮の換算レートを使用
-  }
+function n(v){return v!==null&&v!==undefined&&v!==""&&Number.isFinite(Number(v))?Number(v):null}
+function first(...v){return v.find(x=>x!==undefined&&x!==null&&x!=="")}
+function fmt(v,d=2){return n(v)===null?"--":Number(v).toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d})}
+function usd(v){return n(v)===null?"--":"$"+fmt(v)}
+function yen(v){return n(v)===null?"--":"¥"+Math.round(Number(v)*USDJPY).toLocaleString("ja-JP")}
+function signed(v){return n(v)===null?"--":(Number(v)>0?"+":"")+fmt(v)}
+function set(id,v){$(id).textContent=String(v)}
+function pnlColor(id,v){
+ $(id).classList.remove("green","red");
+ if(n(v)!==null)$(id).classList.add(Number(v)>=0?"green":"red");
 }
-
-async function loadData(){
-  setText("updated","データ読み込み中...");
-  try{
-    const r=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});
-    if(!r.ok) throw Error("data.json HTTP "+r.status);
-    const d=await r.json();
-    DATA=d;
-    render(d);
-    setText("updated","最終更新: "+(d.generated_at || "日時不明")+" / "+(d.build || "build不明"));
-  }catch(e){
-    setText("updated","データ読込エラー: "+e.message);
+function loadGame(){
+ try{
+  const saved=JSON.parse(localStorage.getItem(SAVE_KEY)||"null");
+  if(saved&&typeof saved==="object"){
+   game={...game,...saved};
+   if(!Array.isArray(game.seen))game.seen=[];
   }
+ }catch(e){}
 }
-
-function render(d){
-  const m=d.metrics||{};
-  const s=d.signal||{};
-  const o=d.open_trade||null;
-
-  const price=num(d.price);
-  setText("price",price===null?"--":usd(price));
-  setText("priceJpy",price===null?"--":jpy(price));
-
-  const eq=num(m.equity_usd);
-  setText("equity",usd(eq));
-  setText("equityJpy",jpy(eq));
-
-  const pnl=num(m.net_closed_pnl_usd);
-  setText("pnl",pnl===null?"--":signed(pnl)+" USD");
-  setText("pnlJpy",pnl===null?"--":signed(Math.round(pnl*USDJPY))+" 円");
-  setPnlColor("pnl",pnl);
-
-  setText("winrate",num(m.win_rate_pct)===null?"--":fmt(m.win_rate_pct)+"%");
-  setText("tradeCount","決済回数: "+(m.closed_trades??"--"));
-
-  const un=num(m.open_unrealized_pnl_usd);
-  setText("unrealized",un===null?"--":signed(un)+" USD");
-  setText("unrealizedJpy",un===null?"--":signed(Math.round(un*USDJPY))+" 円");
-  setPnlColor("unrealized",un);
-
-  setText("drawdown",num(m.drawdown_pct)===null?"--":fmt(m.drawdown_pct)+"%");
-  setText("pf","PF: "+(num(m.profit_factor)===null?"--":fmt(m.profit_factor)));
-
-  setText("signal",first(s.direction,"WAIT"));
-  setText("score",num(s.score)===null?"--":fmt(s.score,0));
-  setText("rsi",num(s.rsi_15m)===null?"--":fmt(s.rsi_15m,1));
-  setText("reasons",Array.isArray(s.reasons)?s.reasons.join(" / "):(s.reasons||"理由データなし"));
-
-  if(o){
-    $("openTrade").textContent =
-      "方向: "+first(o.direction,"--")+
-      " / エントリー: "+usd(o.entry_price)+
-      " / ストップ: "+usd(o.stop_price)+
-      " / 利確目標: "+usd(o.target_price);
+function saveGame(){
+ try{localStorage.setItem(SAVE_KEY,JSON.stringify(game))}catch(e){}
+}
+function tradeKey(t){
+ return String(first(t.closed_at,t.closedAt,t.timestamp,t.opened_at,""))+"|"+
+ String(first(t.direction,""))+"|"+String(first(t.entry_price,""))+"|"+
+ String(first(t.exit_price,""))+"|"+String(first(t.net_pnl_usd,""));
+}
+function processNewTrades(trades){
+ const keys=trades.map(tradeKey);
+ if(!game.initialized){
+  game.seen=[...new Set(keys)].slice(0,100);
+  game.initialized=true;
+  saveGame();
+  return;
+ }
+ const fresh=trades.filter(t=>!game.seen.includes(tradeKey(t)));
+ // 古い取引から順に反映し、画面の表示順に依存しにくくする
+ fresh.reverse().forEach(t=>{
+  const p=n(t.net_pnl_usd);
+  if(p===null)return;
+  if(p>0){
+   game.wins++;
+   game.xp+=100;
+   game.coins+=10;
+   game.hp=Math.min(100,game.hp+8);
+   game.lastEvent="win";
+  }else if(p<0){
+   game.losses++;
+   const damage=Math.max(5,Math.min(35,Math.round(Math.abs(p)*2)));
+   game.hp=Math.max(0,game.hp-damage);
+   game.lastEvent="loss";
   }else{
-    $("openTrade").textContent="ポジションなし";
+   game.lastEvent="draw";
   }
-
-  renderTrades(d.recent_trades||[]);
-  drawChart(d.equity_history||[]);
-  renderFib(d);
+  game.seen.push(tradeKey(t));
+  game.seen=game.seen.slice(-100);
+ });
+ saveGame();
 }
+function renderGame(){
+ const stage=Math.floor(game.wins/10)+1;
+ const step=game.wins%10;
+ const level=Math.floor(game.xp/500)+1;
+ set("stageBadge","🏰 STAGE "+stage);
+ set("levelBadge","⭐ LV."+level);
+ set("hpText",game.hp+" / 100 HP");
+ $("hpFill").style.width=game.hp+"%";
+ $("hpFill").style.background=game.hp<=25?
+  "linear-gradient(90deg,#ed4165,#ff9a9a)":"linear-gradient(90deg,#ff608c,#ff9ecb)";
+ set("xpText",game.xp+" XP");
+ $("xpFill").style.width=(game.xp%500)/5+"%";
+ set("coinBadge","🪙 "+game.coins+" COIN");
+ set("progressText",step+" / 10 マス");
+ set("hpMessage",game.hp===0?"HP 0！ピンチ演出中。次の勝利で復活できるよ":
+  game.hp<=25?"危険！回復が必要だよ…":"元気いっぱい！今日も冒険だ♡");
 
+ const board=$("board");board.replaceChildren();
+ const tiles=[
+  ["🏁","START"],["🌸","1"],["🍬","2"],["⭐","3"],["💎","4"],
+  ["🎁","宝箱"],["🌷","6"],["🍓","7"],["✨","8"],["👑","GOAL"]
+ ];
+ tiles.forEach((tile,i)=>{
+  const el=document.createElement("div");
+  el.className="tile"+(i===step?" current":"")+(i<step?" done":"")+(i===5||i===9?" boss":"");
+  const em=document.createElement("div");em.className="emoji";
+  em.textContent=i===step?"🐰":(i<step?"💖":tile[0]);
+  const label=document.createElement("div");label.textContent=i===step?"YOU":tile[1];
+  el.append(em,label);board.appendChild(el);
+ });
+ let mascot="🐰",speech="ご主人さま、次の勝利を待ってるよっ♡",msg="勝利を重ねてゴールを目指そう！";
+ if(game.lastEvent==="win"){mascot="🥳";speech="やったぁぁ♡ 勝利だよ！ "+game.wins+"勝！";msg="前に進んだよ！次のバトルもがんばろう♡";}
+ if(game.lastEvent==="loss"){mascot=game.hp<=25?"😭":"🥺";speech=game.hp===0?"きゃーっ！HPがゼロだよ…！":"いたたっ！ダメージを受けちゃった…";msg="敗北も経験値の一部。無理せず様子を見よう。";}
+ if(game.lastEvent==="draw"){mascot="🤔";speech="引き分けかな？次のチャンスを待とう♡";}
+ if(game.wins>0&&step===0){mascot="👑";speech="ステージクリア！新しい冒険が始まるよ♡";msg="おめでとう！新しいステージに到達！";}
+ if(game.hp===0&&game.lastEvent!=="win"){mascot="😭";}
+ set("mascot",mascot);set("speech",speech);set("mapMessage",msg);
+}
 function renderTrades(trades){
-  const body=$("trades");
-  body.replaceChildren();
-  if(!trades.length){
-    const tr=document.createElement("tr");
-    const td=document.createElement("td");
-    td.colSpan=8; td.textContent="取引履歴なし";
-    tr.appendChild(td); body.appendChild(tr); return;
-  }
-  trades.slice(0,30).forEach(t=>{
-    const tr=document.createElement("tr");
-    const pnl=num(t.net_pnl_usd);
-    const vals=[
-      first(t.closed_at,t.opened_at,"--"),
-      first(t.direction,"--"),
-      num(t.leverage_virtual)===null?"--":fmt(t.leverage_virtual,1)+"x",
-      usd(t.entry_price),
-      usd(t.exit_price),
-      pnl===null?"--":signed(pnl),
-      pnl===null?"--":signed(Math.round(pnl*USDJPY)),
-      first(t.close_reason,"--")
-    ];
-    vals.forEach((v,i)=>{
-      const td=document.createElement("td");
-      td.textContent=String(v);
-      if(i===5||i===6){
-        if(pnl!==null) td.className=pnl>=0?"green":"red";
-      }
-      tr.appendChild(td);
-    });
-    body.appendChild(tr);
+ const body=$("trades");body.replaceChildren();
+ if(!trades.length){
+  const tr=document.createElement("tr"),td=document.createElement("td");
+  td.colSpan=8;td.textContent="まだバトルログがないよ♡";tr.appendChild(td);body.appendChild(tr);return;
+ }
+ trades.slice(0,30).forEach(t=>{
+  const tr=document.createElement("tr"),p=n(t.net_pnl_usd);
+  const vals=[
+   first(t.closed_at,t.opened_at,"--"),
+   p===null?"--":p>0?"🏆 WIN":p<0?"💥 DAMAGE":"DRAW",
+   n(t.leverage_virtual)===null?"--":fmt(t.leverage_virtual,1)+"x",
+   usd(t.entry_price),usd(t.exit_price),
+   p===null?"--":signed(p),p===null?"--":signed(Math.round(p*USDJPY)),
+   first(t.close_reason,"--")
+  ];
+  vals.forEach((v,i)=>{
+   const td=document.createElement("td");td.textContent=String(v);
+   if(i===5||i===6){if(p!==null)td.className=p>0?"green":p<0?"red":"";}
+   tr.appendChild(td);
   });
+  body.appendChild(tr);
+ });
 }
-
 function drawChart(history){
-  const canvas=$("chart");
-  const ctx=canvas.getContext("2d");
-  const rect=canvas.getBoundingClientRect();
-  const ratio=window.devicePixelRatio||1;
-  canvas.width=Math.max(300,rect.width*ratio);
-  canvas.height=260*ratio;
-  ctx.scale(ratio,ratio);
-  const w=canvas.width/ratio, h=260;
-  ctx.clearRect(0,0,w,h);
-
-  const values=history.map(x=>num(typeof x==="number"?x:first(x.equity_usd,x.equity,x.value))).filter(v=>v!==null);
-  if(values.length<2){
-    ctx.fillStyle="#9aa9c5";
-    ctx.font="14px sans-serif";
-    ctx.fillText("資産履歴がまだ不足しています",12,35);
-    setText("chartInfo","記録数: "+values.length);
-    return;
-  }
-  const min=Math.min(...values), max=Math.max(...values);
-  const span=max-min||1;
-  const pad=24;
-  ctx.strokeStyle="#293550";ctx.lineWidth=1;
-  for(let i=0;i<5;i++){
-    const y=pad+(h-pad*2)*i/4;
-    ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();
-  }
-  ctx.strokeStyle="#75a7ff";ctx.lineWidth=2;ctx.beginPath();
-  values.forEach((v,i)=>{
-    const x=pad+(w-pad*2)*i/(values.length-1);
-    const y=h-pad-(v-min)/span*(h-pad*2);
-    if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
-  });
-  ctx.stroke();
-  ctx.fillStyle="#9aa9c5";ctx.font="11px sans-serif";
-  ctx.fillText("$"+fmt(max),5,14);
-  ctx.fillText("$"+fmt(min),5,h-5);
-  setText("chartInfo","記録数: "+values.length+" / 最新資産: "+usd(values[values.length-1]));
+ const c=$("chart"),ctx=c.getContext("2d"),rect=c.getBoundingClientRect(),ratio=window.devicePixelRatio||1;
+ c.width=Math.max(300,rect.width*ratio);c.height=230*ratio;
+ ctx.setTransform(ratio,0,0,ratio,0,0);
+ const w=c.width/ratio,h=230;ctx.clearRect(0,0,w,h);
+ const values=history.map(x=>n(typeof x==="number"?x:first(x.equity_usd,x.equity,x.value))).filter(v=>v!==null);
+ if(values.length<2){
+  ctx.fillStyle="#a18ba5";ctx.font="14px sans-serif";ctx.fillText("資産履歴がたまるとグラフが出るよ♡",10,30);
+  set("chartInfo","記録数: "+values.length);return;
+ }
+ const min=Math.min(...values),max=Math.max(...values),span=max-min||1,pad=25;
+ ctx.strokeStyle="#f5d9e9";
+ for(let i=0;i<5;i++){const y=pad+(h-pad*2)*i/4;ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(w,y);ctx.stroke();}
+ ctx.strokeStyle="#ed7db7";ctx.lineWidth=3;ctx.beginPath();
+ values.forEach((v,i)=>{
+  const x=pad+(w-pad*2)*i/(values.length-1),y=h-pad-(v-min)/span*(h-pad*2);
+  if(i===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+ });
+ ctx.stroke();ctx.fillStyle="#a18ba5";ctx.font="11px sans-serif";
+ ctx.fillText("$"+fmt(max),5,14);ctx.fillText("$"+fmt(min),5,h-5);
+ set("chartInfo","記録数: "+values.length+" / 最新資産: "+usd(values[values.length-1]));
 }
-
 function renderFib(d){
-  const s=d.signal||{};
-  const fib=s.fib||d.fib||null;
-  const panel=$("fibPanel");
-  const levels=$("fibLevels");
-  levels.replaceChildren();
-  if(fib && typeof fib==="object"){
-    const entries=[
-      ["0%",first(fib.level_0,fib["0"],fib.zero)],
-      ["23.6%",first(fib.level_236,fib["0.236"],fib["23.6"])],
-      ["38.2%",first(fib.level_382,fib["0.382"],fib["38.2"])],
-      ["50%",first(fib.level_500,fib["0.5"],fib["50"])],
-      ["61.8%",first(fib.level_618,fib["0.618"],fib["61.8"])],
-      ["78.6%",first(fib.level_786,fib["0.786"],fib["78.6"])],
-      ["100%",first(fib.level_100,fib["1"],fib.one)]
-    ];
-    entries.forEach(([label,value])=>{
-      if(num(value)===null)return;
-      const box=document.createElement("div");
-      box.textContent=label;
-      const strong=document.createElement("strong");
-      strong.textContent=usd(value)+" / "+jpy(value);
-      box.appendChild(strong);levels.appendChild(box);
-    });
-    setText("fibStatus",levels.children.length?"bot.pyが出力したフィボナッチ値":"フィボナッチの数値形式を認識できません");
-    setText("fibNote","値の計算元がスイング高値・安値かどうかは、bot.py側の計算仕様を確認してください。");
-    return;
-  }
-
-  const price=num(d.price);
-  const atr=num(s.atr_15m);
-  if(price===null||atr===null||atr<=0){
-    setText("fibStatus","フィボナッチを計算できません。data.jsonにpriceとsignal.atr_15mが必要です。");
-    setText("fibNote","");
-    return;
-  }
-
-  // 暫定参考値。スイング高値・安値に基づく正式なフィボナッチではない。
-  const low=price-atr*3;
-  const high=price;
-  const ratios=[0,0.236,0.382,0.5,0.618,0.786,1];
-  ratios.forEach(r=>{
-    const v=high-(high-low)*r;
-    const box=document.createElement("div");
-    box.textContent=(r*100).toFixed(1).replace(".0","")+"%";
-    const strong=document.createElement("strong");
-    strong.textContent=usd(v)+" / "+jpy(v);
-    box.appendChild(strong);levels.appendChild(box);
+ const s=d.signal||{},fib=s.fib||d.fib||null,levels=$("fibLevels");levels.replaceChildren();
+ if(fib&&typeof fib==="object"){
+  const arr=[
+   ["0%",first(fib.level_0,fib["0"],fib.zero)],
+   ["23.6%",first(fib.level_236,fib["0.236"],fib["23.6"])],
+   ["38.2%",first(fib.level_382,fib["0.382"],fib["38.2"])],
+   ["50%",first(fib.level_500,fib["0.5"],fib["50"])],
+   ["61.8%",first(fib.level_618,fib["0.618"],fib["61.8"])],
+   ["78.6%",first(fib.level_786,fib["0.786"],fib["78.6"])],
+   ["100%",first(fib.level_100,fib["1"],fib.one)]
+  ];
+  arr.forEach(([label,v])=>{
+   if(n(v)===null)return;
+   const el=document.createElement("div");el.className="fibitem";
+   el.textContent=label;const st=document.createElement("strong");st.textContent=usd(v)+" / "+yen(v);
+   el.appendChild(st);levels.appendChild(el);
   });
-  setText("fibStatus","暫定参考値を表示中");
-  setText("fibNote","注意：直近のスイング高値・安値を使った正式なフィボナッチではありません。現在価格とATRからの参考計算です。正式版にはbot.py側で高値・安値の出力が必要です。");
+  set("fibStatus",levels.children.length?"bot.py出力のフィボナッチ値":"数値形式を認識できません");
+  set("fibNote","計算元がスイング高値・安値かどうかはbot.py側の仕様確認が必要です。");
+  return;
+ }
+ const price=n(d.price),atr=n(s.atr_15m);
+ if(price===null||atr===null||atr<=0){
+  set("fibStatus","必要なデータがありません。");set("fibNote","data.jsonのpriceとsignal.atr_15mを確認してください。");return;
+ }
+ const low=price-atr*3,high=price;
+ [0,.236,.382,.5,.618,.786,1].forEach(r=>{
+  const v=high-(high-low)*r,el=document.createElement("div");el.className="fibitem";
+  el.textContent=(r*100).toFixed(1).replace(".0","")+"%";
+  const st=document.createElement("strong");st.textContent=usd(v)+" / "+yen(v);
+  el.appendChild(st);levels.appendChild(el);
+ });
+ set("fibStatus","暫定参考値");
+ set("fibNote","注意：スイング高値・安値に基づく正式なフィボナッチではありません。現在価格とATRからの参考計算です。");
 }
-
+function render(d){
+ const m=d.metrics||{},s=d.signal||{},o=d.open_trade||null;
+ const price=n(d.price),eq=n(m.equity_usd),pnl=n(m.net_closed_pnl_usd),un=n(m.open_unrealized_pnl_usd);
+ set("price",usd(price));set("priceJpy",yen(price));
+ set("equity",usd(eq));set("equityJpy",yen(eq));
+ set("pnl",pnl===null?"--":signed(pnl)+" USD");set("pnlJpy",pnl===null?"--":signed(Math.round(pnl*USDJPY))+" 円");pnlColor("pnl",pnl);
+ set("winrate",n(m.win_rate_pct)===null?"--":fmt(m.win_rate_pct)+"%");
+ set("tradeCount","決済回数: "+first(m.closed_trades,"--"));
+ set("unrealized",un===null?"--":signed(un)+" USD");set("unrealizedJpy",un===null?"--":signed(Math.round(un*USDJPY))+" 円");pnlColor("unrealized",un);
+ set("drawdown",n(m.drawdown_pct)===null?"--":fmt(m.drawdown_pct)+"%");
+ set("pf","PF: "+(n(m.profit_factor)===null?"--":fmt(m.profit_factor)));
+ set("signal",first(s.direction,"WAIT"));set("score",n(s.score)===null?"--":fmt(s.score,0));
+ set("rsi",n(s.rsi_15m)===null?"--":fmt(s.rsi_15m,1));
+ set("reasons",Array.isArray(s.reasons)?s.reasons.join(" / "):first(s.reasons,"今はシグナルの理由なし"));
+ set("openTrade",o?
+  "方向: "+first(o.direction,"--")+" / エントリー: "+usd(o.entry_price)+
+  " / ストップ: "+usd(o.stop_price)+" / 利確目標: "+usd(o.target_price):
+  "ポジションなし。今は休憩中だよ♡");
+ renderTrades(d.recent_trades||[]);
+ drawChart(d.equity_history||[]);
+ renderFib(d);
+ set("updated","更新: "+first(d.generated_at,"日時不明")+" / "+first(d.build,"build不明"));
+}
+async function loadFx(){
+ try{
+  const r=await fetch("https://open.er-api.com/v6/latest/USD",{cache:"no-store"});
+  if(!r.ok)throw Error("FX");
+  const d=await r.json();if(n(d?.rates?.JPY)>0)USDJPY=Number(d.rates.JPY);
+ }catch(e){/* 為替APIが失敗した場合は参考レート150円 */}
+}
+async function loadData(){
+ try{
+  const r=await fetch("./data.json?t="+Date.now(),{cache:"no-store"});
+  if(!r.ok)throw Error("data.json HTTP "+r.status);
+  const d=await r.json();DATA=d;
+  processNewTrades(d.recent_trades||[]);
+  render(d);renderGame();
+ }catch(e){set("updated","読み込みエラー: "+e.message);}
+}
 $("fibButton").addEventListener("click",()=>{
-  fibOpen=!fibOpen;
-  $("fibPanel").classList.toggle("hidden",!fibOpen);
-  $("fibButton").setAttribute("aria-expanded",String(fibOpen));
-  $("fibButton").textContent=fibOpen?"フィボナッチを閉じる":"フィボナッチ表示";
-  if(fibOpen&&DATA)renderFib(DATA);
+ fibOpen=!fibOpen;$("fibPanel").classList.toggle("hidden",!fibOpen);
+ $("fibButton").textContent=fibOpen?"💖 魔法陣をとじる":"✨ 魔法陣をひらく";
+ if(fibOpen&&DATA)renderFib(DATA);
 });
-
-$("refreshButton").addEventListener("click",async()=>{
-  await loadFx();
-  await loadData();
-});
-
-window.addEventListener("resize",()=>{
-  if(DATA)drawChart(DATA.equity_history||[]);
-});
-
-(async()=>{
-  await loadFx();
-  await loadData();
-})();
+window.addEventListener("resize",()=>{if(DATA)drawChart(DATA.equity_history||[])});
+loadGame();renderGame();
+(async()=>{await loadFx();await loadData();})();
 </script>
 </body>
 </html>
