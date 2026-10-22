@@ -1,557 +1,374 @@
+
 <!DOCTYPE html>
-
 <html lang="ja">
-
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-
 <meta name="theme-color" content="#fce9fb">
-
 <title>萌え萌えキュン♡ BTC冒険記</title>
-
 <style>
-
 *{box-sizing:border-box}
-
 html,body{margin:0;padding:0;width:100%;background:#fce9fb;color:#56338e;font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif}
-
 body{overflow-x:hidden}
-
 #app{position:relative;width:100%;max-width:864px;margin:0 auto;line-height:1}
-
 #bg{display:block;width:100%;height:auto}
-
 #overlay{position:absolute;inset:0;pointer-events:none}
-
-.v{position:absolute;display:flex;align-items:center;justify-content:center;overflow:hidden;text-align:center;padding:1px 2px;font-size:clamp(7px,1.55vw,13px);font-weight:750;line-height:1.16;color:#59358e;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;background:rgba(255,255,255,.94);border-radius:4px}
-
-.s{font-size:clamp(6px,1.18vw,10px);font-weight:650}
-
-.xs{font-size:clamp(6px,1.02vw,9px);font-weight:600}
-
+.v{
+ position:absolute;display:flex;align-items:center;justify-content:center;
+ overflow:hidden;text-align:center;padding:0 2px;
+ font-size:clamp(9px,1.45vw,12px);font-weight:750;line-height:1.15;
+ color:#56358c;font-variant-numeric:tabular-nums;
+ overflow-wrap:anywhere;background:rgba(255,255,255,.96);border-radius:4px
+}
+.s{font-size:clamp(8px,1.2vw,10px);font-weight:650}
+.xs{font-size:clamp(7px,1.05vw,9px);font-weight:600}
 .nowrap{white-space:nowrap;overflow-wrap:normal}
-
-.green{color:#008d7a!important}
-
+.green{color:#008b78!important}
 .red{color:#d52c82!important}
 
-#chartWrap{position:absolute;left:23.7%;top:52%;width:41.8%;height:13%;overflow:hidden;background:rgba(255,255,255,.94);pointer-events:none}
+/* グラフは元画像のグラフ枠内に固定 */
+#chartWrap{
+ position:absolute;left:23.2%;top:46.25%;width:42.2%;height:13.1%;
+ overflow:hidden;background:rgba(255,255,255,.97);pointer-events:none
+}
+#chart{display:block;width:100%;height:100%}
 
-#chart{width:100%;height:100%;display:block}
-
-#historyRows{position:absolute;left:23.1%;top:87%;width:72.8%;height:7.1%;padding:0 3px;overflow:hidden;background:rgba(255,255,255,.96);font-size:clamp(6px,1.08vw,9px);line-height:1.7}
-
-.trade{display:grid;grid-template-columns:1.2fr .65fr .85fr .8fr;gap:2px;align-items:center;height:22%;min-height:15px}
-
+/* 取引履歴は専用エリア内だけに表示 */
+#historyRows{
+ position:absolute;left:23.4%;top:80.0%;width:72.1%;height:7.0%;
+ padding:2px 4px;overflow:hidden;background:rgba(255,255,255,.97);
+ font-size:clamp(8px,1.05vw,9px);line-height:1.5
+}
+.trade{
+ display:grid;grid-template-columns:1.2fr .65fr .85fr .8fr;
+ gap:2px;align-items:center;height:25%;min-height:15px
+}
 .trade span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
+/* 左メニュー */
 .click{position:absolute;z-index:5;pointer-events:auto;display:block;border:0;background:transparent;padding:0;cursor:pointer;touch-action:manipulation}
-
 #toast{display:none;position:fixed;z-index:20;left:50%;bottom:20px;transform:translateX(-50%);padding:12px 16px;border-radius:12px;background:#743e9e;color:white;font-size:14px;line-height:1.4;max-width:90vw}
-
 #settings{display:none;position:fixed;inset:0;z-index:30;background:#35174999;align-items:center;justify-content:center;padding:16px}
-
 .dialog{width:min(420px,100%);background:#fff7ff;border:1px solid #e3b4e6;border-radius:16px;padding:18px;line-height:1.5}
-
 .dialog h2{font-size:19px;margin:0 0 12px}
-
 .dialog label{display:block;font-size:13px;margin:10px 0}
-
 .dialog input{width:100%;padding:10px;border:1px solid #d9b4df;border-radius:8px;font-size:16px}
-
 .dialog button{border:0;border-radius:9px;background:#d94fa8;color:#fff;padding:10px 14px;margin:8px 6px 0 0;font-weight:700}
-
 </style>
-
 </head>
-
 <body>
-
 <div id="app">
-
 <img id="bg" src="./713F797D-7B4F-462D-BCE8-E3F606494A3C.png" alt="BTC冒険記">
-
 <div id="overlay">
 
-<div id="stage" class="v s nowrap" style="left:82%;top:12%;width:15%;height:1.55%">STAGE 1</div>
+<!-- ステージ -->
+<div id="stage" class="v s nowrap" style="left:81.5%;top:11.75%;width:15.2%;height:1.45%">STAGE 1</div>
+<div id="level" class="v s nowrap" style="left:82.5%;top:13.65%;width:13.8%;height:1.35%">Lv.1</div>
+<div id="xp" class="v xs nowrap" style="left:78.5%;top:15.25%;width:18.5%;height:1.3%">0 / 500 XP</div>
 
-<div id="level" class="v s nowrap" style="left:83%;top:14%;width:13%;height:1.5%">Lv.1</div>
+<!-- HP・経験値 -->
+<div id="hp" class="v s nowrap" style="left:29%;top:21.4%;width:16.8%;height:1.35%">100 / 100</div>
+<div id="coin" class="v s nowrap" style="left:45%;top:24.1%;width:10.2%;height:1.35%">0 COIN</div>
+<div id="xpText" class="v xs nowrap" style="left:59.8%;top:24.2%;width:36%;height:1.3%">勝利すると経験値を獲得</div>
 
-<div id="xp" class="v xs nowrap" style="left:81%;top:16%;width:16%;height:1.4%">0 / 500 XP</div>
+<!-- 資産カード -->
+<div id="price" class="v nowrap" style="left:23.8%;top:31.05%;width:13.3%;height:1.55%">$ --</div>
+<div id="priceJPY" class="v s nowrap" style="left:23.8%;top:32.9%;width:13.3%;height:1.35%">¥ --</div>
+<div id="equity" class="v nowrap" style="left:39.2%;top:31.05%;width:12.5%;height:1.55%">$ --</div>
+<div id="equityJPY" class="v s nowrap" style="left:39%;top:32.9%;width:13%;height:1.35%">¥ --</div>
+<div id="closedPnl" class="v nowrap" style="left:54.3%;top:31.05%;width:11.6%;height:1.55%">$ --</div>
+<div id="closedPnlJPY" class="v s nowrap" style="left:54%;top:32.9%;width:12%;height:1.35%">¥ --</div>
 
-<div id="hp" class="v s nowrap" style="left:29%;top:25.1%;width:16%;height:1.35%">100 / 100</div>
+<!-- 勝率・含み損益・DD -->
+<div id="winrate" class="v nowrap" style="left:24%;top:38.65%;width:12.7%;height:1.6%">--%</div>
+<div id="closedTrades" class="v s nowrap" style="left:23.8%;top:40.45%;width:13.1%;height:1.3%">決済 -- 回</div>
+<div id="unreal" class="v nowrap" style="left:39.1%;top:38.65%;width:12.7%;height:1.6%">$ --</div>
+<div id="unrealJPY" class="v s nowrap" style="left:39%;top:40.45%;width:13%;height:1.3%">¥ --</div>
+<div id="drawdown" class="v nowrap" style="left:54%;top:38.65%;width:12%;height:1.6%">--%</div>
+<div id="profitFactor" class="v s nowrap" style="left:54%;top:40.45%;width:12%;height:1.3%">PF: --</div>
 
-<div id="coin" class="v s nowrap" style="left:44%;top:25.1%;width:11%;height:1.35%">0 COIN</div>
+<!-- すごろくの進行状況 -->
+<div id="gameProgress" class="v s nowrap" style="left:89.6%;top:27.9%;width:7%;height:1.3%">1 / 10</div>
 
-<div id="xpText" class="v xs nowrap" style="left:60%;top:25.2%;width:35%;height:1.35%">勝利すると経験値を獲得</div>
-
-<div id="price" class="v nowrap" style="left:24.1%;top:33%;width:12.5%;height:2%">$ --</div>
-
-<div id="priceJPY" class="v s nowrap" style="left:23.7%;top:35.1%;width:13.2%;height:1.5%">¥ --</div>
-
-<div id="equity" class="v nowrap" style="left:39.3%;top:33%;width:12.5%;height:2%">$ --</div>
-
-<div id="equityJPY" class="v s nowrap" style="left:39%;top:35.1%;width:13.2%;height:1.5%">¥ --</div>
-
-<div id="closedPnl" class="v nowrap" style="left:54.3%;top:33%;width:11.5%;height:2%">$ --</div>
-
-<div id="closedPnlJPY" class="v s nowrap" style="left:53.8%;top:35.1%;width:12.2%;height:1.5%">¥ --</div>
-
-<div id="winrate" class="v nowrap" style="left:24%;top:42.5%;width:12.5%;height:2%">--%</div>
-
-<div id="closedTrades" class="v s nowrap" style="left:23.7%;top:44.7%;width:13.2%;height:1.5%">決済 -- 回</div>
-
-<div id="unreal" class="v nowrap" style="left:39.2%;top:42.5%;width:12.5%;height:2%">$ --</div>
-
-<div id="unrealJPY" class="v s nowrap" style="left:39%;top:44.7%;width:13.2%;height:1.5%">¥ --</div>
-
-<div id="drawdown" class="v nowrap" style="left:54%;top:42.5%;width:12%;height:2%">--%</div>
-
-<div id="profitFactor" class="v s nowrap" style="left:53.8%;top:44.7%;width:12.2%;height:1.5%">PF: --</div>
-
-<div id="gameProgress" class="v s nowrap" style="left:89.6%;top:30.9%;width:7%;height:1.5%">1 / 10</div>
-
+<!-- 資産グラフ -->
+<div id="latest" class="v s nowrap" style="left:56.5%;top:45.0%;width:8.3%;height:1.3%">$ --</div>
 <div id="chartWrap"><canvas id="chart"></canvas></div>
+<div id="historyCount" class="v xs nowrap" style="left:31%;top:60.3%;width:31%;height:1.3%">記録数: -- / 最新資産: --</div>
 
-<div id="latest" class="v s nowrap" style="left:57.1%;top:49.3%;width:7%;height:1.5%">$ --</div>
+<!-- 戦闘予報 -->
+<div id="signal" class="v s nowrap" style="left:68.7%;top:46.6%;width:9.5%;height:2.3%">WAIT</div>
+<div id="score" class="v s nowrap" style="left:79.7%;top:46.6%;width:8.3%;height:2.3%">Score --</div>
+<div id="rsi" class="v s nowrap" style="left:89%;top:46.6%;width:8%;height:2.3%">RSI --</div>
+<div id="reason" class="v xs" style="left:69%;top:51.5%;width:28%;height:2.4%">理由: --</div>
 
-<div id="historyCount" class="v xs nowrap" style="left:31%;top:66.8%;width:31%;height:1.4%">記録数: -- / 最新資産: --</div>
+<!-- フィボナッチ -->
+<div id="fibCurrent" class="v s nowrap" style="left:70.5%;top:57.1%;width:26%;height:1.4%">現在価格: $ --</div>
+<div id="fib0" class="v xs nowrap" style="left:69.7%;top:60.0%;width:14%;height:1.2%">0% ¥--</div>
+<div id="fib236" class="v xs nowrap" style="left:69.7%;top:61.6%;width:14%;height:1.2%">23.6% ¥--</div>
+<div id="fib382" class="v xs nowrap" style="left:69.7%;top:63.2%;width:14%;height:1.2%">38.2% ¥--</div>
+<div id="fib50" class="v xs nowrap" style="left:69.7%;top:64.8%;width:14%;height:1.2%">50% ¥--</div>
+<div id="fib618" class="v xs nowrap" style="left:69.7%;top:66.4%;width:14%;height:1.2%">61.8% ¥--</div>
+<div id="fib786" class="v xs nowrap" style="left:69.7%;top:68.0%;width:14%;height:1.2%">78.6% ¥--</div>
+<div id="fib100" class="v xs nowrap" style="left:69.7%;top:69.6%;width:14%;height:1.2%">100% ¥--</div>
 
-<div id="signal" class="v s nowrap" style="left:69%;top:51.7%;width:9%;height:2.3%">WAIT</div>
+<!-- 現在のポジション -->
+<div id="position" class="v s" style="left:31.5%;top:68.0%;width:12.8%;height:2.3%"></div>
+<div id="positionPnl" class="v xs nowrap" style="left:31.5%;top:72.0%;width:12.8%;height:1.25%">含み損益: --</div>
 
-<div id="score" class="v s nowrap" style="left:80.2%;top:51.7%;width:8%;height:2.3%">Score --</div>
+<!-- エンジン稼働状況 -->
+<div id="build" class="v xs" style="left:48.8%;top:66.0%;width:15.4%;height:1.5%">BOT: --</div>
+<div id="tf15" class="v xs nowrap" style="left:48.8%;top:68.0%;width:15.4%;height:1.25%">15m: --</div>
+<div id="tf1h" class="v xs nowrap" style="left:48.8%;top:69.7%;width:15.4%;height:1.25%">1h: --</div>
+<div id="tf4h" class="v xs nowrap" style="left:48.8%;top:71.4%;width:15.4%;height:1.25%">4h: --</div>
+<div id="engineStatus" class="v xs nowrap" style="left:48.8%;top:73.0%;width:15.4%;height:1.2%">PAPER ONLY</div>
 
-<div id="rsi" class="v s nowrap" style="left:89%;top:51.7%;width:8%;height:2.3%">RSI --</div>
-
-<div id="reason" class="v xs" style="left:69%;top:57.2%;width:28.4%;height:2.5%">理由: --</div>
-
-<div id="fibCurrent" class="v s nowrap" style="left:72.5%;top:63.4%;width:24%;height:1.7%">現在価格: $ --</div>
-
-<div id="fib0" class="v xs nowrap" style="left:69.5%;top:66.7%;width:14.5%;height:1.35%">0% ¥--</div>
-
-<div id="fib236" class="v xs nowrap" style="left:69.5%;top:68.3%;width:14.5%;height:1.35%">23.6% ¥--</div>
-
-<div id="fib382" class="v xs nowrap" style="left:69.5%;top:69.9%;width:14.5%;height:1.35%">38.2% ¥--</div>
-
-<div id="fib50" class="v xs nowrap" style="left:69.5%;top:71.5%;width:14.5%;height:1.35%">50% ¥--</div>
-
-<div id="fib618" class="v xs nowrap" style="left:69.5%;top:73.1%;width:14.5%;height:1.35%">61.8% ¥--</div>
-
-<div id="fib786" class="v xs nowrap" style="left:69.5%;top:74.7%;width:14.5%;height:1.35%">78.6% ¥--</div>
-
-<div id="fib100" class="v xs nowrap" style="left:69.5%;top:76.3%;width:14.5%;height:1.35%">100% ¥--</div>
-
-<div id="position" class="v s" style="left:31.8%;top:76.7%;width:12.8%;height:2.8%"></div>
-
-<div id="positionPnl" class="v xs nowrap" style="left:31.8%;top:80.7%;width:12.8%;height:1.35%">含み損益: --</div>
-
-<div id="build" class="v xs" style="left:49%;top:76.6%;width:15%;height:1.8%">BOT: --</div>
-
-<div id="tf15" class="v xs nowrap" style="left:49%;top:78.5%;width:15%;height:1.35%">15m: --</div>
-
-<div id="tf1h" class="v xs nowrap" style="left:49%;top:80%;width:15%;height:1.35%">1h: --</div>
-
-<div id="tf4h" class="v xs nowrap" style="left:49%;top:81.5%;width:15%;height:1.35%">4h: --</div>
-
-<div id="engineStatus" class="v xs nowrap" style="left:48%;top:83%;width:16%;height:1.35%">PAPER ONLY</div>
-
+<!-- 取引履歴：背景画像の表の中にだけ表示 -->
 <div id="historyRows"></div>
 
-<button class="click" aria-label="ホーム" data-go="home" style="left:1.5%;top:21%;width:19%;height:5.2%"></button>
-
-<button class="click" aria-label="バトルログ" data-go="trades" style="left:1.5%;top:26.3%;width:19%;height:5.2%"></button>
-
-<button class="click" aria-label="資産グラフ" data-go="assets" style="left:1.5%;top:31.6%;width:19%;height:5.2%"></button>
-
-<button class="click" aria-label="フィボナッチ" data-go="fib" style="left:1.5%;top:36.8%;width:19%;height:5.2%"></button>
-
-<button class="click" aria-label="設定" data-go="settings" style="left:1.5%;top:42.1%;width:19%;height:5.2%"></button>
-
+<!-- 左側メニューのクリック領域 -->
+<button class="click" aria-label="ホーム" data-go="home" style="left:1.5%;top:19%;width:19%;height:5.1%"></button>
+<button class="click" aria-label="バトルログ" data-go="trades" style="left:1.5%;top:24.2%;width:19%;height:5.1%"></button>
+<button class="click" aria-label="資産グラフ" data-go="assets" style="left:1.5%;top:29.4%;width:19%;height:5.1%"></button>
+<button class="click" aria-label="フィボナッチ" data-go="fib" style="left:1.5%;top:34.6%;width:19%;height:5.1%"></button>
+<button class="click" aria-label="設定" data-go="settings" style="left:1.5%;top:39.8%;width:19%;height:5.1%"></button>
 </div>
-
 </div>
 
 <div id="toast"></div>
-
 <div id="settings">
-
-<div class="dialog">
-
-<h2>⚙️ ダッシュボード設定</h2>
-
-<label>データJSONのURL<input id="dataUrl" value="./data.json"></label>
-
-<label>USD/JPY レート<input id="fx" type="number" min="1" value="150"></label>
-
-<label>初期資産 USD<input id="initial" type="number" min="0" value="100"></label>
-
-<button id="save">保存して更新</button>
-
-<button id="close">閉じる</button>
-
-<p id="status">データ取得待機中</p>
-
-</div>
-
+ <div class="dialog">
+  <h2>⚙️ ダッシュボード設定</h2>
+  <label>データJSONのURL<input id="dataUrl" value="./data.json"></label>
+  <label>USD/JPY レート<input id="fx" type="number" min="1" value="150"></label>
+  <label>初期資産 USD<input id="initial" type="number" min="0" value="100"></label>
+  <button id="save">保存して更新</button>
+  <button id="close">閉じる</button>
+  <p id="status">データ取得待機中</p>
+ </div>
 </div>
 
 <script>
-
 "use strict";
-
 const $=id=>document.getElementById(id);
-
 let data=null;
-
 let fx=Number(localStorage.getItem("btcFx")||150);
-
 let initial=Number(localStorage.getItem("btcInitial")||100);
 
 function val(...args){
-
  for(const x of args){
-
   if(x!==null&&x!==undefined&&x!==""&&Number.isFinite(Number(x)))return Number(x);
-
  }
-
  return NaN;
-
 }
-
 function text(id,value){$(id).textContent=String(value??"--");}
-
 function usd(n){
-
  return Number.isFinite(Number(n))?"$"+Number(n).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2}):"$ --";
-
 }
-
 function yen(n){
-
  return Number.isFinite(Number(n))?"¥"+Math.round(Number(n)).toLocaleString("ja-JP"):"¥ --";
-
 }
-
-function shortYen(n){
-
- if(!Number.isFinite(Number(n)))return "¥--";
-
- const v=Math.round(Number(n));
-
- if(Math.abs(v)>=1000000)return "¥"+(v/1000000).toFixed(2)+"M";
-
- if(Math.abs(v)>=10000)return "¥"+(v/1000).toFixed(1)+"K";
-
- return "¥"+v.toLocaleString("ja-JP");
-
-}
-
 function trend(v){
-
  const n=Number(v);
-
  if(n===1)return "上向き";
-
  if(n===-1)return "下向き";
-
  if(n===0)return "横ばい";
-
  return "--";
-
 }
-
 function colorPnL(id,n){
-
  $(id).classList.remove("green","red");
-
  $(id).classList.add(Number(n)>=0?"green":"red");
-
 }
-
 function toast(msg){
-
  text("toast",msg);
-
  $("toast").style.display="block";
-
  window.setTimeout(()=>$("toast").style.display="none",2200);
-
 }
-
 function escapeHTML(v){
-
  return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-
 }
 
 function drawChart(history){
-
  const canvas=$("chart"),box=$("chartWrap");
-
  const w=Math.max(180,box.clientWidth),h=Math.max(90,box.clientHeight);
-
  const ratio=window.devicePixelRatio||1;
-
  canvas.width=Math.round(w*ratio);canvas.height=Math.round(h*ratio);
-
  const ctx=canvas.getContext("2d");
-
  ctx.setTransform(ratio,0,0,ratio,0,0);
-
  ctx.clearRect(0,0,w,h);
 
  const rows=(Array.isArray(history)?history:[])
-
   .map(p=>val(p.equity_usd,p.equity,p.balance,p.value))
-
   .filter(Number.isFinite);
-
  if(!rows.length)return;
 
  let min=Math.min(...rows),max=Math.max(...rows);
-
  if(min===max){min-=.05;max+=.05;}
-
- const left=38,right=5,top=5,bottom=5,cw=w-left-right,ch=h-top-bottom;
-
- ctx.font="9px sans-serif";ctx.fillStyle="#80609c";ctx.strokeStyle="#ead9f2";ctx.lineWidth=1;
+ const left=35,right=4,top=4,bottom=4,cw=w-left-right,ch=h-top-bottom;
+ ctx.font="9px sans-serif";
+ ctx.fillStyle="#80609c";ctx.strokeStyle="#ead9f2";ctx.lineWidth=1;
 
  for(let i=0;i<4;i++){
-
   const y=top+ch*i/3;
-
   ctx.beginPath();ctx.moveTo(left,y);ctx.lineTo(w-right,y);ctx.stroke();
-
   ctx.fillText("$"+(max-(max-min)*i/3).toFixed(2),1,y+3);
-
  }
-
- const pts=rows.map((v,i)=>({x:left+(rows.length===1?0:i*cw/(rows.length-1)),y:top+(max-v)*ch/(max-min)}));
-
+ const pts=rows.map((v,i)=>({
+  x:left+(rows.length===1?0:i*cw/(rows.length-1)),
+  y:top+(max-v)*ch/(max-min)
+ }));
  const fill=ctx.createLinearGradient(0,top,0,top+ch);
-
- fill.addColorStop(0,"rgba(226,69,177,.30)");fill.addColorStop(1,"rgba(226,69,177,.02)");
-
+ fill.addColorStop(0,"rgba(226,69,177,.25)");
+ fill.addColorStop(1,"rgba(226,69,177,.02)");
  ctx.beginPath();
-
  pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
-
- ctx.lineTo(pts[pts.length-1].x,top+ch);ctx.lineTo(pts[0].x,top+ch);
-
+ ctx.lineTo(pts[pts.length-1].x,top+ch);
+ ctx.lineTo(pts[0].x,top+ch);
  ctx.closePath();ctx.fillStyle=fill;ctx.fill();
 
- ctx.beginPath();pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
-
+ ctx.beginPath();
+ pts.forEach((p,i)=>i?ctx.lineTo(p.x,p.y):ctx.moveTo(p.x,p.y));
  ctx.strokeStyle="#d946ae";ctx.lineWidth=2;ctx.stroke();
-
 }
 
 function render(d){
-
  data=d||{};
-
  const m=data.metrics||{},s=data.signal||{},risk=data.risk||{},o=data.open_trade||null;
-
  const trades=Array.isArray(data.recent_trades)?data.recent_trades:[];
-
  const price=val(data.price),equity=val(m.equity_usd,initial);
-
  const closedPnl=val(m.net_closed_pnl_usd,equity-initial);
-
  const unreal=val(m.open_unrealized_pnl_usd,0);
-
- const closed=val(m.closed_trades,trades.length),wins=val(m.wins,0),losses=val(m.losses,0);
-
+ const closed=val(m.closed_trades,trades.length);
+ const wins=val(m.wins,0),losses=val(m.losses,0);
  const wr=val(m.win_rate_pct,closed>0?wins/closed*100:NaN);
-
- const dd=val(m.drawdown_pct),pf=val(m.profit_factor),rsi=val(s.rsi_15m),score=val(s.score);
+ const dd=val(m.drawdown_pct),pf=val(m.profit_factor);
+ const rsi=val(s.rsi_15m),score=val(s.score);
 
  text("price",usd(price));text("priceJPY",yen(price*fx));
-
  text("equity",usd(equity));text("equityJPY",yen(equity*fx));
-
  text("closedPnl",usd(closedPnl));text("closedPnlJPY",yen(closedPnl*fx));
-
  colorPnL("closedPnl",closedPnl);colorPnL("closedPnlJPY",closedPnl);
-
  text("winrate",Number.isFinite(wr)?wr.toFixed(2)+"%":"--%");
-
  text("closedTrades","決済 "+closed+" 回");
-
  text("unreal",usd(unreal));text("unrealJPY",yen(unreal*fx));
-
  colorPnL("unreal",unreal);colorPnL("unrealJPY",unreal);
-
  text("drawdown",Number.isFinite(dd)?dd.toFixed(2)+"%":"--%");
-
  text("profitFactor","PF: "+(Number.isFinite(pf)?pf.toFixed(2):"--"));
 
  text("signal",s.direction||"WAIT");
-
  text("score","Score "+(Number.isFinite(score)?score:"--"));
-
  text("rsi","RSI "+(Number.isFinite(rsi)?rsi.toFixed(2):"--"));
-
  const reasons=Array.isArray(s.reasons)?s.reasons:[];
-
  text("reason",reasons.length?"理由: "+reasons.join(" / "):"理由: --");
 
  const stage=Math.floor(Math.max(0,wins)/10)+1;
-
- text("stage","STAGE "+stage);text("level","Lv."+stage);
-
+ text("stage","STAGE "+stage);
+ text("level","Lv."+stage);
  text("xp",(Math.max(0,wins)%10)*50+" / 500 XP");
-
  text("hp",Math.max(0,100-losses*10)+" / 100");
-
  text("coin",Math.max(0,wins)+" COIN");
-
  text("xpText","勝利 "+wins+" 回 · 経験値");
-
  text("gameProgress",(Math.max(0,wins)%10)+" / 10");
 
  const history=Array.isArray(data.equity_history)?data.equity_history:[];
-
  const last=history.length?val(history[history.length-1].equity_usd,equity):equity;
-
  text("latest",usd(last));
-
  text("historyCount","記録数: "+history.length+" / 最新資産: "+usd(equity));
-
  drawChart(history);
 
- // ポジションがないときは空欄。余計な「なし」は表示しない。
-
- text("position",o?String(o.direction||"")+" "+val(o.qty_btc,0).toFixed(4)+" BTC":"");
-
+ // ポジションなしの場合、横に「なし」と表示しない
+ if(o){
+  const qty=val(o.qty_btc);
+  text("position",(o.direction||"")+(Number.isFinite(qty)?" "+qty.toFixed(4)+" BTC":""));
+ }else{
+  text("position","");
+ }
  text("positionPnl","含み損益: "+usd(unreal));
 
  text("build",String(data.build||"BOT").replace("BTC_PAPER_",""));
-
  text("tf15","15m: "+trend(s.trend_15m));
-
  text("tf1h","1h: "+trend(s.trend_1h));
-
  text("tf4h","4h: "+trend(s.trend_4h));
-
  text("engineStatus",risk.paper_only===true?"PAPER ONLY":"PAPER ONLY");
 
+ // フィボナッチ参考値。BTC価格からの値幅を使用
  const atr=val(s.atr_15m);
-
  text("fibCurrent","現在価格: "+usd(price));
-
  [["fib0",0],["fib236",.236],["fib382",.382],["fib50",.5],["fib618",.618],["fib786",.786],["fib100",1]].forEach(([id,k])=>{
-
   const p=Number.isFinite(price)?price-(Number.isFinite(atr)?atr:0)*k:NaN;
-
-  text(id,(k*100)+"% "+shortYen(p*fx));
-
+  text(id,(k*100)+"% "+yen(p*fx));
  });
 
- // 読み込み中の文字を出さず、確定済み取引のみを表示
-
- const closedList=trades.filter(t=>t.closed_at||t.exit_price!==undefined).slice().reverse().slice(0,4);
+ // 終了した取引だけ表示。読み込み中の文言は使わない
+ const closedList=trades
+  .filter(t=>t.closed_at||t.exit_price!==undefined)
+  .slice()
+  .sort((a,b)=>String(b.closed_at||"").localeCompare(String(a.closed_at||"")))
+  .slice(0,4);
 
  $("historyRows").innerHTML=closedList.map(t=>{
-
   const time=String(t.closed_at||t.opened_at||"--").replace("T"," ").slice(5,16);
-
   const pnl=val(t.net_pnl_usd,0);
-
-  return '<div class="trade"><span>'+escapeHTML(time)+'</span><span>'+escapeHTML(t.direction||"--")+'</span><span class="'+(pnl>=0?"green":"red")+'">'+escapeHTML(usd(pnl))+'</span><span>'+escapeHTML(t.close_reason||"--")+'</span></div>';
-
+  return '<div class="trade"><span>'+escapeHTML(time)+'</span><span>'+
+   escapeHTML(t.direction||"--")+'</span><span class="'+(pnl>=0?"green":"red")+'">'+
+   escapeHTML(usd(pnl))+'</span><span>'+escapeHTML(t.close_reason||"--")+'</span></div>';
  }).join("");
 
  text("status","読込成功 · "+(data.build||"--")+" · PAPER ONLY");
-
 }
 
 async function loadData(){
-
  const url=localStorage.getItem("btcDataUrl")||"./data.json";
-
  try{
-
   const response=await fetch(url+(url.includes("?")?"&":"?")+"t="+Date.now(),{cache:"no-store"});
-
   if(!response.ok)throw new Error("HTTP "+response.status);
-
   render(await response.json());
-
  }catch(err){
-
   text("status","JSON読込エラー: "+err.message);
-
  }
-
 }
 
 document.querySelectorAll("[data-go]").forEach(button=>{
-
  button.addEventListener("click",()=>{
-
   const action=button.dataset.go;
-
   if(action==="settings"){
-
    $("settings").style.display="flex";
-
    $("dataUrl").value=localStorage.getItem("btcDataUrl")||"./data.json";
-
-   $("fx").value=fx;$("initial").value=initial;
-
+   $("fx").value=fx;
+   $("initial").value=initial;
   }else if(action==="home"){
-
    window.scrollTo({top:0,behavior:"smooth"});
-
   }else if(action==="trades"){
-
-   $("historyRows").scrollIntoView({behavior:"smooth",block:"center"});toast("バトルログ");
-
+   $("historyRows").scrollIntoView({behavior:"smooth",block:"center"});
+   toast("バトルログ");
   }else if(action==="assets"){
-
-   $("chartWrap").scrollIntoView({behavior:"smooth",block:"center"});toast("資産グラフ");
-
+   $("chartWrap").scrollIntoView({behavior:"smooth",block:"center"});
+   toast("資産グラフ");
   }else if(action==="fib"){
-
-   $("fibCurrent").scrollIntoView({behavior:"smooth",block:"center"});toast("フィボナッチ参考値");
-
+   $("fibCurrent").scrollIntoView({behavior:"smooth",block:"center"});
+   toast("フィボナッチ参考値");
   }
-
  });
-
 });
 
 $("save").addEventListener("click",()=>{
-
- fx=val($("fx").value,150);initial=val($("initial").value,100);
-
+ fx=val($("fx").value,150);
+ initial=val($("initial").value,100);
  localStorage.setItem("btcDataUrl",$("dataUrl").value.trim()||"./data.json");
-
- localStorage.setItem("btcFx",String(fx));localStorage.setItem("btcInitial",String(initial));
-
- $("settings").style.display="none";loadData();
-
+ localStorage.setItem("btcFx",String(fx));
+ localStorage.setItem("btcInitial",String(initial));
+ $("settings").style.display="none";
+ loadData();
 });
-
 $("close").addEventListener("click",()=>$("settings").style.display="none");
-
-$("settings").addEventListener("click",e=>{if(e.target===$("settings"))$("settings").style.display="none"});
-
-$("bg").addEventListener("error",()=>toast("背景画像が見つかりません。画像名とdocsフォルダを確認してください。"));
-
+$("settings").addEventListener("click",e=>{
+ if(e.target===$("settings"))$("settings").style.display="none";
+});
+$("bg").addEventListener("error",()=>{
+ toast("背景画像が見つかりません。docs内の画像名を確認してください。");
+});
 window.addEventListener("resize",()=>{if(data)drawChart(data.equity_history)});
-
 loadData();
-
 setInterval(loadData,60000);
-
 </script>
-
 </body>
-
-</html
+</html>
