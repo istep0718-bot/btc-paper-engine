@@ -1,7 +1,7 @@
 {
-  "build": "BTC_PAPER_V8_2026-10-22",
+  "build": "BTC_PAPER_V11_2026-10-23",
   "initial_equity": 100.0,
-  "equity": 100.45003264156112,
+  "equity": 100.45508149142084,
   "open_trade": null,
   "trades": [
     {
@@ -531,6 +531,14 @@
       "realized_equity": 100.45003264,
       "unrealized_pnl": -0.32437426,
       "price": 81464.0
+    },
+    {
+      "time": "2026-10-22T21:28:54.473963+00:00",
+      "timestamp": 1792704534,
+      "price": 81464.0,
+      "equity": 100.45508149142084,
+      "marked_equity": 100.1307072314379,
+      "event": "FUNDING_ESTIMATE_APPLIED"
     }
   ],
   "last_entry_candle": null,
@@ -611,7 +619,7 @@
   "peak_equity_usd": 101.50122799609923,
   "last_close_time": "2026-10-22T01:38:16.009985+00:00",
   "last_processed_candle": "1792649700000",
-  "last_price": 82677.0,
+  "last_price": 81464.0,
   "last_funding_rate": 1.25e-05,
   "position": {
     "side": "SHORT",
@@ -627,10 +635,24 @@
     "entry_time": "2026-10-22T17:11:18.578489+00:00",
     "runner_mode": false,
     "entry_fee": 0.05048849859711966,
-    "funding_paid": 0.005048849859711966,
-    "last_funding_timestamp": 1792703478.5784888
+    "funding_paid": 0.010097699719423932,
+    "last_funding_timestamp": 1792703478.5784888,
+    "direction": "SHORT",
+    "sign": -1,
+    "opened_ts": 1792689078.5784888,
+    "opened_candle_ts": 0,
+    "last_funding_ts": 1792703478.5784888,
+    "last_checked_candle_ts": 1792702800000
   },
   "day": "2026-10-22",
   "funding_last_timestamp": 0.0,
-  "funding_total": 0.017459796601472163
+  "funding_total": 0.02250864646118413,
+  "max_drawdown_pct": 0.6506033791284573,
+  "last_trade_ts": 0.0,
+  "last_processed_15m_ts": 1792702800000,
+  "last_run_at": "2026-10-22T21:28:54.473989+00:00",
+  "last_run_duration_seconds": 1.131601095199585,
+  "last_signal": "WAIT",
+  "last_signal_score": 3,
+  "current_drawdown_pct": 0.6506033791284573
 }
