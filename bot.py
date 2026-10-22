@@ -1,38 +1,47 @@
 #!/usr/bin/env python3
+# -*- coding: utf-8 -*-
 """
-BTC Paper Engine V11
-Paper trading only. No wallet, no private keys, no live orders.
-Python standard library only.
+BTC PAPER ENGINE V12
+Paper trading only.
+No live orders, no wallet, no private keys.
 
-Files:
-  state.json
-  docs/data.json
-
-V11 improvements:
-- Separate closed-trade results from account equity / open PnL.
-- Track current drawdown and historical maximum drawdown separately.
-- Process every available closed 15m candle since the position's last check.
-- Evaluate stop/target before updating the trailing stop.
-- Include estimated fees and slippage in position sizing.
-- Preserve existing state and trade history.
-- Keep legacy dashboard field names where practical.
+Features:
+- Hyperliquid public market data
+- 15m / 1h / 4h multi-timeframe analysis
+- EMA, RSI, ATR, ADX, MACD
+- Risk-based position sizing
+- Maximum margin and leverage limits
+- Stop loss, take profit, trailing stop
+- Maximum holding time
+- Daily loss lock
+- Maximum drawdown lock
+- Fee and funding estimates
+- Legacy state and trade history preservation
+- Atomic JSON writes
+- Dashboard output at docs/data.json
 """
 
+import copy
 import json
 import math
+import os
 import time
+import urllib.error
 import urllib.request
+
 from datetime import datetime, timezone
 from pathlib import Path
+
 
 # ============================================================
 # CONFIGURATION
 # ============================================================
 
-BUILD = "BTC_PAPER_V11_2026-10-23"
+BUILD = "BTC_PAPER_V12_2026-10-23"
 
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
+
 ROOT = Path(__file__).resolve().parent
 STATE_FILE = ROOT / "state.json"
 DATA_FILE = ROOT / "docs" / "data.json"
@@ -40,87 +49,101 @@ DATA_FILE = ROOT / "docs" / "data.json"
 INITIAL_EQUITY = 100.0
 LEVERAGE = 40.0
 
-# Risk limits
 RISK_PER_TRADE = 0.005
 MAX_MARGIN_FRACTION = 0.10
-MAX_DAILY_LOSS = 0.03
-MAX_DRAWDOWN = 0.10
+
+MAX_DAILY_LOSS_PCT = 0.03
+MAX_DRAWDOWN_PCT = 0.10
 MAX_CONSECUTIVE_LOSSES = 4
-COOLDOWN_SECONDS = 3600
+
+COOLDOWN_SECONDS = 60 * 60
 MAX_HOLD_SECONDS = 24 * 60 * 60
 
-# Trading costs: assumptions for simulation, not guaranteed market costs.
-FEE_RATE = 0.0005
-SLIPPAGE_RATE = 0.0002
+TAKER_FEE = 0.0005
+SLIPPAGE = 0.0002
 
-# Funding is estimated from the latest observed rate.
-# It is NOT a reconstruction of historical funding rates.
-FUNDING_INTERVAL_SECONDS = 3600
+CANDLE_INTERVAL = "15m"
+CANDLE_MS = 15 * 60 * 1000
 
-MAX_CANDLES = 240
-MAX_TRADES_STORED = 2000
-MAX_HISTORY_STORED = 1000
+MIN_CANDLES = 110
+MAX_STORED_TRADES = 2000
+MAX_EQUITY_HISTORY = 5000
+MAX_EVENTS = 300
+
+MIN_SIGNAL_SCORE = 6
+MIN_RISK_REWARD = 1.5
+
+ATR_STOP_MULTIPLIER = 1.8
+ATR_TARGET_MULTIPLIER = 3.0
+TRAIL_START_R = 1.5
+TRAIL_ATR_MULTIPLIER = 1.5
+
+# A runner position has no fixed take-profit, but must still
+# have a protective stop and a maximum holding time.
+RUNNER_MODE = False
+
 HTTP_TIMEOUT = 20
+MAX_API_RETRIES = 3
 
-INTERVALS = {
-    "15m": 15 * 60 * 1000,
-    "1h": 60 * 60 * 1000,
-    "4h": 4 * 60 * 60 * 1000,
-}
+# Existing state is never deleted simply because its version differs.
+# If a state file cannot be parsed, the program stops instead of
+# silently replacing it with a fresh account.
 
 
 # ============================================================
-# GENERAL HELPERS
+# TIME / JSON HELPERS
 # ============================================================
 
-def now_ts():
-    return time.time()
+def utc_now():
+    return datetime.now(timezone.utc)
 
 
-def iso_time(ts=None):
-    if ts is None:
-        ts = now_ts()
-    return datetime.fromtimestamp(
-        float(ts), tz=timezone.utc
-    ).isoformat()
+def iso_now():
+    return utc_now().isoformat()
+
+
+def timestamp_ms():
+    return int(time.time() * 1000)
 
 
 def safe_float(value, default=0.0):
     try:
         result = float(value)
-        return result if math.isfinite(result) else default
-    except (TypeError, ValueError):
-        return default
-
-
-def safe_int(value, default=0):
-    try:
-        return int(float(value))
-    except (TypeError, ValueError):
-        return default
+        if math.isfinite(result):
+            return result
+    except (TypeError, ValueError, OverflowError):
+        pass
+    return default
 
 
 def clamp(value, low, high):
     return max(low, min(high, value))
 
 
-def sign_for_direction(direction):
-    return 1 if str(direction).upper() == "LONG" else -1
+def read_json(path):
+    if not path.exists():
+        return None
+
+    try:
+        with path.open("r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as exc:
+        raise RuntimeError(
+            f"Could not read {path.name}; refusing to reset state: {exc}"
+        ) from exc
 
 
-def json_write_atomic(path, data):
+def atomic_write_json(path, data):
     path.parent.mkdir(parents=True, exist_ok=True)
-    temporary = path.with_suffix(path.suffix + ".tmp")
-    temporary.write_text(
-        json.dumps(data, ensure_ascii=False, indent=2, allow_nan=False),
-        encoding="utf-8",
-    )
-    temporary.replace(path)
+    temp_path = path.with_suffix(path.suffix + ".tmp")
 
+    with temp_path.open("w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2, allow_nan=False)
+        f.flush()
+        os.fsync(f.fileno())
 
-# ============================================================
-# HYPERLIQUID PUBLIC MARKET DATA
-# ============================================================
+    os.replace(temp_path, path)
+
 
 def api_post(payload):
     body = json.dumps(payload).encode("utf-8")
@@ -129,95 +152,153 @@ def api_post(payload):
         data=body,
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "BTC-Paper-Engine-V11",
+            "User-Agent": "BTC-Paper-Engine-V12",
         },
         method="POST",
     )
 
-    with urllib.request.urlopen(request, timeout=HTTP_TIMEOUT) as response:
-        raw = response.read().decode("utf-8")
-    return json.loads(raw)
+    last_error = None
+
+    for attempt in range(MAX_API_RETRIES):
+        try:
+            with urllib.request.urlopen(
+                request, timeout=HTTP_TIMEOUT
+            ) as response:
+                raw = response.read().decode("utf-8")
+                return json.loads(raw)
+
+        except (
+            urllib.error.URLError,
+            urllib.error.HTTPError,
+            TimeoutError,
+            json.JSONDecodeError,
+        ) as exc:
+            last_error = exc
+            if attempt < MAX_API_RETRIES - 1:
+                time.sleep(1.5 * (attempt + 1))
+
+    raise RuntimeError(f"Hyperliquid API failed: {last_error}")
 
 
-def fetch_candles(interval, limit=MAX_CANDLES):
-    now_ms = int(time.time() * 1000)
-    interval_ms = INTERVALS[interval]
+# ============================================================
+# HYPERLIQUID MARKET DATA
+# ============================================================
+
+def fetch_candles(interval, count=250):
+    now = timestamp_ms()
+
+    interval_ms = {
+        "15m": 15 * 60 * 1000,
+        "1h": 60 * 60 * 1000,
+        "4h": 4 * 60 * 60 * 1000,
+    }.get(interval)
+
+    if interval_ms is None:
+        raise ValueError(f"Unsupported interval: {interval}")
 
     payload = {
         "type": "candleSnapshot",
         "req": {
             "coin": COIN,
             "interval": interval,
-            "startTime": now_ms - interval_ms * (limit + 5),
-            "endTime": now_ms,
+            "startTime": now - interval_ms * (count + 30),
+            "endTime": now,
         },
     }
 
-    rows = api_post(payload)
-    if not isinstance(rows, list):
-        raise RuntimeError(f"Unexpected candle response for {interval}")
+    raw = api_post(payload)
+
+    if not isinstance(raw, list):
+        raise RuntimeError(f"Invalid candle response for {interval}")
 
     candles = []
-    for row in rows:
+
+    for item in raw:
         try:
             candle = {
-                "t": safe_int(row.get("t")),
-                "T": safe_int(row.get("T")),
-                "o": safe_float(row.get("o")),
-                "h": safe_float(row.get("h")),
-                "l": safe_float(row.get("l")),
-                "c": safe_float(row.get("c")),
-                "v": safe_float(row.get("v")),
-                "n": safe_int(row.get("n")),
+                "t": int(item["t"]),
+                "T": int(item["T"]),
+                "o": float(item["o"]),
+                "h": float(item["h"]),
+                "l": float(item["l"]),
+                "c": float(item["c"]),
+                "v": float(item["v"]),
+                "n": int(item.get("n", 0)),
             }
-        except AttributeError:
-            continue
 
-        if (
-            candle["t"] > 0
-            and candle["h"] > 0
-            and candle["l"] > 0
-            and candle["c"] > 0
-        ):
+            values = [
+                candle["o"], candle["h"], candle["l"],
+                candle["c"], candle["v"],
+            ]
+
+            if not all(math.isfinite(x) for x in values):
+                continue
+
+            if min(
+                candle["o"], candle["h"], candle["l"], candle["c"]
+            ) <= 0:
+                continue
+
+            if candle["h"] < candle["l"]:
+                continue
+
             candles.append(candle)
 
-    # Sort and deduplicate by candle start timestamp.
-    unique = {}
-    for candle in candles:
-        unique[candle["t"]] = candle
-    candles = sorted(unique.values(), key=lambda item: item["t"])
+        except (KeyError, TypeError, ValueError, OverflowError):
+            continue
 
-    # Exclude any candle that has not fully closed yet.
-    now_ms = int(time.time() * 1000)
-    candles = [
-        candle for candle in candles
-        if candle["T"] > 0 and candle["T"] < now_ms
-    ]
+    # Deduplicate and use only fully closed candles.
+    unique = {c["t"]: c for c in candles if c["T"] < now}
+    candles = sorted(unique.values(), key=lambda x: x["t"])
 
-    if len(candles) < 110:
+    if len(candles) < MIN_CANDLES:
         raise RuntimeError(
-            f"Not enough closed candles for {interval}: {len(candles)}"
+            f"Not enough closed {interval} candles: {len(candles)}"
         )
 
-    return candles[-limit:]
+    return candles[-count:]
+
+
+def fetch_market_price():
+    result = api_post({"type": "allMids"})
+
+    if not isinstance(result, dict) or COIN not in result:
+        raise RuntimeError("BTC price missing from allMids response")
+
+    price = safe_float(result[COIN], 0.0)
+
+    if price <= 0:
+        raise RuntimeError("Invalid BTC market price")
+
+    return price
 
 
 def fetch_funding_rate():
-    result = api_post({
-        "type": "metaAndAssetCtxs",
-    })
+    result = api_post({"type": "metaAndAssetCtxs"})
 
-    try:
-        universe = result[0]["universe"]
-        contexts = result[1]
-        for index, item in enumerate(universe):
-            if item.get("name") == COIN:
-                # Hyperliquid's funding value is a decimal rate per hour.
-                return safe_float(contexts[index].get("funding"))
-    except (IndexError, KeyError, TypeError, AttributeError):
-        pass
+    if not isinstance(result, list) or len(result) < 2:
+        raise RuntimeError("Invalid funding response")
 
-    raise RuntimeError("Could not read BTC funding rate")
+    meta = result[0]
+    contexts = result[1]
+
+    universe = meta.get("universe", [])
+
+    for index, asset in enumerate(universe):
+        if asset.get("name") != COIN:
+            continue
+
+        if index >= len(contexts):
+            break
+
+        rate = safe_float(contexts[index].get("funding"), float("nan"))
+
+        if not math.isfinite(rate):
+            raise RuntimeError("Invalid funding rate")
+
+        return rate
+
+    raise RuntimeError("BTC funding rate not found")
 
 
 # ============================================================
@@ -226,1220 +307,1443 @@ def fetch_funding_rate():
 
 def ema(values, period):
     if len(values) < period:
-        return [None] * len(values)
+        return None
 
-    result = [None] * len(values)
-    seed = sum(values[:period]) / period
-    result[period - 1] = seed
     multiplier = 2.0 / (period + 1.0)
-    previous = seed
+    result = sum(values[:period]) / period
 
-    for index in range(period, len(values)):
-        previous = (
-            values[index] * multiplier
-            + previous * (1.0 - multiplier)
-        )
-        result[index] = previous
+    for value in values[period:]:
+        result = value * multiplier + result * (1.0 - multiplier)
 
     return result
 
 
 def rsi(values, period=14):
-    result = [None] * len(values)
-    if len(values) <= period:
-        return result
+    if len(values) < period + 1:
+        return None
 
-    gains = []
-    losses = []
+    changes = [
+        values[i] - values[i - 1]
+        for i in range(1, len(values))
+    ]
 
-    for index in range(1, period + 1):
-        change = values[index] - values[index - 1]
-        gains.append(max(change, 0.0))
-        losses.append(max(-change, 0.0))
+    recent = changes[-period:]
+    gains = [max(change, 0.0) for change in recent]
+    losses = [max(-change, 0.0) for change in recent]
 
     average_gain = sum(gains) / period
     average_loss = sum(losses) / period
 
-    def calculate(avg_gain, avg_loss):
-        if avg_loss == 0:
-            return 100.0 if avg_gain > 0 else 50.0
-        rs = avg_gain / avg_loss
-        return 100.0 - (100.0 / (1.0 + rs))
+    if average_loss == 0:
+        return 100.0 if average_gain > 0 else 50.0
 
-    result[period] = calculate(average_gain, average_loss)
-
-    for index in range(period + 1, len(values)):
-        change = values[index] - values[index - 1]
-        gain = max(change, 0.0)
-        loss = max(-change, 0.0)
-
-        average_gain = (
-            average_gain * (period - 1) + gain
-        ) / period
-        average_loss = (
-            average_loss * (period - 1) + loss
-        ) / period
-
-        result[index] = calculate(average_gain, average_loss)
-
-    return result
+    rs = average_gain / average_loss
+    return 100.0 - 100.0 / (1.0 + rs)
 
 
 def atr(candles, period=14):
-    highs = [c["h"] for c in candles]
-    lows = [c["l"] for c in candles]
-    closes = [c["c"] for c in candles]
+    if len(candles) < period + 1:
+        return None
 
     true_ranges = []
-    for index in range(len(candles)):
-        if index == 0:
-            true_ranges.append(highs[index] - lows[index])
-        else:
-            true_ranges.append(max(
-                highs[index] - lows[index],
-                abs(highs[index] - closes[index - 1]),
-                abs(lows[index] - closes[index - 1]),
-            ))
 
-    result = [None] * len(candles)
+    for i in range(1, len(candles)):
+        current = candles[i]
+        previous_close = candles[i - 1]["c"]
+
+        tr = max(
+            current["h"] - current["l"],
+            abs(current["h"] - previous_close),
+            abs(current["l"] - previous_close),
+        )
+        true_ranges.append(tr)
+
     if len(true_ranges) < period:
-        return result
+        return None
 
-    previous = sum(true_ranges[:period]) / period
-    result[period - 1] = previous
+    value = sum(true_ranges[:period]) / period
 
-    for index in range(period, len(true_ranges)):
-        previous = (
-            previous * (period - 1) + true_ranges[index]
+    for current_tr in true_ranges[period:]:
+        value = (
+            value * (period - 1) + current_tr
         ) / period
-        result[index] = previous
 
-    return result
+    return value
 
 
 def adx(candles, period=14):
-    count = len(candles)
-    result = [None] * count
+    if len(candles) < period * 2 + 2:
+        return None
 
-    if count < period * 2 + 2:
-        return result
+    trs = []
+    plus_dm = []
+    minus_dm = []
 
-    tr_values = [0.0] * count
-    plus_dm = [0.0] * count
-    minus_dm = [0.0] * count
+    for i in range(1, len(candles)):
+        current = candles[i]
+        previous = candles[i - 1]
 
-    for index in range(1, count):
-        up_move = candles[index]["h"] - candles[index - 1]["h"]
-        down_move = candles[index - 1]["l"] - candles[index]["l"]
+        up_move = current["h"] - previous["h"]
+        down_move = previous["l"] - current["l"]
 
-        plus_dm[index] = (
+        plus_dm.append(
             up_move if up_move > down_move and up_move > 0 else 0.0
         )
-        minus_dm[index] = (
+        minus_dm.append(
             down_move if down_move > up_move and down_move > 0 else 0.0
         )
 
-        tr_values[index] = max(
-            candles[index]["h"] - candles[index]["l"],
-            abs(candles[index]["h"] - candles[index - 1]["c"]),
-            abs(candles[index]["l"] - candles[index - 1]["c"]),
-        )
+        trs.append(max(
+            current["h"] - current["l"],
+            abs(current["h"] - previous["c"]),
+            abs(current["l"] - previous["c"]),
+        ))
 
-    smoothed_tr = sum(tr_values[1:period + 1])
-    smoothed_plus = sum(plus_dm[1:period + 1])
-    smoothed_minus = sum(minus_dm[1:period + 1])
+    def smooth(values):
+        initial = sum(values[:period])
+        output = [initial]
 
-    dx_values = [None] * count
-
-    for index in range(period, count):
-        if index > period:
-            smoothed_tr = smoothed_tr - smoothed_tr / period + tr_values[index]
-            smoothed_plus = (
-                smoothed_plus - smoothed_plus / period + plus_dm[index]
-            )
-            smoothed_minus = (
-                smoothed_minus - smoothed_minus / period + minus_dm[index]
+        for value in values[period:]:
+            output.append(
+                output[-1] - output[-1] / period + value
             )
 
-        if smoothed_tr <= 0:
+        return output
+
+    smoothed_tr = smooth(trs)
+    smoothed_plus = smooth(plus_dm)
+    smoothed_minus = smooth(minus_dm)
+
+    dx_values = []
+
+    for i in range(len(smoothed_tr)):
+        tr_value = smoothed_tr[i]
+
+        if tr_value <= 0:
+            dx_values.append(0.0)
             continue
 
-        plus_di = 100.0 * smoothed_plus / smoothed_tr
-        minus_di = 100.0 * smoothed_minus / smoothed_tr
-        denominator = plus_di + minus_di
+        pdi = 100.0 * smoothed_plus[i] / tr_value
+        mdi = 100.0 * smoothed_minus[i] / tr_value
+        denominator = pdi + mdi
 
-        if denominator > 0:
-            dx_values[index] = (
-                100.0 * abs(plus_di - minus_di) / denominator
+        if denominator <= 0:
+            dx_values.append(0.0)
+        else:
+            dx_values.append(
+                100.0 * abs(pdi - mdi) / denominator
             )
 
-    first_dx_index = period
-    valid_dx = [
-        value for value in dx_values[first_dx_index:first_dx_index + period]
-        if value is not None
-    ]
+    if len(dx_values) < period:
+        return None
 
-    if len(valid_dx) < period:
-        return result
+    value = sum(dx_values[:period]) / period
 
-    first_adx_index = first_dx_index + period - 1
-    previous_adx = sum(valid_dx) / period
-    result[first_adx_index] = previous_adx
+    for current_dx in dx_values[period:]:
+        value = (value * (period - 1) + current_dx) / period
 
-    for index in range(first_adx_index + 1, count):
-        value = dx_values[index]
-        if value is None:
-            continue
-        previous_adx = (
-            previous_adx * (period - 1) + value
-        ) / period
-        result[index] = previous_adx
-
-    return result
+    return value
 
 
-def macd(values, fast_period=12, slow_period=26, signal_period=9):
-    fast_values = ema(values, fast_period)
-    slow_values = ema(values, slow_period)
+def macd_values(values):
+    if len(values) < 35:
+        return None, None
 
-    macd_line = []
-    for fast_value, slow_value in zip(fast_values, slow_values):
-        if fast_value is None or slow_value is None:
-            macd_line.append(None)
-        else:
-            macd_line.append(fast_value - slow_value)
+    fast = ema(values, 12)
+    slow = ema(values, 26)
 
-    valid_start = next(
-        (i for i, value in enumerate(macd_line) if value is not None),
-        len(values),
-    )
+    if fast is None or slow is None:
+        return None, None
 
-    valid_macd = [
-        value for value in macd_line[valid_start:]
-        if value is not None
-    ]
+    # Build the MACD series for the signal line.
+    macd_series = []
 
-    signal_values_valid = ema(valid_macd, signal_period)
-    signal_line = [None] * len(values)
+    for end in range(26, len(values) + 1):
+        subset = values[:end]
+        fast_value = ema(subset, 12)
+        slow_value = ema(subset, 26)
 
-    for offset, value in enumerate(signal_values_valid):
-        index = valid_start + offset
-        if index < len(signal_line):
-            signal_line[index] = value
+        if fast_value is not None and slow_value is not None:
+            macd_series.append(fast_value - slow_value)
 
-    histogram = []
-    for line_value, signal_value in zip(macd_line, signal_line):
-        if line_value is None or signal_value is None:
-            histogram.append(None)
-        else:
-            histogram.append(line_value - signal_value)
+    if len(macd_series) < 9:
+        return fast - slow, None
 
-    return macd_line, signal_line, histogram
+    signal = ema(macd_series, 9)
+
+    return fast - slow, signal
 
 
-def analyze(candles):
+def analyze_timeframe(candles):
     closes = [c["c"] for c in candles]
-    volumes = [c["v"] for c in candles]
 
-    ema20_values = ema(closes, 20)
-    ema50_values = ema(closes, 50)
-    ema100_values = ema(closes, 100)
-    rsi_values = rsi(closes, 14)
-    atr_values = atr(candles, 14)
-    adx_values = adx(candles, 14)
-    macd_line, macd_signal, macd_hist = macd(closes)
+    fast_ema = ema(closes, 20)
+    slow_ema = ema(closes, 50)
+    current_rsi = rsi(closes, 14)
+    current_atr = atr(candles, 14)
+    current_adx = adx(candles, 14)
+    macd, macd_signal = macd_values(closes)
 
-    index = len(candles) - 1
-    close = closes[index]
+    if any(x is None for x in [
+        fast_ema, slow_ema, current_rsi,
+        current_atr, current_adx, macd,
+    ]):
+        raise RuntimeError("Indicator calculation incomplete")
 
-    def latest(series, fallback=0.0):
-        value = series[index] if index < len(series) else None
-        return fallback if value is None else float(value)
+    close = closes[-1]
 
-    ema20 = latest(ema20_values, close)
-    ema50 = latest(ema50_values, close)
-    ema100 = latest(ema100_values, close)
-    rsi_value = latest(rsi_values, 50.0)
-    atr_value = latest(atr_values, close * 0.002)
-    adx_value = latest(adx_values, 0.0)
-    macd_value = latest(macd_line, 0.0)
-    macd_signal_value = latest(macd_signal, 0.0)
-    macd_hist_value = latest(macd_hist, 0.0)
-
-    previous_close = closes[max(0, index - 4)]
-    momentum = (
-        (close / previous_close - 1.0) * 100.0
-        if previous_close else 0.0
-    )
-
-    average_volume = (
-        sum(volumes[max(0, index - 19):index]) /
-        max(1, len(volumes[max(0, index - 19):index]))
-    )
-    volume_ratio = (
-        volumes[index] / average_volume if average_volume > 0 else 0.0
-    )
-
-    if ema20 > ema50 > ema100:
+    if close > fast_ema > slow_ema:
         trend = "UP"
-    elif ema20 < ema50 < ema100:
+    elif close < fast_ema < slow_ema:
         trend = "DOWN"
     else:
         trend = "SIDEWAYS"
 
     return {
-        "price": close,
-        "candle_timestamp": candles[index]["t"],
-        "candle_close_timestamp": candles[index]["T"],
-        "ema20": ema20,
-        "ema50": ema50,
-        "ema100": ema100,
-        "rsi": rsi_value,
-        "atr": atr_value,
-        "adx": adx_value,
-        "macd": macd_value,
-        "macd_signal": macd_signal_value,
-        "macd_hist": macd_hist_value,
-        "momentum_pct": momentum,
-        "volume_ratio": volume_ratio,
+        "close": close,
+        "ema20": fast_ema,
+        "ema50": slow_ema,
+        "rsi": current_rsi,
+        "atr": current_atr,
+        "adx": current_adx,
+        "macd": macd,
+        "macd_signal": macd_signal,
         "trend": trend,
+        "last_candle_ts": candles[-1]["t"],
     }
 
 
 # ============================================================
-# STATE MIGRATION / PERSISTENCE
+# STATE MANAGEMENT
 # ============================================================
 
-def normalize_position(position):
-    if not isinstance(position, dict):
-        return None
+def new_state():
+    return {
+        "build": BUILD,
+        "initial_equity": INITIAL_EQUITY,
+        "equity": INITIAL_EQUITY,
+        "peak_equity": INITIAL_EQUITY,
+        "position": None,
+        "trades": [],
+        "equity_history": [],
+        "events": [],
+        "funding_total": 0.0,
+        "last_checked_candle_ts": None,
+        "last_entry_ts": 0,
+        "consecutive_losses": 0,
+        "daily_date": utc_now().date().isoformat(),
+        "daily_start_equity": INITIAL_EQUITY,
+        "daily_loss_locked": False,
+        "drawdown_locked": False,
+        "api_error_count": 0,
+    }
 
-    normalized = dict(position)
 
-    direction = str(
-        normalized.get("direction", normalized.get("side", ""))
-    ).upper()
+def add_event(state, event_type, message, **extra):
+    event = {
+        "timestamp": iso_now(),
+        "type": event_type,
+        "message": message,
+    }
+    event.update(extra)
 
-    if direction in ("BUY", "LONG"):
-        direction = "LONG"
-    elif direction in ("SELL", "SHORT"):
-        direction = "SHORT"
-    else:
-        old_sign = safe_float(normalized.get("sign"), 0.0)
-        if old_sign == 0:
-            return None
-        direction = "LONG" if old_sign > 0 else "SHORT"
-
-    normalized["direction"] = direction
-    normalized["sign"] = sign_for_direction(direction)
-
-    normalized["entry_price"] = safe_float(
-        normalized.get("entry_price", normalized.get("entry", 0))
-    )
-    normalized["quantity"] = safe_float(
-        normalized.get("quantity", normalized.get("qty", 0))
-    )
-    normalized["leverage"] = safe_float(
-        normalized.get("leverage"), LEVERAGE
-    )
-    normalized["entry_fee"] = safe_float(normalized.get("entry_fee"))
-    normalized["funding_paid"] = safe_float(
-        normalized.get("funding_paid")
-    )
-    normalized["margin_used"] = safe_float(
-        normalized.get("margin_used")
-    )
-    normalized["risk_distance"] = safe_float(
-        normalized.get("risk_distance")
-    )
-    normalized["stop_price"] = safe_float(
-        normalized.get("stop_price")
-    )
-    normalized["target_price"] = safe_float(
-        normalized.get("target_price")
-    )
-    normalized["opened_ts"] = safe_float(
-        normalized.get("opened_ts"),
-        safe_float(normalized.get("opened_timestamp"), now_ts()),
-    )
-    normalized["opened_candle_ts"] = safe_int(
-        normalized.get("opened_candle_ts")
-    )
-    normalized["last_funding_ts"] = safe_float(
-        normalized.get("last_funding_ts"),
-        normalized["opened_ts"],
-    )
-    normalized["last_checked_candle_ts"] = safe_int(
-        normalized.get("last_checked_candle_ts"),
-        normalized["opened_candle_ts"],
-    )
-
-    if (
-        normalized["entry_price"] <= 0
-        or normalized["quantity"] <= 0
-    ):
-        return None
-
-    return normalized
+    state.setdefault("events", []).append(event)
+    state["events"] = state["events"][-MAX_EVENTS:]
 
 
 def load_state():
-    if not STATE_FILE.exists():
-        return {
-            "build": BUILD,
-            "initial_equity": INITIAL_EQUITY,
-            "equity": INITIAL_EQUITY,
-            "peak_equity": INITIAL_EQUITY,
-            "max_drawdown_pct": 0.0,
-            "position": None,
-            "trades": [],
-            "equity_history": [],
-            "funding_total": 0.0,
-            "consecutive_losses": 0,
-            "last_trade_ts": 0.0,
-            "day_key": "",
-            "day_start_equity": INITIAL_EQUITY,
-            "last_processed_15m_ts": 0,
-        }
+    saved = read_json(STATE_FILE)
 
-    try:
-        state = json.loads(STATE_FILE.read_text(encoding="utf-8"))
-        if not isinstance(state, dict):
-            raise ValueError("State file root is not an object")
-    except Exception as exc:
-        backup = STATE_FILE.with_name("state.corrupt.json")
-        try:
-            backup.write_text(
-                STATE_FILE.read_text(encoding="utf-8"),
-                encoding="utf-8",
-            )
-        except Exception:
-            pass
-        raise RuntimeError(
-            f"Cannot safely load state.json; backup attempted: {exc}"
-        )
+    if saved is None:
+        state = new_state()
+        add_event(state, "INITIALIZED", "New paper account initialized")
+        return state
 
-    state.setdefault("initial_equity", INITIAL_EQUITY)
-    state.setdefault("equity", state["initial_equity"])
-    state.setdefault("peak_equity", state["equity"])
-    state.setdefault("max_drawdown_pct", 0.0)
-    state.setdefault("funding_total", 0.0)
-    state.setdefault("consecutive_losses", 0)
-    state.setdefault("last_trade_ts", 0.0)
-    state.setdefault("day_key", "")
-    state.setdefault("day_start_equity", state["equity"])
-    state.setdefault("last_processed_15m_ts", 0)
-    state.setdefault("equity_history", [])
+    if not isinstance(saved, dict):
+        raise RuntimeError("State file root is not a JSON object")
 
-    if "trades" not in state:
-        state["trades"] = state.get("paper_trades", [])
-    if not isinstance(state["trades"], list):
-        state["trades"] = []
+    state = copy.deepcopy(saved)
+    defaults = new_state()
 
-    old_position = state.get("position")
-    if old_position is None:
-        old_position = state.get("open_position")
-    state["position"] = normalize_position(old_position)
+    for key, value in defaults.items():
+        if key not in state:
+            state[key] = copy.deepcopy(value)
 
-    state["equity"] = safe_float(
-        state.get("equity"), INITIAL_EQUITY
-    )
+    state["build"] = BUILD
     state["initial_equity"] = safe_float(
         state.get("initial_equity"), INITIAL_EQUITY
+    )
+    state["equity"] = safe_float(
+        state.get("equity"), state["initial_equity"]
     )
     state["peak_equity"] = max(
         safe_float(state.get("peak_equity"), state["equity"]),
         state["equity"],
     )
 
-    state["trades"] = state["trades"][-MAX_TRADES_STORED:]
-    state["equity_history"] = (
-        state["equity_history"][-MAX_HISTORY_STORED:]
-    )
+    if not isinstance(state.get("trades"), list):
+        state["trades"] = []
 
-    state["build"] = BUILD
+    if not isinstance(state.get("equity_history"), list):
+        state["equity_history"] = []
+
+    if not isinstance(state.get("events"), list):
+        state["events"] = []
+
+    # Keep the existing position and its historical fields.
+    # Do not silently erase legacy funding or position data.
+    position = state.get("position")
+
+    if position is not None:
+        if not isinstance(position, dict):
+            raise RuntimeError("Position state is invalid")
+
+        aliases = {
+            "direction": ["direction", "side"],
+            "entry_price": ["entry_price", "entry"],
+            "quantity": ["quantity", "size", "qty"],
+            "stop_price": ["stop_price", "stop_loss", "stop"],
+            "target_price": ["target_price", "take_profit", "target"],
+            "opened_at": ["opened_at", "entry_time", "open_time"],
+            "entry_fee": ["entry_fee"],
+            "funding_paid": ["funding_paid"],
+        }
+
+        for target, names in aliases.items():
+            if target not in position:
+                for name in names:
+                    if name in position:
+                        position[target] = position[name]
+                        break
+
+        direction = str(position.get("direction", "")).upper()
+
+        if direction in ("LONG", "BUY"):
+            position["direction"] = "LONG"
+        elif direction in ("SHORT", "SELL"):
+            position["direction"] = "SHORT"
+        else:
+            raise RuntimeError(
+                "Existing position has unknown direction; refusing to discard it"
+            )
+
+        for key in (
+            "entry_price", "quantity", "stop_price",
+            "target_price", "entry_fee", "funding_paid",
+        ):
+            position[key] = safe_float(position.get(key), 0.0)
+
+        if (
+            position["entry_price"] <= 0
+            or position["quantity"] <= 0
+            or position["stop_price"] <= 0
+        ):
+            raise RuntimeError(
+                "Existing position is missing valid entry, quantity or stop"
+            )
+
+        position.setdefault("leverage", LEVERAGE)
+        position.setdefault("margin_used", 0.0)
+        position.setdefault("notional", position["entry_price"] * position["quantity"])
+        position.setdefault("initial_stop_price", position["stop_price"])
+        position.setdefault("risk_distance", abs(
+            position["entry_price"] - position["initial_stop_price"]
+        ))
+        position.setdefault("trailing_active", False)
+        position.setdefault("funding_paid", 0.0)
+        position.setdefault("last_funding_ts", 0)
+        position.setdefault("last_checked_candle_ts", None)
+        position.setdefault("entry_fee", 0.0)
+        position.setdefault("opened_at", iso_now())
+
+        if "last_checked_candle_ts" not in position:
+            position["last_checked_candle_ts"] = None
+
+    state["trades"] = state["trades"][-MAX_STORED_TRADES:]
+    state["equity_history"] = state["equity_history"][-MAX_EQUITY_HISTORY:]
+    state["events"] = state["events"][-MAX_EVENTS:]
+
     return state
 
 
 # ============================================================
-# PNL / FUNDING / POSITION MANAGEMENT
+# DAILY / DRAWDOWN RISK LOCKS
 # ============================================================
 
-def estimated_close_fee(position, reference_price):
-    notional = abs(
-        safe_float(reference_price) * safe_float(position.get("quantity"))
+def update_daily_baseline(state, marked_equity):
+    today = utc_now().date().isoformat()
+
+    if state.get("daily_date") != today:
+        state["daily_date"] = today
+        state["daily_start_equity"] = max(marked_equity, 0.0)
+        state["daily_loss_locked"] = False
+        add_event(
+            state,
+            "DAILY_RESET",
+            "New UTC day; daily risk baseline reset",
+            baseline=state["daily_start_equity"],
+        )
+
+    baseline = safe_float(
+        state.get("daily_start_equity"), state["initial_equity"]
     )
-    return notional * FEE_RATE
+
+    if baseline > 0:
+        daily_loss = max(
+            0.0, (baseline - marked_equity) / baseline
+        )
+    else:
+        daily_loss = 0.0
+
+    if daily_loss >= MAX_DAILY_LOSS_PCT:
+        if not state.get("daily_loss_locked", False):
+            add_event(
+                state,
+                "DAILY_LOSS_LOCK",
+                "Daily loss limit reached; new entries disabled until UTC day reset",
+                daily_loss_pct=daily_loss * 100.0,
+            )
+        state["daily_loss_locked"] = True
+
+    initial = max(safe_float(state["initial_equity"]), 0.000001)
+    peak = max(
+        safe_float(state.get("peak_equity"), initial),
+        marked_equity,
+    )
+    state["peak_equity"] = peak
+
+    drawdown = max(0.0, (peak - marked_equity) / peak) if peak > 0 else 0.0
+
+    if drawdown >= MAX_DRAWDOWN_PCT:
+        if not state.get("drawdown_locked", False):
+            add_event(
+                state,
+                "DRAWDOWN_LOCK",
+                "Maximum drawdown reached; new entries disabled",
+                drawdown_pct=drawdown * 100.0,
+            )
+        state["drawdown_locked"] = True
+
+    return {
+        "daily_loss_pct": daily_loss * 100.0,
+        "current_drawdown_pct": drawdown * 100.0,
+        "daily_loss_locked": bool(state.get("daily_loss_locked")),
+        "drawdown_locked": bool(state.get("drawdown_locked")),
+    }
 
 
-def mark_to_market(position, price):
-    if not position:
-        return 0.0
+# ============================================================
+# FUNDING ESTIMATE
+# ============================================================
 
-    sign = safe_float(position.get("sign"), 1.0)
-    entry = safe_float(position.get("entry_price"))
-    quantity = safe_float(position.get("quantity"))
-
-    unrealized_gross = (price - entry) * quantity * sign
-    close_fee = estimated_close_fee(position, price)
-
-    # Entry fee and funding have already affected state["equity"].
-    return unrealized_gross - close_fee
-
-
-def marked_equity(state, price):
-    position = state.get("position")
-    return safe_float(state.get("equity")) + mark_to_market(position, price)
-
-
-def charge_funding_until(state, rate, end_ts):
+def charge_funding_until(state, position, funding_rate):
     """
-    Estimate funding using the latest observed rate for elapsed whole hours.
-    This does not fetch historical funding rates and must be treated as an
-    approximation.
+    Estimate funding for whole elapsed hours.
+
+    The current public funding rate is applied to each elapsed hour.
+    This is an approximation, not a reconstruction of historical
+    funding rates. Legacy funding totals are preserved.
     """
-    position = state.get("position")
-    if not position:
-        return 0.0
+    now = timestamp_ms()
+    hour_ms = 60 * 60 * 1000
 
-    last_ts = safe_float(position.get("last_funding_ts"), end_ts)
-    end_ts = safe_float(end_ts, last_ts)
+    last_ts = int(safe_float(position.get("last_funding_ts"), 0))
 
-    elapsed = end_ts - last_ts
-    if elapsed < FUNDING_INTERVAL_SECONDS:
-        return 0.0
+    if last_ts <= 0:
+        # First V12 observation for an old position: establish a cursor.
+        # Do not fabricate historical funding.
+        position["last_funding_ts"] = now
+        add_event(
+            state,
+            "FUNDING_CURSOR_INITIALIZED",
+            "Initialized funding cursor for existing position; no backfill applied",
+        )
+        return
 
-    intervals = int(elapsed // FUNDING_INTERVAL_SECONDS)
-    if intervals <= 0:
-        return 0.0
+    elapsed_hours = (now - last_ts) // hour_ms
 
-    sign = safe_float(position.get("sign"), 1.0)
-    notional = (
-        safe_float(position.get("entry_price"))
-        * safe_float(position.get("quantity"))
-    )
+    if elapsed_hours <= 0:
+        return
 
-    # Positive funding rate: longs pay, shorts receive.
-    payment = -sign * safe_float(rate) * notional * intervals
+    # Avoid a huge unexpected adjustment after a long outage.
+    # Advance only for the capped number of hours and record the estimate.
+    charged_hours = min(int(elapsed_hours), 24)
 
-    state["equity"] = safe_float(state.get("equity")) + payment
-    state["funding_total"] = (
-        safe_float(state.get("funding_total")) + payment
-    )
+    quantity = safe_float(position.get("quantity"), 0.0)
+    price = safe_float(position.get("last_mark_price"), position["entry_price"])
+    notional = abs(quantity * price)
+
+    estimated_funding = notional * funding_rate * charged_hours
+
+    # Positive funding: longs pay shorts; negative funding: shorts pay longs.
+    if position["direction"] == "LONG":
+        cash_change = -estimated_funding
+    else:
+        cash_change = estimated_funding
+
+    state["equity"] = safe_float(state["equity"]) + cash_change
     position["funding_paid"] = (
-        safe_float(position.get("funding_paid")) + payment
+        safe_float(position.get("funding_paid")) + cash_change
     )
-    position["last_funding_ts"] = last_ts + (
-        intervals * FUNDING_INTERVAL_SECONDS
+    state["funding_total"] = (
+        safe_float(state.get("funding_total")) + cash_change
     )
 
-    return payment
+    position["last_funding_ts"] = last_ts + charged_hours * hour_ms
+
+    add_event(
+        state,
+        "FUNDING_ESTIMATE_APPLIED",
+        "Estimated funding applied using current rate",
+        hours=charged_hours,
+        funding_cash_change=cash_change,
+        funding_rate=funding_rate,
+    )
+
+    if elapsed_hours > 24:
+        add_event(
+            state,
+            "FUNDING_CATCHUP_CAPPED",
+            "Funding catch-up capped at 24 hours; older missing hours were not estimated",
+            skipped_hours=int(elapsed_hours - 24),
+        )
 
 
-def close_position(state, reference_price, reason, close_ts=None):
-    position = state.get("position")
-    if not position:
-        return None
+# ============================================================
+# POSITION PNL / CLOSING
+# ============================================================
 
-    sign = safe_float(position.get("sign"), 1.0)
-    quantity = safe_float(position.get("quantity"))
-    entry_price = safe_float(position.get("entry_price"))
-    reference_price = safe_float(reference_price)
+def signed_price_change(direction, entry, exit_price):
+    if direction == "LONG":
+        return exit_price - entry
+    return entry - exit_price
 
-    if reference_price <= 0 or quantity <= 0:
-        raise RuntimeError("Invalid close price or position quantity")
 
-    # Adverse slippage on exit.
-    exit_fill = reference_price * (1.0 - SLIPPAGE_RATE * sign)
+def unrealized_pnl(position, mark_price):
+    direction = position["direction"]
+    entry = safe_float(position["entry_price"])
+    quantity = safe_float(position["quantity"])
 
-    gross_pnl = (exit_fill - entry_price) * quantity * sign
-    exit_notional = abs(exit_fill * quantity)
-    exit_fee = exit_notional * FEE_RATE
+    gross = signed_price_change(direction, entry, mark_price) * quantity
+    exit_fee_estimate = abs(mark_price * quantity) * TAKER_FEE
+
+    return gross - exit_fee_estimate
+
+
+def close_position(state, position, exit_price, reason, candle_ts=None):
+    direction = position["direction"]
+    entry = safe_float(position["entry_price"])
+    quantity = safe_float(position["quantity"])
+
+    if direction == "LONG":
+        fill_price = exit_price * (1.0 - SLIPPAGE)
+    else:
+        fill_price = exit_price * (1.0 + SLIPPAGE)
+
+    gross_pnl = signed_price_change(
+        direction, entry, fill_price
+    ) * quantity
+
+    exit_notional = abs(fill_price * quantity)
+    exit_fee = exit_notional * TAKER_FEE
+
     entry_fee = safe_float(position.get("entry_fee"))
     funding_paid = safe_float(position.get("funding_paid"))
 
-    # Entry fee and funding were already reflected in account equity.
-    # Therefore, closing only adds gross PnL minus exit fee to equity.
-    state["equity"] = (
-        safe_float(state.get("equity")) + gross_pnl - exit_fee
-    )
+    # Entry fee and funding have already affected account equity.
+    # Only gross PnL and exit fee are applied at close.
+    equity_change_now = gross_pnl - exit_fee
+    state["equity"] = safe_float(state["equity"]) + equity_change_now
 
-    net_trade_pnl = (
-        gross_pnl - entry_fee - exit_fee + funding_paid
-    )
+    net_pnl = gross_pnl - entry_fee - exit_fee + funding_paid
 
-    closed_at = safe_float(close_ts, now_ts())
+    opened_at = position.get("opened_at", iso_now())
+
     trade = {
-        "id": f"{int(closed_at)}-{len(state.get('trades', [])) + 1}",
-        "direction": position.get("direction", "UNKNOWN"),
-        "entry_price": entry_price,
-        "entry_fill": entry_price,
-        "exit_price": exit_fill,
-        "exit_reference_price": reference_price,
+        "direction": direction,
+        "side": direction,
+        "entry_price": entry,
+        "exit_price": fill_price,
         "quantity": quantity,
         "leverage": safe_float(position.get("leverage"), LEVERAGE),
-        "entry_notional": entry_price * quantity,
+        "margin_used": safe_float(position.get("margin_used")),
+        "notional": safe_float(position.get("notional")),
+        "opened_at": opened_at,
+        "closed_at": iso_now(),
+        "exit_time": iso_now(),
+        "reason": reason,
         "gross_pnl": gross_pnl,
         "entry_fee": entry_fee,
         "exit_fee": exit_fee,
         "fees": entry_fee + exit_fee,
         "funding_paid": funding_paid,
-        "net_pnl": net_trade_pnl,
-        "reason": str(reason),
-        "opened_at": iso_time(position.get("opened_ts")),
-        "closed_at": iso_time(closed_at),
-        "opened_ts": safe_float(position.get("opened_ts")),
-        "closed_ts": closed_at,
-        "risk_distance": safe_float(position.get("risk_distance")),
+        "net_pnl": net_pnl,
+        "equity_after_close": state["equity"],
+        "build": BUILD,
     }
 
-    state.setdefault("trades", []).append(trade)
-    state["trades"] = state["trades"][-MAX_TRADES_STORED:]
-    state["last_trade_ts"] = closed_at
+    if candle_ts is not None:
+        trade["exit_candle_ts"] = candle_ts
 
-    if net_trade_pnl < 0:
+    state.setdefault("trades", []).append(trade)
+    state["trades"] = state["trades"][-MAX_STORED_TRADES:]
+
+    if net_pnl < 0:
         state["consecutive_losses"] = (
-            safe_int(state.get("consecutive_losses")) + 1
+            int(state.get("consecutive_losses", 0)) + 1
         )
-    elif net_trade_pnl > 0:
+    else:
         state["consecutive_losses"] = 0
 
+    state["last_entry_ts"] = int(
+        safe_float(state.get("last_entry_ts"), 0)
+    )
+    state["last_close_ts"] = timestamp_ms()
+
     state["position"] = None
+
+    add_event(
+        state,
+        "POSITION_CLOSED",
+        f"{direction} closed: {reason}",
+        net_pnl=net_pnl,
+        equity=state["equity"],
+    )
+
     return trade
 
 
-def process_position_candles(state, candles, funding_rate):
+# ============================================================
+# CANDLE-BASED POSITION MANAGEMENT
+# ============================================================
+
+def candle_exit_price(position, candle):
     """
-    Process each unprocessed, fully closed 15m candle in order.
-    When a candle touches both stop and target, stop is assumed to occur first.
+    Conservative OHLC rule:
+    - If stop and target are both touched in one candle, stop wins.
+    - Stops and targets execute at their levels, then slippage is applied
+      by close_position.
     """
+    direction = position["direction"]
+    stop = safe_float(position.get("stop_price"))
+    target = safe_float(position.get("target_price"))
+
+    if direction == "LONG":
+        stop_hit = candle["l"] <= stop
+        target_hit = target > 0 and candle["h"] >= target
+
+        if stop_hit:
+            return stop, "STOP_LOSS"
+
+        if target_hit:
+            return target, "TAKE_PROFIT"
+
+    else:
+        stop_hit = candle["h"] >= stop
+        target_hit = target > 0 and candle["l"] <= target
+
+        if stop_hit:
+            return stop, "STOP_LOSS"
+
+        if target_hit:
+            return target, "TAKE_PROFIT"
+
+    return None, None
+
+
+def process_position_candles(state, candles, mark_price):
     position = state.get("position")
+
     if not position:
-        return []
+        return
 
-    processed_trades = []
-    opened_candle_ts = safe_int(position.get("opened_candle_ts"))
-    last_checked = safe_int(
-        position.get("last_checked_candle_ts"), opened_candle_ts
-    )
+    position["last_mark_price"] = mark_price
 
-    pending = [
-        candle for candle in candles
-        if candle["t"] > max(opened_candle_ts, last_checked)
-    ]
+    cursor = position.get("last_checked_candle_ts")
+
+    if cursor is None:
+        # Safe migration: do not replay candles whose relationship to this
+        # old position is unknown. Start from the latest fully closed candle.
+        position["last_checked_candle_ts"] = candles[-1]["t"]
+        state["last_checked_candle_ts"] = candles[-1]["t"]
+
+        add_event(
+            state,
+            "LEGACY_POSITION_CURSOR_INITIALIZED",
+            "Initialized candle cursor for legacy position; prior candles were not replayed",
+            candle_ts=candles[-1]["t"],
+        )
+        return
+
+    cursor = int(safe_float(cursor, 0))
+    pending = [c for c in candles if c["t"] > cursor]
+
+    if not pending:
+        # Max holding time must be checked even if no new candle is pending.
+        try:
+            opened_ts = int(
+                datetime.fromisoformat(
+                    str(position["opened_at"]).replace("Z", "+00:00")
+                ).timestamp() * 1000
+            )
+        except Exception:
+            opened_ts = timestamp_ms()
+
+        if timestamp_ms() - opened_ts >= MAX_HOLD_SECONDS:
+            close_position(
+                state, position, mark_price, "MAX_HOLD_TIME"
+            )
+        return
 
     for candle in pending:
+        # Refresh the reference because close_position clears state position.
         position = state.get("position")
+
         if not position:
             break
 
-        candle_ts = candle["T"] / 1000.0
-        sign = safe_float(position.get("sign"), 1.0)
-        stop_price = safe_float(position.get("stop_price"))
-        target_price = safe_float(position.get("target_price"))
-        high = candle["h"]
-        low = candle["l"]
+        position["last_mark_price"] = candle["c"]
 
-        stop_hit = False
-        target_hit = False
+        exit_price, reason = candle_exit_price(position, candle)
 
-        if sign > 0:
-            stop_hit = stop_price > 0 and low <= stop_price
-            target_hit = target_price > 0 and high >= target_price
-        else:
-            stop_hit = stop_price > 0 and high >= stop_price
-            target_hit = target_price > 0 and low <= target_price
-
-        # Conservative assumption if both were reached inside one candle.
-        if stop_hit:
-            charge_funding_until(state, funding_rate, candle_ts)
-            reason = (
-                "TRAIL_STOP"
-                if position.get("trailing_active")
-                else "STOP_LOSS"
+        if exit_price is not None:
+            close_position(
+                state,
+                position,
+                exit_price,
+                reason,
+                candle_ts=candle["t"],
             )
-            trade = close_position(
-                state, stop_price, reason, close_ts=candle_ts
-            )
-            if trade:
-                processed_trades.append(trade)
+            state["last_checked_candle_ts"] = candle["t"]
             break
 
-        if target_hit:
-            charge_funding_until(state, funding_rate, candle_ts)
-            trade = close_position(
-                state, target_price, "TAKE_PROFIT", close_ts=candle_ts
-            )
-            if trade:
-                processed_trades.append(trade)
-            break
-
-        # Only update the trailing stop AFTER checking this candle's range.
-        entry = safe_float(position.get("entry_price"))
+        direction = position["direction"]
+        entry = safe_float(position["entry_price"])
         risk_distance = safe_float(position.get("risk_distance"))
 
-        if risk_distance > 0:
-            favorable_move = (candle["c"] - entry) * sign
-            if favorable_move >= 1.5 * risk_distance:
-                candidate_stop = (
-                    candle["c"] - 1.35 * risk_distance
-                    if sign > 0
-                    else candle["c"] + 1.35 * risk_distance
-                )
+        if risk_distance <= 0:
+            risk_distance = abs(
+                entry - safe_float(position.get("initial_stop_price"), entry)
+            )
 
-                old_stop = safe_float(position.get("stop_price"))
-                if sign > 0:
-                    new_stop = max(old_stop, candidate_stop)
-                else:
-                    new_stop = (
-                        min(old_stop, candidate_stop)
-                        if old_stop > 0 else candidate_stop
+        current_atr = safe_float(position.get("entry_atr"))
+
+        if current_atr <= 0:
+            current_atr = atr(candles, 14) or 0.0
+
+        if risk_distance > 0 and current_atr > 0:
+            favorable = (
+                candle["h"] - entry
+                if direction == "LONG"
+                else entry - candle["l"]
+            )
+
+            if favorable >= TRAIL_START_R * risk_distance:
+                if not position.get("trailing_active"):
+                    position["trailing_active"] = True
+                    add_event(
+                        state,
+                        "TRAILING_ACTIVATED",
+                        "Trailing stop activated",
                     )
 
-                position["stop_price"] = new_stop
-                position["trailing_active"] = True
+                if direction == "LONG":
+                    candidate = candle["c"] - (
+                        current_atr * TRAIL_ATR_MULTIPLIER
+                    )
+                    position["stop_price"] = max(
+                        safe_float(position["stop_price"]), candidate
+                    )
+                else:
+                    candidate = candle["c"] + (
+                        current_atr * TRAIL_ATR_MULTIPLIER
+                    )
+                    position["stop_price"] = min(
+                        safe_float(position["stop_price"]), candidate
+                    )
 
-        position["last_checked_candle_ts"] = candle["t"]
-
-        # Time stop based on actual elapsed wall-clock time.
-        if now_ts() - safe_float(position.get("opened_ts")) >= MAX_HOLD_SECONDS:
-            charge_funding_until(state, funding_rate, candle_ts)
-            trade = close_position(
-                state, candle["c"], "MAX_HOLD", close_ts=candle_ts
+        try:
+            opened_ts = int(
+                datetime.fromisoformat(
+                    str(position["opened_at"]).replace("Z", "+00:00")
+                ).timestamp() * 1000
             )
-            if trade:
-                processed_trades.append(trade)
+        except Exception:
+            opened_ts = timestamp_ms()
+
+        if candle["T"] - opened_ts >= MAX_HOLD_SECONDS:
+            close_position(
+                state,
+                position,
+                candle["c"],
+                "MAX_HOLD_TIME",
+                candle_ts=candle["t"],
+            )
+            state["last_checked_candle_ts"] = candle["t"]
             break
 
-    return processed_trades
+        position["last_checked_candle_ts"] = candle["t"]
+        state["last_checked_candle_ts"] = candle["t"]
+
+    # Keep top-level cursor current even after a fully processed batch.
+    if state.get("position") is not None and pending:
+        state["last_checked_candle_ts"] = pending[-1]["t"]
+        state["position"]["last_checked_candle_ts"] = pending[-1]["t"]
 
 
 # ============================================================
-# SIGNAL / RISK MANAGEMENT
+# SIGNAL ENGINE
 # ============================================================
 
-def calc_scores(market, funding_rate):
+def build_signal(c15, c1h, c4h, funding_rate):
+    a15 = analyze_timeframe(c15)
+    a1h = analyze_timeframe(c1h)
+    a4h = analyze_timeframe(c4h)
+
     long_score = 0
     short_score = 0
     reasons = []
 
-    for timeframe in ("15m", "1h", "4h"):
-        trend = market[timeframe]["trend"]
-        if trend == "UP":
-            long_score += 2
-        elif trend == "DOWN":
-            short_score += 2
+    # Higher timeframe direction.
+    if a4h["trend"] == "UP":
+        long_score += 2
+        reasons.append("4h uptrend")
+    elif a4h["trend"] == "DOWN":
+        short_score += 2
+        reasons.append("4h downtrend")
 
-    fifteen = market["15m"]
-    rsi_value = fifteen["rsi"]
-    hist = fifteen["macd_hist"]
-    momentum = fifteen["momentum_pct"]
-    volume_ratio = fifteen["volume_ratio"]
+    if a1h["trend"] == "UP":
+        long_score += 2
+        reasons.append("1h uptrend")
+    elif a1h["trend"] == "DOWN":
+        short_score += 2
+        reasons.append("1h downtrend")
 
-    if hist > 0:
+    # 15m trend and momentum.
+    if a15["trend"] == "UP":
         long_score += 1
-    elif hist < 0:
+    elif a15["trend"] == "DOWN":
         short_score += 1
 
-    if momentum > 0:
+    if a15["rsi"] >= 52:
         long_score += 1
-    elif momentum < 0:
+    elif a15["rsi"] <= 48:
         short_score += 1
 
-    if 50 <= rsi_value <= 68:
-        long_score += 1
-    if 32 <= rsi_value <= 50:
-        short_score += 1
-
-    if volume_ratio >= 1.2:
-        if momentum > 0:
+    if a15["macd_signal"] is not None:
+        if a15["macd"] > a15["macd_signal"]:
             long_score += 1
-        elif momentum < 0:
+        elif a15["macd"] < a15["macd_signal"]:
             short_score += 1
 
-    # Funding is a small contrarian input, not a standalone trade signal.
-    if funding_rate >= 0.0003:
+    if a15["adx"] >= 20:
+        if a15["trend"] == "UP":
+            long_score += 1
+        elif a15["trend"] == "DOWN":
+            short_score += 1
+
+    # Avoid chasing very stretched short-term momentum.
+    if a15["rsi"] >= 75:
+        long_score -= 2
+        reasons.append("15m RSI overbought")
+    if a15["rsi"] <= 25:
+        short_score -= 2
+        reasons.append("15m RSI oversold")
+
+    # Funding is only a small modifier, never a standalone entry signal.
+    funding_pct = funding_rate * 100.0
+
+    if funding_pct > 0.03:
         short_score += 1
-    elif funding_rate <= -0.0003:
+        reasons.append("positive funding")
+    elif funding_pct < -0.03:
         long_score += 1
+        reasons.append("negative funding")
 
-    direction = "WAIT"
-    if long_score >= 5 and long_score >= short_score + 2:
+    if (
+        long_score >= MIN_SIGNAL_SCORE
+        and long_score >= short_score + 2
+    ):
         direction = "LONG"
-    elif short_score >= 5 and short_score >= long_score + 2:
+        score = long_score
+    elif (
+        short_score >= MIN_SIGNAL_SCORE
+        and short_score >= long_score + 2
+    ):
         direction = "SHORT"
-
-    adx_value = fifteen["adx"]
-    runner_mode = (
-        market["1h"]["trend"] == market["4h"]["trend"]
-        and market["1h"]["trend"] in ("UP", "DOWN")
-        and adx_value >= 22
-    )
-
-    reasons.append(
-        f"15m {fifteen['trend']} RSI {rsi_value:.1f}; "
-        f"ADX {adx_value:.1f}; "
-        f"1h {market['1h']['trend']}, 4h {market['4h']['trend']}"
-    )
+        score = short_score
+    else:
+        direction = "WAIT"
+        score = max(long_score, short_score)
 
     return {
         "direction": direction,
-        "score": max(long_score, short_score),
-        "long_score": long_score,
-        "short_score": short_score,
-        "reason": "; ".join(reasons),
-        "runner_mode": runner_mode,
+        "score": int(score),
+        "long_score": int(long_score),
+        "short_score": int(short_score),
+        "reasons": reasons,
+        "timeframes": {
+            "15m": a15,
+            "1h": a1h,
+            "4h": a4h,
+        },
+        "rsi": a15["rsi"],
+        "atr": a15["atr"],
+        "adx": a15["adx"],
+        "ema20": a15["ema20"],
+        "ema50": a15["ema50"],
+        "macd": a15["macd"],
+        "macd_signal": a15["macd_signal"],
+        "trend_15m": a15["trend"],
+        "trend_1h": a1h["trend"],
+        "trend_4h": a4h["trend"],
     }
 
 
-def open_position(state, direction, market, latest_candle):
-    price = safe_float(market["15m"]["price"])
-    atr_value = safe_float(market["15m"]["atr"])
+# ============================================================
+# OPEN POSITION
+# ============================================================
 
-    if price <= 0 or atr_value <= 0:
+def open_position(state, direction, price, atr_value, signal):
+    if state.get("position") is not None:
         return False
 
-    sign = sign_for_direction(direction)
-    marked = marked_equity(state, price)
-    if marked <= 0:
+    if direction not in ("LONG", "SHORT"):
         return False
 
-    # Stop distance is bounded to avoid absurd ATR-driven stop sizes.
-    risk_distance = min(
-        max(atr_value * 1.6, price * 0.0015),
-        price * 0.012,
+    equity = safe_float(state.get("equity"))
+
+    if equity <= 0 or atr_value <= 0 or price <= 0:
+        return False
+
+    if state.get("daily_loss_locked"):
+        add_event(
+            state,
+            "ENTRY_BLOCKED",
+            "Daily loss lock is active",
+        )
+        return False
+
+    if state.get("drawdown_locked"):
+        add_event(
+            state,
+            "ENTRY_BLOCKED",
+            "Maximum drawdown lock is active",
+        )
+        return False
+
+    if int(state.get("consecutive_losses", 0)) >= MAX_CONSECUTIVE_LOSSES:
+        add_event(
+            state,
+            "ENTRY_BLOCKED",
+            "Maximum consecutive losses reached",
+        )
+        return False
+
+    last_entry = int(safe_float(state.get("last_entry_ts"), 0))
+    last_close = int(safe_float(state.get("last_close_ts"), 0))
+    last_activity = max(last_entry, last_close)
+
+    if timestamp_ms() - last_activity < COOLDOWN_SECONDS:
+        add_event(
+            state,
+            "ENTRY_BLOCKED",
+            "Cooldown period is active",
+        )
+        return False
+
+    risk_distance = atr_value * ATR_STOP_MULTIPLIER
+
+    if risk_distance <= 0:
+        return False
+
+    if direction == "LONG":
+        entry_price = price * (1.0 + SLIPPAGE)
+        stop_price = entry_price - risk_distance
+        target_price = (
+            0.0 if RUNNER_MODE
+            else entry_price + atr_value * ATR_TARGET_MULTIPLIER
+        )
+    else:
+        entry_price = price * (1.0 - SLIPPAGE)
+        stop_price = entry_price + risk_distance
+        target_price = (
+            0.0 if RUNNER_MODE
+            else entry_price - atr_value * ATR_TARGET_MULTIPLIER
+        )
+
+    if stop_price <= 0:
+        return False
+
+    # Estimate the round-trip cost in risk sizing.
+    risk_budget = equity * RISK_PER_TRADE
+    risk_per_btc = (
+        risk_distance
+        + entry_price * TAKER_FEE
+        + entry_price * TAKER_FEE
+        + entry_price * SLIPPAGE
     )
 
-    risk_cash = marked * RISK_PER_TRADE
-
-    # Approximate per-unit loss at stop, including fees and adverse slippage.
-    estimated_round_trip_cost_per_unit = (
-        price * (2.0 * FEE_RATE + 2.0 * SLIPPAGE_RATE)
-    )
-    risk_per_unit = risk_distance + estimated_round_trip_cost_per_unit
-
-    if risk_per_unit <= 0:
+    if risk_per_btc <= 0:
         return False
 
-    qty_by_risk = risk_cash / risk_per_unit
-    margin_cap = marked * MAX_MARGIN_FRACTION
-    qty_by_margin = margin_cap * LEVERAGE / price
+    qty_by_risk = risk_budget / risk_per_btc
+
+    max_margin = equity * MAX_MARGIN_FRACTION
+    max_notional = max_margin * LEVERAGE
+    qty_by_margin = max_notional / entry_price
+
     quantity = min(qty_by_risk, qty_by_margin)
 
-    if quantity <= 0 or not math.isfinite(quantity):
+    if not math.isfinite(quantity) or quantity <= 0:
         return False
 
-    # Adverse entry slippage.
-    entry_fill = price * (1.0 + SLIPPAGE_RATE * sign)
-    notional = entry_fill * quantity
+    notional = quantity * entry_price
     margin_used = notional / LEVERAGE
+    entry_fee = notional * TAKER_FEE
 
-    if margin_used > margin_cap * 1.000001:
+    if margin_used > max_margin + 1e-9:
         return False
 
-    entry_fee = notional * FEE_RATE
-    if safe_float(state.get("equity")) <= entry_fee:
+    if entry_fee >= equity:
         return False
 
-    # Entry fee is deducted immediately from account equity.
-    state["equity"] = safe_float(state["equity"]) - entry_fee
+    # Entry fee is deducted immediately. The open-position equity is
+    # cash equity; unrealized PnL is displayed separately.
+    state["equity"] = equity - entry_fee
 
-    runner_mode = bool(market["signal"].get("runner_mode"))
-    stop_price = (
-        entry_fill - risk_distance
-        if sign > 0 else entry_fill + risk_distance
-    )
-    target_price = 0.0 if runner_mode else (
-        entry_fill + 2.4 * risk_distance
-        if sign > 0 else entry_fill - 2.4 * risk_distance
-    )
-
-    current_ts = now_ts()
-
-    state["position"] = {
+    position = {
         "direction": direction,
-        "sign": sign,
-        "entry_price": entry_fill,
-        "reference_entry_price": price,
+        "side": direction,
+        "entry_price": entry_price,
         "quantity": quantity,
         "leverage": LEVERAGE,
         "margin_used": margin_used,
         "notional": notional,
+        "stop_price": stop_price,
+        "initial_stop_price": stop_price,
+        "target_price": target_price,
+        "risk_distance": abs(entry_price - stop_price),
+        "entry_atr": atr_value,
         "entry_fee": entry_fee,
         "funding_paid": 0.0,
-        "opened_ts": current_ts,
-        "opened_at": iso_time(current_ts),
-        "opened_candle_ts": safe_int(latest_candle["t"]),
-        "last_checked_candle_ts": safe_int(latest_candle["t"]),
-        "last_funding_ts": current_ts,
-        "risk_distance": risk_distance,
-        "stop_price": stop_price,
-        "target_price": target_price,
+        "last_funding_ts": timestamp_ms(),
+        "opened_at": iso_now(),
+        "opened_ts": timestamp_ms(),
+        "last_mark_price": price,
         "trailing_active": False,
-        "runner_mode": runner_mode,
-        "entry_signal_score": safe_int(
-            market["signal"].get("score")
-        ),
+        "signal_score": signal["score"],
+        "entry_signal": copy.deepcopy(signal),
+        "last_checked_candle_ts": None,
     }
+
+    state["position"] = position
+    state["last_entry_ts"] = timestamp_ms()
+
+    add_event(
+        state,
+        "POSITION_OPENED",
+        f"{direction} paper position opened",
+        entry_price=entry_price,
+        quantity=quantity,
+        margin_used=margin_used,
+        notional=notional,
+        entry_fee=entry_fee,
+        signal_score=signal["score"],
+    )
 
     return True
 
 
-def update_drawdown(state, current_equity):
+# ============================================================
+# PERFORMANCE METRICS
+# ============================================================
+
+def trade_net_pnl(trade):
+    if "net_pnl" in trade:
+        return safe_float(trade.get("net_pnl"))
+
+    gross = safe_float(trade.get("gross_pnl"))
+    fees = safe_float(trade.get("fees"))
+    if fees == 0:
+        fees = (
+            safe_float(trade.get("entry_fee"))
+            + safe_float(trade.get("exit_fee"))
+        )
+
+    funding = safe_float(trade.get("funding_paid"))
+
+    return gross - fees + funding
+
+
+def calculate_metrics(state):
+    trades = [
+        t for t in state.get("trades", [])
+        if isinstance(t, dict)
+    ]
+
+    net_values = [trade_net_pnl(t) for t in trades]
+    wins = [x for x in net_values if x > 0]
+    losses = [x for x in net_values if x < 0]
+
+    closed = len(net_values)
+    net_total = sum(net_values)
+
+    win_rate = (len(wins) / closed * 100.0) if closed else 0.0
+    net_profit = sum(wins)
+    net_loss_abs = abs(sum(losses))
+
+    if net_loss_abs > 0:
+        profit_factor = net_profit / net_loss_abs
+    elif net_profit > 0:
+        profit_factor = None
+    else:
+        profit_factor = 0.0
+
+    gross_values = [
+        safe_float(t.get("gross_pnl"))
+        for t in trades
+    ]
+    gross_profit = sum(x for x in gross_values if x > 0)
+    gross_loss_abs = abs(sum(x for x in gross_values if x < 0))
+
+    if gross_loss_abs > 0:
+        gross_profit_factor = gross_profit / gross_loss_abs
+    elif gross_profit > 0:
+        gross_profit_factor = None
+    else:
+        gross_profit_factor = 0.0
+
+    fees_total = sum(
+        safe_float(t.get("fees"))
+        if "fees" in t else (
+            safe_float(t.get("entry_fee"))
+            + safe_float(t.get("exit_fee"))
+        )
+        for t in trades
+    )
+
+    funding_closed = sum(
+        safe_float(t.get("funding_paid"))
+        for t in trades
+    )
+
+    initial = safe_float(state.get("initial_equity"), INITIAL_EQUITY)
+    equity = safe_float(state.get("equity"))
+
+    return {
+        "closed_trades": closed,
+        "wins": len(wins),
+        "losses": len(losses),
+        "win_rate": win_rate,
+        "net_profit": net_total,
+        "gross_profit": gross_profit,
+        "gross_loss": gross_loss_abs,
+        "profit_factor": profit_factor,
+        "gross_profit_factor": gross_profit_factor,
+        "average_net_pnl": net_total / closed if closed else 0.0,
+        "total_fees": fees_total,
+        "closed_trade_funding": funding_closed,
+        "account_equity_change": equity - initial,
+        "consecutive_losses": int(state.get("consecutive_losses", 0)),
+    }
+
+
+# ============================================================
+# DASHBOARD DATA
+# ============================================================
+
+def make_dashboard(
+    state,
+    price,
+    funding_rate,
+    signal,
+    risk_status,
+    market_data_error=None,
+):
+    position = state.get("position")
+    equity = safe_float(state.get("equity"))
+    initial = safe_float(state.get("initial_equity"), INITIAL_EQUITY)
+
+    unrealized = 0.0
+    marked_equity = equity
+
+    position_data = None
+
+    if position:
+        position["last_mark_price"] = price
+        unrealized = unrealized_pnl(position, price)
+        marked_equity = equity + unrealized
+
+        position_data = {
+            "direction": position["direction"],
+            "side": position["direction"],
+            "entry_price": position["entry_price"],
+            "quantity": position["quantity"],
+            "leverage": position.get("leverage", LEVERAGE),
+            "margin_used": position.get("margin_used", 0.0),
+            "notional": position.get("notional", 0.0),
+            "stop_price": position.get("stop_price"),
+            "target_price": position.get("target_price"),
+            "entry_fee": position.get("entry_fee", 0.0),
+            "funding_paid": position.get("funding_paid", 0.0),
+            "opened_at": position.get("opened_at"),
+            "trailing_active": bool(position.get("trailing_active")),
+            "unrealized_pnl": unrealized,
+        }
+
     peak = max(
-        safe_float(state.get("peak_equity"), current_equity),
-        current_equity,
+        safe_float(state.get("peak_equity"), initial),
+        marked_equity,
     )
     state["peak_equity"] = peak
 
-    if peak > 0:
-        current_dd = max(0.0, (peak - current_equity) / peak * 100.0)
-    else:
-        current_dd = 0.0
-
-    historical_dd = max(
-        safe_float(state.get("max_drawdown_pct")),
-        current_dd,
-    )
-    state["max_drawdown_pct"] = historical_dd
-
-    return current_dd, historical_dd
-
-
-def update_daily_baseline(state, current_equity):
-    day_key = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-
-    if state.get("day_key") != day_key:
-        state["day_key"] = day_key
-        state["day_start_equity"] = current_equity
-
-    day_start = safe_float(
-        state.get("day_start_equity"), current_equity
-    )
-    if day_start > 0:
-        daily_loss_pct = max(
-            0.0,
-            (day_start - current_equity) / day_start,
-        )
-    else:
-        daily_loss_pct = 0.0
-
-    return daily_loss_pct
-
-
-def calculate_metrics(state, current_marked_equity):
-    trades = state.get("trades", [])
-
-    net_values = [
-        safe_float(trade.get("net_pnl"))
-        for trade in trades
-        if isinstance(trade, dict) and "net_pnl" in trade
-    ]
-
-    wins = [value for value in net_values if value > 0]
-    losses = [value for value in net_values if value < 0]
-
-    # True gross trade PnL before fees/funding.
-    gross_values = [
-        safe_float(trade.get("gross_pnl"))
-        for trade in trades
-        if isinstance(trade, dict) and "gross_pnl" in trade
-    ]
-    gross_wins = [value for value in gross_values if value > 0]
-    gross_losses = [value for value in gross_values if value < 0]
-
-    total_closed_net = sum(net_values)
-    total_gross_profit = sum(gross_wins)
-    total_gross_loss = abs(sum(gross_losses))
-
-    profit_factor = (
-        total_gross_profit / total_gross_loss
-        if total_gross_loss > 0 else None
+    current_dd = (
+        max(0.0, (peak - marked_equity) / peak * 100.0)
+        if peak > 0 else 0.0
     )
 
-    initial = safe_float(state.get("initial_equity"), INITIAL_EQUITY)
-    account_net_pnl = current_marked_equity - initial
+    metrics = calculate_metrics(state)
 
-    return {
-        "trades": len(trades),
-        "closed_trades": len(trades),
-        "wins": len(wins),
-        "losses": len(losses),
-        "win_rate_pct": (
-            len(wins) / len(net_values) * 100.0
-            if net_values else 0.0
-        ),
-        "gross_profit": total_gross_profit,
-        "gross_loss": total_gross_loss,
-        "profit_factor": profit_factor,
-        "closed_trades_net_pnl": total_closed_net,
-        "net_pnl": account_net_pnl,
-        "account_net_pnl": account_net_pnl,
-        "return_pct": (
-            account_net_pnl / initial * 100.0 if initial else 0.0
-        ),
-        "current_drawdown_pct": safe_float(
-            state.get("current_drawdown_pct")
-        ),
-        "max_drawdown_pct": safe_float(
-            state.get("max_drawdown_pct")
-        ),
-        "consecutive_losses": safe_int(
-            state.get("consecutive_losses")
-        ),
-        "funding_total": safe_float(state.get("funding_total")),
-    }
-
-
-# ============================================================
-# DASHBOARD OUTPUT
-# ============================================================
-
-def build_payload(state, market, funding_rate, current_marked_equity,
-                  current_drawdown_pct, daily_loss_pct, events):
-    position = state.get("position")
-    initial = safe_float(state.get("initial_equity"), INITIAL_EQUITY)
-    account_equity = safe_float(state.get("equity"))
-
-    if position:
-        unrealized_pnl = mark_to_market(
-            position, market["15m"]["price"]
-        )
-        position_view = dict(position)
-        position_view["unrealized_pnl"] = unrealized_pnl
-    else:
-        unrealized_pnl = 0.0
-        position_view = None
-
-    metrics = calculate_metrics(state, current_marked_equity)
-
-    # Compatibility fields for existing dashboard code.
-    payload = {
+    data = {
         "build": BUILD,
-        "generated_at": iso_time(),
-        "paper_only": True,
-        "live_trading": False,
-        "wallet_connected": False,
-        "coin": COIN,
-        "price": market["15m"]["price"],
+        "generated_at": iso_now(),
+        "price": price,
         "funding_rate": funding_rate,
         "funding_rate_pct": funding_rate * 100.0,
         "initial_equity": initial,
-        "equity": account_equity,
-        "marked_equity": current_marked_equity,
-        "realized_pnl": account_equity - initial,
-        "unrealized_pnl": unrealized_pnl,
-        "net_pnl": current_marked_equity - initial,
-        "return_pct": (
-            (current_marked_equity - initial) / initial * 100.0
+        "equity": equity,
+        "marked_equity": marked_equity,
+        "realized_pnl": equity - initial,
+        "unrealized_pnl": unrealized,
+        "net_pnl": marked_equity - initial,
+        "net_pnl_pct": (
+            (marked_equity / initial - 1.0) * 100.0
             if initial else 0.0
         ),
-        "leverage": LEVERAGE,
-        "position": position_view,
-        "signal": market["signal"],
-        "market": market,
-        "metrics": metrics,
-        "trades": state.get("trades", [])[-MAX_TRADES_STORED:],
-        "paper_trades": state.get("trades", [])[-MAX_TRADES_STORED:],
-        "equity_history": state.get("equity_history", [])[-MAX_HISTORY_STORED:],
-        "funding_total": safe_float(state.get("funding_total")),
-        "current_drawdown_pct": current_drawdown_pct,
-        "max_drawdown_pct": safe_float(state.get("max_drawdown_pct")),
-        "daily_loss_pct": daily_loss_pct * 100.0,
-        "consecutive_losses": safe_int(state.get("consecutive_losses")),
-        "events": events[-100:],
-        "risk": {
-            "risk_per_trade_pct": RISK_PER_TRADE * 100.0,
-            "max_margin_fraction_pct": MAX_MARGIN_FRACTION * 100.0,
-            "max_daily_loss_pct": MAX_DAILY_LOSS * 100.0,
-            "max_drawdown_limit_pct": MAX_DRAWDOWN * 100.0,
-            "max_consecutive_losses": MAX_CONSECUTIVE_LOSSES,
-            "max_hold_hours": MAX_HOLD_SECONDS / 3600.0,
+        "position": position_data,
+        "has_position": position is not None,
+        "signal": signal or {
+            "direction": "WAIT",
+            "score": 0,
+            "long_score": 0,
+            "short_score": 0,
         },
-        "notes": [
-            "Paper trading only; no live orders or wallet connection.",
-            "Funding uses the latest observed rate as an approximation.",
-            "When one candle touches both stop and target, stop is assumed first.",
-            "Historical maximum drawdown is tracked from V11 onward; older history may be incomplete.",
-        ],
+        "risk": {
+            **risk_status,
+            "risk_per_trade_pct": RISK_PER_TRADE * 100.0,
+            "max_margin_pct": MAX_MARGIN_FRACTION * 100.0,
+            "max_daily_loss_pct": MAX_DAILY_LOSS_PCT * 100.0,
+            "max_drawdown_limit_pct": MAX_DRAWDOWN_PCT * 100.0,
+            "max_consecutive_losses": MAX_CONSECUTIVE_LOSSES,
+            "cooldown_seconds": COOLDOWN_SECONDS,
+            "leverage": LEVERAGE,
+        },
+        "current_drawdown_pct": current_dd,
+        "max_drawdown_pct": safe_float(
+            state.get("max_drawdown_pct"), current_dd
+        ),
+        "funding_total": safe_float(state.get("funding_total")),
+        "metrics": metrics,
+        "closed_trades": len(state.get("trades", [])),
+        "trades": state.get("trades", [])[-200:],
+        "equity_history": state.get("equity_history", [])[-500:],
+        "events": state.get("events", [])[-100:],
+        "consecutive_losses": int(state.get("consecutive_losses", 0)),
+        "daily_loss_locked": bool(state.get("daily_loss_locked")),
+        "drawdown_locked": bool(state.get("drawdown_locked")),
+        "paper_only": True,
+        "live_trading_enabled": False,
+        "market_data_ok": market_data_error is None,
+        "market_data_error": market_data_error,
     }
 
-    return payload
-
-
-def append_history(state, price, marked, event):
-    history = state.setdefault("equity_history", [])
-    history.append({
-        "time": iso_time(),
-        "timestamp": int(now_ts()),
-        "price": safe_float(price),
-        "equity": safe_float(state.get("equity")),
-        "marked_equity": safe_float(marked),
-        "event": str(event),
-    })
-    state["equity_history"] = history[-MAX_HISTORY_STORED:]
+    return data
 
 
 # ============================================================
-# MAIN
+# MAIN ENGINE
 # ============================================================
 
 def main():
-    started = now_ts()
     state = load_state()
-    events = []
 
-    candles_15m = fetch_candles("15m")
-    candles_1h = fetch_candles("1h")
-    candles_4h = fetch_candles("4h")
-    funding_rate = fetch_funding_rate()
+    # Save migrated state before requesting market data, so that
+    # schema normalization is not lost if the public API is down.
+    atomic_write_json(STATE_FILE, state)
 
-    market = {
-        "15m": analyze(candles_15m),
-        "1h": analyze(candles_1h),
-        "4h": analyze(candles_4h),
-    }
+    try:
+        price = fetch_market_price()
+        funding_rate = fetch_funding_rate()
 
-    market["signal"] = calc_scores(market, funding_rate)
-    price = market["15m"]["price"]
-    latest_candle = candles_15m[-1]
-    now = now_ts()
+        candles15 = fetch_candles("15m", 250)
+        candles1h = fetch_candles("1h", 250)
+        candles4h = fetch_candles("4h", 250)
 
-    # Process all unprocessed closed candles for an existing position.
-    old_position = state.get("position")
-    if old_position:
-        # Migration safety: if no candle cursor exists in a legacy position,
-        # begin at the latest candle rather than replaying unknown old candles.
-        if not safe_int(old_position.get("last_checked_candle_ts")):
-            old_position["last_checked_candle_ts"] = safe_int(
-                latest_candle["t"]
-            )
-            old_position["opened_candle_ts"] = safe_int(
-                old_position.get("opened_candle_ts"),
-                safe_int(latest_candle["t"]),
-            )
-            events.append("LEGACY_POSITION_CURSOR_INITIALIZED")
-
-        closed = process_position_candles(
-            state, candles_15m, funding_rate
+        signal = build_signal(
+            candles15,
+            candles1h,
+            candles4h,
+            funding_rate,
         )
-        for trade in closed:
-            events.append(f"CLOSED_{trade['reason']}")
 
-    # If position remains open, estimate funding through current run time.
-    if state.get("position"):
-        funding_payment = charge_funding_until(
-            state, funding_rate, now
+        state["api_error_count"] = 0
+
+    except Exception as exc:
+        state["api_error_count"] = (
+            int(state.get("api_error_count", 0)) + 1
         )
-        if funding_payment:
-            events.append("FUNDING_ESTIMATE_APPLIED")
 
-    current_marked = marked_equity(state, price)
-    current_drawdown_pct, historical_drawdown_pct = update_drawdown(
-        state, current_marked
-    )
-    daily_loss_pct = update_daily_baseline(state, current_marked)
+        add_event(
+            state,
+            "MARKET_DATA_ERROR",
+            str(exc),
+        )
 
-    # Close on opposite signal only after the position's candle processing.
+        # Do not make a trading decision with stale or incomplete data.
+        # Preserve the existing position and history.
+        atomic_write_json(STATE_FILE, state)
+
+        old_data = read_json(DATA_FILE) if DATA_FILE.exists() else {}
+
+        if not isinstance(old_data, dict):
+            old_data = {}
+
+        old_data.update({
+            "build": BUILD,
+            "generated_at": iso_now(),
+            "market_data_ok": False,
+            "market_data_error": str(exc),
+            "paper_only": True,
+            "live_trading_enabled": False,
+            "events": state.get("events", [])[-100:],
+        })
+
+        atomic_write_json(DATA_FILE, old_data)
+        print(f"MARKET DATA ERROR: {exc}")
+        return
+
+    # Charge only the estimated funding since the position's cursor.
+    if state.get("position") is not None:
+        charge_funding_until(
+            state, state["position"], funding_rate
+        )
+
+    # Process closed candles before considering a new entry.
+    process_position_candles(state, candles15, price)
+
     position = state.get("position")
-    signal_direction = market["signal"]["direction"]
 
-    if position:
-        if (
-            signal_direction in ("LONG", "SHORT")
-            and signal_direction != position.get("direction")
-        ):
-            trade = close_position(
-                state, price, "OPPOSITE_SIGNAL", close_ts=now
+    if position is not None:
+        position["last_mark_price"] = price
+
+    marked_equity = safe_float(state.get("equity"))
+
+    if position is not None:
+        marked_equity += unrealized_pnl(position, price)
+
+    risk_status = update_daily_baseline(state, marked_equity)
+
+    # Update all-time drawdown tracking.
+    previous_peak = safe_float(
+        state.get("peak_equity"), state["initial_equity"]
+    )
+    state["peak_equity"] = max(previous_peak, marked_equity)
+
+    peak = max(state["peak_equity"], 0.000001)
+    current_dd = max(
+        0.0, (peak - marked_equity) / peak * 100.0
+    )
+
+    state["max_drawdown_pct"] = max(
+        safe_float(state.get("max_drawdown_pct")),
+        current_dd,
+    )
+
+    # New entries are only considered when flat.
+    # Signal is evaluated on fully closed candles.
+    if state.get("position") is None:
+        if signal["direction"] in ("LONG", "SHORT"):
+            opened = open_position(
+                state,
+                signal["direction"],
+                price,
+                signal["atr"],
+                signal,
             )
-            if trade:
-                events.append("CLOSED_OPPOSITE_SIGNAL")
 
-    current_marked = marked_equity(state, price)
-    current_drawdown_pct, historical_drawdown_pct = update_drawdown(
-        state, current_marked
+            if opened:
+                # A new position starts processing from the latest
+                # closed candle; do not replay candles before entry.
+                latest_ts = candles15[-1]["t"]
+                state["position"]["last_checked_candle_ts"] = latest_ts
+                state["last_checked_candle_ts"] = latest_ts
+
+    # Refresh account mark after potential entry or close.
+    position = state.get("position")
+    unrealized = 0.0
+
+    if position is not None:
+        position["last_mark_price"] = price
+        unrealized = unrealized_pnl(position, price)
+
+    marked_equity = safe_float(state.get("equity")) + unrealized
+
+    peak = max(
+        safe_float(state.get("peak_equity"), state["initial_equity"]),
+        marked_equity,
     )
-    daily_loss_pct = update_daily_baseline(state, current_marked)
+    state["peak_equity"] = peak
 
-    # Entry guards. Existing positions are still managed even if a guard trips.
-    if not state.get("position"):
-        entry_block_reason = None
-
-        if daily_loss_pct >= MAX_DAILY_LOSS:
-            entry_block_reason = "DAILY_LOSS_LIMIT"
-        elif current_drawdown_pct / 100.0 >= MAX_DRAWDOWN:
-            entry_block_reason = "DRAWDOWN_LIMIT"
-        elif safe_int(state.get("consecutive_losses")) >= MAX_CONSECUTIVE_LOSSES:
-            entry_block_reason = "CONSECUTIVE_LOSS_LIMIT"
-        elif now - safe_float(state.get("last_trade_ts")) < COOLDOWN_SECONDS:
-            entry_block_reason = "COOLDOWN"
-
-        if entry_block_reason:
-            events.append(f"ENTRY_BLOCKED_{entry_block_reason}")
-        elif signal_direction in ("LONG", "SHORT"):
-            if open_position(
-                state, signal_direction, market, latest_candle
-            ):
-                events.append(f"OPENED_{signal_direction}")
-
-    # Record the latest closed candle cursor for the next scheduled run.
-    state["last_processed_15m_ts"] = safe_int(latest_candle["t"])
-
-    current_marked = marked_equity(state, price)
-    current_drawdown_pct, historical_drawdown_pct = update_drawdown(
-        state, current_marked
+    current_dd = (
+        max(0.0, (peak - marked_equity) / peak * 100.0)
+        if peak > 0 else 0.0
     )
-    daily_loss_pct = update_daily_baseline(state, current_marked)
+    state["max_drawdown_pct"] = max(
+        safe_float(state.get("max_drawdown_pct")),
+        current_dd,
+    )
 
-    append_history(
+    # Record one account snapshot per run.
+    state.setdefault("equity_history", []).append({
+        "timestamp": iso_now(),
+        "equity": safe_float(state.get("equity")),
+        "equity_usd": safe_float(state.get("equity")),
+        "marked_equity": marked_equity,
+        "price": price,
+        "unrealized_pnl": unrealized,
+        "net_pnl": marked_equity - safe_float(state["initial_equity"]),
+        "drawdown_pct": current_dd,
+    })
+
+    state["equity_history"] = (
+        state["equity_history"][-MAX_EQUITY_HISTORY:]
+    )
+
+    dashboard = make_dashboard(
         state,
         price,
-        current_marked,
-        events[-1] if events else "MARKET_UPDATE",
-    )
-
-    state["last_run_at"] = iso_time()
-    state["last_run_duration_seconds"] = max(0.0, now_ts() - started)
-    state["last_price"] = price
-    state["last_signal"] = market["signal"]["direction"]
-    state["last_signal_score"] = market["signal"]["score"]
-    state["current_drawdown_pct"] = current_drawdown_pct
-    state["max_drawdown_pct"] = historical_drawdown_pct
-    state["build"] = BUILD
-
-    payload = build_payload(
-        state,
-        market,
         funding_rate,
-        current_marked,
-        current_drawdown_pct,
-        daily_loss_pct,
-        events,
+        signal,
+        risk_status,
     )
 
-    # Persist state first, then publish the dashboard data.
-    json_write_atomic(STATE_FILE, state)
-    json_write_atomic(DATA_FILE, payload)
+    # State first, then dashboard. If the second write fails, the
+    # account state is still saved for the next run.
+    atomic_write_json(STATE_FILE, state)
+    atomic_write_json(DATA_FILE, dashboard)
 
-    print(json.dumps({
-        "build": BUILD,
-        "price": round(price, 4),
-        "leverage": LEVERAGE,
-        "signal": market["signal"]["direction"],
-        "signal_score": market["signal"]["score"],
-        "equity": round(safe_float(state["equity"]), 8),
-        "marked_equity": round(current_marked, 8),
-        "net_pnl": round(current_marked - INITIAL_EQUITY, 8),
-        "closed_trades": len(state.get("trades", [])),
-        "position": (
-            state["position"]["direction"]
-            if state.get("position") else None
-        ),
-        "current_drawdown_pct": round(current_drawdown_pct, 6),
-        "max_drawdown_pct": round(historical_drawdown_pct, 6),
-        "events": events,
-        "paper_only": True,
-    }, ensure_ascii=False))
+    print(f"BUILD: {BUILD}")
+    print(f"PRICE: {price:.2f}")
+    print(f"SIGNAL: {signal['direction']} / {signal['score']}")
+    print(f"EQUITY: {state['equity']:.6f}")
+    print(f"MARKED EQUITY: {dashboard['marked_equity']:.6f}")
+    print(f"UNREALIZED PNL: {dashboard['unrealized_pnl']:.6f}")
+    print(f"CLOSED TRADES: {dashboard['metrics']['closed_trades']}")
+    print(f"WIN RATE: {dashboard['metrics']['win_rate']:.2f}%")
+    print(f"DAILY LOSS LOCK: {state['daily_loss_locked']}")
+    print(f"DRAWDOWN LOCK: {state['drawdown_locked']}")
+    print("PAPER ONLY: True")
 
 
 if __name__ == "__main__":
