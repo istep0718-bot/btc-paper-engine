@@ -1,9 +1,35 @@
 {
   "build": "BTC_PAPER_V8_2026-10-22",
   "initial_equity": 100.0,
-  "equity": 99.93971825868287,
+  "equity": 100.49547229029855,
   "open_trade": null,
-  "trades": [],
+  "trades": [
+    {
+      "side": "SHORT",
+      "entry_price": 82204.5558,
+      "quantity": 0.0017254444106418038,
+      "leverage": 40.0,
+      "margin_used": 3.545984783360057,
+      "notional": 141.83939133440228,
+      "risk_distance": 289.78041652122414,
+      "stop_price": 81826.20356230365,
+      "target_price": 81509.08280034906,
+      "opened_timestamp": 1792656343.4441953,
+      "entry_time": "2026-10-22T08:05:43.444195+00:00",
+      "runner_mode": false,
+      "entry_fee": 0.0709197,
+      "funding_paid": 0.01241095,
+      "last_funding_timestamp": 1792681543.4441953,
+      "exit_price": 81842.56880301611,
+      "exit_time": "2026-10-22T15:29:38.977108+00:00",
+      "gross_pnl": 0.62458844,
+      "exit_fee": 0.0706074,
+      "fees": 0.1415271,
+      "net_pnl": 0.49547229,
+      "pnl": 0.49547229,
+      "reason": "STOP_OR_TRAIL"
+    }
+  ],
   "equity_history": [
     {
       "time": "2026-10-21T02:11:43.671398+00:00",
@@ -397,11 +423,20 @@
       "realized_equity": 99.93971826,
       "unrealized_pnl": 0.44447931,
       "price": 81906.0
+    },
+    {
+      "time": "2026-10-22T15:29:38.977108+00:00",
+      "timestamp": "2026-10-22T15:29:38.977108+00:00",
+      "equity": 100.49547229,
+      "equity_usd": 100.49547229,
+      "realized_equity": 100.49547229,
+      "unrealized_pnl": 0.0,
+      "price": 81435.0
     }
   ],
   "last_entry_candle": null,
-  "last_exit_timestamp": 0,
-  "consecutive_losses": 2,
+  "last_exit_timestamp": 1792682978.9771085,
+  "consecutive_losses": 0,
   "day_start": "2026-10-22",
   "day_start_equity": 100.0,
   "peak_equity": 100.78642713206193,
@@ -479,24 +514,8 @@
   "last_processed_candle": "1792649700000",
   "last_price": 82677.0,
   "last_funding_rate": 1.25e-05,
-  "position": {
-    "side": "SHORT",
-    "entry_price": 82204.5558,
-    "quantity": 0.0017254444106418038,
-    "leverage": 40.0,
-    "margin_used": 3.545984783360057,
-    "notional": 141.83939133440228,
-    "risk_distance": 289.78041652122414,
-    "stop_price": 82064.20356230365,
-    "target_price": 81509.08280034906,
-    "opened_timestamp": 1792656343.4441953,
-    "entry_time": "2026-10-22T08:05:43.444195+00:00",
-    "runner_mode": false,
-    "entry_fee": 0.07091969566720115,
-    "funding_paid": 0.010637954350080171,
-    "last_funding_timestamp": 1792677943.4441953
-  },
+  "position": null,
   "day": "2026-10-22",
   "funding_last_timestamp": 0.0,
-  "funding_total": 0.010637954350080171
+  "funding_total": 0.0124109467417602
 }
