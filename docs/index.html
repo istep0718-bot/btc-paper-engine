@@ -3,359 +3,163 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover">
-<meta name="theme-color" content="#fce8fb">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f9eaff">
 <title>萌え萌えキュン♡ BTC冒険記</title>
 
 <style>
-:root {
-  --pink: #ff55b5;
-  --purple: #8d55d8;
-  --blue: #3478ec;
-  --ink: #38266f;
-  --panel: rgba(255,255,255,.70);
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;width:100%;min-height:100%;background:#f8eaff}
+body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;color:#40266f;overflow-x:hidden}
+#dashboard{
+ position:relative;width:min(100%,864px);margin:0 auto;
+ aspect-ratio:864/1536;overflow:hidden;
+ background:#fceaff url("./6F57182A-FA99-4BC6-A546-EAF0793E5B02.png") top center/100% 100% no-repeat;
 }
-* { box-sizing: border-box; }
+.v{
+ position:absolute;z-index:3;display:flex;flex-direction:column;
+ justify-content:center;align-items:center;text-align:center;
+ min-width:0;overflow:hidden;line-height:1.12;
+ font-variant-numeric:tabular-nums;
+}
+.num{font-size:clamp(9px,2.25vw,18px);font-weight:850;white-space:nowrap;max-width:100%}
+.sub{font-size:clamp(6px,1.35vw,10px);font-weight:650;margin-top:2px;white-space:nowrap}
+.good{color:#e42c9c}.bad{color:#3476d8}.muted{color:#9582b1}
+canvas{display:block}
+#hpGraph,#xpGraph{
+ position:absolute;z-index:4;pointer-events:none;
+}
+#hpGraph{left:35.0%;top:23.1%;width:27.4%;height:1.45%}
+#xpGraph{left:58.7%;top:24.2%;width:37.2%;height:1.05%}
 
-html, body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
-  min-height: 100%;
-  background: #f9e8ff;
-  color: var(--ink);
-  font-family: -apple-system, BlinkMacSystemFont,
-    "Hiragino Kaku Gothic ProN", "Noto Sans JP", sans-serif;
-}
+/* 上段の数値欄：背景画像の見出しには重ねない */
+#price{left:24.0%;top:28.65%;width:13.8%;height:3.0%}
+#assets{left:40.0%;top:28.65%;width:13.5%;height:3.0%}
+#realized{left:53.8%;top:28.65%;width:12.4%;height:3.0%}
+#winrate{left:24.0%;top:36.0%;width:13.8%;height:2.6%}
+#pnl{left:40.0%;top:36.0%;width:13.5%;height:2.6%}
+#maxdd{left:53.8%;top:36.0%;width:12.4%;height:2.6%}
 
-body { overflow-x: hidden; }
+/* 資産グラフ */
+#equityChart{position:absolute;z-index:4;left:23.6%;top:44.45%;width:41.7%;height:12.5%}
+#recordCount{left:31.5%;top:58.0%;width:13%;height:1.6%}
+#latestEquity{left:47%;top:58.0%;width:15%;height:1.6%}
 
-#dashboard {
-  position: relative;
-  width: min(100%, 864px);
-  aspect-ratio: 864 / 1536;
-  margin: 0 auto;
-  overflow: hidden;
-  background-color: #fceaff;
-  background-image: url("./6F57182A-FA99-4BC6-A546-EAF0793E5B02.png");
-  background-position: top center;
-  background-size: 100% 100%;
-  background-repeat: no-repeat;
-}
+/* 戦闘予報 */
+#signal{left:68.0%;top:45.1%;width:9.8%;height:4.1%}
+#score{left:78.2%;top:45.1%;width:9.4%;height:4.1%}
+#rsi{left:88.0%;top:45.1%;width:8.0%;height:4.1%}
+#reason{left:68.0%;top:49.8%;width:28.5%;height:2.1%;font-size:clamp(6px,1.2vw,9px)}
 
-/* データだけを背景画像の上に重ねる */
-.overlay {
-  position: absolute;
-  z-index: 2;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-  overflow-wrap: anywhere;
-  line-height: 1.12;
-  font-variant-numeric: tabular-nums;
-  text-shadow: 0 1px 2px rgba(255,255,255,.95);
+/* フィボナッチ：背景にある％は追加しない */
+.fib-value{
+ position:absolute;z-index:4;left:72.4%;width:10.5%;height:1.55%;
+ display:flex;align-items:center;justify-content:center;
+ font-size:clamp(7px,1.7vw,13px);font-weight:800;
+ white-space:nowrap;overflow:hidden;
 }
+#fib0{top:58.15%}
+#fib236{top:59.8%}
+#fib382{top:61.4%}
+#fib50{top:63.0%}
+#fib618{top:64.65%}
+#fib786{top:66.25%}
+#fib100{top:67.85%}
 
-.value {
-  width: 100%;
-  font-size: clamp(9px, 2.5vw, 20px);
-  font-weight: 850;
-  color: #55249e;
-}
+/* 現在のポジション */
+#position{left:32.0%;top:65.0%;width:12.0%;height:2.0%}
+#openPnl{left:32.0%;top:69.2%;width:12.0%;height:2.0%}
 
-.sub {
-  width: 100%;
-  margin-top: 2px;
-  font-size: clamp(6px, 1.45vw, 11px);
-  color: #66528e;
-  font-weight: 650;
-}
+/* エンジン：ラベルは画像側に任せて値だけ表示 */
+#botStatus{left:56.0%;top:63.8%;width:8.8%;height:1.5%}
+#status15m{left:56.0%;top:65.55%;width:8.8%;height:1.5%}
+#status1h{left:56.0%;top:67.25%;width:8.8%;height:1.5%}
+#status4h{left:56.0%;top:68.95%;width:8.8%;height:1.5%}
 
-.good { color: #ed319e; }
-.bad { color: #3478d8; }
-.muted { color: #8e80aa; }
-.small { font-size: clamp(7px, 1.7vw, 13px); }
-.large { font-size: clamp(11px, 3vw, 23px); }
-.xlarge { font-size: clamp(13px, 3.7vw, 28px); }
-
-#price       { left:24%; top:28.4%; width:14%; height:2.5%; }
-#assets      { left:41.5%; top:28.4%; width:13%; height:2.5%; }
-#realized    { left:55.4%; top:28.4%; width:12.5%; height:2.5%; }
-#winrate     { left:24%; top:35.8%; width:14%; height:2.5%; }
-#pnl         { left:41.5%; top:35.8%; width:13%; height:2.5%; }
-#maxdd       { left:55.4%; top:35.8%; width:12.5%; height:2.5%; }
-
-/* 資産グラフ：見本のグラフ枠内に描画 */
-#chart {
-  position: absolute;
-  z-index: 3;
-  left: 24%;
-  top: 49.3%;
-  width: 38%;
-  height: 11.6%;
-  pointer-events: none;
+/* 取引履歴。表の見出しは背景画像に印刷済み */
+#tradeRows{
+ position:absolute;z-index:5;left:23.7%;top:80.1%;width:72.7%;height:7.6%;
+ overflow:hidden;display:flex;flex-direction:column;
+ color:#47336f;font-size:clamp(6px,1.3vw,10px);line-height:1.6;
 }
-
-/* グラフ下の情報 */
-#chartCount {
-  left: 29%;
-  top: 61.2%;
-  width: 16%;
-  height: 1.6%;
+.trade-row{
+ display:grid;grid-template-columns:1.4fr .65fr .8fr 1.25fr;
+ gap:2px;min-height:18%;align-items:center;
+ border-bottom:1px solid rgba(150,105,190,.17);
 }
-#chartLatest {
-  left: 44%;
-  top: 61.2%;
-  width: 17%;
-  height: 1.6%;
+.trade-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+#updated{
+ position:absolute;z-index:5;left:24%;top:89.0%;width:72%;
+ text-align:center;font-size:clamp(5px,1.0vw,8px);color:#67518c;
 }
-
-/* 現在の戦闘予報 */
-#signal {
-  left: 68.2%;
-  top: 46.1%;
-  width: 10.2%;
-  height: 3.4%;
-}
-#score {
-  left: 78.6%;
-  top: 46.1%;
-  width: 9.2%;
-  height: 3.4%;
-}
-#rsi {
-  left: 88.1%;
-  top: 46.1%;
-  width: 8%;
-  height: 3.4%;
-}
-#reason {
-  left: 68%;
-  top: 50.5%;
-  width: 29%;
-  height: 2.6%;
-  font-size: clamp(6px, 1.55vw, 12px);
-}
-
-/* フィボナッチ */
-#fibPrice {
-  left: 74%;
-  top: 59.9%;
-  width: 20%;
-  height: 2.1%;
-}
-#fibLevels {
-  position: absolute;
-  z-index: 3;
-  left: 69%;
-  top: 63.3%;
-  width: 13%;
-  height: 11.3%;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  pointer-events: none;
-}
-.fib-row {
-  font-size: clamp(7px, 1.8vw, 14px);
-  line-height: 1;
-  text-align: left;
-  font-weight: 750;
-  color: #57428b;
-}
-
-/* 現在のバトル */
-#position {
-  left: 31%;
-  top: 70.3%;
-  width: 13%;
-  height: 2.1%;
-}
-#openPnl {
-  left: 32%;
-  top: 73.4%;
-  width: 13%;
-  height: 1.9%;
-}
-
-/* エンジン稼働状況 */
-#botStatus {
-  left: 51%;
-  top: 66.7%;
-  width: 15%;
-  height: 1.6%;
-}
-#status15m {
-  left: 51%;
-  top: 68.7%;
-  width: 15%;
-  height: 1.6%;
-}
-#status1h {
-  left: 51%;
-  top: 70.6%;
-  width: 15%;
-  height: 1.6%;
-}
-#status4h {
-  left: 51%;
-  top: 72.5%;
-  width: 15%;
-  height: 1.6%;
-}
-
-/* ステージ・XP */
-#stageLevel {
-  left: 82%;
-  top: 13.9%;
-  width: 12%;
-  height: 1.7%;
-}
-#xpValue {
-  left: 77%;
-  top: 17.1%;
-  width: 19%;
-  height: 1.3%;
-}
-
-/* バトルログ */
-#tradeRows {
-  position: absolute;
-  z-index: 4;
-  left: 24%;
-  top: 80.2%;
-  width: 72%;
-  height: 7.7%;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  font-size: clamp(6px, 1.35vw, 10px);
-  line-height: 1.5;
-  color: #47336f;
-  pointer-events: none;
-}
-.trade-row {
-  display: grid;
-  grid-template-columns: 1.4fr .7fr .8fr 1.2fr;
-  gap: 2px;
-  min-height: 15%;
-  align-items: center;
-  border-bottom: 1px solid rgba(150,105,190,.15);
-}
-.trade-row span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-#updated {
-  position: absolute;
-  left: 24%;
-  top: 88.5%;
-  width: 72%;
-  text-align: center;
-  font-size: clamp(5px, 1.05vw, 8px);
-  color: #66518b;
-  z-index: 5;
-}
-
-#error {
-  display: none;
-  position: fixed;
-  z-index: 99;
-  left: 8px;
-  right: 8px;
-  bottom: 8px;
-  padding: 9px 12px;
-  border-radius: 12px;
-  background: rgba(255,255,255,.96);
-  border: 1px solid #f2a6d9;
-  color: #713e86;
-  font-size: 12px;
-}
-
-@media (min-width: 865px) {
-  #dashboard { width: 864px; }
+#error{
+ display:none;position:fixed;z-index:99;left:8px;right:8px;bottom:8px;
+ background:#fff;border:1px solid #ed9ed8;border-radius:12px;
+ padding:10px;color:#713e86;font-size:12px;overflow-wrap:anywhere;
 }
 </style>
 </head>
 
 <body>
-<main id="dashboard" aria-label="BTCペーパートレードダッシュボード">
+<main id="dashboard">
 
-  <!-- 数値を表示する位置は背景画像に合わせて固定 -->
-  <div id="stageLevel" class="overlay value">Lv. --</div>
-  <div id="xpValue" class="overlay value small">-- / 500 XP</div>
+<!-- HP・経験値のグラフ。見出しやLv/XP文字は重ねない -->
+<canvas id="hpGraph"></canvas>
+<canvas id="xpGraph"></canvas>
 
-  <div id="price" class="overlay">
-    <div class="value large" id="priceUsd">--</div>
-    <div class="sub" id="priceJpy"></div>
-  </div>
+<!-- 数値だけを表示 -->
+<div id="price" class="v">
+ <div id="priceUsd" class="num">--</div>
+ <div id="priceJpy" class="sub"></div>
+</div>
+<div id="assets" class="v">
+ <div id="equityUsd" class="num">--</div>
+ <div id="equityJpy" class="sub"></div>
+</div>
+<div id="realized" class="v">
+ <div id="realizedUsd" class="num">--</div>
+ <div class="sub">USD</div>
+</div>
+<div id="winrate" class="v"><div id="winrateValue" class="num">--</div></div>
+<div id="pnl" class="v">
+ <div id="pnlUsd" class="num">--</div>
+ <div id="pnlJpy" class="sub"></div>
+</div>
+<div id="maxdd" class="v"><div id="maxddValue" class="num">--</div></div>
 
-  <div id="assets" class="overlay">
-    <div class="value" id="equityUsd">--</div>
-    <div class="sub" id="equityJpy"></div>
-  </div>
+<!-- 資産推移グラフ -->
+<canvas id="equityChart"></canvas>
+<div id="recordCount" class="v"><span id="countValue">--</span></div>
+<div id="latestEquity" class="v"><span id="latestValue">--</span></div>
 
-  <div id="realized" class="overlay">
-    <div class="value" id="realizedUsd">--</div>
-    <div class="sub">USD</div>
-  </div>
+<!-- 戦闘予報 -->
+<div id="signal" class="v"><span id="signalValue" class="num">--</span></div>
+<div id="score" class="v"><span id="scoreValue" class="num">--</span></div>
+<div id="rsi" class="v"><span id="rsiValue" class="num">--</span></div>
+<div id="reason" class="v"><span id="reasonValue">--</span></div>
 
-  <div id="winrate" class="overlay">
-    <div class="value" id="winrateValue">--</div>
-  </div>
+<!-- 画像側にある％ラベルの横に価格だけを表示 -->
+<div id="fib0" class="fib-value">--</div>
+<div id="fib236" class="fib-value">--</div>
+<div id="fib382" class="fib-value">--</div>
+<div id="fib50" class="fib-value">--</div>
+<div id="fib618" class="fib-value">--</div>
+<div id="fib786" class="fib-value">--</div>
+<div id="fib100" class="fib-value">--</div>
 
-  <div id="pnl" class="overlay">
-    <div class="value" id="pnlUsd">--</div>
-    <div class="sub" id="pnlJpy"></div>
-  </div>
+<!-- 現在のバトル -->
+<div id="position" class="v"><span id="positionValue" class="num">--</span></div>
+<div id="openPnl" class="v"><span id="openPnlValue" class="num">--</span></div>
 
-  <div id="maxdd" class="overlay">
-    <div class="value" id="maxddValue">--</div>
-  </div>
+<!-- エンジンの状態値だけ -->
+<div id="botStatus" class="v"><span id="botStatusValue" class="num">--</span></div>
+<div id="status15m" class="v"><span id="status15mValue" class="num">--</span></div>
+<div id="status1h" class="v"><span id="status1hValue" class="num">--</span></div>
+<div id="status4h" class="v"><span id="status4hValue" class="num">--</span></div>
 
-  <canvas id="chart"></canvas>
-
-  <div id="chartCount" class="overlay small">
-    <span id="recordCount">--</span>
-  </div>
-  <div id="chartLatest" class="overlay small">
-    <span id="latestEquity">--</span>
-  </div>
-
-  <div id="signal" class="overlay value">--</div>
-  <div id="score" class="overlay value">--</div>
-  <div id="rsi" class="overlay value small">--</div>
-  <div id="reason" class="overlay">データを読み込み中…</div>
-
-  <div id="fibPrice" class="overlay value small">--</div>
-  <div id="fibLevels">
-    <div class="fib-row">0%</div>
-    <div class="fib-row">23.6%</div>
-    <div class="fib-row">38.2%</div>
-    <div class="fib-row">50%</div>
-    <div class="fib-row">61.8%</div>
-    <div class="fib-row">78.6%</div>
-    <div class="fib-row">100%</div>
-  </div>
-
-  <div id="position" class="overlay value">--</div>
-  <div id="openPnl" class="overlay value small">--</div>
-
-  <div id="botStatus" class="overlay small">--</div>
-  <div id="status15m" class="overlay small">--</div>
-  <div id="status1h" class="overlay small">--</div>
-  <div id="status4h" class="overlay small">--</div>
-
-  <div id="tradeRows"></div>
-
-  <div id="updated">データ確認中…</div>
+<!-- 取引履歴の見出しは画像にあるので、行だけ描画 -->
+<div id="tradeRows"></div>
+<div id="updated">データを読み込み中…</div>
 </main>
 
 <div id="error"></div>
@@ -363,463 +167,355 @@ body { overflow-x: hidden; }
 <script>
 "use strict";
 
-/*
- BTC Paper Engine
- データ元: docs/data.json / data.json / state.json
- 実注文なし。公開データとペーパートレード記録のみ使用。
-*/
-
-const CONFIG = {
-  refreshMs: 60000,
-  // 円換算の概算レート。必要なら変更してください。
-  usdJpy: 150,
-  maxTrades: 5
+const CFG = {
+ refreshMs: 60000,
+ usdJpy: 150, // 概算換算。必要なら変更
+ initialEquityFallback: 100,
+ maxTrades: 4
 };
 
 const $ = id => document.getElementById(id);
 
-function first(obj, paths, fallback = null) {
-  for (const path of paths) {
-    let value = obj;
-    for (const key of path.split(".")) {
-      if (value == null) break;
-      value = value[key];
-    }
-    if (value !== undefined && value !== null && value !== "") {
-      return value;
-    }
+function get(obj, paths, fallback=null) {
+ for (const path of paths) {
+  let v=obj;
+  for (const k of path.split(".")) {
+   if (v==null) break;
+   v=v[k];
   }
-  return fallback;
+  if (v!==undefined && v!==null && v!=="") return v;
+ }
+ return fallback;
 }
-
-function number(value, fallback = null) {
-  if (value === null || value === undefined || value === "") return fallback;
-  const n = Number(value);
-  return Number.isFinite(n) ? n : fallback;
+function n(v, fallback=null) {
+ if (v===null || v===undefined || v==="") return fallback;
+ const x=Number(v);
+ return Number.isFinite(x)?x:fallback;
 }
+function fmt(v,d=2) {
+ const x=n(v);
+ return x===null?"--":x.toLocaleString("en-US",{
+  minimumFractionDigits:d,maximumFractionDigits:d
+ });
+}
+function usd(v,d=2) {
+ const x=n(v);
+ return x===null?"--":"$"+fmt(x,d);
+}
+function jpy(v) {
+ const x=n(v);
+ return x===null?"":"約¥"+Math.round(x*CFG.usdJpy).toLocaleString("ja-JP");
+}
+function text(id,v) {
+ $(id).textContent=(v===null||v===undefined||v==="")?"--":String(v);
+}
+function signed(v) {
+ const x=n(v);
+ return x===null?"--":(x>0?"+":"")+fmt(x);
+}
+function profitStyle(id,v) {
+ const el=$(id),x=n(v);
+ el.classList.remove("good","bad");
+ if(x!==null)el.classList.add(x>=0?"good":"bad");
+}
+function direction(v) {
+ const s=String(v??"WAIT").toUpperCase();
+ if(s.includes("LONG")||s.includes("BUY"))return "LONG";
+ if(s.includes("SHORT")||s.includes("SELL"))return "SHORT";
+ return "WAIT";
+}
+function tradesOf(d) {
+ const t=get(d,["recent_trades","paper_trades","trades",
+  "closed_trades","metrics.recent_trades"],[]);
+ return Array.isArray(t)?t:[];
+}
+function closedTrades(trades) {
+ return trades.filter(t=>{
+  const status=String(get(t,["status","state"],"")).toLowerCase();
+  return status.includes("closed")||status.includes("close")||
+   t.exit_price!=null||t.exit_time!=null||t.closed_at!=null;
+ });
+}
+function pnlOf(t) {
+ return n(get(t,["net_pnl","pnl","profit","realized_pnl",
+  "realised_pnl","net_profit"]));
+}
+function historyOf(d) {
+ const h=get(d,["equity_history","equity_curve","balance_history",
+  "history","snapshots","metrics.equity_history"],[]);
+ if(!Array.isArray(h))return [];
+ return h.map(x=>typeof x==="number"?x:
+  n(get(x,["equity","balance","value","account_value","total_equity"])))
+  .filter(x=>x!==null&&x>0).slice(-120);
+}
+function sizeCanvas(canvas) {
+ const r=canvas.getBoundingClientRect();
+ const dpr=Math.min(window.devicePixelRatio||1,2);
+ canvas.width=Math.max(1,Math.round(r.width*dpr));
+ canvas.height=Math.max(1,Math.round(r.height*dpr));
+ const c=canvas.getContext("2d");
+ c.setTransform(dpr,0,0,dpr,0,0);
+ c.clearRect(0,0,r.width,r.height);
+ return {c,w:r.width,h:r.height};
+}
+function sparkline(id,values,mode="line") {
+ const {c,w,h}=sizeCanvas($(id));
+ if(!values.length||!w||!h)return;
+ const vals=values.map(v=>n(v)).filter(v=>v!==null);
+ if(!vals.length)return;
 
-function money(value, digits = 2) {
-  const n = number(value);
-  if (n === null) return "--";
-  return n.toLocaleString("en-US", {
-    minimumFractionDigits: digits,
-    maximumFractionDigits: digits
+ const min=Math.min(...vals),max=Math.max(...vals);
+ const span=max-min||1;
+ const pts=vals.map((v,i)=>({
+  x:vals.length===1?w/2:i/(vals.length-1)*w,
+  y:h-2-((v-min)/span)*(h-4)
+ }));
+
+ if(mode==="bar") {
+  const last=vals[vals.length-1];
+  const ratio=Math.max(0,Math.min(1,last/100));
+  c.fillStyle="rgba(255,91,184,.20)";
+  c.fillRect(0,0,w,h);
+  c.fillStyle="#ee56b8";
+  c.fillRect(0,0,w*ratio,h);
+  c.strokeStyle="#a746d7";
+  c.lineWidth=1.2;
+  c.beginPath();
+  pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+  c.stroke();
+  return;
+ }
+
+ c.beginPath();
+ pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.lineWidth=1.5;
+ c.strokeStyle="#ee51b5";
+ c.stroke();
+}
+function drawEquity(values) {
+ const {c,w,h}=sizeCanvas($("equityChart"));
+ if(values.length<2||!w||!h)return;
+
+ const min=Math.min(...values),max=Math.max(...values);
+ const spread=max-min||Math.max(Math.abs(max)*.001,1);
+ const pad=3;
+ const pts=values.map((v,i)=>({
+  x:pad+i/(values.length-1)*(w-pad*2),
+  y:pad+(max-v)/spread*(h-pad*2)
+ }));
+
+ c.beginPath();
+ pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.lineTo(pts[pts.length-1].x,h);
+ c.lineTo(pts[0].x,h);
+ c.closePath();
+ const g=c.createLinearGradient(0,0,0,h);
+ g.addColorStop(0,"rgba(239,64,177,.36)");
+ g.addColorStop(1,"rgba(173,110,241,.03)");
+ c.fillStyle=g;c.fill();
+
+ c.beginPath();
+ pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.strokeStyle="#e546b0";c.lineWidth=2;c.lineJoin="round";c.stroke();
+
+ const last=pts[pts.length-1];
+ c.beginPath();c.arc(last.x,last.y,3,0,Math.PI*2);
+ c.fillStyle="#8245db";c.fill();
+}
+function fibLevels(d,price) {
+ const explicit=get(d,["fibonacci.levels","fib_levels","fib.levels"],null);
+ if(Array.isArray(explicit)) {
+  return [0,23.6,38.2,50,61.8,78.6,100].map((pct,i)=>{
+   const item=explicit[i];
+   return n(typeof item==="object"?get(item,["price","value"]):item);
   });
+ }
+ const high=n(get(d,["market.high_24h","high_24h","market.high","high"]));
+ const low=n(get(d,["market.low_24h","low_24h","market.low","low"]));
+ if(high===null||low===null||high<=low)return [null,null,null,null,null,null,null];
+ return [0,23.6,38.2,50,61.8,78.6,100].map(p=>high-(high-low)*p/100);
 }
-
-function yen(value) {
-  const n = number(value);
-  if (n === null) return "";
-  return "約¥" + Math.round(n * CONFIG.usdJpy).toLocaleString("ja-JP");
-}
-
-function setText(id, value) {
-  $(id).textContent = value == null ? "--" : String(value);
-}
-
-function signedMoney(value) {
-  const n = number(value);
-  if (n === null) return "--";
-  return (n > 0 ? "+" : "") + money(n);
-}
-
-function setProfitStyle(id, value) {
-  const n = number(value);
-  $(id).classList.remove("good", "bad");
-  if (n !== null) $(id).classList.add(n >= 0 ? "good" : "bad");
-}
-
-function directionLabel(value) {
-  const s = String(value ?? "WAIT").toUpperCase();
-  if (s.includes("LONG") || s.includes("BUY")) return "LONG";
-  if (s.includes("SHORT") || s.includes("SELL")) return "SHORT";
-  return "WAIT";
-}
-
-function getTrades(data) {
-  const t = first(data, [
-    "paper_trades",
-    "trades",
-    "closed_trades",
-    "state.paper_trades",
-    "state.trades"
-  ], []);
-  return Array.isArray(t) ? t : [];
-}
-
-function getEquityHistory(data) {
-  const h = first(data, [
-    "equity_history",
-    "equity_curve",
-    "balance_history",
-    "history",
-    "snapshots",
-    "state.equity_history"
-  ], []);
-
-  if (!Array.isArray(h)) return [];
-
-  return h.map(item => {
-    if (typeof item === "number") return item;
-    return number(first(item, [
-      "equity", "balance", "value", "account_value", "total_equity"
-    ]));
-  }).filter(v => v !== null && v > 0).slice(-100);
-}
-
-function deriveStats(data, trades) {
-  const closed = trades.filter(t => {
-    const status = String(first(t, ["status", "state"], "")).toLowerCase();
-    return !status || status.includes("closed") ||
-      status.includes("close") || t.exit_price != null ||
-      t.exit_time != null || t.closed_at != null;
-  });
-
-  const pnlValues = closed.map(t => number(first(t, [
-    "net_pnl", "pnl", "profit", "realized_pnl",
-    "realised_pnl", "net_profit"
-  ]))).filter(v => v !== null);
-
-  const wins = pnlValues.filter(v => v > 0).length;
-  const computedWinrate = pnlValues.length
-    ? wins / pnlValues.length * 100 : null;
-
-  const computedRealized = pnlValues.length
-    ? pnlValues.reduce((a, b) => a + b, 0) : null;
-
-  return {
-    count: closed.length,
-    winrate: number(first(data, [
-      "win_rate", "winrate", "stats.win_rate", "stats.winrate"
-    ]), computedWinrate),
-    realized: number(first(data, [
-      "realized_pnl", "realized_profit",
-      "stats.realized_pnl", "stats.total_realized_pnl"
-    ]), computedRealized)
-  };
-}
-
-function drawChart(history) {
-  const canvas = $("chart");
-  const rect = canvas.getBoundingClientRect();
-  if (!rect.width || !rect.height) return;
-
-  const dpr = Math.min(window.devicePixelRatio || 1, 2);
-  canvas.width = Math.round(rect.width * dpr);
-  canvas.height = Math.round(rect.height * dpr);
-
-  const ctx = canvas.getContext("2d");
-  ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  ctx.clearRect(0, 0, rect.width, rect.height);
-
-  const values = history.slice(-100);
-  if (values.length < 2) return;
-
-  const min = Math.min(...values);
-  const max = Math.max(...values);
-  const spread = max - min || Math.max(Math.abs(max) * 0.001, 1);
-  const pad = 5;
-  const w = rect.width - pad * 2;
-  const h = rect.height - pad * 2;
-
-  const points = values.map((v, i) => ({
-    x: pad + i / (values.length - 1) * w,
-    y: pad + (max - v) / spread * h
-  }));
-
-  // 線と面を描画
-  ctx.beginPath();
-  points.forEach((p, i) => {
-    if (i === 0) ctx.moveTo(p.x, p.y);
-    else ctx.lineTo(p.x, p.y);
-  });
-
-  const gradient = ctx.createLinearGradient(0, 0, 0, rect.height);
-  gradient.addColorStop(0, "rgba(255,65,176,.50)");
-  gradient.addColorStop(1, "rgba(184,118,255,.04)");
-
-  ctx.lineTo(points[points.length - 1].x, rect.height);
-  ctx.lineTo(points[0].x, rect.height);
-  ctx.closePath();
-  ctx.fillStyle = gradient;
-  ctx.fill();
-
-  ctx.beginPath();
-  points.forEach((p, i) => {
-    if (i === 0) ctx.moveTo(p.x, p.y);
-    else ctx.lineTo(p.x, p.y);
-  });
-  ctx.strokeStyle = "#e843b0";
-  ctx.lineWidth = 2;
-  ctx.lineJoin = "round";
-  ctx.stroke();
-
-  const last = points[points.length - 1];
-  ctx.beginPath();
-  ctx.arc(last.x, last.y, 3, 0, Math.PI * 2);
-  ctx.fillStyle = "#7e42d9";
-  ctx.fill();
-}
-
 function renderTrades(trades) {
-  const container = $("tradeRows");
-  container.replaceChildren();
-
-  const list = trades.slice(-CONFIG.maxTrades).reverse();
-
-  for (const trade of list) {
-    const row = document.createElement("div");
-    row.className = "trade-row";
-
-    const time = first(trade, [
-      "exit_time", "closed_at", "timestamp", "time",
-      "entry_time", "opened_at"
-    ], "--");
-
-    const date = String(time).replace("T", " ").slice(0, 16);
-    const side = directionLabel(first(trade, [
-      "direction", "side", "position", "type"
-    ], "--"));
-
-    const pnl = number(first(trade, [
-      "net_pnl", "pnl", "profit", "realized_pnl"
-    ]));
-
-    const reason = first(trade, [
-      "exit_reason", "reason", "close_reason", "strategy"
-    ], "--");
-
-    [date, side, pnl === null ? "--" : signedMoney(pnl), reason]
-      .forEach((value, i) => {
-        const span = document.createElement("span");
-        span.textContent = String(value);
-        if (i === 2 && pnl !== null) {
-          span.style.color = pnl >= 0 ? "#d62b98" : "#3478d8";
-        }
-        row.appendChild(span);
-      });
-
-    container.appendChild(row);
-  }
+ const box=$("tradeRows");
+ box.replaceChildren();
+ const rows=trades.slice(-CFG.maxTrades).reverse();
+ rows.forEach(t=>{
+  const row=document.createElement("div");
+  row.className="trade-row";
+  const time=get(t,["exit_time","closed_at","timestamp","time",
+   "entry_time","opened_at"],"--");
+  let date=String(time).replace("T"," ").slice(0,16);
+  const side=direction(get(t,["direction","side","position","type"],"--"));
+  const pnl=pnlOf(t);
+  const reason=get(t,["exit_reason","reason","close_reason","strategy"],"--");
+  [date,side,pnl===null?"--":signed(pnl),reason].forEach((v,i)=>{
+   const s=document.createElement("span");
+   s.textContent=String(v);
+   if(i===2&&pnl!==null)s.style.color=pnl>=0?"#d62b98":"#3478d8";
+   row.appendChild(s);
+  });
+  box.appendChild(row);
+ });
 }
+function render(d) {
+ const price=n(get(d,["price","market.price","btc_price","ticker.price"]));
+ const equity=n(get(d,["equity","metrics.equity","account_value",
+  "total_equity","portfolio_value"]));
+ const initial=n(get(d,["initial_equity","initial_bankroll",
+  "metrics.initial_equity","settings.initial_equity"]),CFG.initialEquityFallback);
+ const trades=tradesOf(d);
+ const closed=closedTrades(trades);
+ const pnls=closed.map(pnlOf).filter(v=>v!==null);
+ const wins=pnls.filter(v=>v>0).length;
+ const losses=pnls.filter(v=>v<0).length;
 
-function render(data) {
-  const price = number(first(data, [
-    "price", "btc_price", "market.price", "ticker.price"
-  ]));
+ const winrate=n(get(d,["metrics.win_rate","metrics.winrate",
+  "win_rate","winrate","paper_stats.win_rate"]),
+  pnls.length?wins/pnls.length*100:null);
 
-  const equity = number(first(data, [
-    "equity", "account_value", "total_equity",
-    "portfolio_value", "state.equity"
-  ]));
+ const realized=n(get(d,["metrics.realized_pnl","metrics.realized_profit",
+  "realized_pnl","realized_profit","risk.realized_pnl"]),
+  pnls.length?pnls.reduce((a,b)=>a+b,0):null);
 
-  const initial = number(first(data, [
-    "initial_equity", "initial_bankroll",
-    "starting_equity", "config.initial_equity"
-  ]), 100);
+ const open=get(d,["open_trade","open_position","position",
+  "current_position"],null);
+ const unrealized=n(get(d,["metrics.unrealized_pnl",
+  "risk.unrealized_pnl","unrealized_pnl","open_pnl",
+  "unrealized_profit","open_trade.unrealized_pnl",
+  "open_trade.net_pnl"]),0);
 
-  const unrealized = number(first(data, [
-    "unrealized_pnl", "unrealized_profit",
-    "open_pnl", "floating_pnl", "position.unrealized_pnl"
-  ]), 0);
+ const dd=n(get(d,["risk.max_drawdown_pct","risk.max_dd_pct",
+  "metrics.max_drawdown_pct","max_drawdown_pct","max_dd_pct","max_dd"]));
 
-  const signal = first(data, [
-    "signal.direction", "signal", "current_signal", "direction"
-  ], "WAIT");
+ // BTC価格
+ text("priceUsd",price===null?"--":usd(price,price>=1000?0:2));
+ text("priceJpy",price===null?"":jpy(price));
 
-  const score = number(first(data, [
-    "signal.score", "score", "signal_score"
-  ]));
+ // 資産額
+ text("equityUsd",equity===null?"--":usd(equity));
+ text("equityJpy",equity===null?"":jpy(equity));
 
-  const rsi = number(first(data, [
-    "indicators.rsi_15m", "rsi_15m", "rsi",
-    "indicators.rsi"
-  ]));
+ // 確定損益
+ text("realizedUsd",realized===null?"--":signed(realized));
+ profitStyle("realizedUsd",realized);
 
-  const reason = first(data, [
-    "signal.reason", "reason", "signal.explanation"
-  ], "シグナル理由のデータなし");
+ // 勝率・含み損益・最大DD
+ text("winrateValue",winrate===null?"--":winrate.toFixed(1)+"%");
+ text("pnlUsd",signed(unrealized));
+ text("pnlJpy",jpy(unrealized));
+ profitStyle("pnlUsd",unrealized);
 
-  const trades = getTrades(data);
-  const stats = deriveStats(data, trades);
-  const history = getEquityHistory(data);
+ text("maxddValue",dd===null?"--":
+  (Math.abs(dd)<=1&&dd!==0?Math.abs(dd)*100:Math.abs(dd)).toFixed(2)+"%");
 
-  // BTC価格
-  setText("priceUsd", price === null ? "--" : "$" + money(price, 1));
-  setText("priceJpy", price === null ? "" : yen(price));
+ // 戦闘予報
+ const sig=direction(get(d,["signal.direction","signal",
+  "current_signal","direction"],"WAIT"));
+ const score=n(get(d,["signal.score","metrics.score","score","signal_score"]));
+ const rsi=n(get(d,["indicators.rsi_15m","metrics.rsi_15m",
+  "rsi_15m","rsi","indicators.rsi"]));
 
-  // 資産額。実際のdata.jsonに含まれるequityを優先
-  setText("equityUsd", equity === null ? "--" : "$" + money(equity));
-  setText("equityJpy", equity === null ? "" : yen(equity));
+ text("signalValue",sig);
+ text("scoreValue",score===null?"--":score);
+ text("rsiValue",rsi===null?"--":rsi.toFixed(1));
+ $("signalValue").classList.remove("good","bad");
+ if(sig==="LONG")$("signalValue").classList.add("good");
+ if(sig==="SHORT")$("signalValue").classList.add("bad");
+ text("reasonValue",get(d,["signal.reason","signal_reason","reason"],
+  "理由データなし"));
 
-  // 確定損益。元データがなければ、クローズ済み取引から算出
-  setText("realizedUsd",
-    stats.realized === null ? "--" : signedMoney(stats.realized));
-  setProfitStyle("realizedUsd", stats.realized);
+ // フィボナッチ：％ラベルは画像にあるので価格のみ
+ const fib=fibLevels(d,price);
+ ["fib0","fib236","fib382","fib50","fib618","fib786","fib100"].forEach((id,i)=>{
+  text(id,fib[i]===null?"--":fmt(fib[i],0));
+ });
 
-  // 勝率
-  setText("winrateValue",
-    stats.winrate === null ? "--" : stats.winrate.toFixed(1) + "%");
+ // ポジション情報
+ let side="NONE";
+ if(open&&typeof open==="object") {
+  side=direction(get(open,["direction","side","position"],"NONE"));
+ } else if(open) {
+  side=String(open).toUpperCase();
+ }
+ text("positionValue",side);
+ text("openPnlValue",signed(unrealized));
+ profitStyle("openPnlValue",unrealized);
 
-  // 含み損益
-  setText("pnlUsd", signedMoney(unrealized));
-  setText("pnlJpy", yen(unrealized));
-  setProfitStyle("pnlUsd", unrealized);
+ // エンジンの状態
+ text("botStatusValue",get(d,["market_status","engine_status","status"],"--"));
+ text("status15mValue",get(d,["market.timeframes.15m.direction",
+  "timeframes.15m.direction","trend.15m","market.trend_15m"],"--"));
+ text("status1hValue",get(d,["market.timeframes.1h.direction",
+  "timeframes.1h.direction","trend.1h","market.trend_1h"],"--"));
+ text("status4hValue",get(d,["market.timeframes.4h.direction",
+  "timeframes.4h.direction","trend.4h","market.trend_4h"],"--"));
 
-  // 最大ドローダウン：保存済み値があれば優先
-  const maxDD = number(first(data, [
-    "max_drawdown_pct", "max_dd_pct", "max_dd",
-    "stats.max_drawdown_pct", "risk.max_drawdown_pct"
-  ]));
+ // 資産推移グラフ
+ let history=historyOf(d);
+ if(history.length<2&&equity!==null)history=[initial,equity];
+ drawEquity(history);
+ text("countValue",history.length);
+ text("latestValue",equity===null?"--":usd(equity));
 
-  setText("maxddValue",
-    maxDD === null ? "--" :
-    (Math.abs(maxDD) > 0 && Math.abs(maxDD) <= 1
-      ? (Math.abs(maxDD) * 100).toFixed(2)
-      : Math.abs(maxDD).toFixed(2)) + "%");
+ // HPグラフ：資産履歴を初期資産比のHPとして表示
+ const hpHistory=history.map(v=>Math.max(0,Math.min(100,v/initial*100)));
+ const hp=equity===null?100:Math.max(0,Math.min(100,equity/initial*100));
+ sparkline("hpGraph",hpHistory.length?hpHistory:[hp],"bar");
 
-  // シグナルとインジケーター
-  const direction = directionLabel(signal);
-  setText("signal", direction);
-  setText("score", score === null ? "--" : score);
-  setText("rsi", rsi === null ? "--" : rsi.toFixed(1));
+ // 経験値：勝利1回につき1XP、10勝で1ステージ
+ // ボットがrpg.xpを出力する場合はその値を優先
+ const explicitXp=n(get(d,["rpg.xp","experience.xp","xp","experience"]));
+ const totalWins=n(get(d,["rpg.total_wins","metrics.total_wins","total_wins"]),wins);
+ const xp=explicitXp===null?totalWins%10:explicitXp%10;
+ const xpHistory=[];
+ let running=0;
+ for(const t of closed) {
+  const p=pnlOf(t);
+  if(p!==null&&p>0)running++;
+  xpHistory.push((running%10)*10);
+ }
+ if(!xpHistory.length)xpHistory.push(xp*10);
+ sparkline("xpGraph",xpHistory,"bar");
 
-  $("signal").classList.remove("good", "bad");
-  if (direction === "LONG") $("signal").classList.add("good");
-  if (direction === "SHORT") $("signal").classList.add("bad");
+ renderTrades(trades);
 
-  setText("reason", reason);
-
-  // ポジション
-  const position = first(data, [
-    "position.direction", "position.side", "position",
-    "current_position", "open_position"
-  ], "NONE");
-
-  setText("position",
-    typeof position === "object"
-      ? directionLabel(position.direction || position.side || "NONE")
-      : String(position).toUpperCase());
-
-  setText("openPnl", signedMoney(unrealized));
-  setProfitStyle("openPnl", unrealized);
-
-  // エンジン状態。15m/1h/4hの方向はデータがある場合のみ表示
-  const status = String(first(data, [
-    "market_status", "engine_status", "status"
-  ], "UNKNOWN"));
-
-  setText("botStatus", status);
-  setText("status15m", first(data, [
-    "timeframes.15m.direction", "trend.15m", "indicators.15m"
-  ], "--"));
-  setText("status1h", first(data, [
-    "timeframes.1h.direction", "trend.1h", "indicators.1h"
-  ], "--"));
-  setText("status4h", first(data, [
-    "timeframes.4h.direction", "trend.4h", "indicators.4h"
-  ], "--"));
-
-  // レベル表示は実装済みのXPデータがあるときだけ反映
-  const xp = number(first(data, [
-    "xp", "experience", "rpg.xp"
-  ]));
-  const stage = number(first(data, [
-    "stage", "level", "rpg.stage"
-  ]));
-
-  setText("stageLevel", stage === null ? "Lv. --" : "Lv. " + stage);
-  setText("xpValue", xp === null ? "-- / 500 XP" : xp + " / 500 XP");
-
-  // フィボナッチ価格：元データに値があるときだけ表示
-  const fib = number(first(data, [
-    "fibonacci.current_price", "fibonacci.price",
-    "fib.current_price", "fib_price"
-  ]));
-  setText("fibPrice", fib === null ? "--" : "$" + money(fib, 2));
-
-  // グラフ。履歴がなければ初期資産と現在資産を使う
-  let graph = history.slice();
-  if (graph.length < 2 && equity !== null) {
-    graph = [initial, equity];
+ const generated=get(d,["generated_at","updated_at","timestamp"]);
+ let time="更新時刻不明";
+ if(generated) {
+  const dt=new Date(generated);
+  if(!Number.isNaN(dt.getTime())) {
+   time="更新: "+dt.toLocaleString("ja-JP",{
+    month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"
+   });
   }
-
-  drawChart(graph);
-  setText("recordCount", String(graph.length));
-  setText("latestEquity",
-    equity === null ? "--" : "$" + money(equity));
-
-  renderTrades(trades);
-
-  const generated = first(data, [
-    "generated_at", "updated_at", "timestamp"
-  ], null);
-
-  let timeText = "更新時刻: --";
-  if (generated) {
-    const dt = new Date(generated);
-    if (!Number.isNaN(dt.getTime())) {
-      timeText = "更新: " + dt.toLocaleString("ja-JP", {
-        month: "2-digit", day: "2-digit",
-        hour: "2-digit", minute: "2-digit"
-      });
-    }
-  }
-  $("updated").textContent =
-    timeText + " ｜ PAPER ONLY ｜ 自動更新60秒";
+ }
+ $("updated").textContent=time+" ｜ PAPER ONLY ｜ 60秒ごとに更新";
 }
 
 async function loadData() {
-  const candidates = [
-    "./docs/data.json",
-    "./data.json",
-    "./state.json",
-    "./docs/state.json"
-  ];
-
-  let lastError = null;
-
-  for (const path of candidates) {
-    try {
-      const response = await fetch(
-        path + "?_=" + Date.now(),
-        { cache: "no-store" }
-      );
-
-      if (!response.ok) {
-        lastError = new Error(path + ": HTTP " + response.status);
-        continue;
-      }
-
-      const data = await response.json();
-
-      if (!data || typeof data !== "object") {
-        lastError = new Error("JSON形式が不正です");
-        continue;
-      }
-
-      render(data);
-      $("error").style.display = "none";
-      return;
-    } catch (error) {
-      lastError = error;
-    }
+ const paths=["./data.json","./docs/data.json","./state.json","./docs/state.json"];
+ let lastError="";
+ for(const path of paths) {
+  try {
+   const r=await fetch(path+"?t="+Date.now(),{cache:"no-store"});
+   if(!r.ok){lastError=path+" HTTP "+r.status;continue}
+   const data=await r.json();
+   if(!data||typeof data!=="object"){lastError="JSON形式エラー";continue}
+   render(data);
+   $("error").style.display="none";
+   return;
+  } catch(e) {
+   lastError=String(e);
   }
-
-  $("updated").textContent = "データ待機中 ｜ PAPER ONLY";
-  $("error").style.display = "block";
-  $("error").textContent =
-    "データを読み込めません。GitHub Pagesの公開状態と、" +
-    "docs/data.json の場所・JSON形式を確認してください。" +
-    (lastError ? " (" + lastError.message + ")" : "");
+ }
+ $("error").style.display="block";
+ $("error").textContent="データを読み込めません。Pages上のdata.jsonの配置を確認してください。 "+lastError;
+ $("updated").textContent="データ待機中 ｜ PAPER ONLY";
 }
 
 loadData();
-setInterval(loadData, CONFIG.refreshMs);
-
-window.addEventListener("resize", () => {
-  loadData();
-});
+setInterval(loadData,CFG.refreshMs);
+window.addEventListener("resize",loadData);
 </script>
 </body>
 </html>
