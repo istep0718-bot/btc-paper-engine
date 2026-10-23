@@ -4,518 +4,309 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#f9eaff">
 <title>萌え萌えキュン♡ BTC冒険記</title>
-
 <style>
 *{box-sizing:border-box}
-html,body{margin:0;padding:0;width:100%;min-height:100%;background:#f8eaff}
-body{font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif;color:#40266f;overflow-x:hidden}
-#dashboard{
- position:relative;width:min(100%,864px);margin:0 auto;
- aspect-ratio:864/1536;overflow:hidden;
- background:#fceaff url("./6F57182A-FA99-4BC6-A546-EAF0793E5B02.png") top center/100% 100% no-repeat;
-}
-.v{
- position:absolute;z-index:3;display:flex;flex-direction:column;
- justify-content:center;align-items:center;text-align:center;
- min-width:0;overflow:hidden;line-height:1.12;
- font-variant-numeric:tabular-nums;
-}
-.num{font-size:clamp(9px,2.25vw,18px);font-weight:850;white-space:nowrap;max-width:100%}
-.sub{font-size:clamp(6px,1.35vw,10px);font-weight:650;margin-top:2px;white-space:nowrap}
-.good{color:#e42c9c}.bad{color:#3476d8}.muted{color:#9582b1}
-canvas{display:block}
-#hpGraph,#xpGraph{
- position:absolute;z-index:4;pointer-events:none;
-}
-#hpGraph{left:35.0%;top:23.1%;width:27.4%;height:1.45%}
-#xpGraph{left:58.7%;top:24.2%;width:37.2%;height:1.05%}
+html,body{margin:0;background:#f9edff;color:#40266f;font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif}
+body{overflow-x:hidden}
+#app{position:relative;width:min(100%,864px);margin:auto;aspect-ratio:864/1536;background:#fff0ff url("./6F57182A-FA99-4BC6-A546-EAF0793E5B02.png") center top/100% 100% no-repeat;overflow:hidden}
+.v{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center;text-align:center;overflow:hidden;min-width:0;font-variant-numeric:tabular-nums;line-height:1.1}
+.num{font-size:clamp(9px,2.1vw,17px);font-weight:850;white-space:nowrap}
+.sub{font-size:clamp(6px,1.25vw,10px);font-weight:650;white-space:nowrap;margin-top:2px}
+.good{color:#e12c9b}.bad{color:#3479d5}
+.stack{flex-direction:column}
+.bar{position:absolute;z-index:5;overflow:hidden;border-radius:30px;pointer-events:none}
+.bar .fill{height:100%;width:0;border-radius:inherit;transition:width .35s ease;background:linear-gradient(90deg,#fa9cde,#e34bb8,#b26ae9)}
+.bar .shine{position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.8)}
+#hpBar{left:32.5%;top:23.45%;width:21.8%;height:1.08%}
+#xpBar{left:57.3%;top:23.45%;width:38.6%;height:1.08%}
+#hpBar .fill{background:linear-gradient(90deg,#ffb5e5,#ec4cb6)}
+#xpBar .fill{background:linear-gradient(90deg,#a8a0ff,#5579ee)}
 
-/* 上段の数値欄：背景画像の見出しには重ねない */
-#price{left:24.0%;top:28.65%;width:13.8%;height:3.0%}
-#assets{left:40.0%;top:28.65%;width:13.5%;height:3.0%}
-#realized{left:53.8%;top:28.65%;width:12.4%;height:3.0%}
-#winrate{left:24.0%;top:36.0%;width:13.8%;height:2.6%}
-#pnl{left:40.0%;top:36.0%;width:13.5%;height:2.6%}
-#maxdd{left:53.8%;top:36.0%;width:12.4%;height:2.6%}
+/* 数字だけ。カードの見出しは背景画像を使用 */
+#price{left:23.8%;top:28.65%;width:13.8%;height:4.1%}
+#assets{left:39.7%;top:28.65%;width:13.6%;height:4.1%}
+#realized{left:54.0%;top:28.65%;width:12.0%;height:4.1%}
+#winrate{left:23.8%;top:35.9%;width:13.8%;height:3.0%}
+#pnl{left:39.7%;top:35.9%;width:13.6%;height:3.0%}
+#maxdd{left:54.0%;top:35.9%;width:12.0%;height:3.0%}
 
-/* 資産グラフ */
-#equityChart{position:absolute;z-index:4;left:23.6%;top:44.45%;width:41.7%;height:12.5%}
-#recordCount{left:31.5%;top:58.0%;width:13%;height:1.6%}
-#latestEquity{left:47%;top:58.0%;width:15%;height:1.6%}
+/* 資産推移グラフは維持 */
+#equityChart{position:absolute;z-index:4;left:23.5%;top:44.45%;width:41.7%;height:12.5%}
+#recordCount{left:39.0%;top:57.8%;width:5.5%;height:1.4%;font-size:clamp(7px,1.4vw,11px);font-weight:800}
+#latestEquity{left:53.3%;top:57.8%;width:11.5%;height:1.4%;font-size:clamp(7px,1.4vw,11px);font-weight:800}
 
 /* 戦闘予報 */
-#signal{left:68.0%;top:45.1%;width:9.8%;height:4.1%}
-#score{left:78.2%;top:45.1%;width:9.4%;height:4.1%}
+#signal{left:68.0%;top:45.1%;width:9.5%;height:4.1%}
+#score{left:78.1%;top:45.1%;width:9.2%;height:4.1%}
 #rsi{left:88.0%;top:45.1%;width:8.0%;height:4.1%}
-#reason{left:68.0%;top:49.8%;width:28.5%;height:2.1%;font-size:clamp(6px,1.2vw,9px)}
+#reason{left:68.5%;top:49.8%;width:27.4%;height:2.0%;font-size:clamp(6px,1.1vw,9px)}
 
-/* フィボナッチ：背景にある％は追加しない */
-.fib-value{
- position:absolute;z-index:4;left:72.4%;width:10.5%;height:1.55%;
- display:flex;align-items:center;justify-content:center;
- font-size:clamp(7px,1.7vw,13px);font-weight:800;
- white-space:nowrap;overflow:hidden;
-}
-#fib0{top:58.15%}
-#fib236{top:59.8%}
-#fib382{top:61.4%}
-#fib50{top:63.0%}
-#fib618{top:64.65%}
-#fib786{top:66.25%}
-#fib100{top:67.85%}
+/* フィボナッチ。背景の％は再描画しない */
+.fib{position:absolute;z-index:4;left:72.7%;width:11.5%;height:1.55%;display:flex;align-items:center;justify-content:center;font-size:clamp(7px,1.55vw,12px);font-weight:800;white-space:nowrap;overflow:hidden}
+#fib0{top:58.3%}
+#fib236{top:60.0%}
+#fib382{top:61.7%}
+#fib50{top:63.4%}
+#fib618{top:65.1%}
+#fib786{top:66.8%}
+#fib100{top:68.5%}
 
-/* 現在のポジション */
-#position{left:32.0%;top:65.0%;width:12.0%;height:2.0%}
-#openPnl{left:32.0%;top:69.2%;width:12.0%;height:2.0%}
+/* バトル欄：値は画像の入力欄内だけに置く */
+#position{left:37.5%;top:67.0%;width:7.8%;height:1.55%}
+#openPnl{left:36.0%;top:70.0%;width:10.0%;height:1.45%}
 
-/* エンジン：ラベルは画像側に任せて値だけ表示 */
-#botStatus{left:56.0%;top:63.8%;width:8.8%;height:1.5%}
-#status15m{left:56.0%;top:65.55%;width:8.8%;height:1.5%}
-#status1h{left:56.0%;top:67.25%;width:8.8%;height:1.5%}
-#status4h{left:56.0%;top:68.95%;width:8.8%;height:1.5%}
+/* エンジン欄：値を右側の空きスペースへ */
+.engine{position:absolute;z-index:4;left:57.4%;width:6.8%;height:1.35%;font-size:clamp(7px,1.45vw,11px);font-weight:800;text-align:center;white-space:nowrap;overflow:hidden}
+#botStatus{top:63.8%}
+#status15m{top:65.45%}
+#status1h{top:67.05%}
+#status4h{top:68.65%}
 
-/* 取引履歴。表の見出しは背景画像に印刷済み */
-#tradeRows{
- position:absolute;z-index:5;left:23.7%;top:80.1%;width:72.7%;height:7.6%;
- overflow:hidden;display:flex;flex-direction:column;
- color:#47336f;font-size:clamp(6px,1.3vw,10px);line-height:1.6;
-}
-.trade-row{
- display:grid;grid-template-columns:1.4fr .65fr .8fr 1.25fr;
- gap:2px;min-height:18%;align-items:center;
- border-bottom:1px solid rgba(150,105,190,.17);
-}
-.trade-row span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-#updated{
- position:absolute;z-index:5;left:24%;top:89.0%;width:72%;
- text-align:center;font-size:clamp(5px,1.0vw,8px);color:#67518c;
-}
-#error{
- display:none;position:fixed;z-index:99;left:8px;right:8px;bottom:8px;
- background:#fff;border:1px solid #ed9ed8;border-radius:12px;
- padding:10px;color:#713e86;font-size:12px;overflow-wrap:anywhere;
-}
+/* 取引履歴の見出しは画像側 */
+#tradeRows{position:absolute;z-index:5;left:23.7%;top:80.1%;width:72.7%;height:7.6%;overflow:hidden;font-size:clamp(6px,1.25vw,10px);line-height:1.6;color:#47336f}
+.trade{display:grid;grid-template-columns:1.4fr .65fr .8fr 1.25fr;gap:2px;min-height:18%;border-bottom:1px solid #eadcf5;align-items:center}
+.trade span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#updated{position:absolute;z-index:5;left:24%;top:89%;width:72%;text-align:center;font-size:clamp(5px,.95vw,8px);color:#67518c}
+#error{display:none;position:fixed;z-index:20;bottom:8px;left:8px;right:8px;padding:12px;background:white;border:1px solid #d7a2e9;border-radius:10px;font-size:12px;overflow-wrap:anywhere}
 </style>
 </head>
-
 <body>
-<main id="dashboard">
+<main id="app">
 
-<!-- HP・経験値のグラフ。見出しやLv/XP文字は重ねない -->
-<canvas id="hpGraph"></canvas>
-<canvas id="xpGraph"></canvas>
+<!-- 横バーのみ。線グラフは使わない -->
+<div id="hpBar" class="bar"><div id="hpFill" class="fill"></div><div class="shine"></div></div>
+<div id="xpBar" class="bar"><div id="xpFill" class="fill"></div><div class="shine"></div></div>
 
-<!-- 数値だけを表示 -->
-<div id="price" class="v">
- <div id="priceUsd" class="num">--</div>
- <div id="priceJpy" class="sub"></div>
+<div id="price" class="v stack">
+ <div id="priceUsd" class="num">--</div><div id="priceJpy" class="sub"></div>
 </div>
-<div id="assets" class="v">
- <div id="equityUsd" class="num">--</div>
- <div id="equityJpy" class="sub"></div>
+<div id="assets" class="v stack">
+ <div id="equityUsd" class="num">--</div><div id="equityJpy" class="sub"></div>
 </div>
-<div id="realized" class="v">
- <div id="realizedUsd" class="num">--</div>
- <div class="sub">USD</div>
+<div id="realized" class="v stack">
+ <div id="realizedUsd" class="num">--</div><div class="sub">USD</div>
 </div>
-<div id="winrate" class="v"><div id="winrateValue" class="num">--</div></div>
-<div id="pnl" class="v">
- <div id="pnlUsd" class="num">--</div>
- <div id="pnlJpy" class="sub"></div>
+<div id="winrate" class="v"><span id="winrateValue" class="num">--</span></div>
+<div id="pnl" class="v stack">
+ <div id="pnlUsd" class="num">--</div><div id="pnlJpy" class="sub"></div>
 </div>
-<div id="maxdd" class="v"><div id="maxddValue" class="num">--</div></div>
+<div id="maxdd" class="v"><span id="maxddValue" class="num">--</span></div>
 
-<!-- 資産推移グラフ -->
 <canvas id="equityChart"></canvas>
 <div id="recordCount" class="v"><span id="countValue">--</span></div>
 <div id="latestEquity" class="v"><span id="latestValue">--</span></div>
 
-<!-- 戦闘予報 -->
-<div id="signal" class="v"><span id="signalValue" class="num">--</span></div>
+<div id="signal" class="v"><span id="signalValue" class="num">WAIT</span></div>
 <div id="score" class="v"><span id="scoreValue" class="num">--</span></div>
 <div id="rsi" class="v"><span id="rsiValue" class="num">--</span></div>
 <div id="reason" class="v"><span id="reasonValue">--</span></div>
 
-<!-- 画像側にある％ラベルの横に価格だけを表示 -->
-<div id="fib0" class="fib-value">--</div>
-<div id="fib236" class="fib-value">--</div>
-<div id="fib382" class="fib-value">--</div>
-<div id="fib50" class="fib-value">--</div>
-<div id="fib618" class="fib-value">--</div>
-<div id="fib786" class="fib-value">--</div>
-<div id="fib100" class="fib-value">--</div>
+<div id="fib0" class="fib">--</div>
+<div id="fib236" class="fib">--</div>
+<div id="fib382" class="fib">--</div>
+<div id="fib50" class="fib">--</div>
+<div id="fib618" class="fib">--</div>
+<div id="fib786" class="fib">--</div>
+<div id="fib100" class="fib">--</div>
 
-<!-- 現在のバトル -->
 <div id="position" class="v"><span id="positionValue" class="num">--</span></div>
 <div id="openPnl" class="v"><span id="openPnlValue" class="num">--</span></div>
 
-<!-- エンジンの状態値だけ -->
-<div id="botStatus" class="v"><span id="botStatusValue" class="num">--</span></div>
-<div id="status15m" class="v"><span id="status15mValue" class="num">--</span></div>
-<div id="status1h" class="v"><span id="status1hValue" class="num">--</span></div>
-<div id="status4h" class="v"><span id="status4hValue" class="num">--</span></div>
+<div id="botStatus" class="engine">--</div>
+<div id="status15m" class="engine">--</div>
+<div id="status1h" class="engine">--</div>
+<div id="status4h" class="engine">--</div>
 
-<!-- 取引履歴の見出しは画像にあるので、行だけ描画 -->
 <div id="tradeRows"></div>
 <div id="updated">データを読み込み中…</div>
 </main>
-
 <div id="error"></div>
 
 <script>
 "use strict";
+const USDJPY=150;
+const $=id=>document.getElementById(id);
 
-const CFG = {
- refreshMs: 60000,
- usdJpy: 150, // 概算換算。必要なら変更
- initialEquityFallback: 100,
- maxTrades: 4
-};
-
-const $ = id => document.getElementById(id);
-
-function get(obj, paths, fallback=null) {
- for (const path of paths) {
-  let v=obj;
-  for (const k of path.split(".")) {
-   if (v==null) break;
-   v=v[k];
-  }
-  if (v!==undefined && v!==null && v!=="") return v;
+function get(o,paths,def=null){
+ for(const p of paths){
+  let v=o;
+  for(const k of p.split(".")){if(v==null)break;v=v[k]}
+  if(v!==undefined&&v!==null&&v!=="")return v;
  }
- return fallback;
+ return def;
 }
-function n(v, fallback=null) {
- if (v===null || v===undefined || v==="") return fallback;
- const x=Number(v);
- return Number.isFinite(x)?x:fallback;
+function num(v,def=null){
+ if(v===null||v===undefined||v==="")return def;
+ const x=Number(v);return Number.isFinite(x)?x:def;
 }
-function fmt(v,d=2) {
- const x=n(v);
- return x===null?"--":x.toLocaleString("en-US",{
-  minimumFractionDigits:d,maximumFractionDigits:d
- });
+function fmt(v,d=2){
+ const x=num(v);return x===null?"--":x.toLocaleString("en-US",{minimumFractionDigits:d,maximumFractionDigits:d});
 }
-function usd(v,d=2) {
- const x=n(v);
- return x===null?"--":"$"+fmt(x,d);
+function usd(v){const x=num(v);return x===null?"--":"$"+fmt(x)}
+function jpy(v){const x=num(v);return x===null?"":"約¥"+Math.round(x*USDJPY).toLocaleString("ja-JP")}
+function put(id,v){$(id).textContent=v===null||v===undefined||v===""?"--":String(v)}
+function signed(v){const x=num(v);return x===null?"--":(x>0?"+":"")+fmt(x)}
+function colorPnL(id,v){
+ const x=num(v),e=$(id);e.classList.remove("good","bad");
+ if(x!==null)e.classList.add(x>=0?"good":"bad");
 }
-function jpy(v) {
- const x=n(v);
- return x===null?"":"約¥"+Math.round(x*CFG.usdJpy).toLocaleString("ja-JP");
-}
-function text(id,v) {
- $(id).textContent=(v===null||v===undefined||v==="")?"--":String(v);
-}
-function signed(v) {
- const x=n(v);
- return x===null?"--":(x>0?"+":"")+fmt(x);
-}
-function profitStyle(id,v) {
- const el=$(id),x=n(v);
- el.classList.remove("good","bad");
- if(x!==null)el.classList.add(x>=0?"good":"bad");
-}
-function direction(v) {
+function sideOf(v){
  const s=String(v??"WAIT").toUpperCase();
  if(s.includes("LONG")||s.includes("BUY"))return "LONG";
  if(s.includes("SHORT")||s.includes("SELL"))return "SHORT";
  return "WAIT";
 }
-function tradesOf(d) {
- const t=get(d,["recent_trades","paper_trades","trades",
-  "closed_trades","metrics.recent_trades"],[]);
- return Array.isArray(t)?t:[];
+function tradesOf(d){
+ const a=get(d,["recent_trades","paper_trades","trades","closed_trades"],[]);
+ return Array.isArray(a)?a:[];
 }
-function closedTrades(trades) {
- return trades.filter(t=>{
-  const status=String(get(t,["status","state"],"")).toLowerCase();
-  return status.includes("closed")||status.includes("close")||
-   t.exit_price!=null||t.exit_time!=null||t.closed_at!=null;
- });
+function pnlOf(t){return num(get(t,["net_pnl","pnl","profit","realized_pnl","realised_pnl"]))}
+function closedOf(a){
+ return a.filter(t=>t.exit_price!=null||t.exit_time!=null||t.closed_at!=null||
+  String(get(t,["status","state"],"")).toLowerCase().includes("closed"));
 }
-function pnlOf(t) {
- return n(get(t,["net_pnl","pnl","profit","realized_pnl",
-  "realised_pnl","net_profit"]));
-}
-function historyOf(d) {
- const h=get(d,["equity_history","equity_curve","balance_history",
-  "history","snapshots","metrics.equity_history"],[]);
- if(!Array.isArray(h))return [];
- return h.map(x=>typeof x==="number"?x:
-  n(get(x,["equity","balance","value","account_value","total_equity"])))
+function historyOf(d){
+ const a=get(d,["equity_history","equity_curve","balance_history","history","snapshots"],[]);
+ if(!Array.isArray(a))return [];
+ return a.map(x=>typeof x==="number"?x:num(get(x,["equity","balance","value","account_value"])))
   .filter(x=>x!==null&&x>0).slice(-120);
 }
-function sizeCanvas(canvas) {
- const r=canvas.getBoundingClientRect();
- const dpr=Math.min(window.devicePixelRatio||1,2);
- canvas.width=Math.max(1,Math.round(r.width*dpr));
- canvas.height=Math.max(1,Math.round(r.height*dpr));
- const c=canvas.getContext("2d");
- c.setTransform(dpr,0,0,dpr,0,0);
- c.clearRect(0,0,r.width,r.height);
- return {c,w:r.width,h:r.height};
-}
-function sparkline(id,values,mode="line") {
- const {c,w,h}=sizeCanvas($(id));
- if(!values.length||!w||!h)return;
- const vals=values.map(v=>n(v)).filter(v=>v!==null);
- if(!vals.length)return;
-
- const min=Math.min(...vals),max=Math.max(...vals);
- const span=max-min||1;
- const pts=vals.map((v,i)=>({
-  x:vals.length===1?w/2:i/(vals.length-1)*w,
-  y:h-2-((v-min)/span)*(h-4)
- }));
-
- if(mode==="bar") {
-  const last=vals[vals.length-1];
-  const ratio=Math.max(0,Math.min(1,last/100));
-  c.fillStyle="rgba(255,91,184,.20)";
-  c.fillRect(0,0,w,h);
-  c.fillStyle="#ee56b8";
-  c.fillRect(0,0,w*ratio,h);
-  c.strokeStyle="#a746d7";
-  c.lineWidth=1.2;
-  c.beginPath();
-  pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
-  c.stroke();
-  return;
- }
-
- c.beginPath();
- pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
- c.lineWidth=1.5;
- c.strokeStyle="#ee51b5";
- c.stroke();
-}
-function drawEquity(values) {
- const {c,w,h}=sizeCanvas($("equityChart"));
- if(values.length<2||!w||!h)return;
-
- const min=Math.min(...values),max=Math.max(...values);
- const spread=max-min||Math.max(Math.abs(max)*.001,1);
- const pad=3;
- const pts=values.map((v,i)=>({
-  x:pad+i/(values.length-1)*(w-pad*2),
-  y:pad+(max-v)/spread*(h-pad*2)
- }));
-
- c.beginPath();
- pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
- c.lineTo(pts[pts.length-1].x,h);
- c.lineTo(pts[0].x,h);
- c.closePath();
- const g=c.createLinearGradient(0,0,0,h);
- g.addColorStop(0,"rgba(239,64,177,.36)");
- g.addColorStop(1,"rgba(173,110,241,.03)");
- c.fillStyle=g;c.fill();
-
- c.beginPath();
- pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+function drawEquity(values){
+ const cv=$("equityChart"),r=cv.getBoundingClientRect(),dpr=Math.min(devicePixelRatio||1,2);
+ cv.width=Math.max(1,Math.round(r.width*dpr));cv.height=Math.max(1,Math.round(r.height*dpr));
+ const c=cv.getContext("2d");c.setTransform(dpr,0,0,dpr,0,0);c.clearRect(0,0,r.width,r.height);
+ if(values.length<2)return;
+ const lo=Math.min(...values),hi=Math.max(...values),span=hi-lo||1,pad=3;
+ const pts=values.map((v,i)=>({x:pad+i/(values.length-1)*(r.width-2*pad),y:pad+(hi-v)/span*(r.height-2*pad)}));
+ c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.lineTo(pts.at(-1).x,r.height);c.lineTo(pts[0].x,r.height);c.closePath();
+ const g=c.createLinearGradient(0,0,0,r.height);g.addColorStop(0,"rgba(239,64,177,.30)");g.addColorStop(1,"rgba(173,110,241,.02)");c.fillStyle=g;c.fill();
+ c.beginPath();pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
  c.strokeStyle="#e546b0";c.lineWidth=2;c.lineJoin="round";c.stroke();
-
- const last=pts[pts.length-1];
- c.beginPath();c.arc(last.x,last.y,3,0,Math.PI*2);
- c.fillStyle="#8245db";c.fill();
+ const p=pts.at(-1);c.beginPath();c.arc(p.x,p.y,3,0,Math.PI*2);c.fillStyle="#8245db";c.fill();
 }
-function fibLevels(d,price) {
- const explicit=get(d,["fibonacci.levels","fib_levels","fib.levels"],null);
- if(Array.isArray(explicit)) {
-  return [0,23.6,38.2,50,61.8,78.6,100].map((pct,i)=>{
-   const item=explicit[i];
-   return n(typeof item==="object"?get(item,["price","value"]):item);
+function fibPrices(d,price){
+ const levels=get(d,["fibonacci.levels","fib_levels","fib.levels"],null);
+ if(Array.isArray(levels)){
+  const a=[0,23.6,38.2,50,61.8,78.6,100];
+  return a.map((pct,i)=>{
+   const item=levels[i];
+   return num(typeof item==="object"?get(item,["price","value"]):item);
   });
  }
- const high=n(get(d,["market.high_24h","high_24h","market.high","high"]));
- const low=n(get(d,["market.low_24h","low_24h","market.low","low"]));
- if(high===null||low===null||high<=low)return [null,null,null,null,null,null,null];
- return [0,23.6,38.2,50,61.8,78.6,100].map(p=>high-(high-low)*p/100);
+ const hi=num(get(d,["market.high_24h","high_24h","market.high","high","swing_high","indicators.swing_high"]));
+ const lo=num(get(d,["market.low_24h","low_24h","market.low","low","swing_low","indicators.swing_low"]));
+ if(hi!==null&&lo!==null&&hi>lo){
+  return [0,23.6,38.2,50,61.8,78.6,100].map(p=>hi-(hi-lo)*p/100);
+ }
+ // 高値・安値がない場合はATRから暫定レンジを作る
+ const atr=num(get(d,["indicators.atr","indicators.atr_15m","atr","atr_15m","metrics.atr"]));
+ if(price!==null&&atr!==null&&atr>0){
+  const high=price+3*atr,low=Math.max(0,price-3*atr);
+  return [0,23.6,38.2,50,61.8,78.6,100].map(p=>high-(high-low)*p/100);
+ }
+ return [null,null,null,null,null,null,null];
 }
-function renderTrades(trades) {
- const box=$("tradeRows");
- box.replaceChildren();
- const rows=trades.slice(-CFG.maxTrades).reverse();
- rows.forEach(t=>{
-  const row=document.createElement("div");
-  row.className="trade-row";
-  const time=get(t,["exit_time","closed_at","timestamp","time",
-   "entry_time","opened_at"],"--");
-  let date=String(time).replace("T"," ").slice(0,16);
-  const side=direction(get(t,["direction","side","position","type"],"--"));
+function renderTrades(a){
+ const box=$("tradeRows");box.replaceChildren();
+ a.slice(-4).reverse().forEach(t=>{
+  const row=document.createElement("div");row.className="trade";
+  const time=String(get(t,["exit_time","closed_at","timestamp","time","entry_time"],"--")).replace("T"," ").slice(0,16);
   const pnl=pnlOf(t);
-  const reason=get(t,["exit_reason","reason","close_reason","strategy"],"--");
-  [date,side,pnl===null?"--":signed(pnl),reason].forEach((v,i)=>{
-   const s=document.createElement("span");
-   s.textContent=String(v);
+  const vals=[time,sideOf(get(t,["direction","side","position","type"],"--")),pnl===null?"--":signed(pnl),get(t,["exit_reason","reason","close_reason","strategy"],"--")];
+  vals.forEach((v,i)=>{
+   const s=document.createElement("span");s.textContent=String(v);
    if(i===2&&pnl!==null)s.style.color=pnl>=0?"#d62b98":"#3478d8";
    row.appendChild(s);
-  });
-  box.appendChild(row);
+  });box.appendChild(row);
  });
 }
-function render(d) {
- const price=n(get(d,["price","market.price","btc_price","ticker.price"]));
- const equity=n(get(d,["equity","metrics.equity","account_value",
-  "total_equity","portfolio_value"]));
- const initial=n(get(d,["initial_equity","initial_bankroll",
-  "metrics.initial_equity","settings.initial_equity"]),CFG.initialEquityFallback);
- const trades=tradesOf(d);
- const closed=closedTrades(trades);
- const pnls=closed.map(pnlOf).filter(v=>v!==null);
- const wins=pnls.filter(v=>v>0).length;
- const losses=pnls.filter(v=>v<0).length;
+function render(d){
+ const price=num(get(d,["price","market.price","btc_price","ticker.price"]));
+ const equity=num(get(d,["equity","metrics.equity","account_value","total_equity","portfolio_value"]));
+ const initial=num(get(d,["initial_equity","initial_bankroll","metrics.initial_equity","settings.initial_equity"]),100);
+ const all=tradesOf(d),closed=closedOf(all),pnls=closed.map(pnlOf).filter(x=>x!==null);
+ const wins=pnls.filter(x=>x>0).length;
+ const wr=num(get(d,["metrics.win_rate","metrics.winrate","win_rate","winrate"]),pnls.length?wins/pnls.length*100:null);
+ const realized=num(get(d,["metrics.realized_pnl","metrics.realized_profit","realized_pnl","realized_profit"]),pnls.reduce((a,b)=>a+b,0));
+ const open=get(d,["open_trade","open_position","current_position"],null);
+ const openPnl=num(get(d,["metrics.unrealized_pnl","risk.unrealized_pnl","unrealized_pnl","open_pnl","open_trade.unrealized_pnl"]),0);
+ const dd=num(get(d,["risk.max_drawdown_pct","risk.max_dd_pct","metrics.max_drawdown_pct","max_drawdown_pct","max_dd_pct","max_dd"]));
 
- const winrate=n(get(d,["metrics.win_rate","metrics.winrate",
-  "win_rate","winrate","paper_stats.win_rate"]),
-  pnls.length?wins/pnls.length*100:null);
+ put("priceUsd",price===null?"--":usd(price));put("priceJpy",price===null?"":jpy(price));
+ put("equityUsd",equity===null?"--":usd(equity));put("equityJpy",equity===null?"":jpy(equity));
+ put("realizedUsd",signed(realized));colorPnL("realizedUsd",realized);
+ put("winrateValue",wr===null?"--":wr.toFixed(1)+"%");
+ put("pnlUsd",signed(openPnl));put("pnlJpy",jpy(openPnl));colorPnL("pnlUsd",openPnl);
+ put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
 
- const realized=n(get(d,["metrics.realized_pnl","metrics.realized_profit",
-  "realized_pnl","realized_profit","risk.realized_pnl"]),
-  pnls.length?pnls.reduce((a,b)=>a+b,0):null);
-
- const open=get(d,["open_trade","open_position","position",
-  "current_position"],null);
- const unrealized=n(get(d,["metrics.unrealized_pnl",
-  "risk.unrealized_pnl","unrealized_pnl","open_pnl",
-  "unrealized_profit","open_trade.unrealized_pnl",
-  "open_trade.net_pnl"]),0);
-
- const dd=n(get(d,["risk.max_drawdown_pct","risk.max_dd_pct",
-  "metrics.max_drawdown_pct","max_drawdown_pct","max_dd_pct","max_dd"]));
-
- // BTC価格
- text("priceUsd",price===null?"--":usd(price,price>=1000?0:2));
- text("priceJpy",price===null?"":jpy(price));
-
- // 資産額
- text("equityUsd",equity===null?"--":usd(equity));
- text("equityJpy",equity===null?"":jpy(equity));
-
- // 確定損益
- text("realizedUsd",realized===null?"--":signed(realized));
- profitStyle("realizedUsd",realized);
-
- // 勝率・含み損益・最大DD
- text("winrateValue",winrate===null?"--":winrate.toFixed(1)+"%");
- text("pnlUsd",signed(unrealized));
- text("pnlJpy",jpy(unrealized));
- profitStyle("pnlUsd",unrealized);
-
- text("maxddValue",dd===null?"--":
-  (Math.abs(dd)<=1&&dd!==0?Math.abs(dd)*100:Math.abs(dd)).toFixed(2)+"%");
-
- // 戦闘予報
- const sig=direction(get(d,["signal.direction","signal",
-  "current_signal","direction"],"WAIT"));
- const score=n(get(d,["signal.score","metrics.score","score","signal_score"]));
- const rsi=n(get(d,["indicators.rsi_15m","metrics.rsi_15m",
-  "rsi_15m","rsi","indicators.rsi"]));
-
- text("signalValue",sig);
- text("scoreValue",score===null?"--":score);
- text("rsiValue",rsi===null?"--":rsi.toFixed(1));
+ const sig=sideOf(get(d,["signal.direction","signal","current_signal","direction"],"WAIT"));
+ const score=num(get(d,["signal.score","metrics.score","score","signal_score"]));
+ const rsi=num(get(d,["indicators.rsi_15m","metrics.rsi_15m","rsi_15m","rsi","indicators.rsi"]));
+ put("signalValue",sig);put("scoreValue",score===null?"--":score);
+ put("rsiValue",rsi===null?"--":rsi.toFixed(1));
  $("signalValue").classList.remove("good","bad");
  if(sig==="LONG")$("signalValue").classList.add("good");
  if(sig==="SHORT")$("signalValue").classList.add("bad");
- text("reasonValue",get(d,["signal.reason","signal_reason","reason"],
-  "理由データなし"));
+ put("reasonValue",get(d,["signal.reason","signal_reason","reason"],"理由データなし"));
 
- // フィボナッチ：％ラベルは画像にあるので価格のみ
- const fib=fibLevels(d,price);
+ const fib=fibPrices(d,price);
  ["fib0","fib236","fib382","fib50","fib618","fib786","fib100"].forEach((id,i)=>{
-  text(id,fib[i]===null?"--":fmt(fib[i],0));
+  put(id,fib[i]===null?"--":fmt(fib[i],0));
  });
 
- // ポジション情報
- let side="NONE";
- if(open&&typeof open==="object") {
-  side=direction(get(open,["direction","side","position"],"NONE"));
- } else if(open) {
-  side=String(open).toUpperCase();
- }
- text("positionValue",side);
- text("openPnlValue",signed(unrealized));
- profitStyle("openPnlValue",unrealized);
+ let pos="NONE";
+ if(open&&typeof open==="object")pos=sideOf(get(open,["direction","side","position"],"NONE"));
+ else if(open)pos=String(open).toUpperCase();
+ if(pos==="WAIT")pos="NONE";
+ put("positionValue",pos);
+ put("openPnlValue",signed(openPnl));colorPnL("openPnlValue",openPnl);
 
- // エンジンの状態
- text("botStatusValue",get(d,["market_status","engine_status","status"],"--"));
- text("status15mValue",get(d,["market.timeframes.15m.direction",
-  "timeframes.15m.direction","trend.15m","market.trend_15m"],"--"));
- text("status1hValue",get(d,["market.timeframes.1h.direction",
-  "timeframes.1h.direction","trend.1h","market.trend_1h"],"--"));
- text("status4hValue",get(d,["market.timeframes.4h.direction",
-  "timeframes.4h.direction","trend.4h","market.trend_4h"],"--"));
+ put("botStatus",get(d,["market_status","engine_status","status"],"--"));
+ put("status15m",get(d,["market.timeframes.15m.direction","timeframes.15m.direction","trend.15m","market.trend_15m"],"--"));
+ put("status1h",get(d,["market.timeframes.1h.direction","timeframes.1h.direction","trend.1h","market.trend_1h"],"--"));
+ put("status4h",get(d,["market.timeframes.4h.direction","timeframes.4h.direction","trend.4h","market.trend_4h"],"--"));
 
- // 資産推移グラフ
  let history=historyOf(d);
  if(history.length<2&&equity!==null)history=[initial,equity];
  drawEquity(history);
- text("countValue",history.length);
- text("latestValue",equity===null?"--":usd(equity));
+ put("countValue",history.length);
+ put("latestValue",equity===null?"--":usd(equity));
 
- // HPグラフ：資産履歴を初期資産比のHPとして表示
- const hpHistory=history.map(v=>Math.max(0,Math.min(100,v/initial*100)));
+ // HP：資産が初期資金に対してどの程度かを横バーにする
  const hp=equity===null?100:Math.max(0,Math.min(100,equity/initial*100));
- sparkline("hpGraph",hpHistory.length?hpHistory:[hp],"bar");
+ $("hpFill").style.width=hp+"%";
 
- // 経験値：勝利1回につき1XP、10勝で1ステージ
- // ボットがrpg.xpを出力する場合はその値を優先
- const explicitXp=n(get(d,["rpg.xp","experience.xp","xp","experience"]));
- const totalWins=n(get(d,["rpg.total_wins","metrics.total_wins","total_wins"]),wins);
- const xp=explicitXp===null?totalWins%10:explicitXp%10;
- const xpHistory=[];
- let running=0;
- for(const t of closed) {
-  const p=pnlOf(t);
-  if(p!==null&&p>0)running++;
-  xpHistory.push((running%10)*10);
- }
- if(!xpHistory.length)xpHistory.push(xp*10);
- sparkline("xpGraph",xpHistory,"bar");
+ // 経験値：勝利1回=1XP、10XPで1ステージ
+ const explicit=num(get(d,["rpg.xp","experience.xp","xp","experience"]));
+ const totalWins=num(get(d,["rpg.total_wins","metrics.total_wins","total_wins"]),wins);
+ const xp=explicit===null?totalWins%10:((explicit%10)+10)%10;
+ $("xpFill").style.width=(xp*10)+"%";
 
- renderTrades(trades);
-
+ renderTrades(all);
  const generated=get(d,["generated_at","updated_at","timestamp"]);
- let time="更新時刻不明";
- if(generated) {
-  const dt=new Date(generated);
-  if(!Number.isNaN(dt.getTime())) {
-   time="更新: "+dt.toLocaleString("ja-JP",{
-    month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"
-   });
-  }
- }
- $("updated").textContent=time+" ｜ PAPER ONLY ｜ 60秒ごとに更新";
+ let stamp="更新時刻不明";
+ if(generated){const dt=new Date(generated);if(!isNaN(dt))stamp="更新: "+dt.toLocaleString("ja-JP",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})}
+ $("updated").textContent=stamp+" ｜ PAPER ONLY ｜ 60秒ごとに更新";
 }
-
-async function loadData() {
- const paths=["./data.json","./docs/data.json","./state.json","./docs/state.json"];
- let lastError="";
- for(const path of paths) {
-  try {
+async function load(){
+ const err=$("error");
+ for(const path of ["./data.json","./docs/data.json","./state.json","./docs/state.json"]){
+  try{
    const r=await fetch(path+"?t="+Date.now(),{cache:"no-store"});
-   if(!r.ok){lastError=path+" HTTP "+r.status;continue}
-   const data=await r.json();
-   if(!data||typeof data!=="object"){lastError="JSON形式エラー";continue}
-   render(data);
-   $("error").style.display="none";
-   return;
-  } catch(e) {
-   lastError=String(e);
-  }
+   if(!r.ok)continue;
+   const d=await r.json();
+   if(!d||typeof d!=="object")continue;
+   render(d);err.style.display="none";return;
+  }catch(e){}
  }
- $("error").style.display="block";
- $("error").textContent="データを読み込めません。Pages上のdata.jsonの配置を確認してください。 "+lastError;
- $("updated").textContent="データ待機中 ｜ PAPER ONLY";
+ err.style.display="block";
+ err.textContent="data.jsonを読み込めません。GitHub Pagesで公開されているファイルの場所を確認してください。";
 }
-
-loadData();
-setInterval(loadData,CFG.refreshMs);
-window.addEventListener("resize",loadData);
+load();
+setInterval(load,60000);
+window.addEventListener("resize",()=>{load()});
 </script>
 </body>
 </html>
