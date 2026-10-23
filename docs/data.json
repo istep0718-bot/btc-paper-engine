@@ -1,7 +1,7 @@
 {
-  "build": "BTC_PAPER_V12_2026-10-23",
-  "generated_at": "2026-10-23T01:01:21.838418+00:00",
-  "price": 81521.5,
+  "build": "BTC_PAPER_V13_2026-10-23",
+  "generated_at": "2026-10-23T01:24:50.082688+00:00",
+  "price": 81409.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -24,16 +24,16 @@
     ],
     "timeframes": {
       "15m": {
-        "close": 81459.0,
-        "ema20": 81382.1439537593,
-        "ema50": 81564.23332383992,
-        "rsi": 45.503211991434696,
-        "atr": 150.7959585600393,
-        "adx": 16.635701741017055,
-        "macd": -29.316706393568893,
-        "macd_signal": -44.241940418942534,
+        "close": 81432.0,
+        "ema20": 81386.89214863944,
+        "ema50": 81559.05025298557,
+        "rsi": 47.22222222222223,
+        "atr": 156.7391048186017,
+        "adx": 15.731690526251393,
+        "macd": -22.323023373930482,
+        "macd_signal": -39.858156962164315,
         "trend": "SIDEWAYS",
-        "last_candle_ts": 1792716300000
+        "last_candle_ts": 1792717200000
       },
       "1h": {
         "close": 81459.0,
@@ -60,13 +60,13 @@
         "last_candle_ts": 1792699200000
       }
     },
-    "rsi": 45.503211991434696,
-    "atr": 150.7959585600393,
-    "adx": 16.635701741017055,
-    "ema20": 81382.1439537593,
-    "ema50": 81564.23332383992,
-    "macd": -29.316706393568893,
-    "macd_signal": -44.241940418942534,
+    "rsi": 47.22222222222223,
+    "atr": 156.7391048186017,
+    "adx": 15.731690526251393,
+    "ema20": 81386.89214863944,
+    "ema50": 81559.05025298557,
+    "macd": -22.323023373930482,
+    "macd_signal": -39.858156962164315,
     "trend_15m": "SIDEWAYS",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN"
@@ -77,12 +77,16 @@
     "daily_loss_locked": false,
     "drawdown_locked": false,
     "risk_per_trade_pct": 0.5,
-    "max_margin_pct": 10.0,
+    "min_margin_pct": 20.0,
+    "max_margin_pct": 50.0,
+    "max_margin_fraction": 50.0,
     "max_daily_loss_pct": 3.0,
     "max_drawdown_limit_pct": 10.0,
     "max_consecutive_losses": 4,
     "cooldown_seconds": 3600,
-    "leverage": 40.0
+    "leverage": 40.0,
+    "equity_scaled_sizing": true,
+    "skip_if_margin_risk_conflict": true
   },
   "current_drawdown_pct": 0.7972144401434745,
   "max_drawdown_pct": 0.7972144401434745,
@@ -761,6 +765,16 @@
       "equity_usd": 99.98294318126045,
       "marked_equity": 99.98294318126045,
       "price": 81521.5,
+      "unrealized_pnl": 0.0,
+      "net_pnl": -0.017056818739547452,
+      "drawdown_pct": 0.7972144401434745
+    },
+    {
+      "timestamp": "2026-10-23T01:24:50.082648+00:00",
+      "equity": 99.98294318126045,
+      "equity_usd": 99.98294318126045,
+      "marked_equity": 99.98294318126045,
+      "price": 81409.5,
       "unrealized_pnl": 0.0,
       "net_pnl": -0.017056818739547452,
       "drawdown_pct": 0.7972144401434745
