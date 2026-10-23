@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V17_1_2026-10-23",
-  "generated_at": "2026-10-23T13:38:39.515672+00:00",
+  "generated_at": "2026-10-23T14:08:43.466413+00:00",
   "market_status": "OK",
-  "price": 81765.5,
+  "price": 81873.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -16,27 +16,27 @@
   "open_position": null,
   "has_position": false,
   "signal": {
-    "direction": "SHORT",
-    "score": 8,
-    "long_score": 1,
-    "short_score": 8,
-    "score_edge": 7,
-    "rsi": 50.3006,
-    "atr": 168.536641,
-    "ema9": 81703.455027,
-    "ema21": 81708.358076,
-    "trend_15m": "SIDEWAYS",
-    "trend_1h": "DOWN",
+    "direction": "LONG",
+    "score": 6,
+    "long_score": 6,
+    "short_score": 2,
+    "score_edge": 4,
+    "rsi": 61.2616,
+    "atr": 185.600497,
+    "ema9": 81815.651217,
+    "ema21": 81761.5356,
+    "trend_15m": "UP",
+    "trend_1h": "SIDEWAYS",
     "trend_4h": "DOWN",
     "bollinger": {
       "period": 20,
       "stddev": 2.0,
-      "upper": 81859.353269,
-      "middle": 81709.45,
-      "lower": 81559.546731,
-      "width_pct": 0.366918,
-      "percent_b": 0.515176,
-      "zscore": 0.060706
+      "upper": 81961.598157,
+      "middle": 81730.35,
+      "lower": 81499.101843,
+      "width_pct": 0.565881,
+      "percent_b": 1.126275,
+      "zscore": 2.505101
     },
     "fibonacci": {
       "lookback_1h_candles": 80,
@@ -52,19 +52,19 @@
       },
       "nearest_level": "0.236",
       "nearest_price": 81840.604,
-      "distance_pct": 0.10225913377448614
+      "distance_pct": 0.2187222628627083
     },
-    "timestamp": "2026-10-23T13:38:39.515471+00:00",
-    "reference_price": 81714.0,
+    "timestamp": "2026-10-23T14:08:43.466311+00:00",
+    "reference_price": 82020.0,
     "flags": [],
     "reasons": [
-      "15m EMA bearish",
-      "1h downtrend",
+      "15m EMA bullish",
+      "15m uptrend",
       "4h downtrend",
-      "Fib resistance area 0.236"
+      "15m positive momentum"
     ],
     "entry_status": "Consecutive-loss lock active",
-    "cooldown_remaining_seconds": 300
+    "cooldown_remaining_seconds": 0
   },
   "risk": {
     "daily_loss_pct": 1.9731,
@@ -1334,25 +1334,31 @@
       "equity": 98.15266165691833,
       "marked_equity": 98.15266165691833,
       "price": 81765.5
+    },
+    {
+      "timestamp": "2026-10-23T14:08:43.466408+00:00",
+      "equity": 98.15266165691833,
+      "marked_equity": 98.15266165691833,
+      "price": 81873.5
     }
   ],
   "timeframes": {
-    "15m": "SIDEWAYS",
-    "1h": "DOWN",
+    "15m": "UP",
+    "1h": "SIDEWAYS",
     "4h": "DOWN",
-    "rsi": 50.3006,
-    "atr": 168.536641,
-    "ema9": 81703.455027,
-    "ema21": 81708.358076,
+    "rsi": 61.2616,
+    "atr": 185.600497,
+    "ema9": 81815.651217,
+    "ema21": 81761.5356,
     "bollinger": {
       "period": 20,
       "stddev": 2.0,
-      "upper": 81859.353269,
-      "middle": 81709.45,
-      "lower": 81559.546731,
-      "width_pct": 0.366918,
-      "percent_b": 0.515176,
-      "zscore": 0.060706
+      "upper": 81961.598157,
+      "middle": 81730.35,
+      "lower": 81499.101843,
+      "width_pct": 0.565881,
+      "percent_b": 1.126275,
+      "zscore": 2.505101
     },
     "fibonacci": {
       "lookback_1h_candles": 80,
@@ -1368,7 +1374,7 @@
       },
       "nearest_level": "0.236",
       "nearest_price": 81840.604,
-      "distance_pct": 0.10225913377448614
+      "distance_pct": 0.2187222628627083
     }
   },
   "config": {
