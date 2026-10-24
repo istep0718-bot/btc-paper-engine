@@ -1,15 +1,15 @@
 {
-  "build": "BTC_PAPER_V17_1_2026-10-23",
-  "generated_at": "2026-10-24T17:34:12.465336+00:00",
+  "build": "BTC_PAPER_V17_2_2026-10-25",
+  "generated_at": "2026-10-24T17:39:28.791974+00:00",
   "market_status": "OK",
-  "price": 80122.5,
-  "funding_rate": 8.6482e-06,
-  "funding_rate_pct": 0.00086482,
+  "price": 80126.5,
+  "funding_rate": 8.2346e-06,
+  "funding_rate_pct": 0.00082346,
   "initial_equity": 100.0,
   "equity": 98.15266165691833,
   "marked_equity": 98.15266165691833,
   "realized_pnl": -1.8302815243421524,
-  "unrealized_pnl": 0,
+  "unrealized_pnl": 0.0,
   "net_pnl": -1.8473383430816739,
   "net_pnl_pct": -1.8473383430816739,
   "position": null,
@@ -54,7 +54,7 @@
       "nearest_price": 80521.176,
       "distance_pct": 0.43177549111319835
     },
-    "timestamp": "2026-10-24T17:34:12.465249+00:00",
+    "timestamp": "2026-10-24T17:39:28.791879+00:00",
     "reference_price": 80170.0,
     "flags": [],
     "reasons": [
@@ -64,16 +64,22 @@
       "4h downtrend",
       "15m positive momentum"
     ],
-    "entry_status": "Consecutive-loss lock active",
-    "cooldown_remaining_seconds": 0
+    "entry_status": "Consecutive-loss pause: 3600s remaining",
+    "cooldown_remaining_seconds": 0,
+    "paper_only": true,
+    "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 0,
+    "daily_loss_pct": 0.0,
+    "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "drawdown_pct": 3.7755,
+    "drawdown_limit_pct": 30.0,
     "drawdown_lock": false,
     "consecutive_losses": 4,
+    "consecutive_loss_limit": 10,
     "consecutive_loss_lock": true,
+    "consecutive_pause_remaining_seconds": 3600,
     "risk_per_trade_pct": 0.75,
     "max_margin_pct": 35.0,
     "leverage": 40.0,
@@ -87,6 +93,7 @@
     "closed_trades": 9,
     "wins": 3,
     "losses": 6,
+    "breakeven_trades": 0,
     "win_rate": 33.33333333333333,
     "total_net_pnl": -1.8473383433802395,
     "average_trade": -0.20525981593113773,
@@ -1659,51 +1666,75 @@
       "equity": 98.15266165691833,
       "marked_equity": 98.15266165691833,
       "price": 80122.5
+    },
+    {
+      "timestamp": "2026-10-24T17:39:28.791969+00:00",
+      "equity": 98.15266165691833,
+      "marked_equity": 98.15266165691833,
+      "price": 80126.5
     }
   ],
-  "timeframes": {
-    "15m": "DOWN",
-    "1h": "DOWN",
-    "4h": "DOWN",
-    "rsi": 48.935,
-    "atr": 251.39647,
-    "ema9": 80000.223663,
-    "ema21": 80134.884965,
-    "bollinger": {
-      "period": 20,
-      "stddev": 2.0,
-      "upper": 81098.161408,
-      "middle": 80179.95,
-      "lower": 79261.738592,
-      "width_pct": 2.290377,
-      "percent_b": 0.494582,
-      "zscore": -0.021673
+  "events": [
+    {
+      "timestamp": "2026-10-22T22:16:20.927511+00:00",
+      "type": "FUNDING_ESTIMATE_APPLIED",
+      "message": "Estimated funding applied using current rate",
+      "hours": 24,
+      "funding_cash_change": 0.030293099158271795,
+      "funding_rate": 1.25e-05
     },
-    "fibonacci": {
-      "lookback_1h_candles": 80,
-      "swing_high": 84850.0,
-      "swing_low": 79184.0,
-      "trend": "DOWN",
-      "levels": {
-        "0.236": 80521.176,
-        "0.382": 81348.412,
-        "0.500": 82017.0,
-        "0.618": 82685.588,
-        "0.786": 83637.476
-      },
-      "nearest_level": "0.236",
-      "nearest_price": 80521.176,
-      "distance_pct": 0.43177549111319835
+    {
+      "timestamp": "2026-10-22T22:16:20.927531+00:00",
+      "type": "FUNDING_CATCHUP_CAPPED",
+      "message": "Funding catch-up capped at 24 hours; older missing hours were not estimated",
+      "skipped_hours": 497452
+    },
+    {
+      "timestamp": "2026-10-22T22:16:20.927679+00:00",
+      "type": "POSITION_CLOSED",
+      "message": "SHORT closed: MAX_HOLD_TIME",
+      "net_pnl": -0.3671698299532111,
+      "equity": 100.12830246034532
+    },
+    {
+      "timestamp": "2026-10-23T00:15:03.691738+00:00",
+      "type": "DAILY_RESET",
+      "message": "New UTC day; daily risk baseline reset",
+      "baseline": 100.12830246034532
+    },
+    {
+      "timestamp": "2026-10-23T00:15:03.691823+00:00",
+      "type": "POSITION_OPENED",
+      "message": "SHORT paper position opened",
+      "entry_price": 81206.2555,
+      "quantity": 0.0014084635217068073,
+      "margin_used": 2.8594012151538197,
+      "notional": 114.37604860615279,
+      "entry_fee": 0.057188024303076394,
+      "signal_score": 7
+    },
+    {
+      "timestamp": "2026-10-23T01:01:21.838369+00:00",
+      "type": "POSITION_CLOSED",
+      "message": "SHORT closed: MAX_HOLD_TIME",
+      "net_pnl": -0.14535927908487584,
+      "equity": 99.98294318126045
     }
+  ],
+  "entry_pause": {
+    "consecutive_loss_lock": true,
+    "remaining_seconds": 3600
   },
   "config": {
     "risk_per_trade_pct": 0.75,
     "max_margin_pct": 35.0,
     "leverage": 40.0,
-    "daily_loss_limit_pct": 3.0,
-    "max_drawdown_limit_pct": 10.0,
-    "max_consecutive_losses": 4,
-    "cooldown_seconds": 300,
+    "daily_loss_limit_pct": 10.0,
+    "max_drawdown_limit_pct": 30.0,
+    "max_consecutive_losses": 10,
+    "consecutive_pause_seconds": 3600,
+    "cooldown_seconds": 60,
+    "max_hold_hours": 24.0,
     "min_signal_score": 6,
     "min_score_edge": 2,
     "fee_rate_per_side": 0.0005,
