@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V17_1_2026-10-23",
-  "generated_at": "2026-10-24T12:04:59.071337+00:00",
+  "generated_at": "2026-10-24T12:42:20.673436+00:00",
   "market_status": "OK",
-  "price": 80591.5,
+  "price": 80750.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -17,26 +17,26 @@
   "has_position": false,
   "signal": {
     "direction": "SHORT",
-    "score": 9,
-    "long_score": 0,
-    "short_score": 9,
-    "score_edge": 9,
-    "rsi": 41.1762,
-    "atr": 105.138776,
-    "ema9": 80608.559798,
-    "ema21": 80660.533435,
-    "trend_15m": "DOWN",
+    "score": 6,
+    "long_score": 2,
+    "short_score": 6,
+    "score_edge": 4,
+    "rsi": 55.3563,
+    "atr": 108.333956,
+    "ema9": 80643.598271,
+    "ema21": 80667.622673,
+    "trend_15m": "SIDEWAYS",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
     "bollinger": {
       "period": 20,
       "stddev": 2.0,
-      "upper": 80848.737672,
-      "middle": 80660.15,
-      "lower": 80471.562328,
-      "width_pct": 0.467611,
-      "percent_b": 0.282197,
-      "zscore": -0.871213
+      "upper": 80823.354905,
+      "middle": 80650.05,
+      "lower": 80476.745095,
+      "width_pct": 0.42977,
+      "percent_b": 0.843181,
+      "zscore": 1.372725
     },
     "fibonacci": {
       "lookback_1h_candles": 80,
@@ -54,14 +54,14 @@
       "nearest_price": 81473.884,
       "distance_pct": 1.1118220854327552
     },
-    "timestamp": "2026-10-24T12:04:59.071234+00:00",
-    "reference_price": 80578.0,
+    "timestamp": "2026-10-24T12:42:20.673339+00:00",
+    "reference_price": 80769.0,
     "flags": [],
     "reasons": [
       "15m EMA bearish",
-      "15m downtrend",
       "1h downtrend",
-      "4h downtrend"
+      "4h downtrend",
+      "15m positive momentum"
     ],
     "entry_status": "Consecutive-loss lock active",
     "cooldown_remaining_seconds": 0
@@ -1592,25 +1592,31 @@
       "equity": 98.15266165691833,
       "marked_equity": 98.15266165691833,
       "price": 80591.5
+    },
+    {
+      "timestamp": "2026-10-24T12:42:20.673431+00:00",
+      "equity": 98.15266165691833,
+      "marked_equity": 98.15266165691833,
+      "price": 80750.5
     }
   ],
   "timeframes": {
-    "15m": "DOWN",
+    "15m": "SIDEWAYS",
     "1h": "DOWN",
     "4h": "DOWN",
-    "rsi": 41.1762,
-    "atr": 105.138776,
-    "ema9": 80608.559798,
-    "ema21": 80660.533435,
+    "rsi": 55.3563,
+    "atr": 108.333956,
+    "ema9": 80643.598271,
+    "ema21": 80667.622673,
     "bollinger": {
       "period": 20,
       "stddev": 2.0,
-      "upper": 80848.737672,
-      "middle": 80660.15,
-      "lower": 80471.562328,
-      "width_pct": 0.467611,
-      "percent_b": 0.282197,
-      "zscore": -0.871213
+      "upper": 80823.354905,
+      "middle": 80650.05,
+      "lower": 80476.745095,
+      "width_pct": 0.42977,
+      "percent_b": 0.843181,
+      "zscore": 1.372725
     },
     "fibonacci": {
       "lookback_1h_candles": 80,
