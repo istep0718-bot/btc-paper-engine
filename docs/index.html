@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="ja">
 <head>
@@ -8,139 +7,76 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <meta name="apple-mobile-web-app-title" content="BTC冒険記">
-<title>萌え萌えキュン♡ BTC冒険記</title>
-
-<!-- iPhoneホーム画面アイコン -->
 <link rel="apple-touch-icon" href="./IMG_6212.jpeg">
+<title>萌え萌えキュン♡ BTC冒険記</title>
 
 <style>
 *{box-sizing:border-box}
 html,body{
-  margin:0;
-  background:#f9edff;
-  color:#40266f;
-  font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif
+ margin:0;width:100%;min-height:100%;
+ background:#f9edff;color:#40266f;
+ font-family:-apple-system,BlinkMacSystemFont,"Hiragino Kaku Gothic ProN","Noto Sans JP",sans-serif
 }
 body{overflow-x:hidden}
 #app{
-  position:relative;
-  width:min(100%,864px);
-  margin:auto;
-  aspect-ratio:864/1536;
-  background:#fff0ff url("./6F57182A-FA99-4BC6-A546-EAF0793E5B02.png") center top/100% 100% no-repeat;
-  overflow:hidden
+ position:relative;width:min(100%,864px);margin:0 auto;
+ aspect-ratio:864/1536;container-type:inline-size;
+ background:#fff0ff url("./6F57182A-FA99-4BC6-A546-EAF0793E5B02.png") center top/100% 100% no-repeat;
+ overflow:hidden
 }
 .v{
-  position:absolute;
-  z-index:4;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-  overflow:hidden;
-  min-width:0;
-  font-variant-numeric:tabular-nums;
-  line-height:1.1
+ position:absolute;z-index:4;display:flex;align-items:center;
+ justify-content:center;text-align:center;overflow:hidden;
+ min-width:0;font-variant-numeric:tabular-nums;line-height:1.12
 }
-.num{
-  font-size:clamp(9px,2.1vw,17px);
-  font-weight:850;
-  white-space:nowrap
-}
-.sub{
-  font-size:clamp(6px,1.25vw,10px);
-  font-weight:650;
-  white-space:nowrap;
-  margin-top:2px
-}
-.good{color:#e12c9b}
-.bad{color:#3479d5}
+.num{font-size:clamp(10px,2.75cqw,23px);font-weight:900;white-space:nowrap;letter-spacing:-.025em}
+.sub{font-size:clamp(7px,1.55cqw,13px);font-weight:750;white-space:nowrap;margin-top:.25cqw}
 .stack{flex-direction:column}
-.bar{
-  position:absolute;
-  z-index:5;
-  overflow:hidden;
-  border-radius:30px;
-  pointer-events:none
-}
+.good{color:#d9239b}
+.bad{color:#276fd0}
+
+.bar{position:absolute;z-index:5;overflow:hidden;border-radius:30px;pointer-events:none}
 .bar .fill{
-  height:100%;
-  width:0;
-  border-radius:inherit;
-  transition:width .35s ease;
-  background:linear-gradient(90deg,#fa9cde,#e34bb8,#b26ae9)
+ height:100%;width:0;border-radius:inherit;transition:width .35s;
+ background:linear-gradient(90deg,#fa9cde,#e34bb8,#b26ae9)
 }
-.bar .shine{
-  position:absolute;
-  inset:0;
-  border-radius:inherit;
-  border:1px solid rgba(255,255,255,.8)
-}
+.bar .shine{position:absolute;inset:0;border-radius:inherit;border:1px solid rgba(255,255,255,.8)}
 #hpBar{left:32.5%;top:23.45%;width:21.8%;height:1.08%}
 #xpBar{left:57.3%;top:23.45%;width:38.6%;height:1.08%}
 #hpBar .fill{background:linear-gradient(90deg,#ffb5e5,#ec4cb6)}
 #xpBar .fill{background:linear-gradient(90deg,#a8a0ff,#5579ee)}
 
-/* 数字表示 */
-#price{left:23.8%;top:28.65%;width:13.8%;height:4.1%}
-#assets{left:39.7%;top:28.65%;width:13.6%;height:4.1%}
-#realized{left:54%;top:28.65%;width:12%;height:4.1%}
-#winrate{left:23.8%;top:35.9%;width:13.8%;height:3%}
-#pnl{left:39.7%;top:35.9%;width:13.6%;height:3%}
-#maxdd{left:54%;top:35.9%;width:12%;height:3%}
+#price{left:23.5%;top:28.65%;width:14.2%;height:4.15%}
+#assets{left:39.2%;top:28.65%;width:14.4%;height:4.15%}
+#realized{left:54%;top:28.65%;width:12.2%;height:4.15%}
+#winrate{left:23.5%;top:35.9%;width:14.2%;height:3.1%}
+#pnl{left:39.2%;top:35.9%;width:14.4%;height:3.1%}
+#maxdd{left:54%;top:35.9%;width:12.2%;height:3.1%}
 
-/* 資産推移グラフ */
 #equityChart{
-  position:absolute;
-  z-index:4;
-  left:23.5%;
-  top:44.45%;
-  width:41.7%;
-  height:12.5%
+ position:absolute;z-index:4;left:23.7%;top:44.55%;
+ width:41.2%;height:12.1%;display:block
 }
 #recordCount{
-  left:39%;
-  top:57.8%;
-  width:5.5%;
-  height:1.4%;
-  font-size:clamp(7px,1.4vw,11px);
-  font-weight:800
+ left:37.4%;top:57.85%;width:8.8%;height:1.45%;
+ font-size:clamp(8px,1.65cqw,14px);font-weight:900
 }
 #latestEquity{
-  left:53.3%;
-  top:57.8%;
-  width:11.5%;
-  height:1.4%;
-  font-size:clamp(7px,1.4vw,11px);
-  font-weight:800
+ left:50.7%;top:57.85%;width:14.1%;height:1.45%;
+ font-size:clamp(8px,1.65cqw,14px);font-weight:900
 }
-
-/* 戦闘予報 */
-#signal{left:68%;top:45.1%;width:9.5%;height:4.1%}
-#score{left:78.1%;top:45.1%;width:9.2%;height:4.1%}
-#rsi{left:88%;top:45.1%;width:8%;height:4.1%}
+#signal{left:67.6%;top:45%;width:10.1%;height:4.15%}
+#score{left:78%;top:45%;width:9.3%;height:4.15%}
+#rsi{left:87.7%;top:45%;width:8.7%;height:4.15%}
 #reason{
-  left:68.5%;
-  top:49.8%;
-  width:27.4%;
-  height:2%;
-  font-size:clamp(6px,1.1vw,9px)
+ left:68%;top:49.8%;width:27.5%;height:2.1%;
+ font-size:clamp(7px,1.4cqw,12px);font-weight:700
 }
-
-/* フィボナッチ */
 .fib{
-  position:absolute;
-  z-index:4;
-  left:72.7%;
-  width:11.5%;
-  height:1.55%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:clamp(7px,1.55vw,12px);
-  font-weight:800;
-  white-space:nowrap;
-  overflow:hidden
+ position:absolute;z-index:4;left:71.6%;width:13.2%;height:1.55%;
+ display:flex;align-items:center;justify-content:center;
+ font-size:clamp(8px,1.8cqw,15px);font-weight:900;
+ white-space:nowrap;overflow:hidden
 }
 #fib0{top:58.3%}
 #fib236{top:60%}
@@ -150,78 +86,41 @@ body{overflow-x:hidden}
 #fib786{top:66.8%}
 #fib100{top:68.5%}
 
-/* バトル欄 */
-#position{left:37.5%;top:67%;width:7.8%;height:1.55%}
-#openPnl{left:36%;top:70%;width:10%;height:1.45%}
+#position{left:37%;top:67%;width:9%;height:1.8%}
+#openPnl{left:35.4%;top:70%;width:11.8%;height:1.55%}
 
-/* エンジン欄 */
 .engine{
-  position:absolute;
-  z-index:4;
-  left:57.4%;
-  width:6.8%;
-  height:1.35%;
-  font-size:clamp(7px,1.45vw,11px);
-  font-weight:800;
-  text-align:center;
-  white-space:nowrap;
-  overflow:hidden
+ position:absolute;z-index:4;left:56.8%;width:7.6%;height:1.4%;
+ font-size:clamp(8px,1.7cqw,14px);font-weight:900;
+ text-align:center;white-space:nowrap;overflow:hidden
 }
 #botStatus{top:63.8%}
 #status15m{top:65.45%}
 #status1h{top:67.05%}
 #status4h{top:68.65%}
 
-/* 取引履歴 */
 #tradeRows{
-  position:absolute;
-  z-index:5;
-  left:23.7%;
-  top:80.1%;
-  width:72.7%;
-  height:7.6%;
-  overflow:hidden;
-  font-size:clamp(6px,1.25vw,10px);
-  line-height:1.6;
-  color:#47336f
+ position:absolute;z-index:5;left:23.7%;top:80.1%;
+ width:72.7%;height:7.6%;overflow:hidden;
+ font-size:clamp(7px,1.5cqw,13px);line-height:1.6;color:#47336f
 }
 .trade{
-  display:grid;
-  grid-template-columns:1.4fr .65fr .8fr 1.25fr;
-  gap:2px;
-  min-height:18%;
-  border-bottom:1px solid #eadcf5;
-  align-items:center
+ display:grid;grid-template-columns:1.4fr .65fr .8fr 1.25fr;
+ gap:.25cqw;min-height:22%;
+ border-bottom:1px solid #eadcf5;align-items:center
 }
-.trade span{
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis
-}
+.trade span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 #updated{
-  position:absolute;
-  z-index:5;
-  left:24%;
-  top:89%;
-  width:72%;
-  text-align:center;
-  font-size:clamp(5px,.95vw,8px);
-  color:#67518c
+ position:absolute;z-index:5;left:23%;top:89%;width:74%;
+ text-align:center;font-size:clamp(6px,1.15cqw,10px);
+ font-weight:650;color:#67518c;white-space:nowrap
 }
 #error{
-  display:none;
-  position:fixed;
-  z-index:20;
-  bottom:8px;
-  left:8px;
-  right:8px;
-  padding:12px;
-  background:white;
-  border:1px solid #d7a2e9;
-  border-radius:10px;
-  font-size:12px;
-  overflow-wrap:anywhere
+ display:none;position:fixed;z-index:20;bottom:8px;left:8px;right:8px;
+ padding:12px;background:#fff;border:1px solid #d7a2e9;
+ border-radius:10px;font-size:12px;overflow-wrap:anywhere
 }
+@media(min-width:865px){#app{margin:0 auto}}
 </style>
 </head>
 
@@ -229,45 +128,68 @@ body{overflow-x:hidden}
 <main id="app">
 
 <div id="hpBar" class="bar">
-  <div id="hpFill" class="fill"></div>
-  <div class="shine"></div>
+ <div id="hpFill" class="fill"></div>
+ <div class="shine"></div>
 </div>
+
 <div id="xpBar" class="bar">
-  <div id="xpFill" class="fill"></div>
-  <div class="shine"></div>
+ <div id="xpFill" class="fill"></div>
+ <div class="shine"></div>
 </div>
 
 <div id="price" class="v stack">
-  <div id="priceUsd" class="num">--</div>
-  <div id="priceJpy" class="sub"></div>
+ <div id="priceUsd" class="num">--</div>
+ <div id="priceJpy" class="sub"></div>
 </div>
+
 <div id="assets" class="v stack">
-  <div id="equityUsd" class="num">--</div>
-  <div id="equityJpy" class="sub"></div>
+ <div id="equityUsd" class="num">--</div>
+ <div id="equityJpy" class="sub"></div>
 </div>
+
 <div id="realized" class="v stack">
-  <div id="realizedUsd" class="num">--</div>
-  <div class="sub">USD</div>
+ <div id="realizedUsd" class="num">--</div>
+ <div class="sub">USD</div>
 </div>
+
 <div id="winrate" class="v">
-  <span id="winrateValue" class="num">--</span>
+ <span id="winrateValue" class="num">--</span>
 </div>
+
 <div id="pnl" class="v stack">
-  <div id="pnlUsd" class="num">--</div>
-  <div id="pnlJpy" class="sub"></div>
+ <div id="pnlUsd" class="num">--</div>
+ <div id="pnlJpy" class="sub"></div>
 </div>
+
 <div id="maxdd" class="v">
-  <span id="maxddValue" class="num">--</span>
+ <span id="maxddValue" class="num">--</span>
 </div>
 
 <canvas id="equityChart"></canvas>
-<div id="recordCount" class="v"><span id="countValue">--</span></div>
-<div id="latestEquity" class="v"><span id="latestValue">--</span></div>
 
-<div id="signal" class="v"><span id="signalValue" class="num">WAIT</span></div>
-<div id="score" class="v"><span id="scoreValue" class="num">--</span></div>
-<div id="rsi" class="v"><span id="rsiValue" class="num">--</span></div>
-<div id="reason" class="v"><span id="reasonValue">--</span></div>
+<div id="recordCount" class="v">
+ <span id="countValue">--</span>
+</div>
+
+<div id="latestEquity" class="v">
+ <span id="latestValue">--</span>
+</div>
+
+<div id="signal" class="v">
+ <span id="signalValue" class="num">WAIT</span>
+</div>
+
+<div id="score" class="v">
+ <span id="scoreValue" class="num">--</span>
+</div>
+
+<div id="rsi" class="v">
+ <span id="rsiValue" class="num">--</span>
+</div>
+
+<div id="reason" class="v">
+ <span id="reasonValue">--</span>
+</div>
 
 <div id="fib0" class="fib">--</div>
 <div id="fib236" class="fib">--</div>
@@ -277,8 +199,13 @@ body{overflow-x:hidden}
 <div id="fib786" class="fib">--</div>
 <div id="fib100" class="fib">--</div>
 
-<div id="position" class="v"><span id="positionValue" class="num">--</span></div>
-<div id="openPnl" class="v"><span id="openPnlValue" class="num">--</span></div>
+<div id="position" class="v">
+ <span id="positionValue" class="num">--</span>
+</div>
+
+<div id="openPnl" class="v">
+ <span id="openPnlValue" class="num">--</span>
+</div>
 
 <div id="botStatus" class="engine">--</div>
 <div id="status15m" class="engine">--</div>
@@ -287,6 +214,7 @@ body{overflow-x:hidden}
 
 <div id="tradeRows"></div>
 <div id="updated">データを読み込み中…</div>
+
 </main>
 
 <div id="error"></div>
@@ -298,426 +226,366 @@ const USDJPY=150;
 const $=id=>document.getElementById(id);
 
 function get(o,paths,def=null){
-  for(const p of paths){
-    let v=o;
-    for(const k of p.split(".")){
-      if(v==null)break;
-      v=v[k];
-    }
-    if(v!==undefined&&v!==null&&v!=="")return v;
+ for(const p of paths){
+  let v=o;
+  for(const k of p.split(".")){
+   if(v==null)break;
+   v=v[k];
   }
-  return def;
+  if(v!==undefined&&v!==null&&v!=="")return v;
+ }
+ return def;
 }
 
-function num(v,def=null){
-  if(v===null||v===undefined||v==="")return def;
-  const x=Number(v);
-  return Number.isFinite(x)?x:def;
+function n(v){
+ if(v===null||v===undefined||v==="")return null;
+ const x=Number(v);
+ return Number.isFinite(x)?x:null;
 }
 
 function fmt(v,d=2){
-  const x=num(v);
-  return x===null?"--":x.toLocaleString("en-US",{
-    minimumFractionDigits:d,
-    maximumFractionDigits:d
-  });
+ const x=n(v);
+ return x===null?"--":x.toLocaleString("en-US",{
+  minimumFractionDigits:d,
+  maximumFractionDigits:d
+ });
 }
 
 function usd(v){
-  const x=num(v);
-  return x===null?"--":"$"+fmt(x);
+ const x=n(v);
+ return x===null?"--":"$"+fmt(x);
 }
 
 function jpy(v){
-  const x=num(v);
-  return x===null?"":"約¥"+Math.round(x*USDJPY).toLocaleString("ja-JP");
+ const x=n(v);
+ return x===null?"":"約¥"+Math.round(x*USDJPY).toLocaleString("ja-JP");
 }
 
 function put(id,v){
-  $(id).textContent=v===null||v===undefined||v===""?"--":String(v);
+ $(id).textContent=v===null||v===undefined||v===""?"--":String(v);
 }
 
 function signed(v){
-  const x=num(v);
-  return x===null?"--":(x>0?"+":"")+fmt(x);
+ const x=n(v);
+ return x===null?"--":(x>0?"+":"")+fmt(x);
 }
 
-function colorPnL(id,v){
-  const x=num(v),e=$(id);
-  e.classList.remove("good","bad");
-  if(x!==null)e.classList.add(x>=0?"good":"bad");
+function color(id,v){
+ const x=n(v);
+ $(id).classList.remove("good","bad");
+ if(x!==null)$(id).classList.add(x>=0?"good":"bad");
 }
 
-function sideOf(v){
-  const s=String(v??"WAIT").toUpperCase();
-  if(s.includes("LONG")||s.includes("BUY"))return "LONG";
-  if(s.includes("SHORT")||s.includes("SELL"))return "SHORT";
-  return "WAIT";
+function side(v){
+ const s=String(v??"WAIT").toUpperCase();
+ if(s.includes("LONG")||s==="BUY")return"LONG";
+ if(s.includes("SHORT")||s==="SELL")return"SHORT";
+ return"WAIT";
 }
 
 function tradesOf(d){
-  const a=get(d,["recent_trades","paper_trades","trades","closed_trades"],[]);
-  return Array.isArray(a)?a:[];
+ const a=get(d,["recent_trades","paper_trades","trades","closed_trades"],[]);
+ return Array.isArray(a)?a:[];
 }
 
 function pnlOf(t){
-  return num(get(t,["net_pnl","pnl","profit","realized_pnl","realised_pnl"]));
+ return n(get(t,["net_pnl","pnl","profit","realized_pnl","realised_pnl"]));
 }
 
-function closedOf(a){
-  return a.filter(t=>
-    t.exit_price!=null||
-    t.exit_time!=null||
-    t.closed_at!=null||
-    String(get(t,["status","state"],"")).toLowerCase().includes("closed")
-  );
+function closed(a){
+ return a.filter(t=>
+  t.exit_price!=null||
+  t.exit_time!=null||
+  t.closed_at!=null||
+  String(get(t,["status","state"],"")).toLowerCase().includes("closed")
+ );
 }
 
 function historyOf(d){
-  const a=get(d,["equity_history","equity_curve","balance_history","history","snapshots"],[]);
-  if(!Array.isArray(a))return [];
-  return a.map(x=>
-    typeof x==="number"
-      ?x
-      :num(get(x,["equity","balance","value","account_value"]))
-  ).filter(x=>x!==null&&x>0).slice(-120);
+ const a=get(d,["equity_history","equity_curve","balance_history","history","snapshots"],[]);
+ if(!Array.isArray(a))return[];
+ return a.map(x=>
+  typeof x==="number"
+   ?x
+   :n(get(x,["marked_equity","equity","balance","value","account_value"]))
+ ).filter(x=>x!==null&&x>0).slice(-120);
 }
 
-function drawEquity(values){
-  const cv=$("equityChart");
-  const r=cv.getBoundingClientRect();
-  const dpr=Math.min(window.devicePixelRatio||1,2);
-  const w=Math.max(1,r.width);
-  const h=Math.max(1,r.height);
+function draw(values){
+ const cv=$("equityChart");
+ const r=cv.getBoundingClientRect();
+ const dpr=Math.min(devicePixelRatio||1,2);
+ const w=Math.max(1,r.width);
+ const h=Math.max(1,r.height);
 
-  cv.width=Math.max(1,Math.round(w*dpr));
-  cv.height=Math.max(1,Math.round(h*dpr));
+ cv.width=Math.round(w*dpr);
+ cv.height=Math.round(h*dpr);
 
-  const c=cv.getContext("2d");
-  c.setTransform(dpr,0,0,dpr,0,0);
-  c.clearRect(0,0,w,h);
+ const c=cv.getContext("2d");
+ c.setTransform(dpr,0,0,dpr,0,0);
+ c.clearRect(0,0,w,h);
 
-  if(values.length<2)return;
+ if(values.length<2)return;
 
-  const lo=Math.min(...values);
-  const hi=Math.max(...values);
-  const span=hi-lo||1;
-  const pad=3;
+ let lo=Math.min(...values);
+ let hi=Math.max(...values);
 
-  const pts=values.map((v,i)=>({
-    x:pad+i/(values.length-1)*(w-2*pad),
-    y:pad+(hi-v)/span*(h-2*pad)
-  }));
+ if(hi-lo<0.000001){
+  lo-=1;
+  hi+=1;
+ }
 
-  c.beginPath();
-  pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
-  c.lineTo(pts[pts.length-1].x,h);
-  c.lineTo(pts[0].x,h);
-  c.closePath();
+ const pad=3;
+ const pts=values.map((v,i)=>({
+  x:pad+i/(values.length-1)*(w-2*pad),
+  y:pad+(hi-v)/(hi-lo)*(h-2*pad)
+ }));
 
-  const g=c.createLinearGradient(0,0,0,h);
-  g.addColorStop(0,"rgba(239,64,177,.30)");
-  g.addColorStop(1,"rgba(173,110,241,.02)");
-  c.fillStyle=g;
-  c.fill();
+ c.beginPath();
+ pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.lineTo(pts.at(-1).x,h);
+ c.lineTo(pts[0].x,h);
+ c.closePath();
 
-  c.beginPath();
-  pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
-  c.strokeStyle="#e546b0";
-  c.lineWidth=2;
-  c.lineJoin="round";
-  c.stroke();
+ const g=c.createLinearGradient(0,0,0,h);
+ g.addColorStop(0,"rgba(239,64,177,.25)");
+ g.addColorStop(1,"rgba(173,110,241,.02)");
+ c.fillStyle=g;
+ c.fill();
 
-  const p=pts[pts.length-1];
-  c.beginPath();
-  c.arc(p.x,p.y,3,0,Math.PI*2);
-  c.fillStyle="#8245db";
-  c.fill();
+ c.beginPath();
+ pts.forEach((p,i)=>i?c.lineTo(p.x,p.y):c.moveTo(p.x,p.y));
+ c.strokeStyle="#e546b0";
+ c.lineWidth=Math.max(1.5,w*.005);
+ c.stroke();
+
+ const p=pts.at(-1);
+ c.beginPath();
+ c.arc(p.x,p.y,Math.max(2,w*.009),0,Math.PI*2);
+ c.fillStyle="#8245db";
+ c.fill();
 }
 
-function fibPrices(d,price){
-  const levels=get(d,["fibonacci.levels","fib_levels","fib.levels"],null);
+function fibs(d,price){
+ const fib=get(d,["signal.fibonacci","fibonacci","fib"]);
+ const levels=get(fib,["levels"],null);
 
-  if(Array.isArray(levels)){
-    return [0,23.6,38.2,50,61.8,78.6,100].map((pct,i)=>{
-      const item=levels[i];
-      return num(typeof item==="object"?get(item,["price","value"]):item);
-    });
+ if(levels&&typeof levels==="object"){
+  let vals=[null];
+
+  for(const key of ["0.236","0.382","0.500","0.618","0.786"]){
+   vals.push(n(levels[key]));
   }
 
-  const hi=num(get(d,[
-    "market.high_24h","high_24h","market.high","high",
-    "swing_high","indicators.swing_high"
-  ]));
+  vals.push(null);
 
-  const lo=num(get(d,[
-    "market.low_24h","low_24h","market.low","low",
-    "swing_low","indicators.swing_low"
-  ]));
-
-  if(hi!==null&&lo!==null&&hi>lo){
-    return [0,23.6,38.2,50,61.8,78.6,100]
-      .map(p=>hi-(hi-lo)*p/100);
+  if(vals.slice(1,6).some(x=>x!==null)){
+   vals[0]=n(fib.swing_high);
+   vals[6]=n(fib.swing_low);
+   return vals;
   }
+ }
 
-  // ATRから計算した参考値。実際の高値・安値ではありません。
-  const atr=num(get(d,[
-    "indicators.atr","indicators.atr_15m","atr","atr_15m","metrics.atr"
-  ]));
+ const hi=n(get(d,["high_24h","market.high_24h","fibonacci.swing_high"]));
+ const lo=n(get(d,["low_24h","market.low_24h","fibonacci.swing_low"]));
 
-  if(price!==null&&atr!==null&&atr>0){
-    const high=price+3*atr;
-    const low=Math.max(0,price-3*atr);
-    return [0,23.6,38.2,50,61.8,78.6,100]
-      .map(p=>high-(high-low)*p/100);
-  }
+ if(hi!==null&&lo!==null&&hi>lo){
+  return [hi,23.6,38.2,50,61.8,78.6,100].map(x=>
+   x===hi?hi:x===100?lo:hi-(hi-lo)*x/100
+  );
+ }
 
-  return [null,null,null,null,null,null,null];
-}
-
-function renderTrades(a){
-  const box=$("tradeRows");
-  box.replaceChildren();
-
-  a.slice(-4).reverse().forEach(t=>{
-    const row=document.createElement("div");
-    row.className="trade";
-
-    const time=String(get(t,[
-      "exit_time","closed_at","timestamp","time","entry_time"
-    ],"--")).replace("T"," ").slice(0,16);
-
-    const pnl=pnlOf(t);
-
-    const vals=[
-      time,
-      sideOf(get(t,["direction","side","position","type"],"--")),
-      pnl===null?"--":signed(pnl),
-      get(t,["exit_reason","reason","close_reason","strategy"],"--")
-    ];
-
-    vals.forEach((v,i)=>{
-      const s=document.createElement("span");
-      s.textContent=String(v);
-
-      if(i===2&&pnl!==null){
-        s.style.color=pnl>=0?"#d62b98":"#3478d8";
-      }
-
-      row.appendChild(s);
-    });
-
-    box.appendChild(row);
-  });
+ return[null,null,null,null,null,null,null];
 }
 
 function render(d){
-  const price=num(get(d,["price","market.price","btc_price","ticker.price"]));
-  const equity=num(get(d,[
-    "equity","metrics.equity","account_value","total_equity","portfolio_value"
-  ]));
+ const price=n(get(d,["price","market.price","btc_price"]));
+ const equity=n(get(d,["marked_equity","equity","metrics.equity"]));
+ const initial=n(get(d,["initial_equity","initial_bankroll"]),100);
 
-  const initial=num(get(d,[
-    "initial_equity","initial_bankroll","metrics.initial_equity","settings.initial_equity"
-  ]),100);
+ const all=tradesOf(d);
+ const cl=closed(all);
+ const pnls=cl.map(pnlOf).filter(x=>x!==null);
+ const wins=pnls.filter(x=>x>0).length;
 
-  const all=tradesOf(d);
-  const closed=closedOf(all);
-  const pnls=closed.map(pnlOf).filter(x=>x!==null);
-  const wins=pnls.filter(x=>x>0).length;
+ const wr=n(get(d,["metrics.win_rate","win_rate","winrate"]))
+  ??(pnls.length?wins/pnls.length*100:null);
 
-  const wr=num(get(d,[
-    "metrics.win_rate","metrics.winrate","win_rate","winrate"
-  ]),pnls.length?wins/pnls.length*100:null);
+ const realized=n(get(d,["realized_pnl","metrics.total_net_pnl"]))
+  ??pnls.reduce((a,b)=>a+b,0);
 
-  const realized=num(get(d,[
-    "metrics.realized_pnl","metrics.realized_profit","realized_pnl","realized_profit"
-  ]),pnls.reduce((a,b)=>a+b,0));
+ const open=get(d,["position","open_position","open_trade"],null);
 
-  const open=get(d,["open_trade","open_position","current_position"],null);
+ const upnl=n(get(d,[
+  "unrealized_pnl",
+  "position.unrealized_pnl",
+  "open_pnl"
+ ]))??0;
 
-  const openPnl=num(get(d,[
-    "metrics.unrealized_pnl","risk.unrealized_pnl",
-    "unrealized_pnl","open_pnl","open_trade.unrealized_pnl"
-  ]),0);
+ const dd=n(get(d,[
+  "risk.drawdown_pct",
+  "max_drawdown_pct",
+  "current_drawdown_pct"
+ ]));
 
-  const dd=num(get(d,[
-    "risk.max_drawdown_pct","risk.max_dd_pct",
-    "metrics.max_drawdown_pct","max_drawdown_pct","max_dd_pct","max_dd"
-  ]));
+ const sig=side(get(d,["signal.direction","signal","current_signal"],"WAIT"));
+ const score=n(get(d,["signal.score"]));
+ const rv=n(get(d,["signal.rsi","indicators.rsi_15m","rsi_15m"]));
 
-  put("priceUsd",price===null?"--":usd(price));
-  put("priceJpy",price===null?"":jpy(price));
+ put("priceUsd",price===null?"--":usd(price));
+ put("priceJpy",price===null?"":jpy(price));
 
-  put("equityUsd",equity===null?"--":usd(equity));
-  put("equityJpy",equity===null?"":jpy(equity));
+ put("equityUsd",equity===null?"--":usd(equity));
+ put("equityJpy",equity===null?"":jpy(equity));
 
-  put("realizedUsd",signed(realized));
-  colorPnL("realizedUsd",realized);
+ put("realizedUsd",signed(realized));
+ color("realizedUsd",realized);
 
-  put("winrateValue",wr===null?"--":wr.toFixed(1)+"%");
+ put("winrateValue",wr===null?"--":wr.toFixed(1)+"%");
 
-  put("pnlUsd",signed(openPnl));
-  put("pnlJpy",jpy(openPnl));
-  colorPnL("pnlUsd",openPnl);
+ put("pnlUsd",signed(upnl));
+ put("pnlJpy",jpy(upnl));
+ color("pnlUsd",upnl);
 
-  put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
+ put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
 
-  const sig=sideOf(get(d,[
-    "signal.direction","signal","current_signal","direction"
-  ],"WAIT"));
+ put("signalValue",sig);
+ put("scoreValue",score===null?"--":score);
+ put("rsiValue",rv===null?"--":rv.toFixed(1));
 
-  const score=num(get(d,["signal.score","metrics.score","score","signal_score"]));
-  const rsi=num(get(d,[
-    "indicators.rsi_15m","metrics.rsi_15m","rsi_15m","rsi","indicators.rsi"
-  ]));
+ $("signalValue").classList.remove("good","bad");
+ if(sig==="LONG")$("signalValue").classList.add("good");
+ if(sig==="SHORT")$("signalValue").classList.add("bad");
 
-  put("signalValue",sig);
-  put("scoreValue",score===null?"--":score);
-  put("rsiValue",rsi===null?"--":rsi.toFixed(1));
+ const reasons=get(d,["signal.reasons","signal.reason"],[]);
+ put("reasonValue",
+  Array.isArray(reasons)
+   ?(reasons.slice(0,2).join("・")||"理由データなし")
+   :reasons
+ );
 
-  $("signalValue").classList.remove("good","bad");
-  if(sig==="LONG")$("signalValue").classList.add("good");
-  if(sig==="SHORT")$("signalValue").classList.add("bad");
+ const fp=fibs(d,price);
 
-  put("reasonValue",get(d,[
-    "signal.reason","signal_reason","reason"
-  ],"理由データなし"));
+ ["fib0","fib236","fib382","fib50","fib618","fib786","fib100"]
+  .forEach((id,k)=>put(id,fp[k]===null?"--":fmt(fp[k],0)));
 
-  const fib=fibPrices(d,price);
+ const pside=open&&typeof open==="object"
+  ?side(get(open,["side","direction"],"WAIT"))
+  :side(open);
 
-  ["fib0","fib236","fib382","fib50","fib618","fib786","fib100"]
-    .forEach((id,i)=>{
-      put(id,fib[i]===null?"--":fmt(fib[i],0));
-    });
+ put("positionValue",pside==="WAIT"?"NONE":pside);
+ put("openPnlValue",signed(upnl));
+ color("openPnlValue",upnl);
 
-  let pos="NONE";
+ put("botStatus",
+  get(d,["market_status"],"--")==="OK"
+   ?"OK"
+   :get(d,["market_status"],"--")
+ );
 
-  if(open&&typeof open==="object"){
-    pos=sideOf(get(open,["direction","side","position"],"NONE"));
-  }else if(open){
-    pos=String(open).toUpperCase();
+ put("status15m",get(d,["timeframes.15m.direction","signal.trend_15m"],"--"));
+ put("status1h",get(d,["timeframes.1h.direction","signal.trend_1h"],"--"));
+ put("status4h",get(d,["timeframes.4h.direction","signal.trend_4h"],"--"));
+
+ let hist=historyOf(d);
+
+ if(hist.length<2&&equity!==null){
+  hist=[initial,equity];
+ }
+
+ draw(hist);
+
+ put("countValue",hist.length);
+ put("latestValue",equity===null?"--":usd(equity));
+
+ $("hpFill").style.width=
+  Math.max(0,Math.min(100,(equity??initial)/Math.max(initial,.01)*100))+"%";
+
+ const tw=n(get(d,["metrics.wins","rpg.total_wins","total_wins"]))??wins;
+ $("xpFill").style.width=((tw%10+10)%10*10)+"%";
+
+ const box=$("tradeRows");
+ box.replaceChildren();
+
+ all.slice(-4).reverse().forEach(t=>{
+  const row=document.createElement("div");
+  row.className="trade";
+
+  const val=[
+   String(get(t,["exit_time","closed_at","timestamp","time","entry_time"],"--"))
+    .replace("T"," ").slice(0,16),
+   side(get(t,["side","direction","position","type"],"--")),
+   pnlOf(t)===null?"--":signed(pnlOf(t)),
+   get(t,["reason","exit_reason","close_reason","strategy"],"--")
+  ];
+
+  val.forEach((v,k)=>{
+   const span=document.createElement("span");
+   span.textContent=String(v);
+
+   if(k===2&&pnlOf(t)!==null){
+    span.style.color=pnlOf(t)>=0?"#d62b98":"#3478d8";
+   }
+
+   row.appendChild(span);
+  });
+
+  box.appendChild(row);
+ });
+
+ const generated=get(d,["generated_at","updated_at","timestamp"]);
+ let stamp="更新時刻不明";
+
+ if(generated){
+  const dt=new Date(generated);
+  if(!isNaN(dt)){
+   stamp="更新: "+dt.toLocaleString("ja-JP",{
+    month:"2-digit",
+    day:"2-digit",
+    hour:"2-digit",
+    minute:"2-digit"
+   });
   }
+ }
 
-  if(pos==="WAIT")pos="NONE";
-
-  put("positionValue",pos);
-  put("openPnlValue",signed(openPnl));
-  colorPnL("openPnlValue",openPnl);
-
-  put("botStatus",get(d,[
-    "market_status","engine_status","status"
-  ],"--"));
-
-  put("status15m",get(d,[
-    "market.timeframes.15m.direction","timeframes.15m.direction",
-    "trend.15m","market.trend_15m"
-  ],"--"));
-
-  put("status1h",get(d,[
-    "market.timeframes.1h.direction","timeframes.1h.direction",
-    "trend.1h","market.trend_1h"
-  ],"--"));
-
-  put("status4h",get(d,[
-    "market.timeframes.4h.direction","timeframes.4h.direction",
-    "trend.4h","market.trend_4h"
-  ],"--"));
-
-  let history=historyOf(d);
-  if(history.length<2&&equity!==null)history=[initial,equity];
-
-  drawEquity(history);
-
-  put("countValue",history.length);
-  put("latestValue",equity===null?"--":usd(equity));
-
-  // HPバー：資産と初期資金の比率
-  const hp=equity===null||initial<=0
-    ?100
-    :Math.max(0,Math.min(100,equity/initial*100));
-
-  $("hpFill").style.width=hp+"%";
-
-  // XPバー：勝利10回で1周
-  const explicit=num(get(d,["rpg.xp","experience.xp","xp","experience"]));
-  const totalWins=num(get(d,[
-    "rpg.total_wins","metrics.total_wins","total_wins"
-  ]),wins);
-
-  const xp=explicit===null
-    ?((totalWins%10)+10)%10
-    :((explicit%10)+10)%10;
-
-  $("xpFill").style.width=(xp*10)+"%";
-
-  renderTrades(all);
-
-  const generated=get(d,["generated_at","updated_at","timestamp"]);
-  let stamp="更新時刻不明";
-
-  if(generated){
-    const dt=new Date(generated);
-    if(!isNaN(dt)){
-      stamp="更新: "+dt.toLocaleString("ja-JP",{
-        month:"2-digit",
-        day:"2-digit",
-        hour:"2-digit",
-        minute:"2-digit"
-      });
-    }
-  }
-
-  $("updated").textContent=
-    stamp+" ｜ PAPER ONLY ｜ 60秒ごとに更新";
+ put("updated",stamp+" ｜ PAPER ONLY ｜ 60秒ごとに更新");
 }
 
 let loading=false;
 
 async function load(){
-  if(loading)return;
-  loading=true;
+ if(loading)return;
+ loading=true;
 
-  const err=$("error");
+ const err=$("error");
 
-  try{
-    for(const path of [
-      "./data.json",
-      "./docs/data.json",
-      "./state.json",
-      "./docs/state.json"
-    ]){
-      try{
-        const r=await fetch(path+"?t="+Date.now(),{cache:"no-store"});
-        if(!r.ok)continue;
+ try{
+  for(const path of ["./data.json","./docs/data.json","./state.json","./docs/state.json"]){
+   try{
+    const r=await fetch(path+"?t="+Date.now(),{cache:"no-store"});
+    if(!r.ok)continue;
 
-        const d=await r.json();
-        if(!d||typeof d!=="object")continue;
+    const d=await r.json();
 
-        render(d);
-        err.style.display="none";
-        return;
-      }catch(e){
-        // 次の候補ファイルを試します
-      }
+    if(d&&typeof d==="object"&&("price"in d||"equity"in d)){
+     render(d);
+     err.style.display="none";
+     return;
     }
-
-    err.style.display="block";
-    err.textContent=
-      "データを読み込めません。GitHub Pagesで公開されているdata.jsonの場所と、JSONの内容を確認してください。";
-  }finally{
-    loading=false;
+   }catch(e){}
   }
+
+  err.style.display="block";
+  err.textContent="データを読み込めません。docs/data.json がGitHub Pagesで公開されているか確認してください。";
+
+ }finally{
+  loading=false;
+ }
 }
 
 load();
 setInterval(load,60000);
-
-window.addEventListener("resize",()=>{
-  const history=[];
-  // 表示中のデータを再取得してグラフのサイズを調整
-  load();
-});
+window.addEventListener("resize",load);
 </script>
 </body>
 </html>
