@@ -1,35 +1,69 @@
 {
   "build": "BTC_PAPER_V18_0_2026-10-25",
-  "generated_at": "2026-10-25T09:15:29.828552+00:00",
+  "generated_at": "2026-10-25T09:53:39.019704+00:00",
   "market_status": "OK",
-  "price": 80110.5,
-  "funding_rate": 6.4576e-06,
-  "funding_rate_pct": 0.00064576,
+  "price": 80278.5,
+  "funding_rate": 3.3328e-06,
+  "funding_rate_pct": 0.00033328000000000003,
   "initial_equity": 100.0,
-  "equity": 98.45342091655368,
-  "marked_equity": 98.45342091655368,
+  "equity": 98.39509492310759,
+  "marked_equity": 98.37175985871629,
   "realized_pnl": -1.5295222647068099,
-  "unrealized_pnl": 0.0,
-  "net_pnl": -1.5465790834463178,
-  "net_pnl_pct": -1.5465790834463178,
-  "position": null,
-  "open_position": null,
-  "has_position": false,
+  "unrealized_pnl": -0.023335064391311035,
+  "net_pnl": -1.6282401412837118,
+  "net_pnl_pct": -1.6282401412837118,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 80262.4443,
+    "quantity": 0.0014533819385835038,
+    "leverage": 10.0,
+    "margin_used": 11.66519868921845,
+    "notional": 116.6519868921845,
+    "stop_price": 80488.78144800001,
+    "target_price": 79922.938578,
+    "risk_distance": 226.33714799999998,
+    "entry_fee": 0.058325993446092246,
+    "entry_time": "2026-10-25T09:53:39.019643+00:00",
+    "opened_timestamp": 1792922019,
+    "last_checked_candle_ts": 1792920600000,
+    "entry_signal_score": 9,
+    "entry_rsi": 36.424,
+    "unrealized_pnl": -0.023335064391311035
+  },
+  "open_position": {
+    "side": "SHORT",
+    "entry_price": 80262.4443,
+    "quantity": 0.0014533819385835038,
+    "leverage": 10.0,
+    "margin_used": 11.66519868921845,
+    "notional": 116.6519868921845,
+    "stop_price": 80488.78144800001,
+    "target_price": 79922.938578,
+    "risk_distance": 226.33714799999998,
+    "entry_fee": 0.058325993446092246,
+    "entry_time": "2026-10-25T09:53:39.019643+00:00",
+    "opened_timestamp": 1792922019,
+    "last_checked_candle_ts": 1792920600000,
+    "entry_signal_score": 9,
+    "entry_rsi": 36.424,
+    "unrealized_pnl": -0.023335064391311035
+  },
+  "has_position": true,
   "signal": {
     "direction": "SHORT",
-    "score": 8,
+    "score": 9,
     "long_score": 0,
-    "short_score": 8,
-    "score_edge": 8,
-    "rsi": 30.381,
-    "atr": 124.47101,
-    "ema9": 80432.39731066124,
-    "ema21": 80555.27646977002,
+    "short_score": 9,
+    "score_edge": 9,
+    "rsi": 36.424,
+    "atr": 125.74286,
+    "ema9": 80346.1742788232,
+    "ema21": 80491.94749489309,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-10-25T09:15:29.828469+00:00",
-    "reference_price": 80123.0,
+    "timestamp": "2026-10-25T09:53:39.019592+00:00",
+    "reference_price": 80228.0,
     "reasons": [
       "15m EMA下向き",
       "15m下降",
@@ -50,7 +84,7 @@
       },
       "trend": "DOWN"
     },
-    "entry_status": "クールダウン中",
+    "entry_status": "SHORT opened",
     "paper_only": true,
     "live_trading_enabled": false
   },
@@ -58,7 +92,7 @@
     "daily_loss_pct": 0,
     "daily_loss_limit_pct": 8.0,
     "daily_loss_lock": false,
-    "drawdown_pct": 3.4806679318967455,
+    "drawdown_pct": 3.56072478197939,
     "drawdown_limit_pct": 25.0,
     "drawdown_pause_until": 0,
     "drawdown_lock": false,
@@ -2132,6 +2166,12 @@
       "equity": 98.45342091655368,
       "marked_equity": 98.45342091655368,
       "price": 80110.5
+    },
+    {
+      "timestamp": "2026-10-25T09:53:39.019694+00:00",
+      "equity": 98.39509492310759,
+      "marked_equity": 98.37175985871629,
+      "price": 80278.5
     }
   ],
   "events": [
@@ -2199,6 +2239,14 @@
       "side": "SHORT",
       "reason": "TAKE_PROFIT",
       "net_pnl": 0.30075925963534267
+    },
+    {
+      "timestamp": "2026-10-25T09:53:39.019655+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "entry_price": 80262.4443,
+      "stop_price": 80488.78144800001,
+      "target_price": 79922.938578
     }
   ],
   "timeframes": {
@@ -2213,8 +2261,8 @@
     }
   },
   "indicators": {
-    "rsi_15m": 30.381,
-    "atr": 124.47101
+    "rsi_15m": 36.424,
+    "atr": 125.74286
   },
   "fibonacci": {
     "swing_high": 84335.0,
