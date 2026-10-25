@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V18_0_2026-10-25",
   "initial_equity": 100.0,
-  "equity": 98.08664745001771,
+  "equity": 98.45342091655368,
   "open_trade": null,
   "trades": [
     {
@@ -226,6 +226,27 @@
       "entry_bollinger": {},
       "entry_fibonacci": {},
       "build": "BTC_PAPER_V17_1_2026-10-23"
+    },
+    {
+      "side": "SHORT",
+      "direction": "SHORT",
+      "entry_price": 80580.38070000001,
+      "exit_price": 80316.37111221,
+      "quantity": 0.0016384684789811346,
+      "leverage": 10.0,
+      "margin_used": 13.20284138012498,
+      "entry_time": "2026-10-25T07:21:06.218465+00:00",
+      "exit_time": "2026-10-25T09:15:29.828508+00:00",
+      "exit_timestamp": 1792919729,
+      "gross_pnl": 0.4325713877427211,
+      "entry_fee": 0.0660142069006249,
+      "exit_fee": 0.06579792120675353,
+      "fees": 0.1318121281073784,
+      "net_pnl": 0.30075925963534267,
+      "pnl": 0.30075925963534267,
+      "reason": "TAKE_PROFIT",
+      "exit_reason": "TAKE_PROFIT",
+      "build": "BTC_PAPER_V18_0_2026-10-25"
     }
   ],
   "equity_history": [
@@ -1533,11 +1554,17 @@
       "equity": 98.08664745001771,
       "marked_equity": 98.47968441568365,
       "price": 80340.5
+    },
+    {
+      "timestamp": "2026-10-25T09:15:29.828548+00:00",
+      "equity": 98.45342091655368,
+      "marked_equity": 98.45342091655368,
+      "price": 80110.5
     }
   ],
-  "last_entry_candle": 1792911600000,
+  "last_entry_candle": 1792918800000,
   "last_exit_timestamp": 1792682978.9771085,
-  "consecutive_losses": 4,
+  "consecutive_losses": 0,
   "day_start": "2026-10-22",
   "day_start_equity": 100.0,
   "peak_equity": 102.00383571561161,
@@ -1615,23 +1642,7 @@
   "last_processed_candle": "1792649700000",
   "last_price": 81482.0,
   "last_funding_rate": 1.25e-05,
-  "position": {
-    "side": "SHORT",
-    "entry_price": 80580.38070000001,
-    "quantity": 0.0016384684789811346,
-    "leverage": 10.0,
-    "margin_used": 13.20284138012498,
-    "notional": 132.0284138012498,
-    "stop_price": 80767.0938,
-    "target_price": 80300.31105,
-    "risk_distance": 186.7131,
-    "entry_fee": 0.0660142069006249,
-    "entry_time": "2026-10-25T07:21:06.218465+00:00",
-    "opened_timestamp": 1792912866,
-    "last_checked_candle_ts": 1792917000000,
-    "entry_signal_score": 6,
-    "entry_rsi": 44.137
-  },
+  "position": null,
   "day": "2026-10-22",
   "funding_last_timestamp": 0.0,
   "funding_total": 0.05316309438414351,
@@ -1701,6 +1712,13 @@
       "entry_price": 80580.38070000001,
       "stop_price": 80767.0938,
       "target_price": 80300.31105
+    },
+    {
+      "timestamp": "2026-10-25T09:15:29.828522+00:00",
+      "type": "POSITION_CLOSED",
+      "side": "SHORT",
+      "reason": "TAKE_PROFIT",
+      "net_pnl": 0.30075925963534267
     }
   ],
   "last_checked_candle_ts": 1792714500000,
@@ -1710,8 +1728,8 @@
   "daily_loss_locked": false,
   "drawdown_locked": false,
   "api_error_count": 0,
-  "last_close_ts": 1792762719,
-  "realized_pnl": -1.8302815243421524,
+  "last_close_ts": 1792919729,
+  "realized_pnl": -1.5295222647068099,
   "last_candle_ts": 1792907100000,
   "daily_loss_lock": false,
   "last_error": null,
