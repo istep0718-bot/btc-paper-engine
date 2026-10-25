@@ -1,17 +1,17 @@
 {
   "build": "BTC_PAPER_V18_0_2026-10-25",
-  "generated_at": "2026-10-25T12:41:46.997780+00:00",
+  "generated_at": "2026-10-25T13:16:26.364553+00:00",
   "market_status": "OK",
-  "price": 80391.5,
+  "price": 80387.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
   "equity": 97.92616610712233,
-  "marked_equity": 97.90293100565931,
+  "marked_equity": 97.90871149276629,
   "realized_pnl": -1.9987009380313172,
-  "unrealized_pnl": -0.02323510146302045,
-  "net_pnl": -2.097068994340688,
-  "net_pnl_pct": -2.097068994340688,
+  "unrealized_pnl": -0.017454614356042855,
+  "net_pnl": -2.0912885072337133,
+  "net_pnl_pct": -2.0912885072337133,
   "position": {
     "side": "SHORT",
     "entry_price": 80375.4217,
@@ -25,10 +25,10 @@
     "entry_fee": 0.05807613610684216,
     "entry_time": "2026-10-25T12:41:46.997746+00:00",
     "opened_timestamp": 1792932106,
-    "last_checked_candle_ts": 1792930500000,
+    "last_checked_candle_ts": 1792933200000,
     "entry_signal_score": 9,
     "entry_rsi": 43.577,
-    "unrealized_pnl": -0.02323510146302045
+    "unrealized_pnl": -0.017454614356042855
   },
   "open_position": {
     "side": "SHORT",
@@ -43,33 +43,31 @@
     "entry_fee": 0.05807613610684216,
     "entry_time": "2026-10-25T12:41:46.997746+00:00",
     "opened_timestamp": 1792932106,
-    "last_checked_candle_ts": 1792930500000,
+    "last_checked_candle_ts": 1792933200000,
     "entry_signal_score": 9,
     "entry_rsi": 43.577,
-    "unrealized_pnl": -0.02323510146302045
+    "unrealized_pnl": -0.017454614356042855
   },
   "has_position": true,
   "signal": {
     "direction": "SHORT",
-    "score": 9,
+    "score": 7,
     "long_score": 1,
-    "short_score": 9,
-    "score_edge": 8,
-    "rsi": 43.577,
-    "atr": 125.8287,
-    "ema9": 80387.36268663534,
-    "ema21": 80417.41649460171,
-    "trend_15m": "DOWN",
+    "short_score": 7,
+    "score_edge": 6,
+    "rsi": 47.691,
+    "atr": 117.69306,
+    "ema9": 80393.0496955573,
+    "ema21": 80412.85085982247,
+    "trend_15m": "SIDEWAYS",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-10-25T12:41:46.997711+00:00",
-    "reference_price": 80305.0,
+    "timestamp": "2026-10-25T13:16:26.364468+00:00",
+    "reference_price": 80388.0,
     "reasons": [
       "15m EMA下向き",
-      "15m下降",
       "1h下降",
-      "4h下降",
-      "短期モメンタム下"
+      "4h下降"
     ],
     "flags": [],
     "fibonacci": {
@@ -84,15 +82,15 @@
       },
       "trend": "DOWN"
     },
-    "entry_status": "SHORT opened",
+    "entry_status": "保有中",
     "paper_only": true,
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 0.25443084990595555,
+    "daily_loss_pct": 0.24854156783311693,
     "daily_loss_limit_pct": 8.0,
     "daily_loss_lock": false,
-    "drawdown_pct": 4.020343628435398,
+    "drawdown_pct": 4.014676697318131,
     "drawdown_limit_pct": 25.0,
     "drawdown_pause_until": 0,
     "drawdown_lock": false,
@@ -2271,6 +2269,12 @@
       "equity": 97.92616610712233,
       "marked_equity": 97.90293100565931,
       "price": 80391.5
+    },
+    {
+      "timestamp": "2026-10-25T13:16:26.364546+00:00",
+      "equity": 97.92616610712233,
+      "marked_equity": 97.90871149276629,
+      "price": 80387.5
     }
   ],
   "events": [
@@ -2365,7 +2369,7 @@
   ],
   "timeframes": {
     "15m": {
-      "direction": "DOWN"
+      "direction": "SIDEWAYS"
     },
     "1h": {
       "direction": "DOWN"
@@ -2375,8 +2379,8 @@
     }
   },
   "indicators": {
-    "rsi_15m": 43.577,
-    "atr": 125.8287
+    "rsi_15m": 47.691,
+    "atr": 117.69306
   },
   "fibonacci": {
     "swing_high": 82987.0,
