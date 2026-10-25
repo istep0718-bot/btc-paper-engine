@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V18_0_2026-10-25",
-  "generated_at": "2026-10-25T15:05:25.187505+00:00",
+  "generated_at": "2026-10-25T15:36:11.356749+00:00",
   "market_status": "OK",
-  "price": 80689.5,
+  "price": 80671.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -17,21 +17,22 @@
   "has_position": false,
   "signal": {
     "direction": "WAIT",
-    "score": 4,
-    "long_score": 4,
-    "short_score": 4,
+    "score": 5,
+    "long_score": 5,
+    "short_score": 5,
     "score_edge": 0,
-    "rsi": 59.546,
-    "atr": 132.2137,
-    "ema9": 80419.20293391375,
-    "ema21": 80408.02174624731,
-    "trend_15m": "SIDEWAYS",
+    "rsi": 54.335,
+    "atr": 136.09242,
+    "ema9": 80483.72987770481,
+    "ema21": 80441.77004002803,
+    "trend_15m": "UP",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-10-25T15:05:25.187424+00:00",
-    "reference_price": 80635.0,
+    "timestamp": "2026-10-25T15:36:11.356696+00:00",
+    "reference_price": 80542.0,
     "reasons": [
       "15m EMA上向き",
+      "15m上昇",
       "1h下降",
       "4h下降",
       "短期モメンタム上"
@@ -49,7 +50,7 @@
       },
       "trend": "DOWN"
     },
-    "entry_status": "クールダウン中",
+    "entry_status": "WAIT（LONG 5 / SHORT 5、必要スコア 5）",
     "paper_only": true,
     "live_trading_enabled": false
   },
@@ -2329,6 +2330,12 @@
       "equity": 97.51731072287666,
       "marked_equity": 97.51731072287666,
       "price": 80689.5
+    },
+    {
+      "timestamp": "2026-10-25T15:36:11.356744+00:00",
+      "equity": 97.51731072287666,
+      "marked_equity": 97.51731072287666,
+      "price": 80671.5
     }
   ],
   "events": [
@@ -2430,7 +2437,7 @@
   ],
   "timeframes": {
     "15m": {
-      "direction": "SIDEWAYS"
+      "direction": "UP"
     },
     "1h": {
       "direction": "DOWN"
@@ -2440,8 +2447,8 @@
     }
   },
   "indicators": {
-    "rsi_15m": 59.546,
-    "atr": 132.2137
+    "rsi_15m": 54.335,
+    "atr": 136.09242
   },
   "fibonacci": {
     "swing_high": 82526.0,
