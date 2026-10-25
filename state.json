@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V18_0_2026-10-25",
   "initial_equity": 100.0,
-  "equity": 96.58871488312109,
+  "equity": 96.52718465463606,
   "open_trade": null,
   "trades": [
     {
@@ -1776,9 +1776,15 @@
       "equity": 96.58871488312109,
       "marked_equity": 96.58871488312109,
       "price": 80532.5
+    },
+    {
+      "timestamp": "2026-10-25T20:16:49.592619+00:00",
+      "equity": 96.52718465463606,
+      "marked_equity": 96.50256763983909,
+      "price": 80560.5
     }
   ],
-  "last_entry_candle": 1792955700000,
+  "last_entry_candle": 1792958400000,
   "last_exit_timestamp": 1792682978.9771085,
   "consecutive_losses": 4,
   "day_start": "2026-10-22",
@@ -1858,7 +1864,23 @@
   "last_processed_candle": "1792649700000",
   "last_price": 81482.0,
   "last_funding_rate": 1.25e-05,
-  "position": null,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 80544.3879,
+    "quantity": 0.0015278588636471258,
+    "leverage": 10.0,
+    "margin_used": 12.30604569700473,
+    "notional": 123.06045697004731,
+    "stop_price": 80747.717502,
+    "target_price": 80239.393497,
+    "risk_distance": 203.32960200000002,
+    "entry_fee": 0.06153022848502366,
+    "entry_time": "2026-10-25T20:16:49.592588+00:00",
+    "opened_timestamp": 1792959409,
+    "last_checked_candle_ts": 1792958400000,
+    "entry_signal_score": 5,
+    "entry_rsi": 49.25
+  },
   "day": "2026-10-22",
   "funding_last_timestamp": 0.0,
   "funding_total": 0.05316309438414351,
@@ -1995,6 +2017,14 @@
       "side": "LONG",
       "reason": "STOP_LOSS",
       "net_pnl": -0.4631577986990873
+    },
+    {
+      "timestamp": "2026-10-25T20:16:49.592594+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "entry_price": 80544.3879,
+      "stop_price": 80747.717502,
+      "target_price": 80239.393497
     }
   ],
   "last_checked_candle_ts": 1792714500000,
