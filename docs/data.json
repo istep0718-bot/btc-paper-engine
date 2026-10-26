@@ -1,17 +1,17 @@
 {
   "build": "BTC_PAPER_V19_0_2026-10-26",
-  "generated_at": "2026-10-26T22:59:10.939717+00:00",
+  "generated_at": "2026-10-26T23:22:42.916936+00:00",
   "market_status": "OK",
-  "price": 79961.5,
-  "funding_rate": 1.10479e-05,
-  "funding_rate_pct": 0.00110479,
+  "price": 79879.5,
+  "funding_rate": 1.25e-05,
+  "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
-  "equity": 82.22162556601903,
-  "marked_equity": 83.3606887122928,
+  "equity": 82.2272845019251,
+  "marked_equity": 84.54883549765641,
   "realized_pnl": -17.23415776923361,
-  "unrealized_pnl": 1.1390631462737693,
-  "net_pnl": -16.6393112877072,
-  "net_pnl_pct": -16.6393112877072,
+  "unrealized_pnl": 2.321550995731313,
+  "net_pnl": -15.451164502343588,
+  "net_pnl_pct": -15.451164502343588,
   "position": {
     "side": "SHORT",
     "entry_price": 80040.4887,
@@ -21,22 +21,22 @@
     "notional": 1154.2305530779734,
     "planned_risk": 8.274878541202686,
     "effective_risk_pct": 10.0,
-    "stop_price": 80502.25612800001,
+    "stop_price": 80046.325571,
     "initial_stop_price": 80502.25612800001,
     "risk_distance": 461.76742800000005,
     "entry_fee": 0.5771152765389866,
-    "funding_pnl": 0.04995543053118026,
+    "funding_pnl": 0.0556143664372431,
     "entry_time": "2026-10-26T19:23:39.023663+00:00",
     "opened_timestamp": 1793042619,
-    "last_funding_ts": 1793055550,
-    "last_checked_candle_ts": 1793053800000,
+    "last_funding_ts": 1793056962,
+    "last_checked_candle_ts": 1793055600000,
     "entry_signal_score": 9,
     "entry_rsi": 46.732,
     "entry_bb_width_pct": 1.0996400820121999,
     "partial_taken": false,
-    "best_price": 79789.0,
-    "trail_active": false,
-    "unrealized_pnl": 1.1390631462737693
+    "best_price": 79700.0,
+    "trail_active": true,
+    "unrealized_pnl": 2.321550995731313
   },
   "open_position": {
     "side": "SHORT",
@@ -47,69 +47,70 @@
     "notional": 1154.2305530779734,
     "planned_risk": 8.274878541202686,
     "effective_risk_pct": 10.0,
-    "stop_price": 80502.25612800001,
+    "stop_price": 80046.325571,
     "initial_stop_price": 80502.25612800001,
     "risk_distance": 461.76742800000005,
     "entry_fee": 0.5771152765389866,
-    "funding_pnl": 0.04995543053118026,
+    "funding_pnl": 0.0556143664372431,
     "entry_time": "2026-10-26T19:23:39.023663+00:00",
     "opened_timestamp": 1793042619,
-    "last_funding_ts": 1793055550,
-    "last_checked_candle_ts": 1793053800000,
+    "last_funding_ts": 1793056962,
+    "last_checked_candle_ts": 1793055600000,
     "entry_signal_score": 9,
     "entry_rsi": 46.732,
     "entry_bb_width_pct": 1.0996400820121999,
     "partial_taken": false,
-    "best_price": 79789.0,
-    "trail_active": false,
-    "unrealized_pnl": 1.1390631462737693
+    "best_price": 79700.0,
+    "trail_active": true,
+    "unrealized_pnl": 2.321550995731313
   },
   "has_position": true,
   "signal": {
     "direction": "SHORT",
-    "score": 9,
-    "long_score": 1,
-    "short_score": 9,
-    "score_edge": 8,
-    "rsi": 46.887,
-    "atr": 170.45901,
-    "ema9": 79979.64429373402,
-    "ema21": 80021.15503748857,
+    "score": 10,
+    "long_score": 0,
+    "short_score": 10,
+    "score_edge": 10,
+    "rsi": 42.2,
+    "atr": 169.4774,
+    "ema9": 79952.37234798977,
+    "ema21": 80001.50829525552,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-10-26T22:59:10.939623+00:00",
-    "reference_price": 79969.0,
-    "previous_close": 79945.0,
+    "timestamp": "2026-10-26T23:22:42.916805+00:00",
+    "reference_price": 79847.0,
+    "previous_close": 79975.0,
     "reasons": [
       "EMA下向き",
       "15m下降",
       "1h下降",
       "4h下降",
-      "短期モメンタム下"
+      "短期モメンタム下",
+      "BB下側・下降継続候補"
     ],
     "flags": [
       "BB幅縮小"
     ],
     "bollinger": {
-      "middle": 80013.5,
-      "upper": 80278.48716950072,
-      "lower": 79748.51283049928,
-      "width_pct": 0.6623561511512853,
-      "position": 0.4160336704530903,
-      "state": "INSIDE",
+      "middle": 79977.45,
+      "upper": 80186.56955910435,
+      "lower": 79768.33044089565,
+      "width_pct": 0.5229463032501053,
+      "position": 0.1880970853259533,
+      "state": "NEAR_LOWER",
       "width_expanding": false,
-      "previous_width_pct": 0.6879211306377898
+      "previous_width_pct": 0.5711173505286931
     },
     "fibonacci": {
-      "swing_high": 82088.0,
+      "swing_high": 81866.0,
       "swing_low": 79184.0,
       "levels": {
-        "0.236": 81402.656,
-        "0.382": 80978.672,
-        "0.500": 80636.0,
-        "0.618": 80293.328,
-        "0.786": 79805.456
+        "0.236": 81233.048,
+        "0.382": 80841.476,
+        "0.500": 80525.0,
+        "0.618": 80208.524,
+        "0.786": 79757.948
       },
       "trend": "DOWN"
     },
@@ -118,11 +119,11 @@
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 14.283081554688232,
+    "daily_loss_pct": 13.061351232214854,
     "daily_loss_limit_pct": 20.0,
     "daily_loss_lock": false,
-    "drawdown_pct": 18.276907797169724,
-    "current_drawdown_pct": 18.276907797169724,
+    "drawdown_pct": 17.112101810190776,
+    "current_drawdown_pct": 17.112101810190776,
     "max_drawdown_pct": 19.81620136827508,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
@@ -3369,6 +3370,12 @@
       "equity": 82.22162556601903,
       "marked_equity": 83.3606887122928,
       "price": 79961.5
+    },
+    {
+      "timestamp": "2026-10-26T23:22:42.916923+00:00",
+      "equity": 82.2272845019251,
+      "marked_equity": 84.54883549765641,
+      "price": 79879.5
     }
   ],
   "events": [
@@ -3759,6 +3766,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00710914,
       "hours": 0.5575
+    },
+    {
+      "timestamp": "2026-10-26T23:22:42.916852+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00565894,
+      "hours": 0.3922
     }
   ],
   "timeframes": {
@@ -3773,28 +3786,28 @@
     }
   },
   "indicators": {
-    "rsi_15m": 46.887,
-    "atr": 170.45901,
+    "rsi_15m": 42.2,
+    "atr": 169.4774,
     "bollinger": {
-      "middle": 80013.5,
-      "upper": 80278.48716950072,
-      "lower": 79748.51283049928,
-      "width_pct": 0.6623561511512853,
-      "position": 0.4160336704530903,
-      "state": "INSIDE",
+      "middle": 79977.45,
+      "upper": 80186.56955910435,
+      "lower": 79768.33044089565,
+      "width_pct": 0.5229463032501053,
+      "position": 0.1880970853259533,
+      "state": "NEAR_LOWER",
       "width_expanding": false,
-      "previous_width_pct": 0.6879211306377898
+      "previous_width_pct": 0.5711173505286931
     }
   },
   "fibonacci": {
-    "swing_high": 82088.0,
+    "swing_high": 81866.0,
     "swing_low": 79184.0,
     "levels": {
-      "0.236": 81402.656,
-      "0.382": 80978.672,
-      "0.500": 80636.0,
-      "0.618": 80293.328,
-      "0.786": 79805.456
+      "0.236": 81233.048,
+      "0.382": 80841.476,
+      "0.500": 80525.0,
+      "0.618": 80208.524,
+      "0.786": 79757.948
     },
     "trend": "DOWN"
   },
