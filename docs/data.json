@@ -1,105 +1,53 @@
 {
   "build": "BTC_PAPER_V19_0_2026-10-26",
-  "generated_at": "2026-10-26T15:48:51.924077+00:00",
+  "generated_at": "2026-10-26T16:36:40.831246+00:00",
   "market_status": "OK",
-  "price": 80717.5,
+  "price": 79793.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
-  "equity": 91.1244829301303,
-  "marked_equity": 90.89599902914902,
-  "realized_pnl": -8.287136256726155,
-  "unrealized_pnl": -0.22848390098127708,
-  "net_pnl": -9.104000970850976,
-  "net_pnl_pct": -9.104000970850976,
-  "position": {
-    "side": "LONG",
-    "entry_price": 80733.64349999999,
-    "quantity": 0.01415330634505553,
-    "leverage": 40.0,
-    "margin_used": 28.566199720200025,
-    "notional": 1142.647988808001,
-    "planned_risk": 9.16958069245343,
-    "effective_risk_pct": 10.0,
-    "stop_price": 80198.795082,
-    "initial_stop_price": 80198.795082,
-    "risk_distance": 534.848418,
-    "entry_fee": 0.5713239944040005,
-    "funding_pnl": 0.0,
-    "entry_time": "2026-10-26T15:48:51.924027+00:00",
-    "opened_timestamp": 1793029731,
-    "last_funding_ts": 1793029731,
-    "last_checked_candle_ts": 1793028600000,
-    "entry_signal_score": 5,
-    "entry_rsi": 63.564,
-    "entry_bb_width_pct": 1.3372663287389206,
-    "partial_taken": false,
-    "best_price": 80717.5,
-    "trail_active": false,
-    "unrealized_pnl": -0.22848390098127708
-  },
-  "open_position": {
-    "side": "LONG",
-    "entry_price": 80733.64349999999,
-    "quantity": 0.01415330634505553,
-    "leverage": 40.0,
-    "margin_used": 28.566199720200025,
-    "notional": 1142.647988808001,
-    "planned_risk": 9.16958069245343,
-    "effective_risk_pct": 10.0,
-    "stop_price": 80198.795082,
-    "initial_stop_price": 80198.795082,
-    "risk_distance": 534.848418,
-    "entry_fee": 0.5713239944040005,
-    "funding_pnl": 0.0,
-    "entry_time": "2026-10-26T15:48:51.924027+00:00",
-    "opened_timestamp": 1793029731,
-    "last_funding_ts": 1793029731,
-    "last_checked_candle_ts": 1793028600000,
-    "entry_signal_score": 5,
-    "entry_rsi": 63.564,
-    "entry_bb_width_pct": 1.3372663287389206,
-    "partial_taken": false,
-    "best_price": 80717.5,
-    "trail_active": false,
-    "unrealized_pnl": -0.22848390098127708
-  },
-  "has_position": true,
+  "equity": 82.74878541202685,
+  "marked_equity": 82.74878541202685,
+  "realized_pnl": -17.23415776923361,
+  "unrealized_pnl": 0.0,
+  "net_pnl": -17.251214587973152,
+  "net_pnl_pct": -17.251214587973152,
+  "position": null,
+  "open_position": null,
+  "has_position": false,
   "signal": {
-    "direction": "LONG",
-    "score": 5,
-    "long_score": 5,
+    "direction": "WAIT",
+    "score": 4,
+    "long_score": 3,
     "short_score": 4,
     "score_edge": 1,
-    "rsi": 63.564,
-    "atr": 297.13801,
-    "ema9": 80320.74122776544,
-    "ema21": 80240.29370054242,
-    "trend_15m": "UP",
-    "trend_1h": "DOWN",
+    "rsi": 43.72,
+    "atr": 301.48657,
+    "ema9": 80240.12350861591,
+    "ema21": 80223.718781067,
+    "trend_15m": "SIDEWAYS",
+    "trend_1h": "SIDEWAYS",
     "trend_4h": "DOWN",
-    "timestamp": "2026-10-26T15:48:51.923984+00:00",
-    "reference_price": 80671.0,
-    "previous_close": 80547.0,
+    "timestamp": "2026-10-26T16:36:40.831096+00:00",
+    "reference_price": 79976.0,
+    "previous_close": 80178.0,
     "reasons": [
       "EMA上向き",
-      "15m上昇",
-      "1h下降",
       "4h下降",
-      "短期モメンタム上"
+      "短期モメンタム下"
     ],
     "flags": [
       "BB幅拡大"
     ],
     "bollinger": {
-      "middle": 80228.15,
-      "upper": 80764.58201806007,
-      "lower": 79691.71798193992,
-      "width_pct": 1.3372663287389206,
-      "position": 0.9127736461383344,
-      "state": "NEAR_UPPER",
+      "middle": 80210.35,
+      "upper": 80759.64710539926,
+      "lower": 79661.05289460075,
+      "width_pct": 1.3696414624777262,
+      "position": 0.28668192705141715,
+      "state": "INSIDE",
       "width_expanding": true,
-      "previous_width_pct": 1.2599062576717237
+      "previous_width_pct": 1.3471829610602548
     },
     "fibonacci": {
       "swing_high": 82088.0,
@@ -111,23 +59,23 @@
         "0.618": 80293.328,
         "0.786": 79805.456
       },
-      "trend": "DOWN"
+      "trend": "SIDEWAYS"
     },
-    "entry_status": "LONG opened",
+    "entry_status": "クールダウン中",
     "paper_only": true,
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 6.534782088025677,
+    "daily_loss_pct": 14.912280594373936,
     "daily_loss_limit_pct": 20.0,
     "daily_loss_lock": false,
-    "drawdown_pct": 10.889626462117977,
-    "current_drawdown_pct": 10.889626462117977,
-    "max_drawdown_pct": 10.889626462117977,
+    "drawdown_pct": 18.876790434889298,
+    "current_drawdown_pct": 18.876790434889298,
+    "max_drawdown_pct": 18.876790434889298,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
     "drawdown_lock": false,
-    "consecutive_losses": 1,
+    "consecutive_losses": 2,
     "consecutive_lock_until": 1792912018,
     "consecutive_loss_lock": false,
     "leverage": 40.0,
@@ -137,19 +85,19 @@
     "live_trading_enabled": false
   },
   "metrics": {
-    "closed_trades": 21,
+    "closed_trades": 22,
     "wins": 9,
-    "losses": 12,
-    "win_rate": 42.857142857142854,
-    "total_net_pnl": -8.287136256726155,
-    "average_trade": -0.395437765512583,
+    "losses": 13,
+    "win_rate": 40.909090909090914,
+    "total_net_pnl": -17.23415776923361,
+    "average_trade": -0.7841461176487136,
     "average_win": 0.7912994360276714,
-    "average_loss": 1.285490666667774,
-    "profit_factor": 0.46167163434888864,
-    "expectancy_per_trade": -0.395437765512583
+    "average_loss": 1.8748391932708262,
+    "profit_factor": 0.29219715933341966,
+    "expectancy_per_trade": -0.7841461176487136
   },
-  "closed_trades": 21,
-  "win_rate": 42.857142857142854,
+  "closed_trades": 22,
+  "win_rate": 40.909090909090914,
   "trades": [
     {
       "side": "SHORT",
@@ -629,6 +577,29 @@
       "funding_pnl": -0.07715600910663957,
       "net_pnl": -8.722346320671848,
       "pnl": -8.722346320671848,
+      "reason": "STOP_LOSS",
+      "exit_reason": "STOP_LOSS",
+      "partial": false,
+      "build": "BTC_PAPER_V19_0_2026-10-26"
+    },
+    {
+      "side": "LONG",
+      "direction": "LONG",
+      "entry_price": 80733.64349999999,
+      "exit_price": 80182.7553229836,
+      "quantity": 0.01415330634505553,
+      "leverage": 40.0,
+      "margin_used": 28.566199720200025,
+      "entry_time": "2026-10-26T15:48:51.924027+00:00",
+      "exit_time": "2026-10-26T16:36:40.831182+00:00",
+      "exit_timestamp": 1793032600,
+      "gross_pnl": -7.796889131182093,
+      "entry_fee": 0.5713239944040005,
+      "exit_fee": 0.5674255498384094,
+      "fees": 1.13874954424241,
+      "funding_pnl": -0.011382837082951926,
+      "net_pnl": -8.947021512507455,
+      "pnl": -8.947021512507455,
       "reason": "STOP_LOSS",
       "exit_reason": "STOP_LOSS",
       "partial": false,
@@ -1118,6 +1089,29 @@
       "exit_reason": "STOP_LOSS",
       "partial": false,
       "build": "BTC_PAPER_V19_0_2026-10-26"
+    },
+    {
+      "side": "LONG",
+      "direction": "LONG",
+      "entry_price": 80733.64349999999,
+      "exit_price": 80182.7553229836,
+      "quantity": 0.01415330634505553,
+      "leverage": 40.0,
+      "margin_used": 28.566199720200025,
+      "entry_time": "2026-10-26T15:48:51.924027+00:00",
+      "exit_time": "2026-10-26T16:36:40.831182+00:00",
+      "exit_timestamp": 1793032600,
+      "gross_pnl": -7.796889131182093,
+      "entry_fee": 0.5713239944040005,
+      "exit_fee": 0.5674255498384094,
+      "fees": 1.13874954424241,
+      "funding_pnl": -0.011382837082951926,
+      "net_pnl": -8.947021512507455,
+      "pnl": -8.947021512507455,
+      "reason": "STOP_LOSS",
+      "exit_reason": "STOP_LOSS",
+      "partial": false,
+      "build": "BTC_PAPER_V19_0_2026-10-26"
     }
   ],
   "recent_trades": [
@@ -1599,6 +1593,29 @@
       "funding_pnl": -0.07715600910663957,
       "net_pnl": -8.722346320671848,
       "pnl": -8.722346320671848,
+      "reason": "STOP_LOSS",
+      "exit_reason": "STOP_LOSS",
+      "partial": false,
+      "build": "BTC_PAPER_V19_0_2026-10-26"
+    },
+    {
+      "side": "LONG",
+      "direction": "LONG",
+      "entry_price": 80733.64349999999,
+      "exit_price": 80182.7553229836,
+      "quantity": 0.01415330634505553,
+      "leverage": 40.0,
+      "margin_used": 28.566199720200025,
+      "entry_time": "2026-10-26T15:48:51.924027+00:00",
+      "exit_time": "2026-10-26T16:36:40.831182+00:00",
+      "exit_timestamp": 1793032600,
+      "gross_pnl": -7.796889131182093,
+      "entry_fee": 0.5713239944040005,
+      "exit_fee": 0.5674255498384094,
+      "fees": 1.13874954424241,
+      "funding_pnl": -0.011382837082951926,
+      "net_pnl": -8.947021512507455,
+      "pnl": -8.947021512507455,
       "reason": "STOP_LOSS",
       "exit_reason": "STOP_LOSS",
       "partial": false,
@@ -3228,6 +3245,12 @@
       "equity": 91.1244829301303,
       "marked_equity": 90.89599902914902,
       "price": 80717.5
+    },
+    {
+      "timestamp": "2026-10-26T16:36:40.831236+00:00",
+      "equity": 82.74878541202685,
+      "marked_equity": 82.74878541202685,
+      "price": 79793.5
     }
   ],
   "events": [
@@ -3552,31 +3575,45 @@
       "quantity": 0.01415330634505553,
       "leverage": 40.0,
       "effective_risk_pct": 10.0
+    },
+    {
+      "timestamp": "2026-10-26T16:36:40.831147+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": -0.01138284,
+      "hours": 0.7969
+    },
+    {
+      "timestamp": "2026-10-26T16:36:40.831191+00:00",
+      "type": "POSITION_CLOSED",
+      "side": "LONG",
+      "reason": "STOP_LOSS",
+      "net_pnl": -8.947021512507455,
+      "fraction": 1.0
     }
   ],
   "timeframes": {
     "15m": {
-      "direction": "UP"
+      "direction": "SIDEWAYS"
     },
     "1h": {
-      "direction": "DOWN"
+      "direction": "SIDEWAYS"
     },
     "4h": {
       "direction": "DOWN"
     }
   },
   "indicators": {
-    "rsi_15m": 63.564,
-    "atr": 297.13801,
+    "rsi_15m": 43.72,
+    "atr": 301.48657,
     "bollinger": {
-      "middle": 80228.15,
-      "upper": 80764.58201806007,
-      "lower": 79691.71798193992,
-      "width_pct": 1.3372663287389206,
-      "position": 0.9127736461383344,
-      "state": "NEAR_UPPER",
+      "middle": 80210.35,
+      "upper": 80759.64710539926,
+      "lower": 79661.05289460075,
+      "width_pct": 1.3696414624777262,
+      "position": 0.28668192705141715,
+      "state": "INSIDE",
       "width_expanding": true,
-      "previous_width_pct": 1.2599062576717237
+      "previous_width_pct": 1.3471829610602548
     }
   },
   "fibonacci": {
@@ -3589,7 +3626,7 @@
       "0.618": 80293.328,
       "0.786": 79805.456
     },
-    "trend": "DOWN"
+    "trend": "SIDEWAYS"
   },
   "config": {
     "leverage": 40.0,
