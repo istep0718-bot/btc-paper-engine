@@ -1,9 +1,9 @@
 {
   "build": "BTC_PAPER_V19_0_2026-10-26",
   "initial_equity": 100.0,
-  "equity": 82.74878541202685,
+  "equity": 82.17167013548786,
   "peak_equity": 102.00383571561161,
-  "max_drawdown_pct": 18.876790434889298,
+  "max_drawdown_pct": 19.668924926640287,
   "realized_pnl": -17.23415776923361,
   "trades": [
     {
@@ -2160,11 +2160,41 @@
       "equity": 82.74878541202685,
       "marked_equity": 82.74878541202685,
       "price": 80239.5
+    },
+    {
+      "timestamp": "2026-10-26T19:23:39.023711+00:00",
+      "equity": 82.17167013548786,
+      "marked_equity": 81.94077784641448,
+      "price": 80056.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 80040.4887,
+    "quantity": 0.014420583529970044,
+    "leverage": 40.0,
+    "margin_used": 28.855763826949335,
+    "notional": 1154.2305530779734,
+    "planned_risk": 8.274878541202686,
+    "effective_risk_pct": 10.0,
+    "stop_price": 80502.25612800001,
+    "initial_stop_price": 80502.25612800001,
+    "risk_distance": 461.76742800000005,
+    "entry_fee": 0.5771152765389866,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-10-26T19:23:39.023663+00:00",
+    "opened_timestamp": 1793042619,
+    "last_funding_ts": 1793042619,
+    "last_checked_candle_ts": 1793041200000,
+    "entry_signal_score": 9,
+    "entry_rsi": 46.732,
+    "entry_bb_width_pct": 1.0996400820121999,
+    "partial_taken": false,
+    "best_price": 80056.5,
+    "trail_active": false
+  },
   "last_close_ts": 1793032600,
-  "last_entry_candle": 1793031300000,
+  "last_entry_candle": 1793041200000,
   "consecutive_losses": 2,
   "consecutive_lock_until": 1792912018,
   "daily_date": "2026-10-26",
@@ -2508,6 +2538,16 @@
       "reason": "STOP_LOSS",
       "net_pnl": -8.947021512507455,
       "fraction": 1.0
+    },
+    {
+      "timestamp": "2026-10-26T19:23:39.023673+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "entry_price": 80040.4887,
+      "stop_price": 80502.25612800001,
+      "quantity": 0.014420583529970044,
+      "leverage": 40.0,
+      "effective_risk_pct": 10.0
     }
   ],
   "open_trade": null,
