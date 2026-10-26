@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V19_0_2026-10-26",
   "initial_equity": 100.0,
-  "equity": 99.68128553404111,
+  "equity": 91.6958069245343,
   "peak_equity": 102.00383571561161,
-  "max_drawdown_pct": 6.630785723097278,
-  "realized_pnl": 0.43521006394569206,
+  "max_drawdown_pct": 10.105530560454879,
+  "realized_pnl": -8.287136256726155,
   "trades": [
     {
       "side": "SHORT",
@@ -463,6 +463,29 @@
       "pnl": 0.8337498248182401,
       "reason": "TRAIL_STOP",
       "exit_reason": "TRAIL_STOP",
+      "partial": false,
+      "build": "BTC_PAPER_V19_0_2026-10-26"
+    },
+    {
+      "side": "LONG",
+      "direction": "LONG",
+      "entry_price": 80538.6045,
+      "exit_price": 80123.6697764568,
+      "quantity": 0.01745565563447137,
+      "leverage": 40.0,
+      "margin_used": 35.14635363582215,
+      "entry_time": "2026-10-26T09:52:23.072977+00:00",
+      "exit_time": "2026-10-26T14:15:49.456706+00:00",
+      "exit_timestamp": 1793024149,
+      "gross_pnl": -7.242957644954799,
+      "entry_fee": 0.7029270727164431,
+      "exit_fee": 0.6993055938939657,
+      "fees": 1.4022326666104088,
+      "funding_pnl": -0.07715600910663957,
+      "net_pnl": -8.722346320671848,
+      "pnl": -8.722346320671848,
+      "reason": "STOP_LOSS",
+      "exit_reason": "STOP_LOSS",
       "partial": false,
       "build": "BTC_PAPER_V19_0_2026-10-26"
     }
@@ -2078,36 +2101,18 @@
       "equity": 99.68128553404111,
       "marked_equity": 96.39779815874667,
       "price": 80350.5
+    },
+    {
+      "timestamp": "2026-10-26T14:15:49.456739+00:00",
+      "equity": 91.6958069245343,
+      "marked_equity": 91.6958069245343,
+      "price": 79959.5
     }
   ],
-  "position": {
-    "side": "LONG",
-    "entry_price": 80538.6045,
-    "quantity": 0.01745565563447137,
-    "leverage": 40.0,
-    "margin_used": 35.14635363582215,
-    "notional": 1405.854145432886,
-    "planned_risk": 8.931375255364602,
-    "effective_risk_pct": 8.894183936599108,
-    "stop_price": 80139.697716,
-    "initial_stop_price": 80139.697716,
-    "risk_distance": 398.906784,
-    "entry_fee": 0.7029270727164431,
-    "funding_pnl": -0.033940638448593255,
-    "entry_time": "2026-10-26T09:52:23.072977+00:00",
-    "opened_timestamp": 1793008343,
-    "last_funding_ts": 1793015296,
-    "last_checked_candle_ts": 1793014200000,
-    "entry_signal_score": 5,
-    "entry_rsi": 63.191,
-    "entry_bb_width_pct": 0.8991954650695317,
-    "partial_taken": false,
-    "best_price": 80548.0,
-    "trail_active": false
-  },
-  "last_close_ts": 1793005944,
-  "last_entry_candle": 1793007000000,
-  "consecutive_losses": 0,
+  "position": null,
+  "last_close_ts": 1793024149,
+  "last_entry_candle": 1793023200000,
+  "consecutive_losses": 1,
   "consecutive_lock_until": 1792912018,
   "daily_date": "2026-10-26",
   "daily_start_equity": 97.25114974295037,
@@ -2412,6 +2417,20 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": -0.01191071,
       "hours": 0.6778
+    },
+    {
+      "timestamp": "2026-10-26T14:15:49.456683+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": -0.04321537,
+      "hours": 2.4592
+    },
+    {
+      "timestamp": "2026-10-26T14:15:49.456712+00:00",
+      "type": "POSITION_CLOSED",
+      "side": "LONG",
+      "reason": "STOP_LOSS",
+      "net_pnl": -8.722346320671848,
+      "fraction": 1.0
     }
   ],
   "open_trade": null,
