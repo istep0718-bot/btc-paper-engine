@@ -12,7 +12,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V19_0_2026-10-26"
+BUILD = "BTC_PAPER_V19_1_2026-10-27"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -26,16 +26,15 @@ DATA_FILE = ROOT / "docs" / "data.json"
 
 INITIAL_EQUITY = 100.0
 
-# Requested fixed leverage.
-LEVERAGE = 40.0
+# Fixed leverage (reduced from 40x for survivability).
+LEVERAGE = 10.0
 
-# Requested paper-test risk.
-# WARNING: 10% planned risk per trade is extremely aggressive.
-# Actual loss can exceed planned risk due to gaps, fees, and slippage.
-RISK_PER_TRADE = 0.10
+# Planned risk per trade (reduced from 10% → 2%).
+# Actual loss can still exceed planned risk due to gaps, fees, and slippage.
+RISK_PER_TRADE = 0.02
 
 # Maximum simulated margin allocation.
-MAX_MARGIN_FRACTION = 0.35
+MAX_MARGIN_FRACTION = 0.20
 
 FEE_RATE = 0.0005
 SLIPPAGE_RATE = 0.0002
@@ -46,8 +45,8 @@ PARTIAL_TP_FRACTION = 0.40
 TRAIL_ATR = 1.6
 TRAIL_START_ATR = 1.2
 
-MIN_SIGNAL_SCORE = 5
-MIN_SCORE_EDGE = 1
+MIN_SIGNAL_SCORE = 6
+MIN_SCORE_EDGE = 2
 
 COOLDOWN_SECONDS = 300
 MAX_HOLD_SECONDS = 86400
