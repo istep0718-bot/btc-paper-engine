@@ -1,9 +1,9 @@
 {
   "build": "BTC_PAPER_V19_0_2026-10-26",
   "initial_equity": 100.0,
-  "equity": 81.34235593622968,
+  "equity": 80.77295944467608,
   "peak_equity": 102.00383571561161,
-  "max_drawdown_pct": 20.255591012269853,
+  "max_drawdown_pct": 21.037130886151818,
   "realized_pnl": -18.640587245030773,
   "trades": [
     {
@@ -2243,15 +2243,45 @@
       "equity": 81.34235593622968,
       "marked_equity": 81.34235593622968,
       "price": 80083.5
+    },
+    {
+      "timestamp": "2026-10-27T00:16:28.793916+00:00",
+      "equity": 80.77295944467608,
+      "marked_equity": 80.54515528722312,
+      "price": 80234.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 80218.4531,
+    "quantity": 0.01419614738378962,
+    "leverage": 40.0,
+    "margin_used": 28.469824577680384,
+    "notional": 1138.7929831072154,
+    "planned_risk": 5.837264558543524,
+    "effective_risk_pct": 7.176168542646821,
+    "stop_price": 80517.333794,
+    "initial_stop_price": 80517.333794,
+    "risk_distance": 298.880694,
+    "entry_fee": 0.5693964915536077,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-10-27T00:16:28.793869+00:00",
+    "opened_timestamp": 1793060188,
+    "last_funding_ts": 1793060188,
+    "last_checked_candle_ts": 1793059200000,
+    "entry_signal_score": 5,
+    "entry_rsi": 56.61,
+    "entry_bb_width_pct": 0.5160323580985471,
+    "partial_taken": false,
+    "best_price": 80234.5,
+    "trail_active": false
+  },
   "last_close_ts": 1793058803,
-  "last_entry_candle": 1793057400000,
+  "last_entry_candle": 1793059200000,
   "consecutive_losses": 3,
   "consecutive_lock_until": 1792912018,
-  "daily_date": "2026-10-26",
-  "daily_start_equity": 97.25114974295037,
+  "daily_date": "2026-10-27",
+  "daily_start_equity": 80.54515528722312,
   "daily_loss_lock": false,
   "drawdown_pause_until": 0,
   "last_error": null,
@@ -2663,6 +2693,20 @@
       "reason": "TRAIL_STOP",
       "net_pnl": -1.4064294757971618,
       "fraction": 1.0
+    },
+    {
+      "timestamp": "2026-10-27T00:16:28.793877+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "entry_price": 80218.4531,
+      "stop_price": 80517.333794,
+      "quantity": 0.01419614738378962,
+      "leverage": 40.0,
+      "effective_risk_pct": 7.176168542646821
+    },
+    {
+      "timestamp": "2026-10-27T00:16:28.793892+00:00",
+      "type": "DAILY_RESET"
     }
   ],
   "open_trade": null,
