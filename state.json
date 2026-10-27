@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V19_1_2026-10-27",
   "initial_equity": 100.0,
-  "equity": 79.31389527452622,
+  "equity": 79.2345813792517,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 22.59739985127306,
   "realized_pnl": -20.669047906734257,
@@ -2549,11 +2549,41 @@
       "equity": 79.31389527452622,
       "marked_equity": 79.31389527452622,
       "price": 80139.5
+    },
+    {
+      "timestamp": "2026-10-27T15:13:39.734535+00:00",
+      "equity": 79.2345813792517,
+      "marked_equity": 79.20286216498474,
+      "price": 80353.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "LONG",
+    "entry_price": 80369.5707,
+    "quantity": 0.0019737294745690664,
+    "leverage": 10.0,
+    "margin_used": 15.862779054905243,
+    "notional": 158.62779054905243,
+    "planned_risk": 0.9629912456692129,
+    "effective_risk_pct": 1.214151999893647,
+    "stop_price": 79994.183724,
+    "initial_stop_price": 79994.183724,
+    "risk_distance": 375.386976,
+    "entry_fee": 0.07931389527452622,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-10-27T15:13:39.734486+00:00",
+    "opened_timestamp": 1793114019,
+    "last_funding_ts": 1793114019,
+    "last_checked_candle_ts": 1793112300000,
+    "entry_signal_score": 7,
+    "entry_rsi": 62.366,
+    "entry_bb_width_pct": 1.1677196197922495,
+    "partial_taken": false,
+    "best_price": 80353.5,
+    "trail_active": false
+  },
   "last_close_ts": 1793099907,
-  "last_entry_candle": 1793098800000,
+  "last_entry_candle": 1793112300000,
   "consecutive_losses": 1,
   "consecutive_lock_until": 1792912018,
   "daily_date": "2026-10-27",
@@ -3175,6 +3205,16 @@
       "reason": "TRAIL_STOP",
       "net_pnl": -0.051575964331884425,
       "fraction": 1.0
+    },
+    {
+      "timestamp": "2026-10-27T15:13:39.734496+00:00",
+      "type": "POSITION_OPENED",
+      "side": "LONG",
+      "entry_price": 80369.5707,
+      "stop_price": 79994.183724,
+      "quantity": 0.0019737294745690664,
+      "leverage": 10.0,
+      "effective_risk_pct": 1.214151999893647
     }
   ],
   "open_trade": null,
