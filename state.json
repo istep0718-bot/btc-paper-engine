@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V19_1_2026-10-27",
   "initial_equity": 100.0,
-  "equity": 79.32024496237072,
+  "equity": 79.31389527452622,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 22.59739985127306,
-  "realized_pnl": -20.61747194240237,
+  "realized_pnl": -20.669047906734257,
   "trades": [
     {
       "side": "SHORT",
@@ -648,6 +648,29 @@
       "reason": "PARTIAL_TAKE_PROFIT",
       "exit_reason": "PARTIAL_TAKE_PROFIT",
       "partial": true,
+      "build": "BTC_PAPER_V19_1_2026-10-27"
+    },
+    {
+      "side": "SHORT",
+      "direction": "SHORT",
+      "entry_price": 79787.5393,
+      "exit_price": 79753.5748374624,
+      "quantity": 0.0011913140218258644,
+      "leverage": 10.0,
+      "margin_used": 9.50520143350722,
+      "entry_time": "2026-10-27T08:47:17.858876+00:00",
+      "exit_time": "2026-10-27T11:18:27.952672+00:00",
+      "exit_timestamp": 1793099907,
+      "gross_pnl": 0.040462340464833484,
+      "entry_fee": 0.047526007167536105,
+      "exit_fee": 0.0475057759973037,
+      "fees": 0.0950317831648398,
+      "funding_pnl": 0.0029934783681218927,
+      "net_pnl": -0.051575964331884425,
+      "pnl": -0.051575964331884425,
+      "reason": "TRAIL_STOP",
+      "exit_reason": "TRAIL_STOP",
+      "partial": false,
       "build": "BTC_PAPER_V19_1_2026-10-27"
     }
   ],
@@ -2496,36 +2519,18 @@
       "equity": 79.32024496237072,
       "marked_equity": 79.2702565920951,
       "price": 79829.5
+    },
+    {
+      "timestamp": "2026-10-27T11:18:27.952716+00:00",
+      "equity": 79.31389527452622,
+      "marked_equity": 79.31389527452622,
+      "price": 79874.5
     }
   ],
-  "position": {
-    "side": "SHORT",
-    "entry_price": 79787.5393,
-    "quantity": 0.0011913140218258644,
-    "leverage": 10.0,
-    "margin_used": 9.50520143350722,
-    "notional": 95.05201433507222,
-    "planned_risk": 0.7963210215206197,
-    "effective_risk_pct": 1.0053287481695719,
-    "stop_price": 79737.627312,
-    "initial_stop_price": 80076.90028,
-    "risk_distance": 289.36098000000004,
-    "entry_fee": 0.047526007167536105,
-    "funding_pnl": 0.002299730680162442,
-    "entry_time": "2026-10-27T08:47:17.858876+00:00",
-    "opened_timestamp": 1793090837,
-    "last_funding_ts": 1793097805,
-    "last_checked_candle_ts": 1793096100000,
-    "entry_signal_score": 8,
-    "entry_rsi": 47.348,
-    "entry_bb_width_pct": 0.46457841803367683,
-    "partial_taken": true,
-    "best_price": 79489.0,
-    "trail_active": true
-  },
-  "last_close_ts": 1793088448,
-  "last_entry_candle": 1793089800000,
-  "consecutive_losses": 0,
+  "position": null,
+  "last_close_ts": 1793099907,
+  "last_entry_candle": 1793098800000,
+  "consecutive_losses": 1,
   "consecutive_lock_until": 1792912018,
   "daily_date": "2026-10-27",
   "daily_start_equity": 80.54515528722312,
@@ -3132,6 +3137,20 @@
       "reason": "PARTIAL_TAKE_PROFIT",
       "net_pnl": 0.15545929296458982,
       "fraction": 0.4
+    },
+    {
+      "timestamp": "2026-10-27T11:18:27.952651+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00069375,
+      "hours": 0.5839
+    },
+    {
+      "timestamp": "2026-10-27T11:18:27.952679+00:00",
+      "type": "POSITION_CLOSED",
+      "side": "SHORT",
+      "reason": "TRAIL_STOP",
+      "net_pnl": -0.051575964331884425,
+      "fraction": 1.0
     }
   ],
   "open_trade": null,
