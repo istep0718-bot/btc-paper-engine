@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V19_1_2026-10-27",
-  "generated_at": "2026-10-28T12:09:08.928688+00:00",
+  "generated_at": "2026-10-28T12:57:49.977696+00:00",
   "market_status": "OK",
-  "price": 81171.5,
+  "price": 80722.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -16,40 +16,40 @@
   "open_position": null,
   "has_position": false,
   "signal": {
-    "direction": "LONG",
-    "score": 8,
-    "long_score": 8,
-    "short_score": 2,
-    "score_edge": 6,
-    "rsi": 51.683,
-    "atr": 122.23377,
-    "ema9": 81389.16955548878,
-    "ema21": 81319.77102985198,
-    "trend_15m": "UP",
+    "direction": "WAIT",
+    "score": 5,
+    "long_score": 4,
+    "short_score": 5,
+    "score_edge": 1,
+    "rsi": 33.484,
+    "atr": 152.93538,
+    "ema9": 81137.35881241027,
+    "ema21": 81209.75509343584,
+    "trend_15m": "DOWN",
     "trend_1h": "UP",
     "trend_4h": "UP",
-    "timestamp": "2026-10-28T12:09:08.928553+00:00",
-    "reference_price": 81303.0,
-    "previous_close": 81354.0,
+    "timestamp": "2026-10-28T12:57:49.977619+00:00",
+    "reference_price": 80803.0,
+    "previous_close": 80945.0,
     "reasons": [
-      "EMA上向き",
-      "15m上昇",
+      "EMA下向き",
+      "15m下降",
       "1h上昇",
       "4h上昇",
       "短期モメンタム下"
     ],
     "flags": [
-      "BB幅縮小"
+      "BB幅拡大"
     ],
     "bollinger": {
-      "middle": 81343.65,
-      "upper": 81790.79707871124,
-      "lower": 80896.50292128875,
-      "width_pct": 1.0994025439262893,
-      "position": 0.45454515758309977,
-      "state": "INSIDE",
-      "width_expanding": false,
-      "previous_width_pct": 1.227171514723789
+      "middle": 81338.3,
+      "upper": 81808.00675958517,
+      "lower": 80868.59324041483,
+      "width_pct": 1.154946094484811,
+      "position": -0.06982360704449234,
+      "state": "BELOW_LOWER",
+      "width_expanding": true,
+      "previous_width_pct": 1.0817259014511753
     },
     "fibonacci": {
       "swing_high": 81804.0,
@@ -63,7 +63,7 @@
       },
       "trend": "UP"
     },
-    "entry_status": "クールダウン中",
+    "entry_status": "WAIT（LONG 4 / SHORT 5、必要スコア 6）",
     "paper_only": true,
     "live_trading_enabled": false
   },
@@ -2730,11 +2730,6 @@
   ],
   "equity_history": [
     {
-      "time": "2026-10-21T21:35:02.085016+00:00",
-      "equity_usd": 101.501228,
-      "price": 84781.0
-    },
-    {
       "time": "2026-10-21T22:08:12.814756+00:00",
       "equity_usd": 101.44064684,
       "price": 84735.0
@@ -4624,6 +4619,12 @@
       "equity": 79.18034884988062,
       "marked_equity": 79.18034884988062,
       "price": 81171.5
+    },
+    {
+      "timestamp": "2026-10-28T12:57:49.977686+00:00",
+      "equity": 79.18034884988062,
+      "marked_equity": 79.18034884988062,
+      "price": 80722.5
     }
   ],
   "events": [
@@ -5324,7 +5325,7 @@
   ],
   "timeframes": {
     "15m": {
-      "direction": "UP"
+      "direction": "DOWN"
     },
     "1h": {
       "direction": "UP"
@@ -5334,17 +5335,17 @@
     }
   },
   "indicators": {
-    "rsi_15m": 51.683,
-    "atr": 122.23377,
+    "rsi_15m": 33.484,
+    "atr": 152.93538,
     "bollinger": {
-      "middle": 81343.65,
-      "upper": 81790.79707871124,
-      "lower": 80896.50292128875,
-      "width_pct": 1.0994025439262893,
-      "position": 0.45454515758309977,
-      "state": "INSIDE",
-      "width_expanding": false,
-      "previous_width_pct": 1.227171514723789
+      "middle": 81338.3,
+      "upper": 81808.00675958517,
+      "lower": 80868.59324041483,
+      "width_pct": 1.154946094484811,
+      "position": -0.06982360704449234,
+      "state": "BELOW_LOWER",
+      "width_expanding": true,
+      "previous_width_pct": 1.0817259014511753
     }
   },
   "fibonacci": {
