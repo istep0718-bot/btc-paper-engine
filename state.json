@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V19_1_2026-10-27",
   "initial_equity": 100.0,
-  "equity": 79.83805368448297,
+  "equity": 79.75821563079849,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 22.69309473537051,
   "realized_pnl": -20.144889496777488,
@@ -2901,11 +2901,41 @@
       "equity": 79.83805368448297,
       "marked_equity": 79.83805368448297,
       "price": 81437.5
+    },
+    {
+      "timestamp": "2026-10-28T10:54:39.366065+00:00",
+      "equity": 79.75821563079849,
+      "marked_equity": 79.72628679509185,
+      "price": 81520.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "LONG",
+    "entry_price": 81536.8041,
+    "quantity": 0.0019583316899830024,
+    "leverage": 10.0,
+    "margin_used": 15.967610736896598,
+    "notional": 159.67610736896597,
+    "planned_risk": 0.6875029949836495,
+    "effective_risk_pct": 0.8611219377925167,
+    "stop_price": 81299.88997199999,
+    "initial_stop_price": 81299.88997199999,
+    "risk_distance": 236.91412799999998,
+    "entry_fee": 0.07983805368448299,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-10-28T10:54:39.366016+00:00",
+    "opened_timestamp": 1793184879,
+    "last_funding_ts": 1793184879,
+    "last_checked_candle_ts": 1793183400000,
+    "entry_signal_score": 8,
+    "entry_rsi": 67.66,
+    "entry_bb_width_pct": 1.4447121603669784,
+    "partial_taken": false,
+    "best_price": 81520.5,
+    "trail_active": false
+  },
   "last_close_ts": 1793182407,
-  "last_entry_candle": 1793180700000,
+  "last_entry_candle": 1793183400000,
   "consecutive_losses": 0,
   "consecutive_lock_until": 1792912018,
   "daily_date": "2026-10-28",
@@ -3783,6 +3813,16 @@
       "reason": "TRAIL_STOP",
       "net_pnl": 0.6092452240864016,
       "fraction": 1.0
+    },
+    {
+      "timestamp": "2026-10-28T10:54:39.366024+00:00",
+      "type": "POSITION_OPENED",
+      "side": "LONG",
+      "entry_price": 81536.8041,
+      "stop_price": 81299.88997199999,
+      "quantity": 0.0019583316899830024,
+      "leverage": 10.0,
+      "effective_risk_pct": 0.8611219377925167
     }
   ],
   "open_trade": null,
