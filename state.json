@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V19_1_2026-10-27",
   "initial_equity": 100.0,
-  "equity": 79.11627393786587,
+  "equity": 79.037157663928,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 22.59739985127306,
   "realized_pnl": -20.8666692433946,
@@ -2813,11 +2813,41 @@
       "equity": 79.11627393786587,
       "marked_equity": 79.11627393786587,
       "price": 80956.5
+    },
+    {
+      "timestamp": "2026-10-28T05:28:18.809865+00:00",
+      "equity": 79.037157663928,
+      "marked_equity": 79.00551748238917,
+      "price": 80938.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "LONG",
+    "entry_price": 80954.6877,
+    "quantity": 0.0019545816600776257,
+    "leverage": 10.0,
+    "margin_used": 15.823254787573173,
+    "notional": 158.23254787573174,
+    "planned_risk": 0.6989103439144635,
+    "effective_risk_pct": 0.8833964355593314,
+    "stop_price": 80710.44885,
+    "initial_stop_price": 80710.44885,
+    "risk_distance": 244.23885,
+    "entry_fee": 0.07911627393786587,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-10-28T05:28:18.809816+00:00",
+    "opened_timestamp": 1793165298,
+    "last_funding_ts": 1793165298,
+    "last_checked_candle_ts": 1793163600000,
+    "entry_signal_score": 6,
+    "entry_rsi": 53.152,
+    "entry_bb_width_pct": 0.6612149747069056,
+    "partial_taken": false,
+    "best_price": 80938.5,
+    "trail_active": false
+  },
   "last_close_ts": 1793163000,
-  "last_entry_candle": 1793161800000,
+  "last_entry_candle": 1793163600000,
   "consecutive_losses": 2,
   "consecutive_lock_until": 1792912018,
   "daily_date": "2026-10-28",
@@ -3633,6 +3663,16 @@
       "reason": "TRAIL_STOP",
       "net_pnl": -0.1643732171988434,
       "fraction": 1.0
+    },
+    {
+      "timestamp": "2026-10-28T05:28:18.809826+00:00",
+      "type": "POSITION_OPENED",
+      "side": "LONG",
+      "entry_price": 80954.6877,
+      "stop_price": 80710.44885,
+      "quantity": 0.0019545816600776257,
+      "leverage": 10.0,
+      "effective_risk_pct": 0.8833964355593314
     }
   ],
   "open_trade": null,
