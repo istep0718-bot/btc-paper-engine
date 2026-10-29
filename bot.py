@@ -13,8 +13,11 @@ Design pillars (fixing V19.x fatal flaws):
   * Setup-separated strategies (A pullback / B breakout / C range fade),
     each trade tagged and measured separately.
   * Confluence scoring incl. cost filter (expected move must dwarf costs).
-  * Exit redesign: structural stop, +1R breakeven, staged partials at
-    +1.5R / +2.75R, Chandelier trail on the runner, time stop.
+  * Exit redesign: structural stop, +1R breakeven, thin/late staged
+    partials at +1.5R / +3R (20% each, 60% runner), wide Chandelier
+    trail (ATR x 3.5) with a +1R profit floor, trend-flip runner exit,
+    24h max hold extendable to 72h while the trend cooperates, time stop.
+    (V20.2: exits re-tuned to let winners run, per user direction.)
   * Unified risk: effective risk 5% of equity, DD throttle, daily stop
     count / daily loss lock, consecutive-loss cooldown.
   * Complete trade records: build, setup, regime, score breakdown,
@@ -30,7 +33,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_1_PRO_2026-10-29"
+BUILD = "BTC_PAPER_V20_2_PRO_2026-10-29"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -69,13 +72,20 @@ STOP_ATR_MAX = 2.6
 STOP_STRUCT_BUFFER_ATR = 0.15  # buffer beyond the swing/zone for the stop
 BREAKEVEN_AT_R = 1.0         # move stop to entry + costs at +1R
 TP1_AT_R = 1.5               # first partial at +1.5R ...
-TP1_FRACTION = 0.30          # ... closing 30% of the initial quantity
-TP2_AT_R = 2.75              # second partial at +2.75R ...
-TP2_FRACTION = 0.35          # ... closing 35% of the initial quantity
-CHANDELIER_ATR = 2.75        # runner trail: best price -/+ ATR x 2.75
+TP1_FRACTION = 0.20          # ... closing 20% of the initial quantity
+TP2_AT_R = 3.0               # second partial at +3.0R ...
+TP2_FRACTION = 0.20          # ... closing 20% of the initial quantity
+                             # (runner keeps 60% of the initial size)
+CHANDELIER_ATR = 3.5         # runner trail: best price -/+ ATR x 3.5
+RUNNER_FLOOR_ARM_R = 2.0     # once MFE >= +2R, the runner stop may not
+RUNNER_FLOOR_R = 1.0         # fall below entry +/- 1R (never give back
+                             # the whole move)
 TIME_STOP_SECONDS = 4 * 3600  # exit if MFE < 0.5R after 4 hours
 TIME_STOP_MIN_MFE_R = 0.5
-MAX_HOLD_SECONDS = 86400     # 24h hard cap (unchanged)
+MAX_HOLD_SECONDS = 86400     # 24h base block; extendable (see below)
+MAX_HOLD_EXTENSIONS = 2      # up to 2 extra 24h blocks (72h hard cap)
+EXTENSION_MIN_R = 1.0        # extension requires unrealized >= +1R and
+                             # the HTF bias still aligned with the side
 
 # --- Entry gates ---
 MIN_SCORE = 8                # confluence threshold for setups A / B
@@ -340,6 +350,20 @@ def normalize_position(p):
         p["targets"] = targets
     p.setdefault("tp1_taken", bool(p.get("partial_taken")))
     p.setdefault("tp2_taken", False)
+    p.setdefault("hold_extensions", 0)
+    p.setdefault("trend_flip_exit", False)
+    p.setdefault("runner_floor_active", False)
+    # V20.2: targets for partials that have not fired yet are moved to
+    # the current (later / thinner) profile. This only delays profit
+    # taking; stops are never touched here.
+    if side in ("LONG", "SHORT"):
+        sign = 1.0 if side == "LONG" else -1.0
+        targets = p.get("targets") or {}
+        if not p.get("tp1_taken"):
+            targets["tp1_price"] = entry + sign * distance * TP1_AT_R
+        if not p.get("tp2_taken"):
+            targets["tp2_price"] = entry + sign * distance * TP2_AT_R
+        p["targets"] = targets
     p.setdefault("partial_taken", bool(p.get("tp1_taken")))
     p.setdefault("be_moved", False)
     p.setdefault("trail_active", False)
@@ -1929,6 +1953,18 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
         "entry_event_within_24h": pos.get("entry_event_within_24h"),
         "entry_event_upcoming_24h": pos.get("entry_event_upcoming_24h"),
         "entry_event_name": pos.get("entry_event_name"),
+        "tp1_taken": bool(pos.get("tp1_taken")),
+        "tp2_taken": bool(pos.get("tp2_taken")),
+        "tp_stage": max(
+            2 if pos.get("tp2_taken")
+            else 1 if pos.get("tp1_taken") else 0,
+            2 if reason == "PARTIAL_TAKE_PROFIT_2"
+            else 1 if reason == "PARTIAL_TAKE_PROFIT_1" else 0,
+        ),
+        "hold_extensions": i(pos.get("hold_extensions")),
+        "trend_flip": bool(pos.get("trend_flip_exit"))
+                      or reason == "TREND_FLIP",
+        "runner_floor_active": bool(pos.get("runner_floor_active")),
     }
 
     s["trades"].append(trade)
@@ -2059,6 +2095,9 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
         "risk_multiplier": risk_multiplier,
         "tp1_taken": False,
         "tp2_taken": False,
+        "hold_extensions": 0,
+        "trend_flip_exit": False,
+        "runner_floor_active": False,
         "partial_taken": False,
         "be_moved": False,
         "trail_active": False,
@@ -2264,7 +2303,7 @@ def manage_position(s, candles, price, ctx, funding, now_s=None):
                 pos["be_moved"] = True
                 event(s, "STOP_MOVED_TO_BREAKEVEN", stop_price=pos["stop_price"])
 
-        # --- Partial take-profit 1: +1.5R, 30% of initial quantity ---
+        # --- Partial take-profit 1: +1.5R, 20% of initial quantity ---
         if not pos.get("tp1_taken") and tp1 > 0:
             hit = high >= tp1 if side == "LONG" else low <= tp1
             if hit:
@@ -2284,7 +2323,7 @@ def manage_position(s, candles, price, ctx, funding, now_s=None):
                     pos["tp1_taken"] = True
                     pos["partial_taken"] = True
 
-        # --- Partial take-profit 2: +2.75R, 35% of initial quantity ---
+        # --- Partial take-profit 2: +3R, 20% of initial quantity ---
         pos = s.get("position")
         if not pos:
             return
@@ -2314,9 +2353,21 @@ def manage_position(s, candles, price, ctx, funding, now_s=None):
             if side == "LONG":
                 candidate_stop = f(pos.get("best_price")) - CHANDELIER_ATR * av
                 new_stop = max(f(pos.get("stop_price")), candidate_stop)
+                # Profit floor: once the trade has shown +2R, the stop
+                # may not fall below entry + 1R (never return it all).
+                if f(pos.get("mfe_r")) >= RUNNER_FLOOR_ARM_R:
+                    floor_stop = entry + distance * RUNNER_FLOOR_R
+                    if floor_stop > new_stop:
+                        new_stop = floor_stop
+                        pos["runner_floor_active"] = True
             else:
                 candidate_stop = f(pos.get("best_price")) + CHANDELIER_ATR * av
                 new_stop = min(f(pos.get("stop_price")), candidate_stop)
+                if f(pos.get("mfe_r")) >= RUNNER_FLOOR_ARM_R:
+                    floor_stop = entry - distance * RUNNER_FLOOR_R
+                    if floor_stop < new_stop:
+                        new_stop = floor_stop
+                        pos["runner_floor_active"] = True
             if new_stop != f(pos.get("stop_price")):
                 pos["stop_price"] = new_stop
                 pos["trail_active"] = True
@@ -2333,9 +2384,52 @@ def manage_position(s, candles, price, ctx, funding, now_s=None):
         pos["last_checked_candle_ts"] = candle["t"]
         cursor = candle["t"]
 
-    # --- Max hold (24h) at the live price ---
-    if ts_now - i(pos.get("opened_timestamp")) >= MAX_HOLD_SECONDS:
-        close_position(s, price, "MAX_HOLD_TIME", now_s=ts_now)
+    # --- Trend flip: HTF bias reversed against the runner ---
+    # Applies only once the position is in its runner phase (TP1 taken):
+    # the trade thesis was trend continuation, so a higher-timeframe
+    # reversal closes the runner immediately instead of waiting for the
+    # (now wider) trail to be hit.
+    pos = s.get("position")
+    if pos and pos.get("tp1_taken"):
+        htf_bias = (ctx or {}).get("htf_bias")
+        against = "DOWN" if side == "LONG" else "UP"
+        if htf_bias == against:
+            pos["trend_flip_exit"] = True
+            event(
+                s, "TREND_FLIP_EXIT", side=side, htf_bias=htf_bias,
+                hold_extensions=i(pos.get("hold_extensions")),
+            )
+            close_position(s, price, "TREND_FLIP", now_s=ts_now)
+            return
+
+    # --- Max hold: 24h blocks, extendable while the trend cooperates ---
+    pos = s.get("position")
+    if not pos:
+        return
+    extensions = i(pos.get("hold_extensions"))
+    deadline = i(pos.get("opened_timestamp")) + MAX_HOLD_SECONDS * (
+        1 + extensions
+    )
+    if ts_now >= deadline:
+        unrealized_r = (
+            (price - entry) if side == "LONG" else (entry - price)
+        ) / distance
+        htf_bias = (ctx or {}).get("htf_bias")
+        aligned = htf_bias == ("UP" if side == "LONG" else "DOWN")
+        if (
+            extensions < MAX_HOLD_EXTENSIONS
+            and unrealized_r >= EXTENSION_MIN_R
+            and aligned
+        ):
+            pos["hold_extensions"] = extensions + 1
+            event(
+                s, "MAX_HOLD_EXTENDED",
+                extensions=pos["hold_extensions"],
+                unrealized_r=round(unrealized_r, 3),
+                htf_bias=htf_bias,
+            )
+        else:
+            close_position(s, price, "MAX_HOLD_TIME", now_s=ts_now)
 
 
 # ============================================================
@@ -2561,7 +2655,10 @@ def make_dashboard(s, price, funding, sig, status):
             "min_signal_score": MIN_SCORE,
             "min_score_edge": 0,
             "partial_tp_fraction": TP1_FRACTION,
+            "tp2_fraction": TP2_FRACTION,
             "trail_atr": CHANDELIER_ATR,
+            "runner_floor_r": RUNNER_FLOOR_R,
+            "max_hold_extensions": MAX_HOLD_EXTENSIONS,
             "stop_atr_min": STOP_ATR_MIN,
             "stop_atr_max": STOP_ATR_MAX,
             "tp1_at_r": TP1_AT_R,
