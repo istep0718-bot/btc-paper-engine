@@ -27,10 +27,10 @@ import json
 import math
 import time
 import urllib.request
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_0_PRO_2026-10-29"
+BUILD = "BTC_PAPER_V20_1_PRO_2026-10-29"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -113,6 +113,30 @@ TRADE_LIMIT = 1000
 CANDLES_15M = 500
 CANDLES_1H = 300
 CANDLES_4H = 200
+
+# --- Economic calendar / event risk (V20.1) -------------------
+# Fail-open by design: an unreachable calendar never halts trading;
+# the hard-coded FOMC schedule below still guards FOMC windows.
+ECON_CALENDAR_URL = "https://nfs.faireconomy.media/ff_calendar_thisweek.json"
+ECON_FETCH_INTERVAL_SECONDS = 86400      # refresh at most once per day
+ECON_STALE_SECONDS = 3 * 86400           # older than this -> warn only
+ECON_EVENT_PRE_MINUTES = 120             # standard high-impact window
+ECON_EVENT_POST_MINUTES = 30
+FOMC_EVENT_PRE_MINUTES = 180             # FOMC gets a wider window
+FOMC_EVENT_POST_MINUTES = 60
+ECON_BLOCK_LOG_INTERVAL_SECONDS = 1800   # throttle EVENT_RISK skip logs
+
+# FOMC statement days (the second day of each meeting), taken from the
+# Federal Reserve's published meeting calendar
+# (federalreserve.gov/monetarypolicy/fomccalendars.htm, checked
+# 2026-10-29). Statements are released at 14:00 Eastern Time.
+FOMC_STATEMENT_DAYS = [
+    (2026, 1, 28), (2026, 3, 18), (2026, 4, 29), (2026, 6, 17),
+    (2026, 7, 29), (2026, 9, 16), (2026, 10, 28), (2026, 12, 9),
+    (2027, 1, 27), (2027, 3, 17), (2027, 4, 28), (2027, 6, 9),
+    (2027, 7, 28), (2027, 9, 15), (2027, 10, 27), (2027, 12, 8),
+    (2028, 1, 26),
+]
 
 # ============================================================
 # UTILITIES
@@ -229,6 +253,14 @@ def default_state():
         "stats_by_regime": {},
         "last_error": None,
         "events": [],
+        "econ_calendar": {
+            "fetched_ts": 0,
+            "events": [],
+            "last_error": None,
+            "last_stale_warn_date": "",
+            "last_block_key": "",
+            "last_block_log_ts": 0,
+        },
     }
 
 
@@ -318,6 +350,11 @@ def normalize_position(p):
         p["mfe_r"] = max(0.0, favorable / distance)
     p.setdefault("mfe_r", 0.0)
     p.setdefault("mae_r", 0.0)
+    p.setdefault("entry_event_within_24h", None)
+    p.setdefault("entry_event_upcoming_24h", None)
+    p.setdefault("entry_event_name", None)
+    p.setdefault("event_spanned", False)
+    p.setdefault("event_spanned_names", [])
     p.setdefault("acc_net_pnl", 0.0)
     p.setdefault("acc_fees", f(p.get("entry_fee")))
     p.setdefault("acc_funding", 0.0)
@@ -365,6 +402,21 @@ def load_state():
     if not isinstance(s.get("stats_by_regime"), dict):
         s["stats_by_regime"] = {}
 
+    if not isinstance(s.get("econ_calendar"), dict):
+        s["econ_calendar"] = {
+            "fetched_ts": 0,
+            "events": [],
+            "last_error": None,
+            "last_stale_warn_date": "",
+            "last_block_key": "",
+            "last_block_log_ts": 0,
+        }
+    else:
+        _cal = s["econ_calendar"]
+        if not isinstance(_cal.get("events"), list):
+            _cal["events"] = []
+        _cal["fetched_ts"] = max(0, i(_cal.get("fetched_ts")))
+
     pos = s.get("position") or s.get("open_position")
     s["position"] = pos if isinstance(pos, dict) else None
 
@@ -404,6 +456,275 @@ def load_state():
 
     s["build"] = BUILD
     return s
+
+
+# ============================================================
+# ECONOMIC CALENDAR (event-risk filter, V20.1)
+# ============================================================
+
+def _eastern_dst_bounds_utc(year):
+    """US Eastern DST window in UTC (2nd Sun Mar 07:00Z .. 1st Sun Nov 06:00Z)."""
+    def nth_sunday(month, n):
+        d = datetime(year, month, 1, tzinfo=timezone.utc)
+        delta = (6 - d.weekday()) % 7  # days until the first Sunday
+        return d + timedelta(days=delta + 7 * (n - 1))
+    return (nth_sunday(3, 2).replace(hour=7),
+            nth_sunday(11, 1).replace(hour=6))
+
+
+def eastern_to_utc_ts(year, month, day, hour=14, minute=0):
+    """Epoch seconds for a US Eastern wall-clock time (DST aware)."""
+    naive = datetime(year, month, day, hour, minute, tzinfo=timezone.utc)
+    start, end = _eastern_dst_bounds_utc(year)
+    as_edt = naive + timedelta(hours=4)
+    offset = 4 if start <= as_edt < end else 5
+    return int((naive + timedelta(hours=offset)).timestamp())
+
+
+def fomc_fallback_events():
+    """FOMC statement events from the hard-coded official schedule."""
+    return [{
+        "title": "FOMC: Federal Funds Rate / Statement (official schedule)",
+        "category": "FOMC",
+        "ts": eastern_to_utc_ts(y, m, d, 14, 0),
+        "impact": "High",
+        "source": "fomc_fallback",
+    } for (y, m, d) in FOMC_STATEMENT_DAYS]
+
+
+def classify_econ_event(title, country, impact):
+    """Map a calendar item to an event category, or None if not targeted.
+
+    Only USD events flagged High impact are targeted. Named categories
+    cover the releases that routinely move BTC; any other USD High item
+    falls into OTHER_HIGH and is gated with the standard window.
+    """
+    if (country or "").upper() != "USD":
+        return None
+    if (impact or "").strip().lower() != "high":
+        return None
+    t = (title or "").lower()
+    if "fomc" in t or "federal funds" in t or "fed chair" in t:
+        return "FOMC"
+    if "claims" in t:
+        return "CLAIMS"
+    if ("nonfarm" in t or "non-farm" in t or "unemployment rate" in t
+            or "average hourly earnings" in t):
+        return "EMPLOYMENT"
+    if "cpi" in t or "consumer price" in t:
+        return "CPI"
+    if "pce" in t:
+        return "PCE"
+    if "ppi" in t or "producer price" in t:
+        return "PPI"
+    if "retail sales" in t:
+        return "RETAIL"
+    if "gdp" in t or "gross domestic" in t:
+        return "GDP"
+    if "ism" in t:
+        return "ISM"
+    return "OTHER_HIGH"
+
+
+def fetch_econ_calendar():
+    """Fetch this week's calendar feed and return targeted USD events."""
+    req = urllib.request.Request(
+        ECON_CALENDAR_URL,
+        headers={"User-Agent": "Mozilla/5.0 (compatible; btc-paper-engine)"},
+    )
+    with urllib.request.urlopen(req, timeout=15) as resp:
+        payload = json.loads(resp.read().decode("utf-8"))
+    events = []
+    if not isinstance(payload, list):
+        return events
+    for item in payload:
+        if not isinstance(item, dict):
+            continue
+        category = classify_econ_event(
+            item.get("title"), item.get("country"), item.get("impact")
+        )
+        if not category:
+            continue
+        try:
+            ts = int(datetime.fromisoformat(item.get("date")).timestamp())
+        except Exception:
+            continue
+        events.append({
+            "title": item.get("title"),
+            "category": category,
+            "ts": ts,
+            "impact": "High",
+            "source": "feed",
+        })
+    return events
+
+
+def refresh_econ_calendar(s, now_s=None):
+    """Refresh the cached calendar at most once per day (fail-open)."""
+    now = int(now_s) if now_s is not None else now_ts()
+    cal = s.get("econ_calendar")
+    if not isinstance(cal, dict):
+        cal = {
+            "fetched_ts": 0, "events": [], "last_error": None,
+            "last_stale_warn_date": "", "last_block_key": "",
+            "last_block_log_ts": 0,
+        }
+        s["econ_calendar"] = cal
+    if now - i(cal.get("fetched_ts")) >= ECON_FETCH_INTERVAL_SECONDS:
+        try:
+            fresh = fetch_econ_calendar()
+            merged = {}
+            for e in cal.get("events", []):
+                if isinstance(e, dict):
+                    merged[(e.get("title"), i(e.get("ts")))] = e
+            for e in fresh:
+                merged[(e["title"], e["ts"])] = e
+            cal["events"] = sorted(
+                merged.values(), key=lambda e: i(e.get("ts"))
+            )
+            cal["fetched_ts"] = now
+            cal["last_error"] = None
+            event(s, "ECON_CALENDAR_UPDATED", events=len(fresh))
+        except Exception as exc:
+            cal["last_error"] = f"{type(exc).__name__}: {exc}"
+            event(s, "ECON_CALENDAR_FETCH_FAILED", error=cal["last_error"])
+    # Keep a rolling window: 3 days back .. 40 days ahead.
+    lo, hi = now - 3 * 86400, now + 40 * 86400
+    cal["events"] = [
+        e for e in cal.get("events", [])
+        if isinstance(e, dict) and lo <= i(e.get("ts")) <= hi
+    ][-300:]
+    fetched = i(cal.get("fetched_ts"))
+    if (fetched == 0 or now - fetched > ECON_STALE_SECONDS) \
+            and cal.get("last_stale_warn_date") != utc_date():
+        cal["last_stale_warn_date"] = utc_date()
+        event(
+            s, "ECON_CALENDAR_STALE", fetched_ts=fetched,
+            note="calendar unknown; fail-open, FOMC fallback still active",
+        )
+    return cal
+
+
+def current_econ_events(s):
+    """Feed events plus FOMC fallback days not covered by the feed."""
+    cal = s.get("econ_calendar") or {}
+    feed_events = [
+        e for e in cal.get("events", []) if isinstance(e, dict)
+    ]
+    feed_fomc_ts = [
+        i(e.get("ts")) for e in feed_events if e.get("category") == "FOMC"
+    ]
+    out = list(feed_events)
+    for fb in fomc_fallback_events():
+        if any(abs(fb["ts"] - ts) <= 12 * 3600 for ts in feed_fomc_ts):
+            continue  # the feed already covers this meeting
+        out.append(fb)
+    out.sort(key=lambda e: i(e.get("ts")))
+    return out
+
+
+def _event_window(e):
+    ts = i(e.get("ts"))
+    if e.get("category") == "FOMC":
+        return (ts - FOMC_EVENT_PRE_MINUTES * 60,
+                ts + FOMC_EVENT_POST_MINUTES * 60)
+    return (ts - ECON_EVENT_PRE_MINUTES * 60,
+            ts + ECON_EVENT_POST_MINUTES * 60)
+
+
+def event_window_status(s, now_s=None):
+    """Is `now` inside a high-impact event window? What is next?"""
+    now = int(now_s) if now_s is not None else now_ts()
+    cal = s.get("econ_calendar") or {}
+    fetched = i(cal.get("fetched_ts"))
+    active = None
+    nxt = None
+    for e in current_econ_events(s):
+        lo, hi = _event_window(e)
+        if lo <= now <= hi:
+            active = e
+        if nxt is None and hi >= now:
+            nxt = e
+    return {
+        "blocked": active is not None,
+        "active_event": active,
+        "next_event": nxt,
+        "calendar_stale": fetched == 0 or now - fetched > ECON_STALE_SECONDS,
+    }
+
+
+def entry_event_fields(s, ts_now):
+    """Event-proximity tags stamped onto a position at entry time."""
+    fields = {
+        "entry_event_within_24h": False,
+        "entry_event_upcoming_24h": False,
+        "entry_event_name": None,
+    }
+    past = None
+    upcoming = None
+    for e in current_econ_events(s):
+        ts = i(e.get("ts"))
+        if ts <= ts_now and ts_now - ts <= 86400:
+            past = e  # events are sorted; the last match is the closest
+        if upcoming is None and ts_now < ts <= ts_now + 86400:
+            upcoming = e
+    if past is not None:
+        fields["entry_event_within_24h"] = True
+        fields["entry_event_name"] = past.get("title")
+    if upcoming is not None:
+        fields["entry_event_upcoming_24h"] = True
+        if fields["entry_event_name"] is None:
+            fields["entry_event_name"] = upcoming.get("title")
+    return fields
+
+
+def update_position_event_span(s, now_s=None):
+    """Tag the open position if a high-impact release happened mid-hold."""
+    pos = s.get("position")
+    if not pos:
+        return
+    now = int(now_s) if now_s is not None else now_ts()
+    opened = i(pos.get("opened_timestamp"))
+    names = list(pos.get("event_spanned_names") or [])
+    spanned = bool(pos.get("event_spanned"))
+    for e in current_econ_events(s):
+        ts = i(e.get("ts"))
+        if opened < ts <= now and e.get("title") not in names:
+            names.append(e.get("title"))
+            spanned = True
+    pos["event_spanned"] = spanned
+    pos["event_spanned_names"] = names
+
+
+def _next_high_event_payload(s):
+    st = event_window_status(s)
+    e = st["next_event"]
+    if not e:
+        return None
+    active = st["active_event"]
+    return {
+        "title": e.get("title"),
+        "category": e.get("category"),
+        "timestamp": i(e.get("ts")),
+        "time": iso_of(i(e.get("ts"))),
+        "in_window": bool(
+            active and i(active.get("ts")) == i(e.get("ts"))
+        ),
+    }
+
+
+def _event_risk_payload(s):
+    st = event_window_status(s)
+    cal = s.get("econ_calendar") or {}
+    active = st["active_event"]
+    return {
+        "blocked": st["blocked"],
+        "active_event": active.get("title") if active else None,
+        "active_category": active.get("category") if active else None,
+        "calendar_updated_ts": i(cal.get("fetched_ts")),
+        "calendar_stale": st["calendar_stale"],
+        "calendar_last_error": cal.get("last_error"),
+    }
 
 
 # ============================================================
@@ -1603,6 +1924,11 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
         "mae_r": f(pos.get("mae_r")),
         "r_multiple": r_multiple,
         "zone_room_r": pos.get("zone_room_r"),
+        "event_spanned": bool(pos.get("event_spanned")),
+        "event_spanned_names": pos.get("event_spanned_names", []),
+        "entry_event_within_24h": pos.get("entry_event_within_24h"),
+        "entry_event_upcoming_24h": pos.get("entry_event_upcoming_24h"),
+        "entry_event_name": pos.get("entry_event_name"),
     }
 
     s["trades"].append(trade)
@@ -1746,6 +2072,8 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
         "acc_r": 0.0,
         "saw_stop_loss": False,
     }
+
+    s["position"].update(entry_event_fields(s, ts_now))
 
     s["last_entry_candle"] = candle_ts
     # The post-cooldown half-risk flag is consumed by this entry.
@@ -2240,6 +2568,8 @@ def make_dashboard(s, price, funding, sig, status):
             "tp2_at_r": TP2_AT_R,
         },
         "last_error": s.get("last_error"),
+        "next_high_event": _next_high_event_payload(s),
+        "event_risk": _event_risk_payload(s),
     }
 
 
@@ -2265,6 +2595,11 @@ def main():
         latest_candle = c15[-1]["t"]
         now = now_ts()
 
+        # Economic calendar: refresh (daily, fail-open) and evaluate
+        # the event-risk gate for this cycle.
+        refresh_econ_calendar(s, now)
+        ev_status = event_window_status(s, now)
+
         # Mark-to-market (net of exit costs) for risk state.
         pos = s.get("position")
         marked = s["equity"] + (
@@ -2275,6 +2610,7 @@ def main():
         had_position = bool(s.get("position"))
 
         if had_position:
+            update_position_event_span(s, now)
             manage_position(s, c15, price, ctx, funding, now)
 
         if had_position and not s.get("position"):
@@ -2308,6 +2644,30 @@ def main():
             status = "クールダウン中"
         elif latest_candle == s["last_entry_candle"]:
             status = "同じ15分足での再エントリー防止"
+        elif candidate is not None and ev_status["blocked"]:
+            ev = ev_status["active_event"]
+            status = (
+                "イベント回避（EVENT_RISK）: "
+                f"{ev.get('title')} の発表窓のため新規エントリー見送り"
+            )
+            notes.append(
+                f"EVENT_RISK: {ev.get('title')}"
+                f"（{ev.get('category')}）"
+            )
+            _cal = s["econ_calendar"]
+            _key = f"{ev.get('title')}|{ev.get('ts')}"
+            if _cal.get("last_block_key") != _key or \
+                    now - i(_cal.get("last_block_log_ts")) \
+                    >= ECON_BLOCK_LOG_INTERVAL_SECONDS:
+                _cal["last_block_key"] = _key
+                _cal["last_block_log_ts"] = now
+                event(
+                    s, "ENTRY_SKIPPED_EVENT_RISK",
+                    event_title=ev.get("title"),
+                    category=ev.get("category"),
+                    event_ts=i(ev.get("ts")),
+                    reason="EVENT_RISK",
+                )
         elif candidate is not None:
             mult = risk_mult
             if candidate["setup"] == "C":
@@ -2345,6 +2705,7 @@ def main():
             f"long={sig['long_score']} "
             f"short={sig['short_score']}\n"
             f"ENTRY: {status}\n"
+            f"EVENT_RISK: {('BLOCKED: ' + str(ev_status['active_event'].get('title'))) if ev_status['blocked'] else 'clear'}\n"
             f"EQUITY: {s['equity']:.4f}\n"
             f"REALIZED PNL: {s['realized_pnl']:.4f}\n"
             f"CLOSED RECORDS: {len(s['trades'])}\n"
