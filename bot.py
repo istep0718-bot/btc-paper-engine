@@ -24,6 +24,14 @@ Design pillars (fixing V19.x fatal flaws):
     entry/stop/targets, planned risk, MFE/MAE, fees, funding, R multiple.
   * Realistic fills: stop fills use the worse of stop vs candle close
     plus extra slippage; marked equity is net of estimated exit costs.
+  * Setup D (V20.3): copy trading. A vetted Hyperliquid trader list
+    (COPY_TRADERS, see copy_research.json) is polled every cycle; a
+    fresh BTC open / direction flip by a tracked trader generates a
+    same-direction entry under every house rule (5% effective risk,
+    structural stop, event-risk filter, DD throttle, daily locks,
+    V20.2 exit engine). If the source closes or flips away, the copy
+    position is closed (COPY_SOURCE_EXIT). Traders are re-evaluated
+    daily and auto-disabled on inactivity or performance decay.
 """
 
 import json
@@ -33,7 +41,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_2_PRO_2026-10-29"
+BUILD = "BTC_PAPER_V20_3_PRO_2026-10-30"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -147,6 +155,25 @@ FOMC_STATEMENT_DAYS = [
     (2027, 7, 28), (2027, 9, 15), (2027, 10, 27), (2027, 12, 8),
     (2028, 1, 26),
 ]
+
+# --- Copy trading (Setup D, V20.3) ----------------------------
+# Source traders vetted 2026-10-30 from the Hyperliquid leaderboard
+# + per-address fills (copy_research.json / copy_selection.json):
+# >=100 closed trades in ~90d, positive realized PnL, swing-style
+# holding times (median >= 1h), no martingale blow-up profile.
+# To replace or drop a trader, edit ONLY this list: state tracking
+# for removed addresses is discarded; re-added addresses start fresh.
+COPY_TRADERS = [
+    {"address": "0x24e370916722584204322fad3c179a7fbde6684b", "label": "HL-684B", "enabled": True},
+    {"address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918", "label": "HL-D918", "enabled": True},
+    {"address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d", "label": "HL-F79D", "enabled": True},
+]
+COPY_SIGNAL_MAX_AGE_SECONDS = 1800   # ignore source opens older than 30m
+COPY_RECHECK_INTERVAL_SECONDS = 86400  # daily performance re-evaluation
+COPY_INACTIVE_DAYS = 30              # no fills for 30d -> auto-disable
+COPY_MIN_CLOSES_30D = 30             # re-check needs this many closes
+COPY_MIN_WIN_RATE_30D = 0.45         # below this (or PnL<0) -> disable
+COPY_FOLLOW_SOURCE_EXIT = True       # close our copy when source exits
 
 # ============================================================
 # UTILITIES
@@ -271,6 +298,10 @@ def default_state():
             "last_block_key": "",
             "last_block_log_ts": 0,
         },
+        "copy": {
+            "last_recheck_ts": 0,
+            "traders": {},
+        },
     }
 
 
@@ -379,6 +410,11 @@ def normalize_position(p):
     p.setdefault("entry_event_name", None)
     p.setdefault("event_spanned", False)
     p.setdefault("event_spanned_names", [])
+    p.setdefault("source_trader", None)
+    p.setdefault("source_trader_label", None)
+    p.setdefault("source_entry_price", None)
+    p.setdefault("copy_source_event_ts", None)
+    p.setdefault("copy_detection_lag_seconds", None)
     p.setdefault("acc_net_pnl", 0.0)
     p.setdefault("acc_fees", f(p.get("entry_fee")))
     p.setdefault("acc_funding", 0.0)
@@ -440,6 +476,15 @@ def load_state():
         if not isinstance(_cal.get("events"), list):
             _cal["events"] = []
         _cal["fetched_ts"] = max(0, i(_cal.get("fetched_ts")))
+
+    if not isinstance(s.get("copy"), dict):
+        s["copy"] = {"last_recheck_ts": 0, "traders": {}}
+    else:
+        if not isinstance(s["copy"].get("traders"), dict):
+            s["copy"]["traders"] = {}
+        s["copy"]["last_recheck_ts"] = max(
+            0, i(s["copy"].get("last_recheck_ts"))
+        )
 
     pos = s.get("position") or s.get("open_position")
     s["position"] = pos if isinstance(pos, dict) else None
@@ -1486,6 +1531,8 @@ def _finalize_candidate(ctx, side, setup, stop_anchor, breakdown_extra=None):
         )
 
     # Zone room: never enter with < 1.5R of room to the opposing zone.
+    # (Setup D opts out via _finalize_candidate_no_zone: the source
+    # trader's own analysis replaces this gate.)
     structure = ctx["structure"]
     if side == "LONG":
         opposing = structure["resistance"]
@@ -1714,6 +1761,23 @@ def _candidate_c(ctx, side):
 _SETUP_FUNCS = {"A": _candidate_a, "B": _candidate_b, "C": _candidate_c}
 
 
+def _finalize_candidate_no_zone(ctx, side, stop_anchor):
+    """_finalize_candidate with the zone-room gate relaxed (setup D).
+
+    The cost filter and stop clamping inside _finalize_candidate
+    still apply; only the opposing-zone room check is skipped.
+    """
+    global MIN_ZONE_ROOM_R
+    saved = MIN_ZONE_ROOM_R
+    MIN_ZONE_ROOM_R = 0.0
+    try:
+        candidate, _reason = _finalize_candidate(ctx, side, "D",
+                                                 stop_anchor)
+    finally:
+        MIN_ZONE_ROOM_R = saved
+    return candidate
+
+
 def evaluate_entry(ctx, allowed_setups=("A", "B", "C")):
     """Return (best_candidate, per_side_scores, rejection_notes)."""
     best = None
@@ -1735,6 +1799,335 @@ def evaluate_entry(ctx, allowed_setups=("A", "B", "C")):
                 notes.append(f"{setup}/{side}: {reason}")
 
     return best, side_scores, notes
+
+
+
+# ============================================================
+# COPY TRADING (Setup D, V20.3)
+# ============================================================
+
+def _copy_config_traders():
+    """Validated, enabled entries from the COPY_TRADERS config list."""
+    out = []
+    for t in COPY_TRADERS:
+        if not isinstance(t, dict):
+            continue
+        addr = str(t.get("address", "")).lower()
+        if not addr.startswith("0x") or len(addr) != 42:
+            continue
+        if not t.get("enabled", True):
+            continue
+        out.append({
+            "address": addr,
+            "label": str(t.get("label", addr[:10])),
+        })
+    return out
+
+
+def _copy_book(s):
+    book = s.setdefault("copy", {"last_recheck_ts": 0, "traders": {}})
+    if not isinstance(book.get("traders"), dict):
+        book["traders"] = {}
+    return book
+
+
+def _copy_rec(book, meta):
+    return book["traders"].setdefault(meta["address"], {
+        "label": meta["label"],
+        "snapshot": None,
+        "auto_disabled": False,
+        "disabled_reason": None,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": None,
+    })
+
+
+def fetch_trader_btc_position(address):
+    """Current BTC position of a trader; None on API error.
+
+    Returns {"side": "LONG"/"SHORT"/None, "szi": float,
+    "entry_px": float|None}. side=None means confirmed flat.
+    """
+    try:
+        data = post({"type": "clearinghouseState", "user": address})
+    except Exception:
+        return None
+    if not isinstance(data, dict):
+        return None
+    for ap in data.get("assetPositions", []):
+        p = ap.get("position", {})
+        if p.get("coin") == COIN:
+            szi = f(p.get("szi"))
+            if szi == 0:
+                return {"side": None, "szi": 0.0, "entry_px": None}
+            return {
+                "side": "LONG" if szi > 0 else "SHORT",
+                "szi": szi,
+                "entry_px": f(p.get("entryPx")) or None,
+            }
+    return {"side": None, "szi": 0.0, "entry_px": None}
+
+
+def fetch_trader_fills(address, start_ms, end_ms, coin=None):
+    """userFillsByTime; None on API error. Optionally one coin only."""
+    try:
+        data = post({
+            "type": "userFillsByTime",
+            "user": address,
+            "startTime": int(start_ms),
+            "endTime": int(end_ms),
+        })
+    except Exception:
+        return None
+    if not isinstance(data, list):
+        return None
+    if coin is not None:
+        data = [x for x in data if x.get("coin") == coin]
+    return data
+
+
+def update_copy_tracking(s, now_s):
+    """Poll tracked traders; return fresh/stale entry signals.
+
+    Snapshot diffing (per trader, stored in state):
+      flat -> LONG/SHORT : "OPEN"
+      LONG <-> SHORT     : "FLIP" (fresh open of the new side)
+      LONG/SHORT -> flat : source exit (no entry signal; open copy
+                           positions are closed by the source-exit
+                           check in main)
+      same side          : no signal (scaling in/out is not chased)
+
+    The source event time is estimated from the trader's BTC fills
+    since the previous snapshot. If no fill is found in that window
+    (e.g. first poll finds a long-standing position), the signal is
+    marked stale so we never copy an old entry blind.
+    """
+    signals = []
+    book = _copy_book(s)
+    configured = {t["address"]: t for t in _copy_config_traders()}
+
+    # Tracking follows the config list exactly.
+    for addr in list(book["traders"].keys()):
+        if addr not in configured:
+            del book["traders"][addr]
+
+    for addr, meta in configured.items():
+        rec = _copy_rec(book, meta)
+        rec["label"] = meta["label"]
+        if rec.get("auto_disabled"):
+            continue
+
+        current = fetch_trader_btc_position(addr)
+        if current is None:
+            rec["last_error_ts"] = now_s
+            continue
+
+        prev = rec.get("snapshot") or {}
+        prev_side = prev.get("side")
+        cur_side = current["side"]
+
+        event_ts = prev.get("event_ts")
+        if cur_side is not None and cur_side != prev_side:
+            since = prev.get("updated_ts") or (now_s - 3600)
+            fills = fetch_trader_fills(
+                addr, since * 1000, now_s * 1000, coin=COIN
+            )
+            opens = [
+                x for x in (fills or [])
+                if str(x.get("dir", "")).startswith("Open")
+            ]
+            pool = opens or (fills or [])
+            event_ts = (
+                max(int(x["time"]) for x in pool) / 1000.0
+                if pool else None
+            )
+            age = (now_s - event_ts) if event_ts is not None else None
+            kind = "OPEN" if prev_side is None else "FLIP"
+            signals.append({
+                "kind": kind,
+                "address": addr,
+                "label": meta["label"],
+                "side": cur_side,
+                "source_entry_price": current["entry_px"],
+                "source_event_ts": event_ts,
+                "detected_ts": now_s,
+                "age_seconds": age,
+                "fresh": (
+                    age is not None
+                    and age <= COPY_SIGNAL_MAX_AGE_SECONDS
+                ),
+            })
+            event(
+                s, "COPY_SIGNAL_" + kind,
+                trader=addr, label=meta["label"], side=cur_side,
+                source_entry_price=current["entry_px"],
+                source_event_ts=(
+                    int(event_ts) if event_ts is not None else None
+                ),
+                age_seconds=(int(age) if age is not None else None),
+                fresh=signals[-1]["fresh"],
+            )
+        elif cur_side is None and prev_side is not None:
+            event(
+                s, "COPY_SOURCE_FLAT",
+                trader=addr, label=meta["label"],
+                previous_side=prev_side,
+            )
+
+        rec["snapshot"] = {
+            "side": cur_side,
+            "szi": current["szi"],
+            "entry_px": current["entry_px"],
+            "event_ts": event_ts,
+            "updated_ts": now_s,
+        }
+
+    return signals
+
+
+def copy_source_side(s, pos):
+    """Last confirmed side of the position's source trader.
+
+    Returns "LONG"/"SHORT", None (confirmed flat), or "UNKNOWN"
+    when we have no snapshot (never exit on missing data).
+    """
+    addr = pos.get("source_trader")
+    if not addr:
+        return "UNKNOWN"
+    rec = (_copy_book(s)["traders"].get(addr) or {})
+    snap = rec.get("snapshot")
+    if not snap:
+        return "UNKNOWN"
+    return snap.get("side")
+
+
+def reevaluate_copy_traders(s, now_s):
+    """Daily re-evaluation: auto-disable inactive or decaying traders.
+
+    Rules (trailing COPY_INACTIVE_DAYS window, all coins for the
+    activity check, fills capped by the API at the most recent 2000):
+      * no fills at all in the window -> disabled (inactive)
+      * >= COPY_MIN_CLOSES_30D closes and (win rate <
+        COPY_MIN_WIN_RATE_30D or realized PnL < 0) -> disabled
+    API errors never disable anyone (fail-open).
+    """
+    book = _copy_book(s)
+    if now_s - i(book.get("last_recheck_ts"))             < COPY_RECHECK_INTERVAL_SECONDS:
+        return
+    book["last_recheck_ts"] = now_s
+
+    start_ms = (now_s - COPY_INACTIVE_DAYS * 86400) * 1000
+    for meta in _copy_config_traders():
+        addr = meta["address"]
+        rec = _copy_rec(book, meta)
+        if rec.get("auto_disabled"):
+            continue
+        fills = fetch_trader_fills(addr, start_ms, now_s * 1000)
+        if fills is None:
+            continue
+        closes = [
+            f(x.get("closedPnl"))
+            for x in fills
+            if f(x.get("closedPnl")) != 0.0
+        ]
+        wins = sum(1 for p in closes if p > 0)
+        win_rate = wins / len(closes) if closes else 0.0
+        realized = sum(closes)
+        rec["reeval"] = {
+            "ts": now_s,
+            "fills": len(fills),
+            "closes": len(closes),
+            "win_rate": round(win_rate, 4),
+            "realized_pnl": round(realized, 2),
+        }
+        reason = None
+        if not fills:
+            reason = "inactive_30d"
+        elif len(closes) >= COPY_MIN_CLOSES_30D and (
+            win_rate < COPY_MIN_WIN_RATE_30D or realized < 0
+        ):
+            reason = "performance_decay_30d"
+        if reason:
+            rec["auto_disabled"] = True
+            rec["disabled_reason"] = reason
+            rec["disabled_ts"] = now_s
+            event(
+                s, "COPY_TRADER_AUTO_DISABLED",
+                trader=addr, label=meta["label"], reason=reason,
+                closes=len(closes), win_rate=round(win_rate, 4),
+                realized_pnl=round(realized, 2),
+            )
+
+
+def _candidate_copy(ctx, side, signal):
+    """Setup D candidate: direction from the source trader.
+
+    Everything else stays house rules: structural stop from the
+    recent swing (clamped exactly like setup A) and the cost filter.
+    There is deliberately no confluence score and no zone-room gate:
+    the source trader's analysis replaces ours, so those gates would
+    veto the very signals this setup exists to follow. Risk controls,
+    the event filter and the V20.2 exit engine still apply unchanged.
+    """
+    candles = ctx["candles"]
+    av = ctx["atr"]
+    structure = ctx["structure"]
+    if side == "LONG":
+        anchor = structure["last_swing_low"] or min(
+            c["l"] for c in candles[-10:]
+        )
+        stop_anchor = anchor - STOP_STRUCT_BUFFER_ATR * av
+    else:
+        anchor = structure["last_swing_high"] or max(
+            c["h"] for c in candles[-10:]
+        )
+        stop_anchor = anchor + STOP_STRUCT_BUFFER_ATR * av
+
+    candidate, reason = _finalize_candidate(ctx, side, "D", stop_anchor)
+    if candidate is None:
+        # _finalize_candidate also enforces the zone-room gate; for a
+        # copy signal the only acceptable house vetoes are the cost
+        # filter and stop construction, so rebuild without the gate.
+        if reason and "対向ゾーン" not in reason:
+            return None, reason
+        candidate = _finalize_candidate_no_zone(ctx, side, stop_anchor)
+        if candidate is None:
+            return None, "コストフィルター（コピー）"
+    candidate["score"] = 0
+    candidate["score_breakdown"] = {"copy_signal": 0}
+    candidate["source_trader"] = signal["address"]
+    candidate["source_trader_label"] = signal["label"]
+    candidate["source_entry_price"] = signal.get("source_entry_price")
+    candidate["copy_source_event_ts"] = signal.get("source_event_ts")
+    candidate["copy_detection_lag_seconds"] = (
+        signal["detected_ts"] - signal["source_event_ts"]
+        if signal.get("source_event_ts") is not None else None
+    )
+    return candidate, None
+
+
+def _copy_dashboard_payload(s):
+    book = s.get("copy") or {}
+    traders = []
+    for meta in _copy_config_traders():
+        rec = (book.get("traders") or {}).get(meta["address"]) or {}
+        snap = rec.get("snapshot") or {}
+        traders.append({
+            "address": meta["address"],
+            "label": meta["label"],
+            "side": snap.get("side"),
+            "source_entry_price": snap.get("entry_px"),
+            "auto_disabled": bool(rec.get("auto_disabled")),
+            "disabled_reason": rec.get("disabled_reason"),
+            "reeval": rec.get("reeval"),
+        })
+    return {
+        "enabled": bool(traders),
+        "follow_source_exit": COPY_FOLLOW_SOURCE_EXIT,
+        "signal_max_age_seconds": COPY_SIGNAL_MAX_AGE_SECONDS,
+        "traders": traders,
+    }
 
 
 # ============================================================
@@ -1965,6 +2358,13 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
         "trend_flip": bool(pos.get("trend_flip_exit"))
                       or reason == "TREND_FLIP",
         "runner_floor_active": bool(pos.get("runner_floor_active")),
+        "source_trader": pos.get("source_trader"),
+        "source_trader_label": pos.get("source_trader_label"),
+        "source_entry_price": pos.get("source_entry_price"),
+        "copy_source_event_ts": pos.get("copy_source_event_ts"),
+        "copy_detection_lag_seconds": pos.get(
+            "copy_detection_lag_seconds"
+        ),
     }
 
     s["trades"].append(trade)
@@ -2089,6 +2489,13 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
         "origin_build": BUILD,
         "targets": candidate["targets"],
         "zone_room_r": candidate.get("zone_room_r"),
+        "source_trader": candidate.get("source_trader"),
+        "source_trader_label": candidate.get("source_trader_label"),
+        "source_entry_price": candidate.get("source_entry_price"),
+        "copy_source_event_ts": candidate.get("copy_source_event_ts"),
+        "copy_detection_lag_seconds": candidate.get(
+            "copy_detection_lag_seconds"
+        ),
         "qty_initial": quantity,
         "risk_usd_initial": risk_usd,
         "entry_equity": entry_equity,
@@ -2113,6 +2520,21 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
     }
 
     s["position"].update(entry_event_fields(s, ts_now))
+
+    if candidate.get("source_trader"):
+        event(
+            s,
+            "COPY_ENTRY",
+            trader=candidate["source_trader"],
+            label=candidate.get("source_trader_label"),
+            side=side,
+            source_entry_price=candidate.get("source_entry_price"),
+            entry_price=entry,
+            source_event_ts=candidate.get("copy_source_event_ts"),
+            detection_lag_seconds=candidate.get(
+                "copy_detection_lag_seconds"
+            ),
+        )
 
     s["last_entry_candle"] = candle_ts
     # The post-cooldown half-risk flag is consumed by this entry.
@@ -2663,10 +3085,13 @@ def make_dashboard(s, price, funding, sig, status):
             "stop_atr_max": STOP_ATR_MAX,
             "tp1_at_r": TP1_AT_R,
             "tp2_at_r": TP2_AT_R,
+            "copy_traders": len(_copy_config_traders()),
+            "copy_follow_source_exit": COPY_FOLLOW_SOURCE_EXIT,
         },
         "last_error": s.get("last_error"),
         "next_high_event": _next_high_event_payload(s),
         "event_risk": _event_risk_payload(s),
+        "copy_trading": _copy_dashboard_payload(s),
     }
 
 
@@ -2697,12 +3122,38 @@ def main():
         refresh_econ_calendar(s, now)
         ev_status = event_window_status(s, now)
 
+        # Copy trading (Setup D): refresh source snapshots (entry
+        # signals + source-exit checks below) and run the daily
+        # re-evaluation. All fetches fail open.
+        copy_signals = update_copy_tracking(s, now)
+        reevaluate_copy_traders(s, now)
+
         # Mark-to-market (net of exit costs) for risk state.
         pos = s.get("position")
         marked = s["equity"] + (
             unrealized_net(pos, price) if pos else 0.0
         )
         dd = refresh_risk_state(s, marked, now)
+
+        # Copy positions follow their source: if the tracked trader
+        # has closed or flipped away, exit now (house exits remain as
+        # the backstop). Missing data never forces an exit.
+        if COPY_FOLLOW_SOURCE_EXIT:
+            _pos = s.get("position")
+            if _pos and _pos.get("setup") == "D" \
+                    and _pos.get("source_trader"):
+                _src_side = copy_source_side(s, _pos)
+                if _src_side != "UNKNOWN" \
+                        and _src_side != _pos.get("side"):
+                    event(
+                        s, "COPY_SOURCE_EXIT",
+                        trader=_pos.get("source_trader"),
+                        source_side=_src_side,
+                        position_side=_pos.get("side"),
+                    )
+                    close_position(
+                        s, price, "COPY_SOURCE_EXIT", now_s=now
+                    )
 
         had_position = bool(s.get("position"))
 
@@ -2724,6 +3175,13 @@ def main():
         candidate, side_scores, notes = evaluate_entry(
             ctx, allowed_setups
         )
+        for _cs in copy_signals:
+            notes.append(
+                f"COPY {_cs['kind']}: {_cs['label']} {_cs['side']}"
+                f"（ラグ "
+                f"{int(_cs['age_seconds']) if _cs['age_seconds'] is not None else '不明'}"
+                f"秒、{'新鮮' if _cs['fresh'] else '鮮度切れ'}）"
+            )
 
         status = "WAIT: シグナル条件未達"
 
@@ -2774,6 +3232,35 @@ def main():
                 risk_multiplier=mult, now_s=now,
             )
             status = message if ok else "エントリー見送り: " + message
+        elif copy_signals and ev_status["blocked"]:
+            status = (
+                "イベント回避（EVENT_RISK）: "
+                "コピー信号も新規エントリー見送り"
+            )
+        elif copy_signals and dd >= DD_THROTTLE_2:
+            status = "コピー見送り: DDスロットル（20%以上ではAのみ許可）"
+        elif copy_signals:
+            fresh = next(
+                (x for x in copy_signals if x["fresh"]), None
+            )
+            if fresh is None:
+                status = "コピー見送り: 信号の鮮度切れ（30分超）"
+            else:
+                cand_d, reason_d = _candidate_copy(
+                    ctx, fresh["side"], fresh
+                )
+                if cand_d is None:
+                    status = "コピー見送り: " + str(reason_d)
+                else:
+                    ok, message = open_position(
+                        s, cand_d, latest_candle,
+                        risk_multiplier=risk_mult, now_s=now,
+                    )
+                    status = (
+                        f"コピー参入: {fresh['label']} の"
+                        f"{fresh['side']}に追随（セットアップD）"
+                        if ok else "エントリー見送り: " + message
+                    )
         else:
             status = (
                 f"WAIT（LONG {side_scores.get('LONG', 0)} / "
@@ -2803,6 +3290,8 @@ def main():
             f"short={sig['short_score']}\n"
             f"ENTRY: {status}\n"
             f"EVENT_RISK: {('BLOCKED: ' + str(ev_status['active_event'].get('title'))) if ev_status['blocked'] else 'clear'}\n"
+            f"COPY: {len(copy_signals)} signal(s), "
+            f"{sum(1 for x in copy_signals if x['fresh'])} fresh\n"
             f"EQUITY: {s['equity']:.4f}\n"
             f"REALIZED PNL: {s['realized_pnl']:.4f}\n"
             f"CLOSED RECORDS: {len(s['trades'])}\n"
