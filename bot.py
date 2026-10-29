@@ -1219,7 +1219,7 @@ def make_dashboard(s, price, funding, sig, status):
         "trades": trades[-200:],
         "paper_trades": trades[-200:],
         "recent_trades": trades[-200:],
-        "equity_history": s["equity_history"][-300:],
+        "equity_history": s["equity_history"][-1000:],
         "events": s["events"][-100:],
         "timeframes": {
             "15m": {"direction": sig["trend_15m"]},
