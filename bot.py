@@ -1,8 +1,26 @@
 #!/usr/bin/env python3
 """
-BTC Paper Engine V19.0
-Public market data only.
-Paper trading only. No wallet, private keys, or live orders.
+BTC Paper Engine V20.0 PRO
+Professional-grade discretionary-style systematic paper trading.
+
+- Public market data only (Hyperliquid public info API).
+- Paper trading only. No wallet, private keys, or live orders.
+- Standard library only.
+
+Design pillars (fixing V19.x fatal flaws):
+  * Regime classification (ADX / ATR percentile / BB width) gates setups.
+  * Market structure: swings, S/R zones, minimum 1.5R room to opposing zone.
+  * Setup-separated strategies (A pullback / B breakout / C range fade),
+    each trade tagged and measured separately.
+  * Confluence scoring incl. cost filter (expected move must dwarf costs).
+  * Exit redesign: structural stop, +1R breakeven, staged partials at
+    +1.5R / +2.75R, Chandelier trail on the runner, time stop.
+  * Unified risk: effective risk 5% of equity, DD throttle, daily stop
+    count / daily loss lock, consecutive-loss cooldown.
+  * Complete trade records: build, setup, regime, score breakdown,
+    entry/stop/targets, planned risk, MFE/MAE, fees, funding, R multiple.
+  * Realistic fills: stop fills use the worse of stop vs candle close
+    plus extra slippage; marked equity is net of estimated exit costs.
 """
 
 import json
@@ -12,7 +30,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V19_3_2026-10-29"
+BUILD = "BTC_PAPER_V20_0_PRO_2026-10-29"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -26,45 +44,75 @@ DATA_FILE = ROOT / "docs" / "data.json"
 
 INITIAL_EQUITY = 100.0
 
-# Fixed leverage.
+# Fixed leverage (position size is risk-based; leverage only caps margin).
 LEVERAGE = 40.0
 
-# Planned risk per trade ≈ 20% of equity at full stop-out.
-# Actual loss can still exceed planned risk due to gaps, fees, and slippage.
-RISK_PER_TRADE = 0.20
+# Unified effective risk per trade: 5% of equity at full stop-out
+# (including estimated round-trip costs). Planned == effective by
+# construction; the margin cap can only reduce it, never increase it.
+RISK_PER_TRADE = 0.05
 
 # Maximum simulated margin allocation.
 MAX_MARGIN_FRACTION = 0.25
 
-FEE_RATE = 0.0005
-SLIPPAGE_RATE = 0.0002
+FEE_RATE = 0.0005            # taker fee per side (paper model)
+SLIPPAGE_RATE = 0.0002       # base slippage per side
+STOP_EXTRA_SLIPPAGE = 0.0005  # extra adverse slippage assumed on stop fills
 
-# Stop ~ATR×2.6. Partial/trail set for high R:R so 100%+ equity is reachable
-# (≈5R when planned risk is 20%).
-ATR_STOP = 2.6
-PARTIAL_TP_ATR = 13.0
-PARTIAL_TP_FRACTION = 0.25
-TRAIL_ATR = 4.0
-TRAIL_START_ATR = 3.5
+# Round-trip cost rate per unit of notional (entry+exit fee & slippage,
+# plus the extra stop slippage). Used for BE offset and the cost filter.
+ROUND_TRIP_COST_RATE = 2 * FEE_RATE + 2 * SLIPPAGE_RATE + STOP_EXTRA_SLIPPAGE
 
-# Slightly stricter entry for higher win-rate selectivity.
-MIN_SIGNAL_SCORE = 7
-MIN_SCORE_EDGE = 3
+# --- Exit framework (R = initial risk distance) ---
+STOP_ATR_MIN = 1.8           # structural stop clamped into [1.8, 2.6] x ATR
+STOP_ATR_MAX = 2.6
+STOP_STRUCT_BUFFER_ATR = 0.15  # buffer beyond the swing/zone for the stop
+BREAKEVEN_AT_R = 1.0         # move stop to entry + costs at +1R
+TP1_AT_R = 1.5               # first partial at +1.5R ...
+TP1_FRACTION = 0.30          # ... closing 30% of the initial quantity
+TP2_AT_R = 2.75              # second partial at +2.75R ...
+TP2_FRACTION = 0.35          # ... closing 35% of the initial quantity
+CHANDELIER_ATR = 2.75        # runner trail: best price -/+ ATR x 2.75
+TIME_STOP_SECONDS = 4 * 3600  # exit if MFE < 0.5R after 4 hours
+TIME_STOP_MIN_MFE_R = 0.5
+MAX_HOLD_SECONDS = 86400     # 24h hard cap (unchanged)
 
-COOLDOWN_SECONDS = 300
-MAX_HOLD_SECONDS = 86400
+# --- Entry gates ---
+MIN_SCORE = 8                # confluence threshold for setups A / B
+MIN_SCORE_C = 6              # confluence threshold for setup C (range fade;
+                             # half size, and its score mix differs by design)
+MIN_ZONE_ROOM_R = 1.5        # required room to opposing zone, in R
+COST_FILTER_MULT = 2.0       # risk distance must be >= 2x round-trip cost
+# NOTE: with the stop clamped to <= 2.6 x ATR and typical 15m ATR at
+# 0.16-0.25% of price, a 3x multiple could mathematically never pass
+# (max R ~= 2.2x round-trip cost). 2x caps cost drag at 50% of initial
+# risk as a hard ceiling; the +1R breakeven and staged exits reduce the
+# realized drag further.
+SETUP_C_RISK_MULT = 0.5      # range fades take half risk
 
-# Allow room for a full 20% stop without immediately locking the day.
-DAILY_LOSS_LIMIT = 0.40
-MAX_DRAWDOWN_LIMIT = 0.50
+# --- Regime thresholds ---
+ADX_TREND = 25.0
+ADX_RANGE = 20.0
+ATR_PCT_HIGH_VOL = 90.0      # ATR percentile >= 90 -> HIGH_VOLATILITY
+
+# --- Risk management ---
+DD_THROTTLE_1 = 10.0         # DD >= 10% -> risk x 0.5
+DD_THROTTLE_2 = 20.0         # DD >= 20% -> risk x 0.25, setup A only
+DD_HARD_PAUSE = 30.0         # DD >= 30% -> 6h circuit breaker
 DRAWDOWN_PAUSE_SECONDS = 21600
+DAILY_LOSS_LIMIT = 0.10      # daily loss lock at -10%
+DAILY_STOP_LIMIT = 2         # or after 2 losing stop-outs in a day
+MAX_CONSECUTIVE_LOSSES = 3   # 3 losses -> 2h cooldown + next risk halved
+CONSECUTIVE_PAUSE_SECONDS = 7200
+COOLDOWN_SECONDS = 300
 
-MAX_CONSECUTIVE_LOSSES = 6
-CONSECUTIVE_PAUSE_SECONDS = 3600
-
-HTTP_TIMEOUT = 20
+HTTP_TIMEOUT = 30
 HISTORY_LIMIT = 1000
 TRADE_LIMIT = 1000
+
+CANDLES_15M = 500
+CANDLES_1H = 300
+CANDLES_4H = 200
 
 # ============================================================
 # UTILITIES
@@ -78,8 +126,20 @@ def iso_now():
     return datetime.now(timezone.utc).isoformat()
 
 
+def iso_of(ts_seconds):
+    return datetime.fromtimestamp(
+        int(ts_seconds), tz=timezone.utc
+    ).isoformat()
+
+
 def utc_date():
     return datetime.now(timezone.utc).date().isoformat()
+
+
+def date_of(ts_seconds):
+    return datetime.fromtimestamp(
+        int(ts_seconds), tz=timezone.utc
+    ).date().isoformat()
 
 
 def f(v, default=0.0):
@@ -123,7 +183,7 @@ def post(payload):
         data=json.dumps(payload).encode("utf-8"),
         headers={
             "Content-Type": "application/json",
-            "User-Agent": "BTC-Paper-Engine-V19/1.0",
+            "User-Agent": "BTC-Paper-Engine-V20/1.0",
         },
         method="POST",
     )
@@ -162,10 +222,107 @@ def default_state():
         "daily_date": utc_date(),
         "daily_start_equity": INITIAL_EQUITY,
         "daily_loss_lock": False,
+        "daily_stop_count": 0,
+        "next_risk_multiplier": 1.0,
         "drawdown_pause_until": 0,
+        "stats_by_setup": {},
+        "stats_by_regime": {},
         "last_error": None,
         "events": [],
     }
+
+
+def _empty_stats_bucket():
+    return {
+        "round_trips": 0,
+        "wins": 0,
+        "losses": 0,
+        "net_pnl": 0.0,
+        "gross_win": 0.0,
+        "gross_loss": 0.0,
+        "total_r": 0.0,
+        "fees": 0.0,
+        "funding_pnl": 0.0,
+    }
+
+
+def _update_stats(bucket_map, key, pos, total_net, total_r):
+    bucket = bucket_map.setdefault(key or "UNKNOWN", _empty_stats_bucket())
+    bucket["round_trips"] += 1
+    if total_net > 0:
+        bucket["wins"] += 1
+        bucket["gross_win"] += total_net
+    elif total_net < 0:
+        bucket["losses"] += 1
+        bucket["gross_loss"] += total_net
+    bucket["net_pnl"] += total_net
+    bucket["total_r"] += total_r
+    bucket["fees"] += f(pos.get("acc_fees"))
+    bucket["funding_pnl"] += f(pos.get("acc_funding"))
+
+
+def normalize_position(p):
+    """Fill V20 fields on a position dict (incl. legacy V19 positions).
+
+    Never moves an existing stop. Legacy positions keep their original
+    stop and risk distance; they are managed under the V20 exit
+    framework (breakeven / staged partials / chandelier) which can only
+    tighten the stop, never loosen it.
+    """
+    entry = f(p.get("entry_price"))
+    distance = max(f(p.get("risk_distance")), 0.01)
+    side = p.get("side")
+
+    p.setdefault("entry_fee", 0.0)
+    p.setdefault("funding_pnl", 0.0)
+    p.setdefault("best_price", entry)
+    p.setdefault("worst_price", entry)
+    p.setdefault("last_funding_ts", now_ts())
+    p.setdefault("last_checked_candle_ts", 0)
+    p.setdefault("opened_timestamp", now_ts())
+    p.setdefault("leverage", LEVERAGE)
+    p.setdefault("origin_build", p.get("build", "LEGACY"))
+    p.setdefault("setup", "LEGACY")
+    p.setdefault("regime", "UNKNOWN")
+    p.setdefault("score_breakdown", {})
+    p.setdefault("score", p.get("entry_signal_score"))
+    p.setdefault("qty_initial", f(p.get("quantity")))
+    p.setdefault("risk_usd_initial", f(p.get("planned_risk")))
+    if f(p.get("risk_usd_initial")) <= 0:
+        p["risk_usd_initial"] = f(p.get("quantity")) * (
+            distance + entry * ROUND_TRIP_COST_RATE
+        )
+    if side in ("LONG", "SHORT"):
+        sign = 1.0 if side == "LONG" else -1.0
+        targets = p.get("targets") or {}
+        targets.setdefault(
+            "tp1_price", entry + sign * distance * TP1_AT_R
+        )
+        targets.setdefault(
+            "tp2_price", entry + sign * distance * TP2_AT_R
+        )
+        targets.setdefault(
+            "be_price",
+            entry + sign * entry * ROUND_TRIP_COST_RATE,
+        )
+        p["targets"] = targets
+    p.setdefault("tp1_taken", bool(p.get("partial_taken")))
+    p.setdefault("tp2_taken", False)
+    p.setdefault("partial_taken", bool(p.get("tp1_taken")))
+    p.setdefault("be_moved", False)
+    p.setdefault("trail_active", False)
+    # Seed MFE from the legacy best-price excursion when available.
+    if "mfe_r" not in p and side in ("LONG", "SHORT"):
+        best = f(p.get("best_price"), entry)
+        favorable = (best - entry) if side == "LONG" else (entry - best)
+        p["mfe_r"] = max(0.0, favorable / distance)
+    p.setdefault("mfe_r", 0.0)
+    p.setdefault("mae_r", 0.0)
+    p.setdefault("acc_net_pnl", 0.0)
+    p.setdefault("acc_fees", f(p.get("entry_fee")))
+    p.setdefault("acc_funding", 0.0)
+    p.setdefault("saw_stop_loss", False)
+    return p
 
 
 def load_state():
@@ -203,6 +360,11 @@ def load_state():
     if not isinstance(s.get("events"), list):
         s["events"] = []
 
+    if not isinstance(s.get("stats_by_setup"), dict):
+        s["stats_by_setup"] = {}
+    if not isinstance(s.get("stats_by_regime"), dict):
+        s["stats_by_regime"] = {}
+
     pos = s.get("position") or s.get("open_position")
     s["position"] = pos if isinstance(pos, dict) else None
 
@@ -221,6 +383,10 @@ def load_state():
         s.get("daily_start_equity"), s["equity"]
     )
     s["daily_loss_lock"] = bool(s.get("daily_loss_lock"))
+    s["daily_stop_count"] = max(0, i(s.get("daily_stop_count")))
+    s["next_risk_multiplier"] = clamp(
+        f(s.get("next_risk_multiplier"), 1.0), 0.1, 1.0
+    )
 
     # Convert old permanent drawdown lock to a timed pause.
     if old.get("drawdown_lock") and not s["drawdown_pause_until"]:
@@ -234,15 +400,7 @@ def load_state():
         )
 
     if s["position"]:
-        p = s["position"]
-        p.setdefault("entry_fee", 0.0)
-        p.setdefault("funding_pnl", 0.0)
-        p.setdefault("partial_taken", False)
-        p.setdefault("best_price", f(p.get("entry_price")))
-        p.setdefault("last_funding_ts", now_ts())
-        p.setdefault("last_checked_candle_ts", 0)
-        p.setdefault("opened_timestamp", now_ts())
-        p.setdefault("leverage", LEVERAGE)
+        s["position"] = normalize_position(s["position"])
 
     s["build"] = BUILD
     return s
@@ -252,7 +410,8 @@ def load_state():
 # MARKET DATA
 # ============================================================
 
-def fetch_price_funding():
+def fetch_market():
+    """Return dict with price, funding rate and premium (HL asset ctx)."""
     mids = post({"type": "allMids"})
     price = f(mids.get(COIN)) if isinstance(mids, dict) else 0.0
 
@@ -260,6 +419,8 @@ def fetch_price_funding():
         raise RuntimeError("BTC price unavailable from Hyperliquid")
 
     funding = 0.0
+    premium = 0.0
+    open_interest = 0.0
 
     try:
         result = post({"type": "metaAndAssetCtxs"})
@@ -271,33 +432,33 @@ def fetch_price_funding():
             for index, asset in enumerate(universe):
                 if asset.get("name") == COIN and index < len(contexts):
                     funding = f(contexts[index].get("funding"))
+                    premium = f(contexts[index].get("premium"))
+                    open_interest = f(contexts[index].get("openInterest"))
                     break
 
     except Exception as exc:
-        print("Funding unavailable:", exc)
+        print("Funding/premium unavailable:", exc)
 
-    return price, funding
+    return {
+        "price": price,
+        "funding": funding,
+        "premium": premium,
+        "open_interest": open_interest,
+    }
 
 
-def fetch_candles(interval, limit=200):
-    minutes = {
-        "15m": 15,
-        "1h": 60,
-        "4h": 240,
-    }[interval]
+def fetch_price_funding():
+    m = fetch_market()
+    return m["price"], m["funding"]
 
-    end = int(time.time() * 1000)
-    start = end - minutes * 60_000 * (limit + 5)
 
-    result = post({
-        "type": "candleSnapshot",
-        "req": {
-            "coin": COIN,
-            "interval": interval,
-            "startTime": start,
-            "endTime": end,
-        },
-    })
+_INTERVAL_MINUTES = {"15m": 15, "1h": 60, "4h": 240}
+
+
+def parse_candles(result, interval, limit, now_ms=None):
+    """Convert a raw candleSnapshot response to closed-candle dicts."""
+    minutes = _INTERVAL_MINUTES[interval]
+    end = int(now_ms if now_ms is not None else time.time() * 1000)
 
     if not isinstance(result, list):
         raise RuntimeError("Invalid candle response: " + interval)
@@ -326,11 +487,31 @@ def fetch_candles(interval, limit=200):
             candles.append(candle)
 
     candles.sort(key=lambda x: x["t"])
+    return candles[-limit:] if limit else candles
+
+
+def fetch_candles(interval, limit=200):
+    minutes = _INTERVAL_MINUTES[interval]
+
+    end = int(time.time() * 1000)
+    start = end - minutes * 60_000 * (limit + 5)
+
+    result = post({
+        "type": "candleSnapshot",
+        "req": {
+            "coin": COIN,
+            "interval": interval,
+            "startTime": start,
+            "endTime": end,
+        },
+    })
+
+    candles = parse_candles(result, interval, limit, end)
 
     if len(candles) < 35:
         raise RuntimeError("Not enough closed candles: " + interval)
 
-    return candles[-limit:]
+    return candles
 
 
 # ============================================================
@@ -380,29 +561,51 @@ def rsi(values, period=14):
     return 100.0 - 100.0 / (1.0 + rs)
 
 
-def atr(candles, period=14):
-    true_ranges = []
-
+def _true_ranges(candles):
+    trs = [0.0]
     for index in range(1, len(candles)):
         current = candles[index]
         previous_close = candles[index - 1]["c"]
-
-        true_ranges.append(max(
+        trs.append(max(
             current["h"] - current["l"],
             abs(current["h"] - previous_close),
             abs(current["l"] - previous_close),
         ))
+    return trs
 
-    if not true_ranges:
+
+def atr_series(candles, period=14):
+    """Wilder ATR aligned with candles (index 0..period-1 are warmup)."""
+    trs = _true_ranges(candles)
+    out = [0.0] * len(candles)
+    if len(candles) <= period:
+        return out
+
+    value = sum(trs[1:period + 1]) / period
+    out[period] = value
+    for index in range(period + 1, len(candles)):
+        value = (value * (period - 1) + trs[index]) / period
+        out[index] = value
+    return out
+
+
+def atr(candles, period=14):
+    series = atr_series(candles, period)
+    value = series[-1] if series else 0.0
+    if value <= 0:
         return candles[-1]["c"] * 0.002
-
-    seed = true_ranges[:period]
-    value = sum(seed) / len(seed)
-
-    for item in true_ranges[period:]:
-        value = (value * (period - 1) + item) / period
-
     return max(value, 0.01)
+
+
+def atr_percentile(candles, period=14, lookback=100):
+    """Percentile rank (0-100) of the current ATR within recent ATRs."""
+    series = [x for x in atr_series(candles, period) if x > 0]
+    if len(series) < 20:
+        return 50.0
+    window = series[-lookback:]
+    current = window[-1]
+    below = sum(1 for x in window if x < current)
+    return below / len(window) * 100.0
 
 
 def bollinger(values, period=20, deviations=2.0):
@@ -471,11 +674,214 @@ def trend(candles):
     return "SIDEWAYS"
 
 
+def macd(values, fast=12, slow=26, signal_period=9):
+    """Return dict with macd line, signal line and histogram (last bar)."""
+    if len(values) < slow + signal_period:
+        return {"line": 0.0, "signal": 0.0, "hist": 0.0, "hist_prev": 0.0}
+
+    ema_fast = ema(values, fast)
+    ema_slow = ema(values, slow)
+    line = [a - b for a, b in zip(ema_fast, ema_slow)]
+    signal = ema(line, signal_period)
+    hist = line[-1] - signal[-1]
+    hist_prev = line[-2] - signal[-2] if len(line) >= 2 else hist
+
+    return {
+        "line": line[-1],
+        "signal": signal[-1],
+        "hist": hist,
+        "hist_prev": hist_prev,
+    }
+
+
+def adx(candles, period=14):
+    """Wilder ADX. Returns last ADX value (0-100)."""
+    n = len(candles)
+    if n < 2 * period + 2:
+        return 0.0
+
+    trs = []
+    plus_dm = []
+    minus_dm = []
+    for idx in range(1, n):
+        cur = candles[idx]
+        prev = candles[idx - 1]
+        up = cur["h"] - prev["h"]
+        down = prev["l"] - cur["l"]
+        plus_dm.append(up if (up > down and up > 0) else 0.0)
+        minus_dm.append(down if (down > up and down > 0) else 0.0)
+        trs.append(max(
+            cur["h"] - cur["l"],
+            abs(cur["h"] - prev["c"]),
+            abs(cur["l"] - prev["c"]),
+        ))
+
+    def _wilder_smooth(values):
+        out = []
+        total = sum(values[:period])
+        out.append(total)
+        for value in values[period:]:
+            total = total - total / period + value
+            out.append(total)
+        return out
+
+    s_tr = _wilder_smooth(trs)
+    s_plus = _wilder_smooth(plus_dm)
+    s_minus = _wilder_smooth(minus_dm)
+
+    dxs = []
+    for s_t, s_p, s_m in zip(s_tr, s_plus, s_minus):
+        if s_t <= 0:
+            dxs.append(0.0)
+            continue
+        plus_di = 100.0 * s_p / s_t
+        minus_di = 100.0 * s_m / s_t
+        denom = plus_di + minus_di
+        dxs.append(
+            100.0 * abs(plus_di - minus_di) / denom if denom > 0 else 0.0
+        )
+
+    if len(dxs) < period:
+        return dxs[-1] if dxs else 0.0
+
+    value = sum(dxs[:period]) / period
+    for dx in dxs[period:]:
+        value = (value * (period - 1) + dx) / period
+    return value
+
+
+def daily_vwap(candles):
+    """Session (UTC day) VWAP from 15m candles, using the last bar's day."""
+    if not candles:
+        return 0.0
+    last_day = date_of(candles[-1]["t"] // 1000)
+    num = 0.0
+    den = 0.0
+    for candle in candles:
+        if date_of(candle["t"] // 1000) != last_day:
+            continue
+        typical = (candle["h"] + candle["l"] + candle["c"]) / 3.0
+        num += typical * candle["v"]
+        den += candle["v"]
+    if den <= 0:
+        return candles[-1]["c"]
+    return num / den
+
+
+def relative_volume(candles, period=20):
+    """Last bar volume vs the mean of the preceding `period` bars."""
+    if len(candles) < period + 1:
+        return 1.0
+    window = [c["v"] for c in candles[-period - 1:-1]]
+    mean_v = sum(window) / len(window) if window else 0.0
+    if mean_v <= 0:
+        return 1.0
+    return candles[-1]["v"] / mean_v
+
+
+def swing_points(candles, k=3, lookback=160):
+    """Confirmed fractal swings: list of {index, kind, price, t}.
+
+    A swing at index j is only included once bars up to j+k exist,
+    so no future information leaks into decisions at the last bar.
+    """
+    start = max(k, len(candles) - lookback)
+    out = []
+    for j in range(start, len(candles) - k):
+        high = candles[j]["h"]
+        low = candles[j]["l"]
+        is_high = all(
+            candles[j + d]["h"] <= high for d in range(-k, k + 1) if d != 0
+        ) and any(
+            candles[j + d]["h"] < high for d in range(-k, k + 1) if d != 0
+        )
+        is_low = all(
+            candles[j + d]["l"] >= low for d in range(-k, k + 1) if d != 0
+        ) and any(
+            candles[j + d]["l"] > low for d in range(-k, k + 1) if d != 0
+        )
+        if is_high:
+            out.append({
+                "index": j, "kind": "HIGH", "price": high,
+                "t": candles[j]["t"],
+            })
+        if is_low:
+            out.append({
+                "index": j, "kind": "LOW", "price": low,
+                "t": candles[j]["t"],
+            })
+    return out
+
+
+def market_structure(candles, price):
+    """Swing-based structure bias + nearest support/resistance zones."""
+    swings = swing_points(candles)
+    highs = [s for s in swings if s["kind"] == "HIGH"]
+    lows = [s for s in swings if s["kind"] == "LOW"]
+
+    structure = "MIXED"
+    if len(highs) >= 2 and len(lows) >= 2:
+        hh = highs[-1]["price"] > highs[-2]["price"]
+        hl = lows[-1]["price"] > lows[-2]["price"]
+        lh = highs[-1]["price"] < highs[-2]["price"]
+        ll = lows[-1]["price"] < lows[-2]["price"]
+        if hh and hl:
+            structure = "UP"
+        elif lh and ll:
+            structure = "DOWN"
+
+    # Round numbers on a 1000 USD grid act as psychological zones
+    # (a 500 grid would sit inside 1.5R almost permanently at current
+    # ATR levels and veto nearly every entry by construction).
+    grid = 1000.0
+    round_above = (math.floor(price / grid) + 1) * grid
+    round_below = math.floor(price / grid) * grid
+    if round_below >= price:
+        round_below -= grid
+
+    above = [s["price"] for s in highs if s["price"] > price]
+    above.append(round_above)
+    below = [s["price"] for s in lows if s["price"] < price]
+    below.append(round_below)
+
+    resistance = min(above) if above else None
+    support = max(below) if below else None
+
+    return {
+        "structure": structure,
+        "support": support,
+        "resistance": resistance,
+        "last_swing_high": highs[-1]["price"] if highs else None,
+        "last_swing_low": lows[-1]["price"] if lows else None,
+        "prev_swing_high": highs[-2]["price"] if len(highs) >= 2 else None,
+        "prev_swing_low": lows[-2]["price"] if len(lows) >= 2 else None,
+        "recent_swing_highs": [s["price"] for s in highs[-4:]],
+        "recent_swing_lows": [s["price"] for s in lows[-4:]],
+        "swings": swings[-12:],
+    }
+
+
 # ============================================================
-# SIGNAL ENGINE
+# MARKET CONTEXT: REGIME + STRUCTURE + CONFLUENCE
 # ============================================================
 
-def make_signal(c15, c1, c4, funding):
+def classify_regime(adx_value, atr_pct, htf_bias, structure_bias):
+    if atr_pct >= ATR_PCT_HIGH_VOL:
+        return "HIGH_VOLATILITY"
+    if adx_value >= ADX_TREND:
+        direction = structure_bias if structure_bias in ("UP", "DOWN") \
+            else htf_bias
+        if direction == "UP":
+            return "TREND_UP"
+        if direction == "DOWN":
+            return "TREND_DOWN"
+        return "NEUTRAL"
+    if adx_value < ADX_RANGE:
+        return "RANGE"
+    return "NEUTRAL"
+
+
+def build_context(c15, c1, c4, funding, premium=0.0):
     values = [x["c"] for x in c15]
     ema9 = ema(values, 9)
     ema21 = ema(values, 21)
@@ -485,9 +891,12 @@ def make_signal(c15, c1, c4, funding):
 
     rv = rsi(values)
     av = atr(c15)
+    atr_pct = atr_percentile(c15)
+    adx_value = adx(c15)
+    mc = macd(values)
     bb = bollinger(values)
-
-    previous_bb = bollinger(values[:-1])
+    vwap = daily_vwap(c15)
+    relvol = relative_volume(c15)
 
     trends = {
         "15m": trend(c15),
@@ -495,110 +904,27 @@ def make_signal(c15, c1, c4, funding):
         "4h": trend(c4),
     }
 
-    long_score = 0
-    short_score = 0
-    reasons = []
-    flags = []
+    htf_points = 0
+    htf_points += 1 if trends["1h"] == "UP" else (
+        -1 if trends["1h"] == "DOWN" else 0
+    )
+    htf_points += 2 if trends["4h"] == "UP" else (
+        -2 if trends["4h"] == "DOWN" else 0
+    )
+    htf_bias = "UP" if htf_points >= 2 else (
+        "DOWN" if htf_points <= -2 else "NEUTRAL"
+    )
 
-    # EMA direction.
-    if ema9[-1] > ema21[-1]:
-        long_score += 2
-        reasons.append("EMA上向き")
-    elif ema9[-1] < ema21[-1]:
-        short_score += 2
-        reasons.append("EMA下向き")
+    structure = market_structure(c15, current)
+    regime = classify_regime(
+        adx_value, atr_pct, htf_bias, structure["structure"]
+    )
 
-    # Multi-timeframe trends.
-    for timeframe, direction in trends.items():
-        points = 1 if timeframe == "15m" else 2
-
-        if direction == "UP":
-            long_score += points
-            reasons.append(timeframe + "上昇")
-        elif direction == "DOWN":
-            short_score += points
-            reasons.append(timeframe + "下降")
-
-    # RSI is a supporting indicator, not a standalone entry.
-    if 43 <= rv <= 68:
-        long_score += 1
-
-    if 32 <= rv <= 57:
-        short_score += 1
-
-    if rv > 78:
-        flags.append("RSI買われ過ぎ")
-    elif rv < 22:
-        flags.append("RSI売られ過ぎ")
-
-    # Short-term momentum.
-    if len(values) >= 5:
-        momentum = current / values[-5] - 1.0
-
-        if momentum > 0.0008:
-            long_score += 1
-            reasons.append("短期モメンタム上")
-        elif momentum < -0.0008:
-            short_score += 1
-            reasons.append("短期モメンタム下")
-
-    # Bollinger Band logic.
-    width_expanding = bb["width_pct"] > previous_bb["width_pct"]
-
-    if width_expanding:
-        flags.append("BB幅拡大")
-    else:
-        flags.append("BB幅縮小")
-
-    # Trend continuation: a band touch alone is NOT a reversal signal.
-    if (
-        bb["state"] in ("NEAR_UPPER", "ABOVE_UPPER")
-        and trends["1h"] == "UP"
-        and trends["4h"] != "DOWN"
-    ):
-        long_score += 1
-        reasons.append("BB上側・上昇継続候補")
-
-    if (
-        bb["state"] in ("NEAR_LOWER", "BELOW_LOWER")
-        and trends["1h"] == "DOWN"
-        and trends["4h"] != "UP"
-    ):
-        short_score += 1
-        reasons.append("BB下側・下降継続候補")
-
-    # A tight band can signal compression, but is not enough to enter alone.
-    if bb["width_pct"] < 0.35:
-        flags.append("BB収縮・ブレイク待ち")
-
-    # Funding is a small factor, never the sole trigger.
-    if funding > 0.0003:
-        short_score += 1
-        reasons.append("プラス資金調達率")
-    elif funding < -0.0003:
-        long_score += 1
-        reasons.append("マイナス資金調達率")
-
-    edge = abs(long_score - short_score)
-    direction = "WAIT"
-
-    if (
-        long_score >= MIN_SIGNAL_SCORE
-        and long_score - short_score >= MIN_SCORE_EDGE
-    ):
-        direction = "LONG"
-    elif (
-        short_score >= MIN_SIGNAL_SCORE
-        and short_score - long_score >= MIN_SCORE_EDGE
-    ):
-        direction = "SHORT"
-
-    # Fibonacci levels from recent 1h candles.
+    # Fibonacci levels from recent 1h candles (dashboard/context only).
     window = c1[-min(80, len(c1)):]
     swing_high = max(x["h"] for x in window)
     swing_low = min(x["l"] for x in window)
     span = swing_high - swing_low
-
     fib_levels = {
         key: swing_high - span * ratio
         for key, ratio in {
@@ -611,28 +937,30 @@ def make_signal(c15, c1, c4, funding):
     }
 
     return {
-        "direction": direction,
-        "score": max(long_score, short_score),
-        "long_score": long_score,
-        "short_score": short_score,
-        "score_edge": edge,
-        "rsi": round(rv, 3),
-        "atr": round(av, 5),
+        "price": current,
+        "previous_close": previous,
+        "last_candle": c15[-1],
+        "prev_candle": c15[-2],
+        "candles": c15,
         "ema9": ema9[-1],
         "ema21": ema21[-1],
+        "ema9_prev": ema9[-2],
+        "rsi": rv,
+        "atr": av,
+        "atr_percentile": atr_pct,
+        "adx": adx_value,
+        "macd": mc,
+        "bollinger": bb,
+        "vwap": vwap,
+        "relative_volume": relvol,
         "trend_15m": trends["15m"],
         "trend_1h": trends["1h"],
         "trend_4h": trends["4h"],
-        "timestamp": iso_now(),
-        "reference_price": current,
-        "previous_close": previous,
-        "reasons": reasons or ["明確な方向優位性なし"],
-        "flags": flags,
-        "bollinger": {
-            **bb,
-            "width_expanding": width_expanding,
-            "previous_width_pct": previous_bb["width_pct"],
-        },
+        "htf_bias": htf_bias,
+        "structure": structure,
+        "regime": regime,
+        "funding": funding,
+        "premium": premium,
         "fibonacci": {
             "swing_high": swing_high,
             "swing_low": swing_low,
@@ -640,6 +968,428 @@ def make_signal(c15, c1, c4, funding):
             "trend": trends["1h"],
         },
     }
+
+
+def _crowding_points(ctx, side):
+    """Funding/premium crowding: fade crowded positioning."""
+    points = 0
+    funding = ctx["funding"]
+    premium = ctx["premium"]
+    # Funding is hourly on Hyperliquid; +/-0.03% is clearly crowded.
+    if side == "LONG":
+        if funding >= 0.0003:
+            points -= 2
+        elif funding <= -0.0003:
+            points += 1
+        if premium >= 0.0005:
+            points -= 1
+        elif premium <= -0.0005:
+            points += 1
+    else:
+        if funding <= -0.0003:
+            points -= 2
+        elif funding >= 0.0003:
+            points += 1
+        if premium <= -0.0005:
+            points -= 1
+        elif premium >= 0.0005:
+            points += 1
+    return points
+
+
+def score_breakdown(ctx, side, setup):
+    """Confluence scoring for one direction. Returns (total, breakdown)."""
+    sign = 1 if side == "LONG" else -1
+    bd = {}
+
+    # Higher-timeframe bias.
+    pts = 0
+    t1 = ctx["trend_1h"]
+    t4 = ctx["trend_4h"]
+    want = "UP" if side == "LONG" else "DOWN"
+    against = "DOWN" if side == "LONG" else "UP"
+    if setup != "C":
+        if t1 == want:
+            pts += 2
+        elif t1 == against:
+            pts -= 2
+        if t4 == want:
+            pts += 2
+        elif t4 == against:
+            pts -= 2
+    bd["htf_bias"] = pts
+
+    # Market structure.
+    pts = 0
+    structure = ctx["structure"]["structure"]
+    if setup != "C":
+        if structure == want:
+            pts += 2
+        elif structure == against:
+            pts -= 2
+    bd["structure"] = pts
+
+    # Momentum: MACD histogram direction + expansion.
+    pts = 0
+    hist = ctx["macd"]["hist"]
+    hist_prev = ctx["macd"]["hist_prev"]
+    if sign * hist > 0:
+        pts += 1
+        if sign * (hist - hist_prev) > 0:
+            pts += 1
+    elif sign * hist < 0 and sign * (hist - hist_prev) < 0:
+        pts -= 1
+    bd["macd_momentum"] = pts
+
+    # RSI band / extremes.
+    pts = 0
+    rv = ctx["rsi"]
+    if setup == "C":
+        if side == "LONG" and rv <= 32:
+            pts += 2
+        elif side == "SHORT" and rv >= 68:
+            pts += 2
+        # A Bollinger-band extreme confirms the mean-reversion edge.
+        bb_pos = ctx["bollinger"]["position"]
+        if (side == "LONG" and bb_pos <= 0.05) or (
+            side == "SHORT" and bb_pos >= 0.95
+        ):
+            pts += 1
+    else:
+        if side == "LONG":
+            if 40 <= rv <= 70:
+                pts += 1
+            elif rv > 78:
+                pts -= 1
+        else:
+            if 30 <= rv <= 60:
+                pts += 1
+            elif rv < 22:
+                pts -= 1
+    bd["rsi"] = pts
+
+    # Relative volume.
+    pts = 0
+    if ctx["relative_volume"] >= 1.3:
+        pts += 1
+    bd["volume"] = pts
+
+    # VWAP position (trend setups only; range fades ignore VWAP).
+    pts = 0
+    if setup != "C" and ctx["vwap"] > 0:
+        if side == "LONG" and ctx["price"] >= ctx["vwap"]:
+            pts += 1
+        elif side == "SHORT" and ctx["price"] <= ctx["vwap"]:
+            pts += 1
+    bd["vwap"] = pts
+
+    # Crowding (funding / premium).
+    bd["crowding"] = _crowding_points(ctx, side)
+
+    # Volatility fit.
+    pts = 0
+    if 20 <= ctx["atr_percentile"] < 85:
+        pts += 1
+    elif ctx["atr_percentile"] >= 95:
+        pts -= 1
+    bd["volatility_fit"] = pts
+
+    # Range quality (setup C only): a genuinely flat ADX is the fade's
+    # best friend; trend-aligned components are structurally zero for
+    # counter-trend fades, so range quality carries this weight instead.
+    if setup == "C":
+        bd["range_quality"] = 1 if ctx["adx"] < 17 else 0
+
+    total = sum(bd.values())
+    return total, bd
+
+
+# ============================================================
+# SETUP EVALUATION
+# ============================================================
+
+def _finalize_candidate(ctx, side, setup, stop_anchor, breakdown_extra=None):
+    """Apply structural-stop clamping, cost filter and zone-room gate."""
+    price = ctx["price"]
+    av = ctx["atr"]
+    entry = (
+        price * (1 + SLIPPAGE_RATE)
+        if side == "LONG"
+        else price * (1 - SLIPPAGE_RATE)
+    )
+
+    raw_distance = abs(entry - stop_anchor)
+    min_distance = max(
+        STOP_ATR_MIN * av,
+        entry * (FEE_RATE + SLIPPAGE_RATE) * 4.0,
+    )
+    max_distance = STOP_ATR_MAX * av
+    distance = clamp(raw_distance, min_distance, max_distance)
+
+    if side == "LONG":
+        stop = entry - distance
+    else:
+        stop = entry + distance
+
+    # Cost filter: the risk distance (our unit of expected movement)
+    # must be a healthy multiple of the round-trip cost per unit.
+    round_trip_cost = entry * ROUND_TRIP_COST_RATE
+    if distance < COST_FILTER_MULT * round_trip_cost:
+        return None, (
+            f"コストフィルター（想定値幅が往復コストの"
+            f"{COST_FILTER_MULT:.0f}倍未満）"
+        )
+
+    # Zone room: never enter with < 1.5R of room to the opposing zone.
+    structure = ctx["structure"]
+    if side == "LONG":
+        opposing = structure["resistance"]
+        room = (opposing - entry) if opposing else None
+    else:
+        opposing = structure["support"]
+        room = (entry - opposing) if opposing else None
+
+    room_r = (room / distance) if room is not None else None
+    if room_r is not None and room_r < MIN_ZONE_ROOM_R:
+        return None, "対向ゾーンまでの距離が1.5R未満"
+
+    total, bd = score_breakdown(ctx, side, setup)
+    if breakdown_extra:
+        for key, value in breakdown_extra.items():
+            bd[key] = bd.get(key, 0) + value
+        total = sum(bd.values())
+
+    sign = 1.0 if side == "LONG" else -1.0
+    candidate = {
+        "side": side,
+        "setup": setup,
+        "regime": ctx["regime"],
+        "score": total,
+        "score_breakdown": bd,
+        "entry_price": entry,
+        "reference_price": price,
+        "stop_price": stop,
+        "initial_stop_price": stop,
+        "risk_distance": distance,
+        "targets": {
+            "tp1_price": entry + sign * distance * TP1_AT_R,
+            "tp2_price": entry + sign * distance * TP2_AT_R,
+            "be_price": entry + sign * entry * ROUND_TRIP_COST_RATE,
+        },
+        "zone_room_r": room_r,
+        "support": structure["support"],
+        "resistance": structure["resistance"],
+        "atr": av,
+    }
+    return candidate, None
+
+
+def _candidate_a(ctx, side):
+    """Setup A: trend pullback to EMA21 / VWAP / zone + reversal trigger."""
+    regime = ctx["regime"]
+    want_regime = "TREND_UP" if side == "LONG" else "TREND_DOWN"
+    if regime not in (want_regime, "NEUTRAL", "HIGH_VOLATILITY"):
+        return None, "レジーム不一致"
+
+    want = "UP" if side == "LONG" else "DOWN"
+    against = "DOWN" if side == "LONG" else "UP"
+    if ctx["trend_1h"] != want or ctx["trend_4h"] == against:
+        return None, "上位足バイアス不一致"
+
+    candles = ctx["candles"]
+    av = ctx["atr"]
+    price = ctx["price"]
+    last = candles[-1]
+    prev = candles[-2]
+
+    anchors = [ctx["ema21"], ctx["vwap"]]
+    zone = (
+        ctx["structure"]["support"] if side == "LONG"
+        else ctx["structure"]["resistance"]
+    )
+    if zone:
+        anchors.append(zone)
+    anchors = [a for a in anchors if a and a > 0]
+
+    if side == "LONG":
+        recent_extreme = min(c["l"] for c in candles[-3:])
+        pulled = any(
+            abs(recent_extreme - anchor) <= 0.35 * av for anchor in anchors
+        )
+        held = price >= min(anchors) - 0.5 * av if anchors else False
+        trigger = (
+            last["c"] > prev["h"]
+            or (last["c"] > ctx["ema9"] and prev["c"] <= ctx["ema9_prev"])
+        )
+        swing_anchor = ctx["structure"]["last_swing_low"]
+        fallback = min(c["l"] for c in candles[-10:])
+    else:
+        recent_extreme = max(c["h"] for c in candles[-3:])
+        pulled = any(
+            abs(recent_extreme - anchor) <= 0.35 * av for anchor in anchors
+        )
+        held = price <= max(anchors) + 0.5 * av if anchors else False
+        trigger = (
+            last["c"] < prev["l"]
+            or (last["c"] < ctx["ema9"] and prev["c"] >= ctx["ema9_prev"])
+        )
+        swing_anchor = ctx["structure"]["last_swing_high"]
+        fallback = max(c["h"] for c in candles[-10:])
+
+    if not pulled:
+        return None, "押し目/戻りが未形成"
+    if not held:
+        return None, "押し目が深すぎる"
+    if not trigger:
+        return None, "反転トリガー未発生"
+
+    anchor = swing_anchor if swing_anchor else fallback
+    if side == "LONG":
+        stop_anchor = anchor - STOP_STRUCT_BUFFER_ATR * av
+    else:
+        stop_anchor = anchor + STOP_STRUCT_BUFFER_ATR * av
+
+    extra = {"zone_value": 1}
+    candidate, reason = _finalize_candidate(
+        ctx, side, "A", stop_anchor, extra
+    )
+    if candidate is None:
+        return None, reason
+    threshold = MIN_SCORE + (1 if regime == "HIGH_VOLATILITY" else 0)
+    if candidate["score"] < threshold:
+        return None, f"スコア不足 {candidate['score']}<{threshold}"
+    return candidate, None
+
+
+def _candidate_b(ctx, side):
+    """Setup B: volume-confirmed breakout of the prior 20-bar range."""
+    if ctx["regime"] == "RANGE":
+        return None, "レンジレジームではブレイクアウト禁止"
+
+    against = "DOWN" if side == "LONG" else "UP"
+    if ctx["trend_4h"] == against or ctx["trend_1h"] == against:
+        return None, "上位足が逆行"
+
+    candles = ctx["candles"]
+    last = candles[-1]
+    prior = candles[-21:-1]
+    if len(prior) < 20:
+        return None, "データ不足"
+
+    if ctx["relative_volume"] < 1.5:
+        return None, "出来高不足"
+
+    body = abs(last["c"] - last["o"])
+    span = max(last["h"] - last["l"], 0.01)
+    if body / span < 0.55:
+        return None, "ブレイク足の実体が弱い"
+
+    av = ctx["atr"]
+    if side == "LONG":
+        level = max(c["h"] for c in prior)
+        if not last["c"] > level:
+            return None, "ブレイク未成立"
+        stop_anchor = level - 0.25 * av
+    else:
+        level = min(c["l"] for c in prior)
+        if not last["c"] < level:
+            return None, "ブレイク未成立"
+        stop_anchor = level + 0.25 * av
+
+    candidate, reason = _finalize_candidate(ctx, side, "B", stop_anchor)
+    if candidate is None:
+        return None, reason
+    if candidate["score"] < MIN_SCORE:
+        return None, f"スコア不足 {candidate['score']}<{MIN_SCORE}"
+    return candidate, None
+
+
+def _candidate_c(ctx, side):
+    """Setup C: range fade at a zone edge with RSI extreme (half risk)."""
+    if ctx["regime"] != "RANGE":
+        return None, "レンジレジーム限定"
+
+    candles = ctx["candles"]
+    last = candles[-1]
+    prev = candles[-2]
+    av = ctx["atr"]
+    structure = ctx["structure"]
+
+    # The extreme is checked over the last 3 bars: on the confirmation
+    # (trigger) bar itself, RSI/BB have usually already snapped back,
+    # so requiring the extreme on the trigger bar would veto the very
+    # reversal the setup is designed to catch.
+    closes = [c["c"] for c in candles]
+    extremes = []
+    for back in range(3):
+        sub = closes[:len(closes) - back] if back else closes
+        if len(sub) < 30:
+            break
+        extremes.append((rsi(sub), bollinger(sub)["position"]))
+
+    if side == "LONG":
+        zone = structure["support"]
+        if not zone:
+            return None, "サポートゾーンなし"
+        near = min(c["l"] for c in candles[-3:]) <= zone + 0.3 * av
+        extreme = any(
+            rv <= 32 or pos <= 0.10 for rv, pos in extremes
+        )
+        trigger = last["c"] > last["o"] and last["c"] > prev["c"]
+        stop_anchor = zone - STOP_STRUCT_BUFFER_ATR * av
+    else:
+        zone = structure["resistance"]
+        if not zone:
+            return None, "レジスタンスゾーンなし"
+        near = max(c["h"] for c in candles[-3:]) >= zone - 0.3 * av
+        extreme = any(
+            rv >= 68 or pos >= 0.90 for rv, pos in extremes
+        )
+        trigger = last["c"] < last["o"] and last["c"] < prev["c"]
+        stop_anchor = zone + STOP_STRUCT_BUFFER_ATR * av
+
+    if not near:
+        return None, "ゾーン端に未到達"
+    if not extreme:
+        return None, "RSI/BB極値でない"
+    if not trigger:
+        return None, "反転トリガー未発生"
+
+    extra = {"zone_value": 1}
+    candidate, reason = _finalize_candidate(
+        ctx, side, "C", stop_anchor, extra
+    )
+    if candidate is None:
+        return None, reason
+    if candidate["score"] < MIN_SCORE_C:
+        return None, f"スコア不足 {candidate['score']}<{MIN_SCORE_C}"
+    return candidate, None
+
+
+_SETUP_FUNCS = {"A": _candidate_a, "B": _candidate_b, "C": _candidate_c}
+
+
+def evaluate_entry(ctx, allowed_setups=("A", "B", "C")):
+    """Return (best_candidate, per_side_scores, rejection_notes)."""
+    best = None
+    side_scores = {"LONG": 0, "SHORT": 0}
+    notes = []
+
+    for side in ("LONG", "SHORT"):
+        for setup in ("A", "B", "C"):
+            if setup not in allowed_setups:
+                continue
+            candidate, reason = _SETUP_FUNCS[setup](ctx, side)
+            if candidate is not None:
+                side_scores[side] = max(
+                    side_scores[side], candidate["score"]
+                )
+                if best is None or candidate["score"] > best["score"]:
+                    best = candidate
+            elif reason:
+                notes.append(f"{setup}/{side}: {reason}")
+
+    return best, side_scores, notes
 
 
 # ============================================================
@@ -659,13 +1409,22 @@ def unrealized(pos, price):
     return (entry - price) * quantity
 
 
-def size_position(equity, entry, stop):
-    distance = abs(entry - stop)
-    risk_budget = max(0.0, equity) * RISK_PER_TRADE
-
-    estimated_cost_per_unit = (
-        distance + entry * (2 * FEE_RATE + 2 * SLIPPAGE_RATE)
+def unrealized_net(pos, price):
+    """Unrealized PnL net of the estimated cost of closing now."""
+    if not pos:
+        return 0.0
+    gross = unrealized(pos, price)
+    exit_cost = abs(f(pos.get("quantity")) * price) * (
+        FEE_RATE + SLIPPAGE_RATE
     )
+    return gross - exit_cost
+
+
+def size_position(equity, entry, stop, risk_fraction):
+    distance = abs(entry - stop)
+    risk_budget = max(0.0, equity) * risk_fraction
+
+    estimated_cost_per_unit = distance + entry * ROUND_TRIP_COST_RATE
 
     if equity <= 0 or distance <= 0 or estimated_cost_per_unit <= 0:
         return None
@@ -683,18 +1442,18 @@ def size_position(equity, entry, stop):
 
     notional = quantity * entry
 
+    planned_risk = quantity * estimated_cost_per_unit
+
     return {
         "quantity": quantity,
         "margin_used": notional / LEVERAGE,
         "notional": notional,
-        "planned_risk": quantity * estimated_cost_per_unit,
-        "effective_risk_pct": (
-            quantity * estimated_cost_per_unit / equity * 100
-        ),
+        "planned_risk": planned_risk,
+        "effective_risk_pct": planned_risk / equity * 100,
     }
 
 
-def apply_funding(s, funding):
+def apply_funding(s, funding, now_s=None):
     """
     Approximate paper funding cost using the current funding rate.
     Hyperliquid funding is paid hourly. This estimate assumes the
@@ -705,7 +1464,7 @@ def apply_funding(s, funding):
     if not pos:
         return
 
-    current_time = now_ts()
+    current_time = int(now_s) if now_s is not None else now_ts()
     last_time = i(pos.get("last_funding_ts"), current_time)
 
     elapsed = max(0, current_time - last_time)
@@ -734,7 +1493,16 @@ def apply_funding(s, funding):
         )
 
 
-def close_position(s, price, reason, fraction=1.0):
+def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
+                   now_s=None):
+    """Close `fraction` of the current quantity at `price` (pre-slippage).
+
+    Records are complete: build, origin build, setup, regime, score
+    breakdown, entry/stop/targets, planned risk, effective risk pct,
+    MFE/MAE, fees, funding, exit reason and R multiple are all saved.
+    Round-trip aggregates (win/loss, consecutive losses, daily stop
+    count, per-setup / per-regime stats) update on the final close.
+    """
     pos = s.get("position")
     if not pos:
         return False
@@ -748,15 +1516,18 @@ def close_position(s, price, reason, fraction=1.0):
         s["position"] = None
         return False
 
+    ts_now = int(now_s) if now_s is not None else now_ts()
+
     quantity = old_quantity * fraction
     side = pos["side"]
     entry = f(pos.get("entry_price"))
 
     # Simulate worse execution on exit.
+    slip = SLIPPAGE_RATE + max(0.0, extra_slippage)
     exit_price = (
-        price * (1 - SLIPPAGE_RATE)
+        price * (1 - slip)
         if side == "LONG"
-        else price * (1 + SLIPPAGE_RATE)
+        else price * (1 + slip)
     )
 
     gross = (
@@ -781,6 +1552,20 @@ def close_position(s, price, reason, fraction=1.0):
     s["equity"] += gross - exit_fee
     s["realized_pnl"] += net
 
+    qty_initial = max(f(pos.get("qty_initial"), old_quantity), 1e-12)
+    closed_fraction_of_initial = quantity / qty_initial
+    risk_slice = f(pos.get("risk_usd_initial")) * closed_fraction_of_initial
+    r_multiple = (net / risk_slice) if risk_slice > 0 else 0.0
+    entry_equity = f(pos.get("entry_equity")) or s["equity"]
+    effective_risk_pct = (
+        risk_slice / entry_equity * 100 if entry_equity > 0 else 0.0
+    )
+
+    pos["acc_net_pnl"] = f(pos.get("acc_net_pnl")) + net
+    pos["acc_fees"] = f(pos.get("acc_fees")) + exit_fee
+    pos["acc_funding"] = f(pos.get("acc_funding")) + funding_allocated
+    pos["acc_r"] = f(pos.get("acc_r")) + r_multiple
+
     trade = {
         "side": side,
         "direction": side,
@@ -790,8 +1575,8 @@ def close_position(s, price, reason, fraction=1.0):
         "leverage": pos.get("leverage", LEVERAGE),
         "margin_used": f(pos.get("margin_used")) * fraction,
         "entry_time": pos.get("entry_time"),
-        "exit_time": iso_now(),
-        "exit_timestamp": now_ts(),
+        "exit_time": iso_of(ts_now),
+        "exit_timestamp": ts_now,
         "gross_pnl": gross,
         "entry_fee": entry_fee_allocated,
         "exit_fee": exit_fee,
@@ -803,6 +1588,21 @@ def close_position(s, price, reason, fraction=1.0):
         "exit_reason": reason,
         "partial": fraction < 0.999999,
         "build": BUILD,
+        "origin_build": pos.get("origin_build", BUILD),
+        "setup": pos.get("setup", "UNKNOWN"),
+        "regime": pos.get("regime", "UNKNOWN"),
+        "score": pos.get("score"),
+        "score_breakdown": pos.get("score_breakdown", {}),
+        "initial_stop_price": f(pos.get("initial_stop_price")),
+        "stop_price_at_exit": f(pos.get("stop_price")),
+        "targets": pos.get("targets", {}),
+        "planned_risk": risk_slice,
+        "effective_risk_pct": effective_risk_pct,
+        "risk_distance": f(pos.get("risk_distance")),
+        "mfe_r": f(pos.get("mfe_r")),
+        "mae_r": f(pos.get("mae_r")),
+        "r_multiple": r_multiple,
+        "zone_room_r": pos.get("zone_room_r"),
     }
 
     s["trades"].append(trade)
@@ -816,19 +1616,40 @@ def close_position(s, price, reason, fraction=1.0):
         reason=reason,
         net_pnl=net,
         fraction=fraction,
+        setup=trade["setup"],
+        r_multiple=round(r_multiple, 4),
     )
 
     if fraction >= 0.999999:
-        s["consecutive_losses"] = (
-            s["consecutive_losses"] + 1 if net < 0 else 0
+        total_net = f(pos.get("acc_net_pnl"))
+        total_r = f(pos.get("acc_r"))
+
+        _update_stats(
+            s["stats_by_setup"], pos.get("setup"), pos, total_net, total_r
+        )
+        _update_stats(
+            s["stats_by_regime"], pos.get("regime"), pos, total_net, total_r
         )
 
-        if s["consecutive_losses"] >= MAX_CONSECUTIVE_LOSSES:
-            s["consecutive_lock_until"] = (
-                now_ts() + CONSECUTIVE_PAUSE_SECONDS
-            )
+        if total_net < 0:
+            s["consecutive_losses"] = i(s.get("consecutive_losses")) + 1
+            if pos.get("saw_stop_loss"):
+                s["daily_stop_count"] = i(s.get("daily_stop_count")) + 1
+            if s["consecutive_losses"] >= MAX_CONSECUTIVE_LOSSES:
+                s["consecutive_lock_until"] = (
+                    ts_now + CONSECUTIVE_PAUSE_SECONDS
+                )
+                s["next_risk_multiplier"] = 0.5
+                event(
+                    s,
+                    "CONSECUTIVE_LOSS_COOLDOWN",
+                    losses=s["consecutive_losses"],
+                    pause_seconds=CONSECUTIVE_PAUSE_SECONDS,
+                )
+        else:
+            s["consecutive_losses"] = 0
 
-        s["last_close_ts"] = now_ts()
+        s["last_close_ts"] = ts_now
         s["position"] = None
     else:
         remaining_fraction = 1.0 - fraction
@@ -852,21 +1673,16 @@ def close_position(s, price, reason, fraction=1.0):
     return True
 
 
-def open_position(s, side, price, av, sig, candle_ts):
-    entry = (
-        price * (1 + SLIPPAGE_RATE)
-        if side == "LONG"
-        else price * (1 - SLIPPAGE_RATE)
+def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
+                  now_s=None):
+    ts_now = int(now_s) if now_s is not None else now_ts()
+    side = candidate["side"]
+    entry = candidate["entry_price"]
+    stop = candidate["stop_price"]
+
+    sizing = size_position(
+        s["equity"], entry, stop, RISK_PER_TRADE * risk_multiplier
     )
-
-    distance = max(av * ATR_STOP, price * 0.0012)
-
-    stop = (
-        entry - distance if side == "LONG"
-        else entry + distance
-    )
-
-    sizing = size_position(s["equity"], entry, stop)
     if not sizing:
         return False, "数量計算失敗"
 
@@ -876,8 +1692,14 @@ def open_position(s, side, price, av, sig, candle_ts):
 
     if fee >= s["equity"]:
         return False, "手数料が資金を超過"
+    if notional < 10.0:
+        return False, "想定元本が最小注文未満"
 
+    entry_equity = s["equity"]
     s["equity"] -= fee
+
+    distance = candidate["risk_distance"]
+    risk_usd = quantity * (distance + entry * ROUND_TRIP_COST_RATE)
 
     s["position"] = {
         "side": side,
@@ -886,65 +1708,168 @@ def open_position(s, side, price, av, sig, candle_ts):
         "leverage": LEVERAGE,
         "margin_used": sizing["margin_used"],
         "notional": notional,
-        "planned_risk": sizing["planned_risk"],
-        "effective_risk_pct": sizing["effective_risk_pct"],
+        "planned_risk": risk_usd,
+        "effective_risk_pct": risk_usd / entry_equity * 100,
         "stop_price": stop,
         "initial_stop_price": stop,
         "risk_distance": distance,
         "entry_fee": fee,
         "funding_pnl": 0.0,
-        "entry_time": iso_now(),
-        "opened_timestamp": now_ts(),
-        "last_funding_ts": now_ts(),
+        "entry_time": iso_of(ts_now),
+        "opened_timestamp": ts_now,
+        "last_funding_ts": ts_now,
         "last_checked_candle_ts": candle_ts,
-        "entry_signal_score": sig["score"],
-        "entry_rsi": sig["rsi"],
-        "entry_bb_width_pct": sig["bollinger"]["width_pct"],
+        "entry_signal_score": candidate["score"],
+        "score": candidate["score"],
+        "score_breakdown": candidate["score_breakdown"],
+        "setup": candidate["setup"],
+        "regime": candidate["regime"],
+        "origin_build": BUILD,
+        "targets": candidate["targets"],
+        "zone_room_r": candidate.get("zone_room_r"),
+        "qty_initial": quantity,
+        "risk_usd_initial": risk_usd,
+        "entry_equity": entry_equity,
+        "risk_multiplier": risk_multiplier,
+        "tp1_taken": False,
+        "tp2_taken": False,
         "partial_taken": False,
-        "best_price": price,
+        "be_moved": False,
         "trail_active": False,
+        "best_price": candidate["reference_price"],
+        "worst_price": candidate["reference_price"],
+        "mfe_r": 0.0,
+        "mae_r": 0.0,
+        "acc_net_pnl": 0.0,
+        "acc_fees": fee,
+        "acc_funding": 0.0,
+        "acc_r": 0.0,
+        "saw_stop_loss": False,
     }
 
     s["last_entry_candle"] = candle_ts
+    # The post-cooldown half-risk flag is consumed by this entry.
+    s["next_risk_multiplier"] = 1.0
 
     event(
         s,
         "POSITION_OPENED",
         side=side,
+        setup=candidate["setup"],
+        regime=candidate["regime"],
+        score=candidate["score"],
         entry_price=entry,
         stop_price=stop,
         quantity=quantity,
         leverage=LEVERAGE,
-        effective_risk_pct=sizing["effective_risk_pct"],
+        effective_risk_pct=s["position"]["effective_risk_pct"],
     )
 
-    return True, side + " opened"
+    return True, side + " opened (" + candidate["setup"] + ")"
 
 
 # ============================================================
-# POSITION MANAGEMENT
+# RISK STATE
 # ============================================================
 
-def manage_position(s, candles, price, sig, funding):
+def current_drawdown_pct(s, marked_equity):
+    peak = max(f(s.get("peak_equity")), marked_equity, 0.01)
+    return max(0.0, (peak - marked_equity) / peak * 100.0)
+
+
+def refresh_risk_state(s, marked_equity, now_s=None):
+    """Daily reset, daily loss lock, DD pause. Returns current DD pct."""
+    ts_now = int(now_s) if now_s is not None else now_ts()
+
+    if s.get("daily_date") != date_of(ts_now):
+        s["daily_date"] = date_of(ts_now)
+        s["daily_start_equity"] = marked_equity
+        s["daily_loss_lock"] = False
+        s["daily_stop_count"] = 0
+        event(s, "DAILY_RESET")
+
+    daily_start = max(f(s.get("daily_start_equity")), 0.01)
+    daily_loss_pct = max(
+        0.0, (daily_start - marked_equity) / daily_start * 100.0
+    )
+
+    if daily_loss_pct >= DAILY_LOSS_LIMIT * 100:
+        if not s["daily_loss_lock"]:
+            event(s, "DAILY_LOSS_LOCK", daily_loss_pct=daily_loss_pct)
+        s["daily_loss_lock"] = True
+
+    if i(s.get("daily_stop_count")) >= DAILY_STOP_LIMIT:
+        if not s["daily_loss_lock"]:
+            event(s, "DAILY_STOP_LOCK", stops=s["daily_stop_count"])
+        s["daily_loss_lock"] = True
+
+    s["peak_equity"] = max(f(s.get("peak_equity")), marked_equity)
+    dd = current_drawdown_pct(s, marked_equity)
+    s["max_drawdown_pct"] = max(f(s.get("max_drawdown_pct")), dd)
+
+    if dd >= DD_HARD_PAUSE and s["drawdown_pause_until"] < ts_now:
+        s["drawdown_pause_until"] = ts_now + DRAWDOWN_PAUSE_SECONDS
+        event(s, "DRAWDOWN_PAUSE_STARTED", drawdown_pct=dd)
+
+    if (
+        s["drawdown_pause_until"]
+        and s["drawdown_pause_until"] <= ts_now
+    ):
+        s["drawdown_pause_until"] = 0
+        event(s, "DRAWDOWN_PAUSE_ENDED")
+
+    return dd
+
+
+def risk_controls(s, dd_pct):
+    """Return (risk_multiplier, allowed_setups) for the next entry."""
+    mult = 1.0
+    allowed = ("A", "B", "C")
+    if dd_pct >= DD_THROTTLE_2:
+        mult = 0.25
+        allowed = ("A",)
+    elif dd_pct >= DD_THROTTLE_1:
+        mult = 0.5
+    mult *= clamp(f(s.get("next_risk_multiplier"), 1.0), 0.1, 1.0)
+    return mult, allowed
+
+
+# ============================================================
+# POSITION MANAGEMENT (V20 exit framework)
+# ============================================================
+
+def _stop_reason(pos):
+    if pos.get("trail_active"):
+        return "TRAIL_STOP"
+    if pos.get("be_moved"):
+        return "BREAKEVEN_STOP"
+    return "STOP_LOSS"
+
+
+def manage_position(s, candles, price, ctx, funding, now_s=None):
     pos = s.get("position")
     if not pos:
         return
 
-    apply_funding(s, funding)
+    ts_now = int(now_s) if now_s is not None else now_ts()
+
+    apply_funding(s, funding, ts_now)
 
     pos = s.get("position")
     if not pos:
         return
 
     side = pos["side"]
-    stop = f(pos.get("stop_price"))
     entry = f(pos.get("entry_price"))
     distance = max(f(pos.get("risk_distance")), 0.01)
-    target = (
-        entry + distance * PARTIAL_TP_ATR / ATR_STOP
-        if side == "LONG"
-        else entry - distance * PARTIAL_TP_ATR / ATR_STOP
+    targets = pos.get("targets") or {}
+    tp1 = f(targets.get("tp1_price"))
+    tp2 = f(targets.get("tp2_price"))
+    be_price = f(targets.get("be_price")) or (
+        entry + (1.0 if side == "LONG" else -1.0)
+        * entry * ROUND_TRIP_COST_RATE
     )
+    av = max(f(ctx.get("atr")) if ctx else 0.0, 0.01)
 
     cursor = i(pos.get("last_checked_candle_ts"))
 
@@ -955,119 +1880,211 @@ def manage_position(s, candles, price, sig, funding):
         high = candle["h"]
         low = candle["l"]
         close = candle["c"]
+        candle_ts_s = candle["t"] // 1000
 
-        # Conservative ordering: if both stop and target are touched
-        # in one candle, process the stop first.
-        if side == "LONG" and low <= stop:
-            close_position(s, stop, "TRAIL_STOP" if pos.get("trail_active") else "STOP_LOSS")
-            return
+        # --- MFE / MAE tracking (in R) ---
+        if side == "LONG":
+            favorable = high - entry
+            adverse = entry - low
+            pos["best_price"] = max(f(pos.get("best_price"), entry), high)
+            pos["worst_price"] = min(f(pos.get("worst_price"), entry), low)
+        else:
+            favorable = entry - low
+            adverse = high - entry
+            pos["best_price"] = min(f(pos.get("best_price"), entry), low)
+            pos["worst_price"] = max(f(pos.get("worst_price"), entry), high)
+        pos["mfe_r"] = max(f(pos.get("mfe_r")), favorable / distance)
+        pos["mae_r"] = max(f(pos.get("mae_r")), adverse / distance)
 
-        if side == "SHORT" and high >= stop:
-            close_position(s, stop, "TRAIL_STOP" if pos.get("trail_active") else "STOP_LOSS")
-            return
-
-        if not pos.get("partial_taken"):
-            hit_target = (
-                high >= target if side == "LONG"
-                else low <= target
+        # --- Stop check first (conservative). Stop always re-read from
+        # the position so trail/BE updates from earlier candles in this
+        # same catch-up pass apply to later candles (V19 stale-stop bug).
+        stop = f(pos.get("stop_price"))
+        stop_hit = (low <= stop) if side == "LONG" else (high >= stop)
+        if stop_hit:
+            # Realistic fill: worse of the stop and the candle close
+            # (gap-through), then extra adverse slippage in close_position.
+            if side == "LONG":
+                fill_ref = min(stop, close)
+            else:
+                fill_ref = max(stop, close)
+            reason = _stop_reason(pos)
+            if reason == "STOP_LOSS":
+                pos["saw_stop_loss"] = True
+            close_position(
+                s, fill_ref, reason,
+                extra_slippage=STOP_EXTRA_SLIPPAGE,
+                now_s=candle_ts_s,
             )
+            return
 
-            if hit_target:
-                if close_position(
-                    s,
-                    target,
-                    "PARTIAL_TAKE_PROFIT",
-                    PARTIAL_TP_FRACTION,
+        # --- Breakeven at +1R ---
+        if not pos.get("be_moved"):
+            be_trigger = (
+                entry + distance * BREAKEVEN_AT_R if side == "LONG"
+                else entry - distance * BREAKEVEN_AT_R
+            )
+            reached = (
+                high >= be_trigger if side == "LONG"
+                else low <= be_trigger
+            )
+            if reached:
+                if side == "LONG":
+                    pos["stop_price"] = max(f(pos.get("stop_price")), be_price)
+                else:
+                    pos["stop_price"] = min(f(pos.get("stop_price")), be_price)
+                pos["be_moved"] = True
+                event(s, "STOP_MOVED_TO_BREAKEVEN", stop_price=pos["stop_price"])
+
+        # --- Partial take-profit 1: +1.5R, 30% of initial quantity ---
+        if not pos.get("tp1_taken") and tp1 > 0:
+            hit = high >= tp1 if side == "LONG" else low <= tp1
+            if hit:
+                qty_now = f(pos.get("quantity"))
+                qty_initial = max(f(pos.get("qty_initial"), qty_now), 1e-12)
+                frac = clamp(
+                    TP1_FRACTION * qty_initial / max(qty_now, 1e-12),
+                    0.0, 1.0,
+                )
+                if frac > 0 and close_position(
+                    s, tp1, "PARTIAL_TAKE_PROFIT_1", frac,
+                    now_s=candle_ts_s,
                 ):
                     pos = s.get("position")
                     if not pos:
                         return
+                    pos["tp1_taken"] = True
+                    pos["partial_taken"] = True
 
-                    # Once a partial profit is booked, move stop toward
-                    # entry to reduce the chance of giving back gains.
-                    if side == "LONG":
-                        pos["stop_price"] = max(
-                            f(pos.get("stop_price")),
-                            entry + distance * 0.05,
-                        )
-                    else:
-                        pos["stop_price"] = min(
-                            f(pos.get("stop_price")),
-                            entry - distance * 0.05,
-                        )
+        # --- Partial take-profit 2: +2.75R, 35% of initial quantity ---
+        pos = s.get("position")
+        if not pos:
+            return
+        if pos.get("tp1_taken") and not pos.get("tp2_taken") and tp2 > 0:
+            hit = high >= tp2 if side == "LONG" else low <= tp2
+            if hit:
+                qty_now = f(pos.get("quantity"))
+                qty_initial = max(f(pos.get("qty_initial"), qty_now), 1e-12)
+                frac = clamp(
+                    TP2_FRACTION * qty_initial / max(qty_now, 1e-12),
+                    0.0, 1.0,
+                )
+                if frac > 0 and close_position(
+                    s, tp2, "PARTIAL_TAKE_PROFIT_2", frac,
+                    now_s=candle_ts_s,
+                ):
+                    pos = s.get("position")
+                    if not pos:
+                        return
+                    pos["tp2_taken"] = True
 
-                    stop = f(pos.get("stop_price"))
-
-        # Track the best price after entry.
-        if side == "LONG":
-            pos["best_price"] = max(
-                f(pos.get("best_price"), entry), high
-            )
-            favorable_move = f(pos["best_price"]) - entry
-        else:
-            old_best = f(pos.get("best_price"), entry)
-            pos["best_price"] = min(old_best, low)
-            favorable_move = entry - f(pos["best_price"])
-
-        # Activate trailing only after the move has progressed.
-        if favorable_move >= distance * TRAIL_START_ATR / ATR_STOP:
-            pos["trail_active"] = True
-
-        if pos.get("trail_active"):
-            trail_distance = max(
-                f(sig.get("atr")) * TRAIL_ATR,
-                distance * 0.75,
-            )
-
+        # --- Chandelier trail on the runner (after TP1) ---
+        pos = s.get("position")
+        if not pos:
+            return
+        if pos.get("tp1_taken"):
             if side == "LONG":
-                new_stop = f(pos["best_price"]) - trail_distance
-                pos["stop_price"] = max(
-                    f(pos.get("stop_price")), new_stop
-                )
+                candidate_stop = f(pos.get("best_price")) - CHANDELIER_ATR * av
+                new_stop = max(f(pos.get("stop_price")), candidate_stop)
             else:
-                new_stop = f(pos["best_price"]) + trail_distance
-                pos["stop_price"] = min(
-                    f(pos.get("stop_price")), new_stop
-                )
+                candidate_stop = f(pos.get("best_price")) + CHANDELIER_ATR * av
+                new_stop = min(f(pos.get("stop_price")), candidate_stop)
+            if new_stop != f(pos.get("stop_price")):
+                pos["stop_price"] = new_stop
+                pos["trail_active"] = True
 
-        # If momentum and trend both turn against the position,
-        # exit the remaining size rather than waiting indefinitely.
-        trend_15m = sig.get("trend_15m")
-        trend_1h = sig.get("trend_1h")
-
-        if pos.get("partial_taken"):
-            if (
-                side == "LONG"
-                and trend_15m == "DOWN"
-                and trend_1h == "DOWN"
-                and close < f(sig.get("bollinger", {}).get("middle"), close)
-            ):
-                close_position(s, close, "TREND_REVERSAL")
-                return
-
-            if (
-                side == "SHORT"
-                and trend_15m == "UP"
-                and trend_1h == "UP"
-                and close > f(sig.get("bollinger", {}).get("middle"), close)
-            ):
-                close_position(s, close, "TREND_REVERSAL")
-                return
+        # --- Time stop: no follow-through within the window ---
+        elapsed = candle_ts_s - i(pos.get("opened_timestamp"))
+        if (
+            elapsed >= TIME_STOP_SECONDS
+            and f(pos.get("mfe_r")) < TIME_STOP_MIN_MFE_R
+        ):
+            close_position(s, close, "TIME_STOP", now_s=candle_ts_s)
+            return
 
         pos["last_checked_candle_ts"] = candle["t"]
         cursor = candle["t"]
 
-    if now_ts() - i(pos.get("opened_timestamp")) >= MAX_HOLD_SECONDS:
-        close_position(s, price, "MAX_HOLD_TIME")
+    # --- Max hold (24h) at the live price ---
+    if ts_now - i(pos.get("opened_timestamp")) >= MAX_HOLD_SECONDS:
+        close_position(s, price, "MAX_HOLD_TIME", now_s=ts_now)
 
 
 # ============================================================
-# RISK AND DASHBOARD DATA
+# SIGNAL (dashboard-shaped) + DASHBOARD
 # ============================================================
+
+def make_signal(ctx, candidate, side_scores, status, notes):
+    direction = candidate["side"] if candidate else "WAIT"
+    score = candidate["score"] if candidate else max(
+        side_scores.get("LONG", 0), side_scores.get("SHORT", 0)
+    )
+    reasons = []
+    flags = []
+    if candidate:
+        bd = candidate["score_breakdown"]
+        for key, value in bd.items():
+            if value:
+                reasons.append(f"{key}:{value:+d}")
+        reasons.append(
+            f"setup {candidate['setup']} / regime {candidate['regime']}"
+        )
+        flags.append("コストフィルター通過")
+        if candidate.get("zone_room_r") is not None:
+            flags.append(
+                f"対向ゾーンまで {candidate['zone_room_r']:.2f}R"
+            )
+    structure = ctx["structure"]
+    return {
+        "direction": direction,
+        "score": score,
+        "long_score": side_scores.get("LONG", 0),
+        "short_score": side_scores.get("SHORT", 0),
+        "score_edge": abs(
+            side_scores.get("LONG", 0) - side_scores.get("SHORT", 0)
+        ),
+        "rsi": round(ctx["rsi"], 3),
+        "atr": round(ctx["atr"], 5),
+        "ema9": ctx["ema9"],
+        "ema21": ctx["ema21"],
+        "trend_15m": ctx["trend_15m"],
+        "trend_1h": ctx["trend_1h"],
+        "trend_4h": ctx["trend_4h"],
+        "timestamp": iso_now(),
+        "reference_price": ctx["price"],
+        "previous_close": ctx["previous_close"],
+        "reasons": reasons or ["明確な方向優位性なし"],
+        "flags": flags,
+        "bollinger": ctx["bollinger"],
+        "fibonacci": ctx["fibonacci"],
+        # V20 additions:
+        "regime": ctx["regime"],
+        "adx": round(ctx["adx"], 2),
+        "atr_percentile": round(ctx["atr_percentile"], 1),
+        "macd": {
+            key: round(value, 4)
+            for key, value in ctx["macd"].items()
+        },
+        "vwap": ctx["vwap"],
+        "relative_volume": round(ctx["relative_volume"], 3),
+        "htf_bias": ctx["htf_bias"],
+        "structure_bias": structure["structure"],
+        "support": structure["support"],
+        "resistance": structure["resistance"],
+        "premium": ctx["premium"],
+        "setup": candidate["setup"] if candidate else None,
+        "score_breakdown": (
+            candidate["score_breakdown"] if candidate else {}
+        ),
+        "entry_status": status,
+        "evaluation_notes": notes[-12:],
+    }
+
 
 def make_dashboard(s, price, funding, sig, status):
     pos = s.get("position")
-    upnl = unrealized(pos, price) if pos else 0.0
+    upnl_gross = unrealized(pos, price) if pos else 0.0
+    upnl = unrealized_net(pos, price) if pos else 0.0
     marked_equity = s["equity"] + upnl
 
     initial = max(f(s["initial_equity"]), 0.01)
@@ -1077,52 +2094,18 @@ def make_dashboard(s, price, funding, sig, status):
         marked_equity,
     )
 
-    current_dd = max(
-        0.0,
-        (s["peak_equity"] - marked_equity)
-        / max(s["peak_equity"], 0.01) * 100.0,
-    )
+    current_dd = current_drawdown_pct(s, marked_equity)
 
     s["max_drawdown_pct"] = max(
         f(s.get("max_drawdown_pct")),
         current_dd,
     )
 
-    if s["daily_date"] != utc_date():
-        s["daily_date"] = utc_date()
-        s["daily_start_equity"] = marked_equity
-        s["daily_loss_lock"] = False
-        event(s, "DAILY_RESET")
-
     daily_start = max(f(s.get("daily_start_equity")), 0.01)
-
     daily_loss = max(
         0.0,
         (daily_start - marked_equity) / daily_start * 100.0,
     )
-
-    if daily_loss >= DAILY_LOSS_LIMIT * 100:
-        s["daily_loss_lock"] = True
-
-    if (
-        current_dd >= MAX_DRAWDOWN_LIMIT * 100
-        and s["drawdown_pause_until"] < now_ts()
-    ):
-        s["drawdown_pause_until"] = (
-            now_ts() + DRAWDOWN_PAUSE_SECONDS
-        )
-        event(
-            s,
-            "DRAWDOWN_PAUSE_STARTED",
-            drawdown_pct=current_dd,
-        )
-
-    if (
-        s["drawdown_pause_until"]
-        and s["drawdown_pause_until"] <= now_ts()
-    ):
-        s["drawdown_pause_until"] = 0
-        event(s, "DRAWDOWN_PAUSE_ENDED")
 
     trades = s["trades"]
 
@@ -1149,6 +2132,7 @@ def make_dashboard(s, price, funding, sig, status):
     position = dict(pos) if pos else None
     if position:
         position["unrealized_pnl"] = upnl
+        position["unrealized_pnl_gross"] = upnl_gross
 
     metrics = {
         "closed_trades": len(trades),
@@ -1181,6 +2165,7 @@ def make_dashboard(s, price, funding, sig, status):
         "marked_equity": marked_equity,
         "realized_pnl": s["realized_pnl"],
         "unrealized_pnl": upnl,
+        "unrealized_pnl_gross": upnl_gross,
         "net_pnl": marked_equity - initial,
         "net_pnl_pct": (marked_equity - initial) / initial * 100.0,
         "position": position,
@@ -1196,10 +2181,11 @@ def make_dashboard(s, price, funding, sig, status):
             "daily_loss_pct": daily_loss,
             "daily_loss_limit_pct": DAILY_LOSS_LIMIT * 100,
             "daily_loss_lock": s["daily_loss_lock"],
+            "daily_stop_count": i(s.get("daily_stop_count")),
             "drawdown_pct": current_dd,
             "current_drawdown_pct": current_dd,
             "max_drawdown_pct": s["max_drawdown_pct"],
-            "drawdown_limit_pct": MAX_DRAWDOWN_LIMIT * 100,
+            "drawdown_limit_pct": DD_HARD_PAUSE,
             "drawdown_pause_until": s["drawdown_pause_until"],
             "drawdown_lock": s["drawdown_pause_until"] > now_ts(),
             "consecutive_losses": s["consecutive_losses"],
@@ -1221,6 +2207,8 @@ def make_dashboard(s, price, funding, sig, status):
         "recent_trades": trades[-200:],
         "equity_history": s["equity_history"][-1000:],
         "events": s["events"][-100:],
+        "stats_by_setup": s.get("stats_by_setup", {}),
+        "stats_by_regime": s.get("stats_by_regime", {}),
         "timeframes": {
             "15m": {"direction": sig["trend_15m"]},
             "1h": {"direction": sig["trend_1h"]},
@@ -1230,6 +2218,11 @@ def make_dashboard(s, price, funding, sig, status):
             "rsi_15m": sig["rsi"],
             "atr": sig["atr"],
             "bollinger": sig["bollinger"],
+            "adx": sig.get("adx"),
+            "atr_percentile": sig.get("atr_percentile"),
+            "macd": sig.get("macd"),
+            "vwap": sig.get("vwap"),
+            "relative_volume": sig.get("relative_volume"),
         },
         "fibonacci": sig["fibonacci"],
         "config": {
@@ -1237,10 +2230,14 @@ def make_dashboard(s, price, funding, sig, status):
             "risk_per_trade_pct": RISK_PER_TRADE * 100,
             "paper_only": True,
             "live_trading_enabled": False,
-            "min_signal_score": MIN_SIGNAL_SCORE,
-            "min_score_edge": MIN_SCORE_EDGE,
-            "partial_tp_fraction": PARTIAL_TP_FRACTION,
-            "trail_atr": TRAIL_ATR,
+            "min_signal_score": MIN_SCORE,
+            "min_score_edge": 0,
+            "partial_tp_fraction": TP1_FRACTION,
+            "trail_atr": CHANDELIER_ATR,
+            "stop_atr_min": STOP_ATR_MIN,
+            "stop_atr_max": STOP_ATR_MAX,
+            "tp1_at_r": TP1_AT_R,
+            "tp2_at_r": TP2_AT_R,
         },
         "last_error": s.get("last_error"),
     }
@@ -1255,57 +2252,79 @@ def main():
     s["last_error"] = None
 
     try:
-        price, funding = fetch_price_funding()
+        market = fetch_market()
+        price = market["price"]
+        funding = market["funding"]
+        premium = market["premium"]
 
-        c15 = fetch_candles("15m")
-        c1 = fetch_candles("1h")
-        c4 = fetch_candles("4h")
+        c15 = fetch_candles("15m", CANDLES_15M)
+        c1 = fetch_candles("1h", CANDLES_1H)
+        c4 = fetch_candles("4h", CANDLES_4H)
 
-        sig = make_signal(c15, c1, c4, funding)
+        ctx = build_context(c15, c1, c4, funding, premium)
         latest_candle = c15[-1]["t"]
+        now = now_ts()
+
+        # Mark-to-market (net of exit costs) for risk state.
+        pos = s.get("position")
+        marked = s["equity"] + (
+            unrealized_net(pos, price) if pos else 0.0
+        )
+        dd = refresh_risk_state(s, marked, now)
 
         had_position = bool(s.get("position"))
 
         if had_position:
-            manage_position(s, c15, price, sig, funding)
+            manage_position(s, c15, price, ctx, funding, now)
 
         if had_position and not s.get("position"):
             s["last_entry_candle"] = latest_candle
 
+        # Re-mark after management for entry decisions.
+        pos = s.get("position")
+        marked = s["equity"] + (
+            unrealized_net(pos, price) if pos else 0.0
+        )
+        dd = current_drawdown_pct(s, marked)
+
+        risk_mult, allowed_setups = risk_controls(s, dd)
+        candidate, side_scores, notes = evaluate_entry(
+            ctx, allowed_setups
+        )
+
         status = "WAIT: シグナル条件未達"
-        now = now_ts()
 
         if s.get("position"):
             status = "保有中"
         elif s["daily_loss_lock"]:
-            status = "日次損失停止中（UTC日付更新で解除）"
+            status = "日次停止中（損失/ストップ回数上限、UTC日付更新で解除）"
         elif s["drawdown_pause_until"] > now:
             remaining = (s["drawdown_pause_until"] - now) // 60
             status = f"DD休止中（残り{remaining}分）"
         elif s["consecutive_lock_until"] > now:
             remaining = (s["consecutive_lock_until"] - now) // 60
-            status = f"連敗休止中（残り{remaining}分）"
+            status = f"連敗クールダウン中（残り{remaining}分）"
         elif now - s["last_close_ts"] < COOLDOWN_SECONDS:
             status = "クールダウン中"
         elif latest_candle == s["last_entry_candle"]:
             status = "同じ15分足での再エントリー防止"
-        elif sig["direction"] in ("LONG", "SHORT"):
+        elif candidate is not None:
+            mult = risk_mult
+            if candidate["setup"] == "C":
+                mult *= SETUP_C_RISK_MULT
             ok, message = open_position(
-                s,
-                sig["direction"],
-                price,
-                sig["atr"],
-                sig,
-                latest_candle,
+                s, candidate, latest_candle,
+                risk_multiplier=mult, now_s=now,
             )
             status = message if ok else "エントリー見送り: " + message
         else:
             status = (
-                f"WAIT（LONG {sig['long_score']} / "
-                f"SHORT {sig['short_score']}、"
-                f"必要スコア {MIN_SIGNAL_SCORE}）"
+                f"WAIT（LONG {side_scores.get('LONG', 0)} / "
+                f"SHORT {side_scores.get('SHORT', 0)}、"
+                f"必要スコア {MIN_SCORE}、レジーム {ctx['regime']}）"
             )
 
+        sig = make_signal(ctx, candidate, side_scores, status, notes)
         sig["entry_status"] = status
 
         dashboard = make_dashboard(
@@ -1318,18 +2337,19 @@ def main():
         print(
             f"BUILD: {BUILD}\n"
             f"PRICE: {price:.2f}\n"
+            f"REGIME: {ctx['regime']} "
+            f"ADX={ctx['adx']:.1f} "
+            f"ATR_PCT={ctx['atr_percentile']:.0f}\n"
             f"SIGNAL: {sig['direction']} "
             f"score={sig['score']} "
             f"long={sig['long_score']} "
             f"short={sig['short_score']}\n"
-            f"BB: {sig['bollinger']['state']} "
-            f"width={sig['bollinger']['width_pct']:.4f}%\n"
             f"ENTRY: {status}\n"
             f"EQUITY: {s['equity']:.4f}\n"
             f"REALIZED PNL: {s['realized_pnl']:.4f}\n"
             f"CLOSED RECORDS: {len(s['trades'])}\n"
             f"LEVERAGE: {LEVERAGE}x\n"
-            f"PLANNED RISK: {RISK_PER_TRADE * 100:.1f}%\n"
+            f"EFFECTIVE RISK: {RISK_PER_TRADE * 100:.1f}%\n"
             f"PAPER ONLY: True\n"
             f"LIVE TRADING ENABLED: False"
         )
