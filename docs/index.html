@@ -187,6 +187,17 @@ table.log .sideS{color:var(--blue);font-weight:800}
 .fibMarker .fm{position:absolute;right:-4px;top:-15px;background:#e546b0;color:#fff;font-size:13px;font-weight:800;padding:3px 10px;border-radius:999px;box-shadow:0 3px 8px rgba(229,70,176,.5);white-space:nowrap;font-variant-numeric:tabular-nums}
 .fibList{flex:1 1 300px;min-width:270px}
 .fibBand{margin-top:14px;background:#fdf0fa;border:2px solid var(--card-bd);border-radius:14px;padding:12px 16px;font-size:16.5px;font-weight:800;color:#7b1e6e}
+/* ===== 税金ページ ===== */
+.taxBig{font-size:clamp(26px,4.4vw,38px);font-weight:800;line-height:1.2;font-variant-numeric:tabular-nums;color:#3a1f66}
+table.tax{border-collapse:collapse;width:100%;font-size:15px;font-variant-numeric:tabular-nums}
+table.tax th{background:linear-gradient(120deg,#ffe9a8,#ffd7ef);color:#6d2470;font-weight:800;text-align:right;padding:10px 8px;white-space:nowrap}
+table.tax th:first-child{text-align:left}
+table.tax td{padding:9px 8px;border-bottom:1px solid #f3e2f7;white-space:nowrap;font-weight:500;color:#46306e;text-align:right}
+table.tax td:first-child{text-align:left;font-weight:800}
+table.tax tr.cur td{background:#fff3d6;font-weight:800}
+.taxNote{font-size:13.5px;color:#6b4b96;font-weight:500;line-height:1.7}
+.taxWarn{background:#fff8e6;border:2px solid #ffd97a;border-radius:14px;padding:12px 16px;font-size:14px;font-weight:700;color:#7a5a00;line-height:1.7}
+.taxYearChip{display:inline-block;background:#fdf0fa;border:2px solid var(--card-bd);border-radius:999px;padding:6px 14px;font-size:14.5px;font-weight:800;color:var(--ink2);margin:0 8px 8px 0}
 /* ===== フッター ===== */
 #updated{text-align:center;font-size:13.5px;font-weight:700;color:#4a3578;margin-top:6px}
 .footNote{text-align:center;font-size:12px;color:#8a6bb5;margin-top:6px;line-height:1.6}
@@ -261,6 +272,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
     <button class="nav-btn" data-page="chart" type="button"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3.6" y="12" width="4.4" height="8.4" rx="1.2" fill="#5579ee"/><rect x="9.8" y="7" width="4.4" height="13.4" rx="1.2" fill="#e546b0"/><rect x="16" y="2.8" width="4.4" height="17.6" rx="1.2" fill="#ffb52e"/></svg></span>資産グラフ</button>
     <button class="nav-btn" data-page="fib" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 1.8 L19.5 8.8 L12 22.2 L4.5 8.8 Z" fill="#7fd4ff"/><path d="M4.5 8.8 H19.5 M12 1.8 L8.6 8.8 L12 22.2 M12 1.8 L15.4 8.8 L12 22.2" stroke="#3b9bd8" fill="none" stroke-width="1.1"/></svg></span>フィボナッチ</button>
     <button class="nav-btn" data-page="settings" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5cf6" stroke-width="2.3" stroke-linecap="round"><path d="M12 2.6 V5.4 M12 18.6 V21.4 M2.6 12 H5.4 M18.6 12 H21.4 M5.2 5.2 L7.2 7.2 M16.8 16.8 L18.8 18.8 M18.8 5.2 L16.8 7.2 M7.2 16.8 L5.2 18.8"/><circle cx="12" cy="12" r="3.4" fill="#e546b0" stroke="none"/></svg></span>設定</button>
+    <button class="nav-btn" data-page="tax" type="button"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.6" fill="#ffb52e"/><text x="12" y="16.8" font-size="12.5" font-weight="800" text-anchor="middle" fill="#a86a00" font-family="sans-serif">¥</text></svg></span>税金</button>
   </nav>
 
   <main class="pages">
@@ -403,6 +415,53 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       </div>
       <div class="card">
         <div class="miniNote" style="font-size:14px">このページは表示専用です。設定の変更は BOT のコード側で行います（ダッシュボードからは変更できません）。</div>
+      </div>
+    </section>
+
+    <!-- ===== 税金 ===== -->
+    <section class="page" id="page-tax">
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.6" fill="#ffb52e"/><text x="12" y="16.8" font-size="12.5" font-weight="800" text-anchor="middle" fill="#a86a00" font-family="sans-serif">¥</text></svg></span><span id="taxYearTitle">税金シミュレーション</span></h2>
+        <div class="taxWarn" style="margin-bottom:14px">これはペーパートレード（仮想）の損益に基づく概算表示です。実際の税額は総所得・控除等で変わります。申告は税理士または税務署にご確認ください。</div>
+        <div class="kv"><span class="k">年間実現損益（決済済みのみ）</span><span class="v" id="taxProfitUsd">--</span></div>
+        <div style="margin:10px 0 2px"><span class="taxBig" id="taxProfitJpy">--</span> <span class="miniNote" id="taxFxNote"></span></div>
+        <div class="kv"><span class="k">推定税額（概算）</span><span class="v" id="taxTotal" style="font-size:20px">--</span></div>
+        <div class="kv"><span class="k">　所得税（累進課税の概算）</span><span class="v" id="taxIncome">--</span></div>
+        <div class="kv"><span class="k">　復興特別所得税（所得税額 × 2.1%）</span><span class="v" id="taxRecon">--</span></div>
+        <div class="kv"><span class="k">　住民税（所得の10%相当）</span><span class="v" id="taxResident">--</span></div>
+        <div class="kv"><span class="k">実効税率（対 利益）</span><span class="v" id="taxEffRate">--</span></div>
+        <div class="kv"><span class="k">税引後の手取り（概算）</span><span class="v" id="taxNet">--</span></div>
+        <div id="taxLossNote" style="margin-top:12px"></div>
+        <div class="miniNote" style="margin-top:12px">計算モデル：暗号資産の利益は原則「雑所得（その他）」として総合課税です。この概算では「この利益だけが課税対象の所得だった場合」として、所得税の累進税率表をこの利益にそのまま適用し、住民税10%相当と復興特別所得税（所得税額の2.1%）を加算しています。基礎控除などの各種控除は考慮していません。給与など他の所得がある場合、この利益にはその人の「限界税率」が上乗せされる形になるため、実際の税額は下の早見表のほうが近くなります。</div>
+      </div>
+
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>限界税率別の早見表（今年の利益にその税率がかかった場合）</h2>
+        <div class="tableWrap">
+          <table class="tax">
+            <thead><tr><th>所得税の限界税率</th><th>＋住民税10%</th><th>合計の目安税率 ※</th><th>今年の利益への税額</th></tr></thead>
+            <tbody id="taxMarginalBody"></tbody>
+          </table>
+        </div>
+        <div class="miniNote" style="margin-top:10px">※ 合計の目安税率 = 所得税率 × 1.021（復興特別所得税）＋ 住民税10%。給与所得者は、自分の給与の課税所得がどの税率区分かで見る行が変わります。</div>
+      </div>
+
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z" fill="#ffcf3f"/></svg></span>年別の実現損益</h2>
+        <div id="taxYearList"></div>
+        <div class="miniNote" style="margin-top:8px">決済時刻（日本時間）の年ごとに集計しています。含み損益（未決済の評価損益）は課税対象ではありません。ポジションを決済して利益・損失が確定した時点で、初めてその年の所得として課税対象になります。</div>
+      </div>
+
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M12 2 L20 5 V11 C20 17 16.5 20.4 12 22 C7.5 20.4 4 17 4 11 V5 Z" fill="#7fd4ff"/></svg></span>税金メモ（日本の現行ルール）</h2>
+        <div class="taxNote">
+          ・<b>所得区分</b>：個人の暗号資産取引の利益は原則「雑所得（その他）」で、給与などと合算する総合課税です。先物（無期限契約など証拠金取引）の損益も同様に総合課税です（国税庁FAQ 2-2、2-12）。<br>
+          ・<b>税率</b>：所得税は所得に応じて5%〜45%の累進税率、住民税は原則10%、さらに復興特別所得税として所得税額の2.1%が加算されます（〜2037年）。最大で約55.945%。<br>
+          ・<b>損失の扱い</b>：雑所得の損失は、給与所得など他の所得と損益通算できません。また、翌年以降への繰越控除も現行制度ではありません。その年の暗号資産同士の利益・損失は同一年内で相殺されます（国税庁FAQ 2-11）。<br>
+          ・<b>20万円ルール</b>：給与を1か所から受ける給与所得者は、給与・退職以外の所得の合計が20万円以下なら所得税の確定申告は原則不要です。ただし、所得税の申告が不要でも住民税の申告が必要な場合があります。また他の理由で確定申告をする場合は20万円以下の所得も申告が必要です（国税庁 No.1900）。<br>
+          ・<b>円換算</b>：外貨建ての損益は、取引（約定・決済）時点の為替レートで円に換算するのが原則です。このダッシュボードでは便宜上、現在の換算レート（<span id="taxFxRate2">--</span>）を全期間に一律適用しているため、実際の申告額とは差が出ます。<br>
+          ・<b>将来の改正</b>：令和8年度税制改正で、国内の暗号資産取引業者を通じた「特定暗号資産」等の取引について、税率20.315%（所得税15%＋復興0.315%＋住民税5%）の申告分離課税と、損失の3年間繰越控除が導入されることが決まりました。適用は改正金商法の施行日の属する年の翌年1月1日以後の取引からで、現在の見込みでは2028年1月1日開始です。なお、このBOTが使う海外取引所（Hyperliquid）は分離課税の対象業者には当たらない見込みで、その場合は改正後も現行の総合課税が続く見通しです。<span id="taxSepSample"></span>
+        </div>
       </div>
     </section>
   </main>
@@ -689,6 +748,95 @@ kvRows($("setRisk"),[
 ["DDロック",risk.drawdown_lock?"ロック中":"なし"]
 ]);
 }
+/* ===== 税金シミュレーション ===== */
+const TAX_BRACKETS=[ /* [上限(円), 税率, 控除額] 所得税の速算表 */
+[1950000,0.05,0],[3300000,0.10,97500],[6950000,0.20,427500],[9000000,0.23,636000],
+[18000000,0.33,1536000],[40000000,0.40,2796000],[Infinity,0.45,4796000]];
+function incomeTaxOn(profitJpy){ /* この利益だけに累進課税を適用した概算（控除なし） */
+const p=Math.floor(profitJpy);
+if(!(p>0))return 0;
+for(const b of TAX_BRACKETS){if(p<=b[0])return Math.floor(p*b[1]-b[2])}
+return 0}
+function taxEstimate(profitJpy){ /* 現行ルール（総合課税）の概算 */
+const p=Math.round(profitJpy);
+if(!(p>0))return{profit:p,income:0,recon:0,resident:0,total:0};
+const income=incomeTaxOn(p);
+const recon=Math.floor(income*0.021); /* 復興特別所得税 2.1% */
+const resident=Math.floor(p*0.10); /* 住民税 10%相当 */
+return{profit:p,income: income,recon:recon,resident:resident,total:income+recon+resident}}
+function yenFmt(v){const x=n(v);if(x===null)return"--";return (x<0?"−¥":"¥")+Math.abs(Math.round(x)).toLocaleString("ja-JP")}
+function renderTax(d,closedTrades){
+const nowJst=new Date(new Date().toLocaleString("en-US",{timeZone:"Asia/Tokyo"}));
+const curYear=nowJst.getFullYear();
+const byYear={};
+closedTrades.forEach(t=>{
+const p=pnlOf(t);if(p===null)return;
+const ts=get(t,["exit_time","closed_at","entry_time"],null);if(!ts)return;
+const dt=new Date(ts);if(Number.isNaN(dt.getTime()))return;
+const y=Number(dt.toLocaleString("en-US",{timeZone:"Asia/Tokyo",year:"numeric"}));
+if(!byYear[y])byYear[y]={usd:0,count:0};
+byYear[y].usd+=p;byYear[y].count++;
+});
+const cur=byYear[curYear]||{usd:0,count:0};
+const profitJpy=cur.usd*USDJPY;
+const est=taxEstimate(profitJpy);
+put("taxYearTitle",curYear+"年の税金シミュレーション（日本）");
+put("taxProfitUsd",signed(cur.usd)+" USD（"+cur.count+"件の決済）");
+put("taxProfitJpy",(est.profit>0?"+":est.profit<0?"−":"")+yenFmt(Math.abs(est.profit)).replace("¥","¥ "));
+put("taxFxNote","1 USD = ¥"+USDJPY.toLocaleString("ja-JP")+" で換算");
+put("taxFxRate2","1 USD = ¥"+USDJPY.toLocaleString("ja-JP"));
+if(est.profit>0){
+put("taxTotal",yenFmt(est.total));
+put("taxIncome",yenFmt(est.income));
+put("taxRecon",yenFmt(est.recon));
+put("taxResident",yenFmt(est.resident));
+put("taxEffRate",(est.total/est.profit*100).toFixed(2)+"%");
+put("taxNet",yenFmt(est.profit-est.total));
+}else{
+put("taxTotal","¥0");put("taxIncome","¥0");put("taxRecon","¥0");put("taxResident","¥0");
+put("taxEffRate","--");put("taxNet",yenFmt(est.profit));
+}
+const lossBox=$("taxLossNote");
+if(lossBox){
+if(est.profit<0){
+lossBox.innerHTML='<div class="taxWarn">'+curYear+'年は年間損益がマイナス（'+yenFmt(est.profit)+'）のため、推定税額は0円です。雑所得の損失は給与所得など他の所得と損益通算できず、翌年への繰越控除も現行制度ではありません（国税庁FAQ 2-11）。</div>';
+}else if(est.profit===0){
+lossBox.innerHTML='<div class="taxWarn">'+curYear+'年の実現損益はまだ0円（または決済なし）のため、推定税額は0円です。含み損益は決済するまで課税対象になりません。</div>';
+}else{lossBox.innerHTML=""}
+}
+const mb=$("taxMarginalBody");
+if(mb){mb.replaceChildren();
+[0.05,0.10,0.20,0.23,0.33,0.40,0.45].forEach(rate=>{
+const combined=rate*1.021+0.10;
+const tr=document.createElement("tr");
+const taxAmt=est.profit>0?Math.floor(est.profit*combined):0;
+[["所得税 "+Math.round(rate*100)+"%"],["住民税 10%"],[(combined*100).toFixed(2)+"%"],[est.profit>0?yenFmt(taxAmt):"¥0"]].forEach((c,i)=>{
+const td=document.createElement("td");td.textContent=c[0];tr.appendChild(td);
+});
+mb.appendChild(tr);
+});}
+const yl=$("taxYearList");
+if(yl){yl.replaceChildren();
+const years=Object.keys(byYear).map(Number).sort((a,b)=>b-a);
+if(!years.length){yl.innerHTML='<div class="miniNote">決済済みの取引がまだありません。</div>'}
+years.forEach(y=>{
+const row=document.createElement("div");row.className="kv";
+const k=document.createElement("span");k.className="k";k.textContent=y+"年（"+byYear[y].count+"件）"+(y===curYear?"":" ※");
+const v=document.createElement("span");v.className="v";
+const e2=taxEstimate(byYear[y].usd*USDJPY);
+v.textContent=signed(byYear[y].usd)+" USD ＝ "+yenFmt(byYear[y].usd*USDJPY)+" ／ 推定税額 "+yenFmt(e2.total);
+if(byYear[y].usd>0)v.style.color="#c2187a";else if(byYear[y].usd<0)v.style.color="#1f5bb8";
+row.appendChild(k);row.appendChild(v);yl.appendChild(row);
+});
+if(years.some(y=>y!==curYear)){
+const note=document.createElement("div");note.className="miniNote";note.style.marginTop="6px";note.textContent="※ 過去年の税額は現在の換算レートで再計算した参考値です。";
+yl.appendChild(note);
+}}
+const sep=$("taxSepSample");
+if(sep){
+sep.textContent=est.profit>0?(" 参考までに、もし今年の利益 "+yenFmt(est.profit)+" に分離課税20.315%が適用されたと仮定すると税額は約 "+yenFmt(Math.floor(est.profit*0.20315))+" です。"):"";
+}
+}
 /* ===== メイン描画 ===== */
 function render(d){if(!d||typeof d!=="object")throw new Error("JSONデータの形式が正しくありません。");lastData=d;const fxRate=n(get(d,["usdjpy","fx_rate","usd_jpy","USDJPY"]));if(fxRate!==null&&fxRate>50&&fxRate<300)USDJPY=fxRate;const price=n(get(d,["price","market.price","btc_price"]));const equity=n(get(d,["marked_equity","equity","metrics.equity"]));const initial=n(get(d,["initial_equity","initial_bankroll"],100))??100;const all=tradesOf(d);const closedTrades=closed(all);const pnlValues=closedTrades.map(pnlOf).filter(v=>v!==null);const wins=pnlValues.filter(v=>v>0).length;const losses=pnlValues.filter(v=>v<0).length;let winrate=n(get(d,["metrics.win_rate","win_rate","winrate"]));if(winrate!==null&&winrate>=0&&winrate<=1)winrate*=100;if(winrate===null&&pnlValues.length>0)winrate=wins/pnlValues.length*100;const realized=n(get(d,["realized_pnl","metrics.total_net_pnl"]))??pnlValues.reduce((a,b)=>a+b,0);const position=get(d,["position","open_position","open_trade"],null);const unrealized=n(get(d,["unrealized_pnl","position.unrealized_pnl","position.unrealized_pnl_usd","open_pnl"]))??0;const dd=n(get(d,["max_drawdown_pct","risk.max_drawdown_pct","metrics.max_drawdown_pct","risk.drawdown_pct","current_drawdown_pct"]));
 put("priceUsd",price===null?"--":usd(price));put("priceJpy",price===null?"":jpy(price));put("equityUsd",equity===null?"--":usd(equity));put("equityJpy",equity===null?"":jpy(equity));put("realizedUsd",signed(realized));color("realizedUsd",realized);put("winrateValue",winrate===null?"--":winrate.toFixed(1)+"%");put("winlossText",wins+"勝 "+losses+"敗");put("pnlUsd",signed(unrealized));put("pnlJpy",jpy(unrealized));color("pnlUsd",unrealized);put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
@@ -710,6 +858,7 @@ put("lvValue","Lv. "+level);
 renderBoard(totalWins);
 renderRecent(all);
 renderLog(closedTrades);
+renderTax(d,closedTrades);
 renderFib(d,price);
 renderSettings(d);
 drawChart($("equityChart"),history);
