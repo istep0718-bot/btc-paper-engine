@@ -12,7 +12,7 @@ import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V19_1_2026-10-27"
+BUILD = "BTC_PAPER_V19_3_2026-10-29"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -26,33 +26,37 @@ DATA_FILE = ROOT / "docs" / "data.json"
 
 INITIAL_EQUITY = 100.0
 
-# Fixed leverage (reduced from 40x for survivability).
-LEVERAGE = 10.0
+# Fixed leverage.
+LEVERAGE = 40.0
 
-# Planned risk per trade (reduced from 10% → 2%).
+# Planned risk per trade ≈ 20% of equity at full stop-out.
 # Actual loss can still exceed planned risk due to gaps, fees, and slippage.
-RISK_PER_TRADE = 0.02
+RISK_PER_TRADE = 0.20
 
 # Maximum simulated margin allocation.
-MAX_MARGIN_FRACTION = 0.20
+MAX_MARGIN_FRACTION = 0.25
 
 FEE_RATE = 0.0005
 SLIPPAGE_RATE = 0.0002
 
-ATR_STOP = 1.8
-PARTIAL_TP_ATR = 1.8
-PARTIAL_TP_FRACTION = 0.40
-TRAIL_ATR = 1.6
-TRAIL_START_ATR = 1.2
+# Stop ~ATR×2.6. Partial/trail set for high R:R so 100%+ equity is reachable
+# (≈5R when planned risk is 20%).
+ATR_STOP = 2.6
+PARTIAL_TP_ATR = 13.0
+PARTIAL_TP_FRACTION = 0.25
+TRAIL_ATR = 4.0
+TRAIL_START_ATR = 3.5
 
-MIN_SIGNAL_SCORE = 6
-MIN_SCORE_EDGE = 2
+# Slightly stricter entry for higher win-rate selectivity.
+MIN_SIGNAL_SCORE = 7
+MIN_SCORE_EDGE = 3
 
 COOLDOWN_SECONDS = 300
 MAX_HOLD_SECONDS = 86400
 
-DAILY_LOSS_LIMIT = 0.20
-MAX_DRAWDOWN_LIMIT = 0.30
+# Allow room for a full 20% stop without immediately locking the day.
+DAILY_LOSS_LIMIT = 0.40
+MAX_DRAWDOWN_LIMIT = 0.50
 DRAWDOWN_PAUSE_SECONDS = 21600
 
 MAX_CONSECUTIVE_LOSSES = 6
