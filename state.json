@@ -1,5 +1,5 @@
 {
-  "build": "BTC_PAPER_V20_0_PRO_2026-10-29",
+  "build": "BTC_PAPER_V20_2_PRO_2026-10-29",
   "initial_equity": 100.0,
   "equity": 75.65238381897542,
   "peak_equity": 102.00383571561161,
@@ -3263,6 +3263,12 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 80077.5
+    },
+    {
+      "timestamp": "2026-10-29T14:30:54.580652+00:00",
+      "equity": 75.65238381897542,
+      "marked_equity": 75.65238381897542,
+      "price": 80449.5
     }
   ],
   "position": null,
@@ -4373,8 +4379,57 @@
       "type": "CONSECUTIVE_LOSS_COOLDOWN",
       "losses": 4,
       "pause_seconds": 7200
+    },
+    {
+      "timestamp": "2026-10-29T14:30:54.580305+00:00",
+      "type": "ECON_CALENDAR_UPDATED",
+      "events": 5
     }
   ],
+  "econ_calendar": {
+    "fetched_ts": 1793284254,
+    "events": [
+      {
+        "title": "Federal Funds Rate",
+        "category": "FOMC",
+        "ts": 1793210400,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "FOMC Statement",
+        "category": "FOMC",
+        "ts": 1793210400,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "FOMC Press Conference",
+        "category": "FOMC",
+        "ts": 1793212200,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "Advance GDP q/q",
+        "category": "GDP",
+        "ts": 1793277000,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "Core PCE Price Index m/m",
+        "category": "PCE",
+        "ts": 1793277000,
+        "impact": "High",
+        "source": "feed"
+      }
+    ],
+    "last_error": null,
+    "last_stale_warn_date": "",
+    "last_block_key": "",
+    "last_block_log_ts": 0
+  },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
   "day_start": "2026-10-22",
