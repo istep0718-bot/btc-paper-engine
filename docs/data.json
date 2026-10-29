@@ -1,8 +1,8 @@
 {
-  "build": "BTC_PAPER_V19_1_2026-10-27",
-  "generated_at": "2026-10-29T03:51:24.648038+00:00",
+  "build": "BTC_PAPER_V19_3_2026-10-29",
+  "generated_at": "2026-10-29T04:05:45.200964+00:00",
   "market_status": "OK",
-  "price": 79820.5,
+  "price": 79800.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -17,39 +17,39 @@
   "has_position": false,
   "signal": {
     "direction": "WAIT",
-    "score": 5,
-    "long_score": 3,
-    "short_score": 5,
-    "score_edge": 2,
-    "rsi": 28.852,
-    "atr": 215.04733,
-    "ema9": 80049.8214048503,
-    "ema21": 80436.9568620542,
+    "score": 6,
+    "long_score": 2,
+    "short_score": 6,
+    "score_edge": 4,
+    "rsi": 28.302,
+    "atr": 206.82966,
+    "ema9": 80007.45712388025,
+    "ema21": 80382.50623835222,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "UP",
-    "timestamp": "2026-10-29T03:51:24.647892+00:00",
-    "reference_price": 79869.0,
-    "previous_close": 79804.0,
+    "timestamp": "2026-10-29T04:05:45.200867+00:00",
+    "reference_price": 79838.0,
+    "previous_close": 79869.0,
     "reasons": [
       "EMA下向き",
       "15m下降",
       "1h下降",
       "4h上昇",
-      "短期モメンタム上"
+      "短期モメンタム下"
     ],
     "flags": [
       "BB幅拡大"
     ],
     "bollinger": {
-      "middle": 80626.8,
-      "upper": 81914.51791942179,
-      "lower": 79339.08208057821,
-      "width_pct": 3.1942677110384876,
-      "position": 0.20575854052715606,
+      "middle": 80556.05,
+      "upper": 81853.82154769244,
+      "lower": 79258.27845230757,
+      "width_pct": 3.222033721098378,
+      "position": 0.2233526959052361,
       "state": "INSIDE",
       "width_expanding": true,
-      "previous_width_pct": 3.1488361702629155
+      "previous_width_pct": 3.1942677110384876
     },
     "fibonacci": {
       "swing_high": 81804.0,
@@ -63,26 +63,26 @@
       },
       "trend": "DOWN"
     },
-    "entry_status": "WAIT（LONG 3 / SHORT 5、必要スコア 6）",
+    "entry_status": "WAIT（LONG 2 / SHORT 6、必要スコア 7）",
     "paper_only": true,
     "live_trading_enabled": false
   },
   "risk": {
     "daily_loss_pct": 0.7543917688399209,
-    "daily_loss_limit_pct": 20.0,
+    "daily_loss_limit_pct": 40.0,
     "daily_loss_lock": false,
     "drawdown_pct": 23.261217600907077,
     "current_drawdown_pct": 23.261217600907077,
     "max_drawdown_pct": 23.261217600907077,
-    "drawdown_limit_pct": 30.0,
+    "drawdown_limit_pct": 50.0,
     "drawdown_pause_until": 0,
     "drawdown_lock": false,
     "consecutive_losses": 3,
     "consecutive_lock_until": 1792912018,
     "consecutive_loss_lock": false,
-    "leverage": 10.0,
-    "risk_per_trade_pct": 2.0,
-    "max_margin_pct": 20.0,
+    "leverage": 40.0,
+    "risk_per_trade_pct": 20.0,
+    "max_margin_pct": 25.0,
     "paper_only": true,
     "live_trading_enabled": false
   },
@@ -2937,15 +2937,6 @@
   ],
   "equity_history": [
     {
-      "time": "2026-10-22T07:16:29.410749+00:00",
-      "timestamp": "2026-10-22T07:16:29.410749+00:00",
-      "equity": 100.0,
-      "equity_usd": 100.0,
-      "realized_equity": 100.0,
-      "unrealized_pnl": 0.0,
-      "price": 82334.0
-    },
-    {
       "time": "2026-10-22T08:05:43.444195+00:00",
       "timestamp": "2026-10-22T08:05:43.444195+00:00",
       "equity": 99.82977287,
@@ -4846,6 +4837,12 @@
       "equity": 78.27650152853143,
       "marked_equity": 78.27650152853143,
       "price": 79820.5
+    },
+    {
+      "timestamp": "2026-10-29T04:05:45.200953+00:00",
+      "equity": 78.27650152853143,
+      "marked_equity": 78.27650152853143,
+      "price": 79800.5
     }
   ],
   "events": [
@@ -5554,17 +5551,17 @@
     }
   },
   "indicators": {
-    "rsi_15m": 28.852,
-    "atr": 215.04733,
+    "rsi_15m": 28.302,
+    "atr": 206.82966,
     "bollinger": {
-      "middle": 80626.8,
-      "upper": 81914.51791942179,
-      "lower": 79339.08208057821,
-      "width_pct": 3.1942677110384876,
-      "position": 0.20575854052715606,
+      "middle": 80556.05,
+      "upper": 81853.82154769244,
+      "lower": 79258.27845230757,
+      "width_pct": 3.222033721098378,
+      "position": 0.2233526959052361,
       "state": "INSIDE",
       "width_expanding": true,
-      "previous_width_pct": 3.1488361702629155
+      "previous_width_pct": 3.1942677110384876
     }
   },
   "fibonacci": {
@@ -5580,14 +5577,14 @@
     "trend": "DOWN"
   },
   "config": {
-    "leverage": 10.0,
-    "risk_per_trade_pct": 2.0,
+    "leverage": 40.0,
+    "risk_per_trade_pct": 20.0,
     "paper_only": true,
     "live_trading_enabled": false,
-    "min_signal_score": 6,
-    "min_score_edge": 2,
-    "partial_tp_fraction": 0.4,
-    "trail_atr": 1.6
+    "min_signal_score": 7,
+    "min_score_edge": 3,
+    "partial_tp_fraction": 0.25,
+    "trail_atr": 4.0
   },
   "last_error": null
 }
