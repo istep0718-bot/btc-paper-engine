@@ -3455,6 +3455,12 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 76802.5
+    },
+    {
+      "timestamp": "2026-10-30T15:16:41.902055+00:00",
+      "equity": 75.65238381897542,
+      "marked_equity": 75.65238381897542,
+      "price": 77797.5
     }
   ],
   "position": null,
@@ -4668,10 +4674,22 @@
       "source_event_ts": 1793361403,
       "age_seconds": 1884,
       "fresh": false
+    },
+    {
+      "timestamp": "2026-10-30T15:16:41.117819+00:00",
+      "type": "ECON_CALENDAR_UPDATED",
+      "events": 5
+    },
+    {
+      "timestamp": "2026-10-30T15:16:41.331811+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "previous_side": "LONG"
     }
   ],
   "econ_calendar": {
-    "fetched_ts": 1793284254,
+    "fetched_ts": 1793373400,
     "events": [
       {
         "title": "Federal Funds Rate",
@@ -4720,11 +4738,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "LONG",
-          "szi": 2.5,
-          "entry_px": 76982.8,
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
           "event_ts": 1793361403.533,
-          "updated_ts": 1793370273
+          "updated_ts": 1793373400
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4745,7 +4763,7 @@
           "szi": -3.0,
           "entry_px": 77893.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793370273
+          "updated_ts": 1793373400
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4766,7 +4784,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793370273
+          "updated_ts": 1793373400
         },
         "auto_disabled": false,
         "disabled_reason": null,
