@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V20_3_PRO_2026-10-30",
-  "generated_at": "2026-10-30T11:45:13.802615+00:00",
+  "generated_at": "2026-10-30T12:28:09.368471+00:00",
   "market_status": "OK",
-  "price": 77437.5,
+  "price": 77501.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -22,27 +22,27 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 38.353,
-    "atr": 278.47732,
-    "ema9": 77660.59914513092,
-    "ema21": 77824.19575732101,
+    "rsi": 42.065,
+    "atr": 278.02891,
+    "ema9": 77579.4234528838,
+    "ema21": 77755.71550191818,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-10-30T11:45:13.802545+00:00",
-    "reference_price": 77415.0,
-    "previous_close": 77779.0,
+    "timestamp": "2026-10-30T12:28:09.368391+00:00",
+    "reference_price": 77512.0,
+    "previous_close": 77339.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 77875.3,
-      "upper": 78534.88959967544,
-      "lower": 77215.71040032456,
-      "width_pct": 1.693963553720989,
-      "position": 0.15107090816281876,
-      "state": "NEAR_LOWER"
+      "middle": 77769.25,
+      "upper": 78333.75044286963,
+      "lower": 77204.74955713037,
+      "width_pct": 1.451731739394752,
+      "position": 0.2721436685751079,
+      "state": "INSIDE"
     },
     "fibonacci": {
       "swing_high": 81955.0,
@@ -56,28 +56,29 @@
       },
       "trend": "DOWN"
     },
-    "regime": "TREND_UP",
-    "adx": 26.69,
-    "atr_percentile": 36.0,
+    "regime": "TREND_DOWN",
+    "adx": 28.15,
+    "atr_percentile": 33.0,
     "macd": {
-      "line": -174.008,
-      "signal": -155.4058,
-      "hist": -18.6022,
-      "hist_prev": -7.508
+      "line": -187.3138,
+      "signal": -167.3902,
+      "hist": -19.9236,
+      "hist_prev": -28.0141
     },
-    "vwap": 77573.77278343044,
-    "relative_volume": 1.215,
+    "vwap": 77568.48892103763,
+    "relative_volume": 0.84,
     "htf_bias": "DOWN",
-    "structure_bias": "UP",
+    "structure_bias": "MIXED",
     "support": 77304.0,
-    "resistance": 78000.0,
-    "premium": -0.0001110365,
+    "resistance": 77838.0,
+    "premium": -0.000295389,
     "setup": null,
     "score_breakdown": {},
-    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム TREND_UP）",
+    "entry_status": "コピー見送り: DDスロットル（20%以上ではAのみ許可）",
     "evaluation_notes": [
-      "A/LONG: 上位足バイアス不一致",
-      "A/SHORT: レジーム不一致"
+      "A/LONG: レジーム不一致",
+      "A/SHORT: 反転トリガー未発生",
+      "COPY OPEN: HL-684B LONG（ラグ 1884秒、鮮度切れ）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -5522,19 +5523,15 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 77437.5
+    },
+    {
+      "timestamp": "2026-10-30T12:28:09.368460+00:00",
+      "equity": 75.65238381897542,
+      "marked_equity": 75.65238381897542,
+      "price": 77501.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-10-27T02:36:55.107605+00:00",
-      "type": "POSITION_OPENED",
-      "side": "SHORT",
-      "entry_price": 79884.5199,
-      "stop_price": 80203.72983,
-      "quantity": 0.001982638207987826,
-      "leverage": 10.0,
-      "effective_risk_pct": 1.079178440077218
-    },
     {
       "timestamp": "2026-10-27T02:46:21.142152+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -6232,6 +6229,17 @@
       "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
       "label": "HL-684B",
       "previous_side": "LONG"
+    },
+    {
+      "timestamp": "2026-10-30T12:28:08.831858+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 77347.7,
+      "source_event_ts": 1793361403,
+      "age_seconds": 1884,
+      "fresh": false
     }
   ],
   "stats_by_setup": {
@@ -6272,26 +6280,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 38.353,
-    "atr": 278.47732,
+    "rsi_15m": 42.065,
+    "atr": 278.02891,
     "bollinger": {
-      "middle": 77875.3,
-      "upper": 78534.88959967544,
-      "lower": 77215.71040032456,
-      "width_pct": 1.693963553720989,
-      "position": 0.15107090816281876,
-      "state": "NEAR_LOWER"
+      "middle": 77769.25,
+      "upper": 78333.75044286963,
+      "lower": 77204.74955713037,
+      "width_pct": 1.451731739394752,
+      "position": 0.2721436685751079,
+      "state": "INSIDE"
     },
-    "adx": 26.69,
-    "atr_percentile": 36.0,
+    "adx": 28.15,
+    "atr_percentile": 33.0,
     "macd": {
-      "line": -174.008,
-      "signal": -155.4058,
-      "hist": -18.6022,
-      "hist_prev": -7.508
+      "line": -187.3138,
+      "signal": -167.3902,
+      "hist": -19.9236,
+      "hist_prev": -28.0141
     },
-    "vwap": 77573.77278343044,
-    "relative_volume": 1.215
+    "vwap": 77568.48892103763,
+    "relative_volume": 0.84
   },
   "fibonacci": {
     "swing_high": 81955.0,
@@ -6348,8 +6356,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": null,
-        "source_entry_price": null,
+        "side": "LONG",
+        "source_entry_price": 77347.7,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
