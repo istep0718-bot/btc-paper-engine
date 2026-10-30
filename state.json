@@ -3353,6 +3353,12 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 77071.5
+    },
+    {
+      "timestamp": "2026-10-30T02:00:05.999358+00:00",
+      "equity": 75.65238381897542,
+      "marked_equity": 75.65238381897542,
+      "price": 76795.5
     }
   ],
   "position": null,
@@ -4483,6 +4489,17 @@
     {
       "timestamp": "2026-10-30T00:13:28.306157+00:00",
       "type": "DAILY_RESET"
+    },
+    {
+      "timestamp": "2026-10-30T02:00:05.659039+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 77294.0,
+      "source_event_ts": 1793322889,
+      "age_seconds": 2715,
+      "fresh": false
     }
   ],
   "econ_calendar": {
@@ -4535,11 +4552,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "event_ts": null,
-          "updated_ts": 1793322513
+          "side": "LONG",
+          "szi": 0.5,
+          "entry_px": 77294.0,
+          "event_ts": 1793322889.485,
+          "updated_ts": 1793325605
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4557,10 +4574,10 @@
         "label": "HL-D918",
         "snapshot": {
           "side": "SHORT",
-          "szi": -4.0,
+          "szi": -1.0,
           "entry_px": 81199.4,
           "event_ts": null,
-          "updated_ts": 1793322513
+          "updated_ts": 1793325605
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4581,7 +4598,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793322513
+          "updated_ts": 1793325605
         },
         "auto_disabled": false,
         "disabled_reason": null,
