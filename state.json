@@ -3359,6 +3359,12 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 76795.5
+    },
+    {
+      "timestamp": "2026-10-30T02:42:04.071923+00:00",
+      "equity": 75.65238381897542,
+      "marked_equity": 75.65238381897542,
+      "price": 77530.5
     }
   ],
   "position": null,
@@ -4500,6 +4506,20 @@
       "source_event_ts": 1793322889,
       "age_seconds": 2715,
       "fresh": false
+    },
+    {
+      "timestamp": "2026-10-30T02:42:03.742918+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "previous_side": "LONG"
+    },
+    {
+      "timestamp": "2026-10-30T02:42:03.905802+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+      "label": "HL-D918",
+      "previous_side": "SHORT"
     }
   ],
   "econ_calendar": {
@@ -4552,11 +4572,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "LONG",
-          "szi": 0.5,
-          "entry_px": 77294.0,
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
           "event_ts": 1793322889.485,
-          "updated_ts": 1793325605
+          "updated_ts": 1793328123
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4573,11 +4593,11 @@
       "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
         "label": "HL-D918",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -1.0,
-          "entry_px": 81199.4,
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793325605
+          "updated_ts": 1793328123
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4598,7 +4618,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793325605
+          "updated_ts": 1793328123
         },
         "auto_disabled": false,
         "disabled_reason": null,
