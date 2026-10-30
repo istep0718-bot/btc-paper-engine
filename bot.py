@@ -32,6 +32,17 @@ Design pillars (fixing V19.x fatal flaws):
     V20.2 exit engine). If the source closes or flips away, the copy
     position is closed (COPY_SOURCE_EXIT). Traders are re-evaluated
     daily and auto-disabled on inactivity or performance decay.
+  * V20.4: (1) DD throttle no longer vetoes Setup D outright: in the
+    DD >= 20% band copy entries still run at the throttled x0.25 risk
+    (only the DD >= 30% hard pause stops them), because the legacy
+    drawdown was inherited from pre-V20 builds and vetoing the copy
+    channel entirely threw away its best signals (2026-10-30: a
+    tracked trader's 81,199 short was detected fresh three times and
+    skipped every time). (2) Setup F: trend continuation. A/B demand
+    a precise shape (anchor pullback / high-volume range break); in a
+    one-way trend day neither forms and the engine sat out a -6.7%
+    move with 0/0 scores all day. F enters an established, fully
+    aligned trend on a momentum trigger with exhaustion guards.
 """
 
 import json
@@ -41,7 +52,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_3_PRO_2026-10-30"
+BUILD = "BTC_PAPER_V20_4_PRO_2026-10-30"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -108,6 +119,17 @@ COST_FILTER_MULT = 2.0       # risk distance must be >= 2x round-trip cost
 # realized drag further.
 SETUP_C_RISK_MULT = 0.5      # range fades take half risk
 
+# --- Setup F (V20.4): trend continuation / momentum ----------------
+F_BREAK_BARS = 12            # prior bars for the momentum-break extreme
+F_RSI_LONG_MIN = 35.0        # continuation band: avoid chasing climaxes
+F_RSI_LONG_MAX = 85.0        #   and avoid entering a dead bounce
+F_RSI_SHORT_MIN = 15.0       # a waterfall trend prints very low RSI;
+F_RSI_SHORT_MAX = 65.0       #   the structural stop carries the risk
+F_MAX_EMA21_DIST_ATR = 4.0   # anti-chase: only blocks absurd extensions
+F_MAX_BAR_ATR = 2.5          # skip single-bar blow-off entries
+F_HV_MIN_ADX = 30.0          # HIGH_VOLATILITY regime needs a stronger
+                             # trend proof (full TF alignment + ADX)
+
 # --- Regime thresholds ---
 ADX_TREND = 25.0
 ADX_RANGE = 20.0
@@ -116,6 +138,10 @@ ATR_PCT_HIGH_VOL = 90.0      # ATR percentile >= 90 -> HIGH_VOLATILITY
 # --- Risk management ---
 DD_THROTTLE_1 = 10.0         # DD >= 10% -> risk x 0.5
 DD_THROTTLE_2 = 20.0         # DD >= 20% -> risk x 0.25, setup A only
+                             # (V20.4: setup D copy entries are exempt
+                             # from the setup veto and still run at the
+                             # x0.25 throttled risk; only the DD >= 30%
+                             # hard pause stops them)
 DD_HARD_PAUSE = 30.0         # DD >= 30% -> 6h circuit breaker
 DRAWDOWN_PAUSE_SECONDS = 21600
 DAILY_LOSS_LIMIT = 0.10      # daily loss lock at -10%
@@ -1758,7 +1784,142 @@ def _candidate_c(ctx, side):
     return candidate, None
 
 
-_SETUP_FUNCS = {"A": _candidate_a, "B": _candidate_b, "C": _candidate_c}
+def _candidate_f(ctx, side):
+    """Setup F: trend continuation (momentum) entry.
+
+    A pullback (A) and a range break (B) both demand a precise shape;
+    in a one-way trend day neither forms and the engine sits the whole
+    move out. F instead requires an established, fully aligned trend
+    (regime + 1h + 4h + ADX) and enters on a momentum trigger: a close
+    through the prior F_BREAK_BARS extreme, or an EMA9 resumption
+    cross. Exhaustion guards (RSI band, EMA21 distance, single-bar
+    range) keep it from chasing climaxes or capitulation prints. The
+    shared confluence score must still reach MIN_SCORE, and the stop
+    is structural exactly like setup A. Because a momentum entry
+    targets continuation *through* the opposing zone, a zone-room
+    veto alone falls back to the no-zone finalize (same pattern as
+    setup D); the cost filter still applies.
+    """
+    want_regime = "TREND_UP" if side == "LONG" else "TREND_DOWN"
+    want = "UP" if side == "LONG" else "DOWN"
+    regime = ctx["regime"]
+    if regime == "HIGH_VOLATILITY":
+        # A violent one-way trend classifies as HIGH_VOLATILITY
+        # (ATR percentile spike), not TREND_* — on 2026-10-30 the
+        # whole -6.7% waterfall carried this label while 1h/4h were
+        # already DOWN and ADX was 41-56. Accept it only with full
+        # timeframe alignment and a stronger ADX; directionless
+        # volatility stays excluded.
+        if not (
+            ctx["trend_15m"] == want
+            and ctx["trend_1h"] == want
+            and ctx["trend_4h"] == want
+        ):
+            return None, "高ボラティリティで方向が揃っていない"
+        if ctx["adx"] < F_HV_MIN_ADX:
+            return None, "ADX不足（高ボラティリティ時）"
+    elif regime != want_regime:
+        return None, "レジーム不一致（確立したトレンド限定）"
+
+    if ctx["trend_1h"] != want or ctx["trend_4h"] != want:
+        return None, "上位足バイアス不一致"
+
+    if ctx["adx"] < ADX_TREND:
+        return None, "ADX不足（トレンド強度）"
+
+    candles = ctx["candles"]
+    if len(candles) < F_BREAK_BARS + 2:
+        return None, "データ不足"
+    last = candles[-1]
+    prev = candles[-2]
+    av = ctx["atr"]
+    price = ctx["price"]
+    rv = ctx["rsi"]
+
+    # Exhaustion guards.
+    if side == "LONG":
+        if not (F_RSI_LONG_MIN <= rv <= F_RSI_LONG_MAX):
+            return None, "RSIが継続エントリー帯域外"
+    else:
+        if not (F_RSI_SHORT_MIN <= rv <= F_RSI_SHORT_MAX):
+            return None, "RSIが継続エントリー帯域外"
+    if abs(price - ctx["ema21"]) > F_MAX_EMA21_DIST_ATR * av:
+        return None, "EMA21から乖離しすぎ（追いかけ防止）"
+    if (last["h"] - last["l"]) > F_MAX_BAR_ATR * av:
+        return None, "単一足の急変（ブローオフ）"
+
+    # Momentum trigger.
+    prior = candles[-(F_BREAK_BARS + 1):-1]
+    if side == "LONG":
+        level = max(c["h"] for c in prior)
+        brk = last["c"] > level
+        resume = (
+            last["c"] > ctx["ema9"] and prev["c"] <= ctx["ema9_prev"]
+        )
+        swing_anchor = ctx["structure"]["last_swing_low"]
+        fallback = min(c["l"] for c in candles[-10:])
+    else:
+        level = min(c["l"] for c in prior)
+        brk = last["c"] < level
+        resume = (
+            last["c"] < ctx["ema9"] and prev["c"] >= ctx["ema9_prev"]
+        )
+        swing_anchor = ctx["structure"]["last_swing_high"]
+        fallback = max(c["h"] for c in candles[-10:])
+
+    if not (brk or resume):
+        return None, "継続トリガー未発生"
+
+    anchor = swing_anchor if swing_anchor else fallback
+    if side == "LONG":
+        stop_anchor = anchor - STOP_STRUCT_BUFFER_ATR * av
+    else:
+        stop_anchor = anchor + STOP_STRUCT_BUFFER_ATR * av
+
+    extra = {"trend_continuation": 1}
+    candidate, reason = _finalize_candidate(
+        ctx, side, "F", stop_anchor, extra
+    )
+    if candidate is None and reason and "対向ゾーン" in reason:
+        candidate = _finalize_candidate_no_zone_as(
+            ctx, side, stop_anchor, "F", extra
+        )
+        if candidate is None:
+            return None, "コストフィルター（F）"
+    if candidate is None:
+        return None, reason
+    if candidate["score"] < MIN_SCORE:
+        return None, f"スコア不足 {candidate['score']}<{MIN_SCORE}"
+    return candidate, None
+
+
+_SETUP_FUNCS = {
+    "A": _candidate_a,
+    "B": _candidate_b,
+    "C": _candidate_c,
+    "F": _candidate_f,
+}
+
+
+def _finalize_candidate_no_zone_as(ctx, side, stop_anchor, setup,
+                                   breakdown_extra=None):
+    """_finalize_candidate with the zone-room gate relaxed.
+
+    Used by setup D (the source trader's own analysis replaces the
+    gate) and by setup F when the zone-room check is the only veto
+    (a momentum entry targets continuation through the zone). The
+    cost filter and stop clamping still apply.
+    """
+    global MIN_ZONE_ROOM_R
+    saved = MIN_ZONE_ROOM_R
+    MIN_ZONE_ROOM_R = 0.0
+    try:
+        candidate, _reason = _finalize_candidate(
+            ctx, side, setup, stop_anchor, breakdown_extra
+        )
+    finally:
+        MIN_ZONE_ROOM_R = saved
+    return candidate
 
 
 def _finalize_candidate_no_zone(ctx, side, stop_anchor):
@@ -1767,25 +1928,17 @@ def _finalize_candidate_no_zone(ctx, side, stop_anchor):
     The cost filter and stop clamping inside _finalize_candidate
     still apply; only the opposing-zone room check is skipped.
     """
-    global MIN_ZONE_ROOM_R
-    saved = MIN_ZONE_ROOM_R
-    MIN_ZONE_ROOM_R = 0.0
-    try:
-        candidate, _reason = _finalize_candidate(ctx, side, "D",
-                                                 stop_anchor)
-    finally:
-        MIN_ZONE_ROOM_R = saved
-    return candidate
+    return _finalize_candidate_no_zone_as(ctx, side, stop_anchor, "D")
 
 
-def evaluate_entry(ctx, allowed_setups=("A", "B", "C")):
+def evaluate_entry(ctx, allowed_setups=("A", "B", "C", "F")):
     """Return (best_candidate, per_side_scores, rejection_notes)."""
     best = None
     side_scores = {"LONG": 0, "SHORT": 0}
     notes = []
 
     for side in ("LONG", "SHORT"):
-        for setup in ("A", "B", "C"):
+        for setup in ("A", "B", "C", "F"):
             if setup not in allowed_setups:
                 continue
             candidate, reason = _SETUP_FUNCS[setup](ctx, side)
@@ -2613,7 +2766,7 @@ def refresh_risk_state(s, marked_equity, now_s=None):
 def risk_controls(s, dd_pct):
     """Return (risk_multiplier, allowed_setups) for the next entry."""
     mult = 1.0
-    allowed = ("A", "B", "C")
+    allowed = ("A", "B", "C", "F")
     if dd_pct >= DD_THROTTLE_2:
         mult = 0.25
         allowed = ("A",)
@@ -3237,8 +3390,8 @@ def main():
                 "イベント回避（EVENT_RISK）: "
                 "コピー信号も新規エントリー見送り"
             )
-        elif copy_signals and dd >= DD_THROTTLE_2:
-            status = "コピー見送り: DDスロットル（20%以上ではAのみ許可）"
+        elif copy_signals and dd >= DD_HARD_PAUSE:
+            status = "コピー見送り: DDハードポーズ帯（30%以上）"
         elif copy_signals:
             fresh = next(
                 (x for x in copy_signals if x["fresh"]), None
