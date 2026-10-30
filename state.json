@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_4_PRO_2026-10-30",
   "initial_equity": 100.0,
-  "equity": 75.65238381897542,
+  "equity": 75.63075890593718,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 26.08179830507652,
   "realized_pnl": -24.330559362285044,
@@ -3473,18 +3473,85 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 77308.5
+    },
+    {
+      "timestamp": "2026-10-30T17:29:09.496172+00:00",
+      "equity": 75.63075890593718,
+      "marked_equity": 75.6117064863984,
+      "price": 77257.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "LONG",
+    "entry_price": 77237.4444,
+    "quantity": 0.0005599593100529132,
+    "leverage": 40.0,
+    "margin_used": 1.081245651911856,
+    "notional": 43.24982607647424,
+    "planned_risk": 0.4728273988685964,
+    "effective_risk_pct": 0.625,
+    "stop_price": 76539.79954918685,
+    "initial_stop_price": 76539.79954918685,
+    "risk_distance": 697.6448508131434,
+    "entry_fee": 0.02162491303823712,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-10-30T17:29:08+00:00",
+    "opened_timestamp": 1793381348,
+    "last_funding_ts": 1793381348,
+    "last_checked_candle_ts": 1793379600000,
+    "entry_signal_score": 0,
+    "score": 0,
+    "score_breakdown": {
+      "copy_signal": 0
+    },
+    "setup": "D",
+    "regime": "NEUTRAL",
+    "origin_build": "BTC_PAPER_V20_4_PRO_2026-10-30",
+    "targets": {
+      "tp1_price": 78283.91167621971,
+      "tp2_price": 79330.37895243942,
+      "be_price": 77384.19554435999
+    },
+    "zone_room_r": 0.8608328425272922,
+    "source_trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+    "source_trader_label": "HL-684B",
+    "source_entry_price": 77237.9,
+    "copy_source_event_ts": 1793380309.781,
+    "copy_detection_lag_seconds": 1038.2190001010895,
+    "qty_initial": 0.0005599593100529132,
+    "risk_usd_initial": 0.4728273988685964,
+    "entry_equity": 75.65238381897542,
+    "risk_multiplier": 0.125,
+    "tp1_taken": false,
+    "tp2_taken": false,
+    "hold_extensions": 0,
+    "trend_flip_exit": false,
+    "runner_floor_active": false,
+    "partial_taken": false,
+    "be_moved": false,
+    "trail_active": false,
+    "best_price": 77222.0,
+    "worst_price": 77222.0,
+    "mfe_r": 0.0,
+    "mae_r": 0.0,
+    "acc_net_pnl": 0.0,
+    "acc_fees": 0.02162491303823712,
+    "acc_funding": 0.0,
+    "acc_r": 0.0,
+    "saw_stop_loss": false,
+    "entry_event_within_24h": false,
+    "entry_event_upcoming_24h": false,
+    "entry_event_name": null
+  },
   "last_close_ts": 1793276100,
-  "last_entry_candle": 1793279700000,
+  "last_entry_candle": 1793379600000,
   "consecutive_losses": 4,
   "consecutive_lock_until": 1793283300,
   "daily_date": "2026-10-30",
   "daily_start_equity": 75.65238381897542,
   "daily_loss_lock": false,
   "daily_stop_count": 0,
-  "next_risk_multiplier": 0.5,
+  "next_risk_multiplier": 1.0,
   "drawdown_pause_until": 0,
   "stats_by_setup": {
     "LEGACY": {
@@ -4698,6 +4765,41 @@
       "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
       "label": "HL-684B",
       "previous_side": "LONG"
+    },
+    {
+      "timestamp": "2026-10-30T17:29:09.099514+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 77237.9,
+      "source_event_ts": 1793380309,
+      "age_seconds": 1038,
+      "fresh": true
+    },
+    {
+      "timestamp": "2026-10-30T17:29:09.496091+00:00",
+      "type": "COPY_ENTRY",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 77237.9,
+      "entry_price": 77237.4444,
+      "source_event_ts": 1793380309.781,
+      "detection_lag_seconds": 1038.2190001010895
+    },
+    {
+      "timestamp": "2026-10-30T17:29:09.496101+00:00",
+      "type": "POSITION_OPENED",
+      "side": "LONG",
+      "setup": "D",
+      "regime": "NEUTRAL",
+      "score": 0,
+      "entry_price": 77237.4444,
+      "stop_price": 76539.79954918685,
+      "quantity": 0.0005599593100529132,
+      "leverage": 40.0,
+      "effective_risk_pct": 0.625
     }
   ],
   "econ_calendar": {
@@ -4750,11 +4852,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "event_ts": 1793361403.533,
-          "updated_ts": 1793379199
+          "side": "LONG",
+          "szi": 1.0,
+          "entry_px": 77237.9,
+          "event_ts": 1793380309.781,
+          "updated_ts": 1793381348
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4775,7 +4877,7 @@
           "szi": -3.0,
           "entry_px": 77893.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793379199
+          "updated_ts": 1793381348
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4796,7 +4898,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793379199
+          "updated_ts": 1793381348
         },
         "auto_disabled": false,
         "disabled_reason": null,
