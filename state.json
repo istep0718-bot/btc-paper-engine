@@ -1,5 +1,5 @@
 {
-  "build": "BTC_PAPER_V20_2_PRO_2026-10-29",
+  "build": "BTC_PAPER_V20_3_PRO_2026-10-30",
   "initial_equity": 100.0,
   "equity": 75.65238381897542,
   "peak_equity": 102.00383571561161,
@@ -3341,6 +3341,12 @@
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
       "price": 78489.5
+    },
+    {
+      "timestamp": "2026-10-30T00:13:28.306272+00:00",
+      "equity": 75.65238381897542,
+      "marked_equity": 75.65238381897542,
+      "price": 77809.5
     }
   ],
   "position": null,
@@ -3348,8 +3354,8 @@
   "last_entry_candle": 1793279700000,
   "consecutive_losses": 4,
   "consecutive_lock_until": 1793283300,
-  "daily_date": "2026-10-29",
-  "daily_start_equity": 78.871501644901,
+  "daily_date": "2026-10-30",
+  "daily_start_equity": 75.65238381897542,
   "daily_loss_lock": false,
   "daily_stop_count": 0,
   "next_risk_multiplier": 0.5,
@@ -4456,6 +4462,21 @@
       "timestamp": "2026-10-29T14:30:54.580305+00:00",
       "type": "ECON_CALENDAR_UPDATED",
       "events": 5
+    },
+    {
+      "timestamp": "2026-10-30T00:13:26.816920+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+      "label": "HL-D918",
+      "side": "SHORT",
+      "source_entry_price": 81199.4,
+      "source_event_ts": null,
+      "age_seconds": null,
+      "fresh": false
+    },
+    {
+      "timestamp": "2026-10-30T00:13:28.306157+00:00",
+      "type": "DAILY_RESET"
     }
   ],
   "econ_calendar": {
@@ -4501,6 +4522,74 @@
     "last_stale_warn_date": "",
     "last_block_key": "",
     "last_block_log_ts": 0
+  },
+  "copy": {
+    "last_recheck_ts": 1793319206,
+    "traders": {
+      "0x24e370916722584204322fad3c179a7fbde6684b": {
+        "label": "HL-684B",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "event_ts": null,
+          "updated_ts": 1793319206
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793319206,
+          "fills": 2000,
+          "closes": 906,
+          "win_rate": 0.6325,
+          "realized_pnl": 45272.23
+        }
+      },
+      "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
+        "label": "HL-D918",
+        "snapshot": {
+          "side": "SHORT",
+          "szi": -4.0,
+          "entry_px": 81199.4,
+          "event_ts": null,
+          "updated_ts": 1793319206
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793319206,
+          "fills": 2000,
+          "closes": 1143,
+          "win_rate": 0.4934,
+          "realized_pnl": 11642.74
+        }
+      },
+      "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
+        "label": "HL-F79D",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "event_ts": null,
+          "updated_ts": 1793319206
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793319206,
+          "fills": 1331,
+          "closes": 545,
+          "win_rate": 0.5651,
+          "realized_pnl": 62987.69
+        }
+      }
+    }
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
