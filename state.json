@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_4_PRO_2026-10-30",
   "initial_equity": 100.0,
-  "equity": 75.63075890593718,
+  "equity": 75.63041801321081,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 26.08179830507652,
   "realized_pnl": -24.330559362285044,
@@ -3479,6 +3479,12 @@
       "equity": 75.63075890593718,
       "marked_equity": 75.6117064863984,
       "price": 77257.5
+    },
+    {
+      "timestamp": "2026-10-30T18:06:59.407986+00:00",
+      "equity": 75.63041801321081,
+      "marked_equity": 75.53078789692286,
+      "price": 77113.5
     }
   ],
   "position": {
@@ -3494,11 +3500,11 @@
     "initial_stop_price": 76539.79954918685,
     "risk_distance": 697.6448508131434,
     "entry_fee": 0.02162491303823712,
-    "funding_pnl": 0.0,
+    "funding_pnl": -0.0003408927263666546,
     "entry_time": "2026-10-30T17:29:08+00:00",
     "opened_timestamp": 1793381348,
-    "last_funding_ts": 1793381348,
-    "last_checked_candle_ts": 1793379600000,
+    "last_funding_ts": 1793383618,
+    "last_checked_candle_ts": 1793382300000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -3530,10 +3536,10 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 77222.0,
-    "worst_price": 77222.0,
-    "mfe_r": 0.0,
-    "mae_r": 0.0,
+    "best_price": 77363.0,
+    "worst_price": 77074.0,
+    "mfe_r": 0.1799706539131838,
+    "mae_r": 0.23428023558045272,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.02162491303823712,
     "acc_funding": 0.0,
@@ -3541,7 +3547,9 @@
     "saw_stop_loss": false,
     "entry_event_within_24h": false,
     "entry_event_upcoming_24h": false,
-    "entry_event_name": null
+    "entry_event_name": null,
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1793276100,
   "last_entry_candle": 1793379600000,
@@ -4800,6 +4808,12 @@
       "quantity": 0.0005599593100529132,
       "leverage": 40.0,
       "effective_risk_pct": 0.625
+    },
+    {
+      "timestamp": "2026-10-30T18:06:59.407857+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": -0.00034089,
+      "hours": 0.6306
     }
   ],
   "econ_calendar": {
@@ -4853,10 +4867,10 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "LONG",
-          "szi": 1.0,
-          "entry_px": 77237.9,
+          "szi": 1.7,
+          "entry_px": 77175.2,
           "event_ts": 1793380309.781,
-          "updated_ts": 1793381348
+          "updated_ts": 1793383618
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4877,7 +4891,7 @@
           "szi": -3.0,
           "entry_px": 77893.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793381348
+          "updated_ts": 1793383618
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -4898,7 +4912,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793381348
+          "updated_ts": 1793383618
         },
         "auto_disabled": false,
         "disabled_reason": null,
