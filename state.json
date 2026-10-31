@@ -3599,6 +3599,12 @@
       "equity": 75.1875515575673,
       "marked_equity": 75.1875515575673,
       "price": 77312.5
+    },
+    {
+      "timestamp": "2026-10-31T00:38:54.439690+00:00",
+      "equity": 75.1875515575673,
+      "marked_equity": 75.1875515575673,
+      "price": 77354.5
     }
   ],
   "position": null,
@@ -3606,10 +3612,10 @@
   "last_entry_candle": 1793387700000,
   "consecutive_losses": 5,
   "consecutive_lock_until": 1793393100,
-  "daily_date": "2026-10-30",
-  "daily_start_equity": 75.65238381897542,
+  "daily_date": "2026-10-31",
+  "daily_start_equity": 75.1875515575673,
   "daily_loss_lock": false,
-  "daily_stop_count": 1,
+  "daily_stop_count": 0,
   "next_risk_multiplier": 0.5,
   "drawdown_pause_until": 0,
   "stats_by_setup": {
@@ -4922,6 +4928,10 @@
       "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
       "label": "HL-684B",
       "previous_side": "LONG"
+    },
+    {
+      "timestamp": "2026-10-31T00:38:54.439571+00:00",
+      "type": "DAILY_RESET"
     }
   ],
   "econ_calendar": {
@@ -4969,7 +4979,7 @@
     "last_block_log_ts": 0
   },
   "copy": {
-    "last_recheck_ts": 1793319206,
+    "last_recheck_ts": 1793407132,
     "traders": {
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
@@ -4978,18 +4988,18 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793380309.781,
-          "updated_ts": 1793404677
+          "updated_ts": 1793407132
         },
         "auto_disabled": false,
         "disabled_reason": null,
         "disabled_ts": 0,
         "last_error_ts": 0,
         "reeval": {
-          "ts": 1793319206,
+          "ts": 1793407132,
           "fills": 2000,
-          "closes": 906,
-          "win_rate": 0.6325,
-          "realized_pnl": 45272.23
+          "closes": 909,
+          "win_rate": 0.6304,
+          "realized_pnl": 44925.16
         }
       },
       "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
@@ -4999,18 +5009,18 @@
           "szi": -3.0,
           "entry_px": 77164.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793404677
+          "updated_ts": 1793407132
         },
         "auto_disabled": false,
         "disabled_reason": null,
         "disabled_ts": 0,
         "last_error_ts": 0,
         "reeval": {
-          "ts": 1793319206,
+          "ts": 1793407132,
           "fills": 2000,
-          "closes": 1143,
-          "win_rate": 0.4934,
-          "realized_pnl": 11642.74
+          "closes": 1056,
+          "win_rate": 0.5436,
+          "realized_pnl": 13272.61
         }
       },
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
@@ -5020,18 +5030,18 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": null,
-          "updated_ts": 1793404677
+          "updated_ts": 1793407132
         },
         "auto_disabled": false,
         "disabled_reason": null,
         "disabled_ts": 0,
         "last_error_ts": 0,
         "reeval": {
-          "ts": 1793319206,
-          "fills": 1331,
-          "closes": 545,
-          "win_rate": 0.5651,
-          "realized_pnl": 62987.69
+          "ts": 1793407132,
+          "fills": 1481,
+          "closes": 660,
+          "win_rate": 0.4667,
+          "realized_pnl": 64969.61
         }
       }
     }
