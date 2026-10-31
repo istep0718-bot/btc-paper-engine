@@ -3767,6 +3767,12 @@
       "equity": 75.1875515575673,
       "marked_equity": 75.1875515575673,
       "price": 77689.5
+    },
+    {
+      "timestamp": "2026-10-31T19:11:30.964733+00:00",
+      "equity": 75.1875515575673,
+      "marked_equity": 75.1875515575673,
+      "price": 77628.5
     }
   ],
   "position": null,
@@ -5110,18 +5116,22 @@
       "timestamp": "2026-10-31T15:44:31.798444+00:00",
       "type": "ECON_CALENDAR_UPDATED",
       "events": 5
+    },
+    {
+      "timestamp": "2026-10-31T19:11:30.964577+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+      "label": "HL-F79D",
+      "side": "LONG",
+      "source_entry_price": 77591.7,
+      "source_event_ts": 1793473053,
+      "age_seconds": 836,
+      "fresh": true
     }
   ],
   "econ_calendar": {
     "fetched_ts": 1793461471,
     "events": [
-      {
-        "title": "FOMC Press Conference",
-        "category": "FOMC",
-        "ts": 1793212200,
-        "impact": "High",
-        "source": "feed"
-      },
       {
         "title": "Advance GDP q/q",
         "category": "GDP",
@@ -5152,7 +5162,7 @@
           "szi": -1.8,
           "entry_px": 77586.8,
           "event_ts": 1793454460.877,
-          "updated_ts": 1793471076
+          "updated_ts": 1793473890
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5173,7 +5183,7 @@
           "szi": -3.0,
           "entry_px": 77164.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793471076
+          "updated_ts": 1793473890
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5190,11 +5200,11 @@
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
         "label": "HL-F79D",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "event_ts": null,
-          "updated_ts": 1793471076
+          "side": "LONG",
+          "szi": 7.02241,
+          "entry_px": 77591.7,
+          "event_ts": 1793473053.618,
+          "updated_ts": 1793473890
         },
         "auto_disabled": false,
         "disabled_reason": null,
