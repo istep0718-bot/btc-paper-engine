@@ -43,6 +43,24 @@ Design pillars (fixing V19.x fatal flaws):
     one-way trend day neither forms and the engine sat out a -6.7%
     move with 0/0 scores all day. F enters an established, fully
     aligned trend on a momentum trigger with exhaustion guards.
+  * V20.5: Setup E (trader consensus), originally built on the
+    pre-F V20.3 line, is ported onto this V20.4 base so it runs
+    alongside Setup F and the V20.4 copy-DD exception. A pool of
+    ten vetted Hyperliquid traders (CONSENSUS_TRADERS, see
+    consensus_selection.json) is polled every cycle; when at least
+    five of them hold a BTC position and >= 80% of those positions
+    point the same way, the bot enters in that direction under the
+    same house rules as Setup D. The position is closed when the
+    held side's share of positioned traders falls below 50%
+    (CONSENSUS_LOST) or the opposite side reaches 80%
+    (CONSENSUS_FLIP); the V20.2 exit engine runs in parallel as
+    always. Priority: house setups A/B/C/F > E (consensus) > D
+    (single-trader copy). E gets the same DD treatment as D: in
+    the DD >= 20% band it still runs at the throttled x0.25 risk,
+    and only the DD >= 30% hard pause stops it. Pool members get
+    the same daily re-evaluation / auto-disable as Setup D, and E
+    stops opening new positions when the enabled pool drops below
+    seven.
 """
 
 import json
@@ -52,7 +70,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_4_PRO_2026-10-30"
+BUILD = "BTC_PAPER_V20_5_PRO_2026-11-01"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -201,6 +219,36 @@ COPY_MIN_CLOSES_30D = 30             # re-check needs this many closes
 COPY_MIN_WIN_RATE_30D = 0.45         # below this (or PnL<0) -> disable
 COPY_FOLLOW_SOURCE_EXIT = True       # close our copy when source exits
 
+# --- Consensus trading (Setup E, V20.4) -------------------------
+# Ten-trader pool vetted 2026-10-30 (consensus_selection.json):
+# the three Setup D traders plus seven more that passed the same
+# anti-blow-up / anti-martingale / BTC-positive screens, with the
+# sample-size and holding-time floors relaxed for pool membership
+# (>= 40 BTC closes in the covered window, median hold >= 0.5h:
+# consensus voting reads position *state* every 15 minutes, so it
+# tolerates faster traders than single-trader copying, but sub-
+# 30-minute median holds flip state between polls and are noise).
+# Edit ONLY this list to change the pool; state tracking for
+# removed addresses is discarded automatically.
+CONSENSUS_TRADERS = [
+    {"address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d", "label": "HL-F79D", "enabled": True},
+    {"address": "0x24e370916722584204322fad3c179a7fbde6684b", "label": "HL-684B", "enabled": True},
+    {"address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918", "label": "HL-D918", "enabled": True},
+    {"address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f", "label": "HL-4A6F", "enabled": True},
+    {"address": "0x418aa6bf98a2b2bc93779f810330d88cde488888", "label": "HL-8888", "enabled": True},
+    {"address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd", "label": "HL-7ACA", "enabled": True},
+    {"address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463", "label": "HL-C463", "enabled": True},
+    {"address": "0xb0026ca48937bd18c5941c05decab68b0fcced8a", "label": "HL-ED8A", "enabled": True},
+    {"address": "0x8738542e8fa99afda8eecc8acdae17b68f532274", "label": "HL-2274", "enabled": True},
+    {"address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76", "label": "HL-2B76", "enabled": True},
+]
+CONSENSUS_MIN_ACTIVE = 5         # >= 5 pool members must hold BTC
+CONSENSUS_ENTRY_RATIO = 0.80     # >= 80% of positioned agree -> enter
+CONSENSUS_EXIT_RATIO = 0.50      # held side < 50% of positioned -> exit
+CONSENSUS_MIN_POOL = 7           # enabled pool below this -> E halted
+CONSENSUS_MIN_FETCHED = 5        # fewer successful polls -> reading
+                                 # is invalid (no entry, no exit)
+
 # ============================================================
 # UTILITIES
 # ============================================================
@@ -328,6 +376,11 @@ def default_state():
             "last_recheck_ts": 0,
             "traders": {},
         },
+        "consensus": {
+            "last_recheck_ts": 0,
+            "traders": {},
+            "current": None,
+        },
     }
 
 
@@ -441,6 +494,11 @@ def normalize_position(p):
     p.setdefault("source_entry_price", None)
     p.setdefault("copy_source_event_ts", None)
     p.setdefault("copy_detection_lag_seconds", None)
+    p.setdefault("consensus_ratio", None)
+    p.setdefault("consensus_long_count", None)
+    p.setdefault("consensus_short_count", None)
+    p.setdefault("consensus_flat_count", None)
+    p.setdefault("consensus_members", None)
     p.setdefault("acc_net_pnl", 0.0)
     p.setdefault("acc_fees", f(p.get("entry_fee")))
     p.setdefault("acc_funding", 0.0)
@@ -510,6 +568,19 @@ def load_state():
             s["copy"]["traders"] = {}
         s["copy"]["last_recheck_ts"] = max(
             0, i(s["copy"].get("last_recheck_ts"))
+        )
+
+    if not isinstance(s.get("consensus"), dict):
+        s["consensus"] = {
+            "last_recheck_ts": 0, "traders": {}, "current": None,
+        }
+    else:
+        if not isinstance(s["consensus"].get("traders"), dict):
+            s["consensus"]["traders"] = {}
+        if "current" not in s["consensus"]:
+            s["consensus"]["current"] = None
+        s["consensus"]["last_recheck_ts"] = max(
+            0, i(s["consensus"].get("last_recheck_ts"))
         )
 
     pos = s.get("position") or s.get("open_position")
@@ -1931,6 +2002,15 @@ def _finalize_candidate_no_zone(ctx, side, stop_anchor):
     return _finalize_candidate_no_zone_as(ctx, side, stop_anchor, "D")
 
 
+def _finalize_candidate_no_zone_e(ctx, side, stop_anchor):
+    """_finalize_candidate with the zone-room gate relaxed (setup E).
+
+    Identical contract to the setup D variant; only the setup tag
+    written into the candidate differs.
+    """
+    return _finalize_candidate_no_zone_as(ctx, side, stop_anchor, "E")
+
+
 def evaluate_entry(ctx, allowed_setups=("A", "B", "C", "F")):
     """Return (best_candidate, per_side_scores, rejection_notes)."""
     best = None
@@ -2283,6 +2363,355 @@ def _copy_dashboard_payload(s):
     }
 
 
+
+# ============================================================
+# CONSENSUS TRADING (Setup E, V20.4)
+# ============================================================
+
+def _consensus_config_traders():
+    """Validated, enabled entries from CONSENSUS_TRADERS."""
+    out = []
+    for t in CONSENSUS_TRADERS:
+        if not isinstance(t, dict):
+            continue
+        addr = str(t.get("address", "")).lower()
+        if not addr.startswith("0x") or len(addr) != 42:
+            continue
+        if not t.get("enabled", True):
+            continue
+        out.append({
+            "address": addr,
+            "label": str(t.get("label", addr[:10])),
+        })
+    return out
+
+
+def _consensus_book(s):
+    book = s.setdefault("consensus", {
+        "last_recheck_ts": 0, "traders": {}, "current": None,
+    })
+    if not isinstance(book.get("traders"), dict):
+        book["traders"] = {}
+    return book
+
+
+def _consensus_rec(book, meta):
+    return book["traders"].setdefault(meta["address"], {
+        "label": meta["label"],
+        "snapshot": None,
+        "auto_disabled": False,
+        "disabled_reason": None,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": None,
+    })
+
+
+def compute_consensus(members):
+    """Aggregate member sides into a consensus reading.
+
+    `members` is a list of {"address", "label", "side"} for every
+    successfully polled, enabled pool member (side None = flat).
+    Ratios are shares of *positioned* members (flat members are
+    counted but do not vote). The reading is valid only when at
+    least CONSENSUS_MIN_FETCHED members were polled; callers must
+    treat an invalid reading as "unknown" (fail-open).
+    """
+    long_n = sum(1 for m in members if m.get("side") == "LONG")
+    short_n = sum(1 for m in members if m.get("side") == "SHORT")
+    flat_n = sum(1 for m in members if m.get("side") is None)
+    positioned = long_n + short_n
+    return {
+        "fetched": len(members),
+        "long_count": long_n,
+        "short_count": short_n,
+        "flat_count": flat_n,
+        "positioned": positioned,
+        "long_ratio": (long_n / positioned) if positioned else 0.0,
+        "short_ratio": (short_n / positioned) if positioned else 0.0,
+        "valid": len(members) >= CONSENSUS_MIN_FETCHED,
+        "members": members,
+    }
+
+
+def consensus_entry_side(reading, enabled_pool):
+    """Direction to enter for Setup E, or None.
+
+    Gates (all must hold): the reading is valid, the enabled pool
+    has not fallen below CONSENSUS_MIN_POOL (safety valve), at
+    least CONSENSUS_MIN_ACTIVE members hold a BTC position, and
+    one side holds >= CONSENSUS_ENTRY_RATIO of positioned members.
+    """
+    if not reading or not reading.get("valid"):
+        return None
+    if enabled_pool < CONSENSUS_MIN_POOL:
+        return None
+    if reading["positioned"] < CONSENSUS_MIN_ACTIVE:
+        return None
+    if reading["long_ratio"] >= CONSENSUS_ENTRY_RATIO:
+        return "LONG"
+    if reading["short_ratio"] >= CONSENSUS_ENTRY_RATIO:
+        return "SHORT"
+    return None
+
+
+def consensus_exit_reason(reading, position_side):
+    """Exit verdict for an open Setup E position.
+
+    Returns "CONSENSUS_FLIP" when the opposite side reaches the
+    entry ratio, "CONSENSUS_LOST" when the held side's share of
+    positioned members falls below CONSENSUS_EXIT_RATIO (including
+    everyone going flat), or None. An invalid reading (too many
+    poll errors) never forces an exit.
+    """
+    if not reading or not reading.get("valid"):
+        return None
+    if position_side not in ("LONG", "SHORT"):
+        return None
+    positioned = reading["positioned"]
+    if positioned == 0:
+        return "CONSENSUS_LOST"
+    own = (reading["long_count"] if position_side == "LONG"
+           else reading["short_count"])
+    opp = positioned - own
+    if opp / positioned >= CONSENSUS_ENTRY_RATIO:
+        return "CONSENSUS_FLIP"
+    if own / positioned < CONSENSUS_EXIT_RATIO:
+        return "CONSENSUS_LOST"
+    return None
+
+
+def update_consensus_tracking(s, now_s):
+    """Poll every enabled pool member's BTC position; aggregate.
+
+    Stores the reading in state (dashboard + exit checks) and
+    returns it. Members whose poll fails keep their previous
+    snapshot out of the aggregate (they simply do not vote this
+    cycle); if too few polls succeed the reading is invalid.
+    """
+    book = _consensus_book(s)
+    configured = {t["address"]: t
+                  for t in _consensus_config_traders()}
+
+    for addr in list(book["traders"].keys()):
+        if addr not in configured:
+            del book["traders"][addr]
+
+    members = []
+    enabled_pool = 0
+    for addr, meta in configured.items():
+        rec = _consensus_rec(book, meta)
+        rec["label"] = meta["label"]
+        if rec.get("auto_disabled"):
+            continue
+        enabled_pool += 1
+        current = fetch_trader_btc_position(addr)
+        if current is None:
+            rec["last_error_ts"] = now_s
+            continue
+        rec["snapshot"] = {
+            "side": current["side"],
+            "szi": current["szi"],
+            "entry_px": current["entry_px"],
+            "updated_ts": now_s,
+        }
+        members.append({
+            "address": addr,
+            "label": meta["label"],
+            "side": current["side"],
+        })
+
+    reading = compute_consensus(members)
+    reading["ts"] = now_s
+    reading["enabled_pool"] = enabled_pool
+    book["current"] = reading
+    return reading
+
+
+def _fetch_btc_fills_paginated(address, start_ms, end_ms,
+                               max_pages=10):
+    """All BTC fills in [start_ms, end_ms], paginated.
+
+    bot.fetch_trader_fills takes a single userFillsByTime page
+    (<= 2000 fills, oldest first). For multi-coin high-volume
+    accounts that slice can contain zero BTC fills - or only a
+    stale fragment - which produced flatly wrong re-evaluation
+    verdicts in testing (the pool's best trailing-30d BTC earner,
+    +$307k over 2,718 closes, was read as a 0% win rate / -$33.6k
+    and auto-disabled). Returns None on API error.
+    """
+    out = []
+    start = start_ms
+    for _ in range(max_pages):
+        try:
+            page = post({
+                "type": "userFillsByTime", "user": address,
+                "startTime": start, "endTime": end_ms,
+            })
+        except Exception:
+            return None
+        if not page:
+            break
+        out.extend(x for x in page if x.get("coin") == "BTC")
+        last = max(int(x["time"]) for x in page)
+        if len(page) < 2000 or last >= end_ms - 1000:
+            break
+        start = last + 1
+    out.sort(key=lambda x: int(x["time"]))
+    return out
+
+
+def reevaluate_consensus_traders(s, now_s):
+    """Daily re-evaluation of the consensus pool (BTC fills only).
+
+    Cadence and thresholds follow the Setup D re-evaluation, with
+    two evidence-driven deviations, both forced by the first
+    production-state migration run (2026-10-30):
+
+    1. Fills are fetched paginated and counted for BTC only (the
+       pool votes on BTC and was selected on BTC records). The
+       single-page all-coin count used for Setup D read the
+       pool's best trailing-30d BTC earner (+$307k, 2,718 closes)
+       as a 0% win rate / -$33.6k loss and auto-disabled it on a
+       stale slice, and disabled three more members on non-BTC
+       results - tripping the min-pool valve on day one.
+    2. The performance rule needs BOTH a negative realized PnL
+       and a sub-threshold win rate. Setup D's OR form retires
+       profitable trend followers: the pool's whale member runs a
+       structural ~27% win rate at a 6.4 payoff ratio and printed
+       +$79k of BTC realized PnL in the trailing 30 days - the
+       win-rate clause alone would have disabled it on day one.
+       The martingale signature that clause targets is a
+       selection-time screen and is already applied there.
+
+    API errors never disable anyone.
+    """
+    book = _consensus_book(s)
+    if now_s - i(book.get("last_recheck_ts")) \
+            < COPY_RECHECK_INTERVAL_SECONDS:
+        return
+    book["last_recheck_ts"] = now_s
+
+    start_ms = (now_s - COPY_INACTIVE_DAYS * 86400) * 1000
+    for meta in _consensus_config_traders():
+        addr = meta["address"]
+        rec = _consensus_rec(book, meta)
+        if rec.get("auto_disabled"):
+            continue
+        fills = _fetch_btc_fills_paginated(
+            addr, start_ms, now_s * 1000
+        )
+        if fills is None:
+            continue
+        closes = [
+            f(x.get("closedPnl"))
+            for x in fills
+            if f(x.get("closedPnl")) != 0.0
+        ]
+        wins = sum(1 for p in closes if p > 0)
+        win_rate = wins / len(closes) if closes else 0.0
+        realized = sum(closes)
+        rec["reeval"] = {
+            "ts": now_s,
+            "fills": len(fills),
+            "closes": len(closes),
+            "win_rate": round(win_rate, 4),
+            "realized_pnl": round(realized, 2),
+        }
+        reason = None
+        if not fills:
+            reason = "inactive_30d"
+        elif len(closes) >= COPY_MIN_CLOSES_30D and (
+            win_rate < COPY_MIN_WIN_RATE_30D and realized < 0
+        ):
+            reason = "performance_decay_30d"
+        if reason:
+            rec["auto_disabled"] = True
+            rec["disabled_reason"] = reason
+            rec["disabled_ts"] = now_s
+            event(
+                s, "CONSENSUS_TRADER_AUTO_DISABLED",
+                trader=addr, label=meta["label"], reason=reason,
+                closes=len(closes), win_rate=round(win_rate, 4),
+                realized_pnl=round(realized, 2),
+            )
+
+
+def _candidate_consensus(ctx, side, reading):
+    """Setup E candidate: direction from the pool consensus.
+
+    Stop construction, the cost filter and the zone-gate opt-out
+    mirror Setup D exactly; only the direction source and the
+    recorded provenance differ.
+    """
+    candles = ctx["candles"]
+    av = ctx["atr"]
+    structure = ctx["structure"]
+    if side == "LONG":
+        anchor = structure["last_swing_low"] or min(
+            c["l"] for c in candles[-10:]
+        )
+        stop_anchor = anchor - STOP_STRUCT_BUFFER_ATR * av
+    else:
+        anchor = structure["last_swing_high"] or max(
+            c["h"] for c in candles[-10:]
+        )
+        stop_anchor = anchor + STOP_STRUCT_BUFFER_ATR * av
+
+    candidate, reason = _finalize_candidate(ctx, side, "E", stop_anchor)
+    if candidate is None:
+        if reason and "対向ゾーン" not in reason:
+            return None, reason
+        candidate = _finalize_candidate_no_zone_e(ctx, side, stop_anchor)
+        if candidate is None:
+            return None, "コストフィルター（合意）"
+    candidate["score"] = 0
+    candidate["score_breakdown"] = {"consensus_signal": 0}
+    ratio = (reading["long_ratio"] if side == "LONG"
+             else reading["short_ratio"])
+    candidate["consensus_ratio"] = round(ratio, 4)
+    candidate["consensus_long_count"] = reading["long_count"]
+    candidate["consensus_short_count"] = reading["short_count"]
+    candidate["consensus_flat_count"] = reading["flat_count"]
+    candidate["consensus_members"] = reading["members"]
+    return candidate, None
+
+
+def _consensus_dashboard_payload(s):
+    book = s.get("consensus") or {}
+    current = book.get("current") or {}
+    traders = []
+    for meta in _consensus_config_traders():
+        rec = (book.get("traders") or {}).get(meta["address"]) or {}
+        snap = rec.get("snapshot") or {}
+        traders.append({
+            "address": meta["address"],
+            "label": meta["label"],
+            "side": snap.get("side"),
+            "source_entry_price": snap.get("entry_px"),
+            "auto_disabled": bool(rec.get("auto_disabled")),
+            "disabled_reason": rec.get("disabled_reason"),
+            "reeval": rec.get("reeval"),
+        })
+    return {
+        "enabled": bool(traders),
+        "min_active": CONSENSUS_MIN_ACTIVE,
+        "entry_ratio": CONSENSUS_ENTRY_RATIO,
+        "exit_ratio": CONSENSUS_EXIT_RATIO,
+        "min_pool": CONSENSUS_MIN_POOL,
+        "long_count": current.get("long_count"),
+        "short_count": current.get("short_count"),
+        "flat_count": current.get("flat_count"),
+        "positioned": current.get("positioned"),
+        "long_ratio": current.get("long_ratio"),
+        "short_ratio": current.get("short_ratio"),
+        "enabled_pool": current.get("enabled_pool"),
+        "valid": current.get("valid"),
+        "updated_ts": current.get("ts"),
+        "traders": traders,
+    }
+
+
 # ============================================================
 # POSITION ACCOUNTING
 # ============================================================
@@ -2382,6 +2811,23 @@ def apply_funding(s, funding, now_s=None):
             amount=round(cash_effect, 8),
             hours=round(hours, 4),
         )
+
+
+def _consensus_exit_snapshot(s, pos):
+    """Latest consensus summary for an E trade record (or None)."""
+    if pos.get("setup") != "E":
+        return None
+    cur = (s.get("consensus") or {}).get("current") or {}
+    if not cur:
+        return None
+    return {
+        "ts": cur.get("ts"),
+        "long_count": cur.get("long_count"),
+        "short_count": cur.get("short_count"),
+        "flat_count": cur.get("flat_count"),
+        "long_ratio": cur.get("long_ratio"),
+        "short_ratio": cur.get("short_ratio"),
+    }
 
 
 def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
@@ -2518,6 +2964,12 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
         "copy_detection_lag_seconds": pos.get(
             "copy_detection_lag_seconds"
         ),
+        "consensus_ratio": pos.get("consensus_ratio"),
+        "consensus_long_count": pos.get("consensus_long_count"),
+        "consensus_short_count": pos.get("consensus_short_count"),
+        "consensus_flat_count": pos.get("consensus_flat_count"),
+        "consensus_members": pos.get("consensus_members"),
+        "consensus_at_exit": _consensus_exit_snapshot(s, pos),
     }
 
     s["trades"].append(trade)
@@ -2649,6 +3101,13 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
         "copy_detection_lag_seconds": candidate.get(
             "copy_detection_lag_seconds"
         ),
+        "consensus_ratio": candidate.get("consensus_ratio"),
+        "consensus_long_count": candidate.get("consensus_long_count"),
+        "consensus_short_count": candidate.get(
+            "consensus_short_count"
+        ),
+        "consensus_flat_count": candidate.get("consensus_flat_count"),
+        "consensus_members": candidate.get("consensus_members"),
         "qty_initial": quantity,
         "risk_usd_initial": risk_usd,
         "entry_equity": entry_equity,
@@ -2687,6 +3146,19 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
             detection_lag_seconds=candidate.get(
                 "copy_detection_lag_seconds"
             ),
+        )
+
+    if candidate.get("consensus_members") is not None:
+        event(
+            s,
+            "CONSENSUS_ENTRY",
+            side=side,
+            entry_price=entry,
+            consensus_ratio=candidate.get("consensus_ratio"),
+            long_count=candidate.get("consensus_long_count"),
+            short_count=candidate.get("consensus_short_count"),
+            flat_count=candidate.get("consensus_flat_count"),
+            members=candidate.get("consensus_members"),
         )
 
     s["last_entry_candle"] = candle_ts
@@ -3240,11 +3712,17 @@ def make_dashboard(s, price, funding, sig, status):
             "tp2_at_r": TP2_AT_R,
             "copy_traders": len(_copy_config_traders()),
             "copy_follow_source_exit": COPY_FOLLOW_SOURCE_EXIT,
+            "consensus_traders": len(_consensus_config_traders()),
+            "consensus_min_active": CONSENSUS_MIN_ACTIVE,
+            "consensus_entry_ratio": CONSENSUS_ENTRY_RATIO,
+            "consensus_exit_ratio": CONSENSUS_EXIT_RATIO,
+            "consensus_min_pool": CONSENSUS_MIN_POOL,
         },
         "last_error": s.get("last_error"),
         "next_high_event": _next_high_event_payload(s),
         "event_risk": _event_risk_payload(s),
         "copy_trading": _copy_dashboard_payload(s),
+        "consensus": _consensus_dashboard_payload(s),
     }
 
 
@@ -3281,6 +3759,13 @@ def main():
         copy_signals = update_copy_tracking(s, now)
         reevaluate_copy_traders(s, now)
 
+        # Consensus (Setup E): poll the ten-trader pool, aggregate
+        # the current reading and run its daily re-evaluation. All
+        # fetches fail open; an invalid reading blocks both E
+        # entries and consensus-driven exits.
+        consensus_now = update_consensus_tracking(s, now)
+        reevaluate_consensus_traders(s, now)
+
         # Mark-to-market (net of exit costs) for risk state.
         pos = s.get("position")
         marked = s["equity"] + (
@@ -3308,6 +3793,25 @@ def main():
                         s, price, "COPY_SOURCE_EXIT", now_s=now
                     )
 
+        # Consensus positions exit when the pool consensus breaks:
+        # held side below 50% of positioned members, or the other
+        # side at the 80% entry ratio. House exits (stop / staged
+        # take-profit / trail) keep running as the backstop.
+        _epos = s.get("position")
+        if _epos and _epos.get("setup") == "E":
+            _verdict = consensus_exit_reason(
+                consensus_now, _epos.get("side")
+            )
+            if _verdict:
+                event(
+                    s, _verdict,
+                    position_side=_epos.get("side"),
+                    long_count=consensus_now.get("long_count"),
+                    short_count=consensus_now.get("short_count"),
+                    flat_count=consensus_now.get("flat_count"),
+                )
+                close_position(s, price, _verdict, now_s=now)
+
         had_position = bool(s.get("position"))
 
         if had_position:
@@ -3334,6 +3838,18 @@ def main():
                 f"（ラグ "
                 f"{int(_cs['age_seconds']) if _cs['age_seconds'] is not None else '不明'}"
                 f"秒、{'新鮮' if _cs['fresh'] else '鮮度切れ'}）"
+            )
+
+        _cons_side = consensus_entry_side(
+            consensus_now, consensus_now.get("enabled_pool", 0)
+        )
+        if consensus_now.get("valid"):
+            notes.append(
+                f"CONSENSUS: LONG {consensus_now['long_count']} / "
+                f"SHORT {consensus_now['short_count']} / "
+                f"FLAT {consensus_now['flat_count']}"
+                f"（建玉 {consensus_now['positioned']}名、"
+                f"参入条件: {'成立 ' + _cons_side if _cons_side else '未達'}）"
             )
 
         status = "WAIT: シグナル条件未達"
@@ -3385,6 +3901,34 @@ def main():
                 risk_multiplier=mult, now_s=now,
             )
             status = message if ok else "エントリー見送り: " + message
+        # Setup E entries: priority house A/B/C/F > E > D.
+        # DD treatment matches Setup D under V20.4: risk_mult is
+        # already throttled to x0.25 in the DD >= 20% band, and
+        # only the DD >= 30% hard pause stops E outright.
+        elif _cons_side and ev_status["blocked"]:
+            status = (
+                "イベント回避（EVENT_RISK）: "
+                "合意信号も新規エントリー見送り"
+            )
+        elif _cons_side and dd >= DD_HARD_PAUSE:
+            status = "合意見送り: DDハードポーズ帯（30%以上）"
+        elif _cons_side:
+            cand_e, reason_e = _candidate_consensus(
+                ctx, _cons_side, consensus_now
+            )
+            if cand_e is None:
+                status = "合意見送り: " + str(reason_e)
+            else:
+                ok, message = open_position(
+                    s, cand_e, latest_candle,
+                    risk_multiplier=risk_mult, now_s=now,
+                )
+                status = (
+                    f"合意参入: トップトレーダー合意 "
+                    f"{cand_e['consensus_ratio']:.0%} で"
+                    f"{_cons_side}（セットアップE）"
+                    if ok else "エントリー見送り: " + message
+                )
         elif copy_signals and ev_status["blocked"]:
             status = (
                 "イベント回避（EVENT_RISK）: "
@@ -3445,6 +3989,11 @@ def main():
             f"EVENT_RISK: {('BLOCKED: ' + str(ev_status['active_event'].get('title'))) if ev_status['blocked'] else 'clear'}\n"
             f"COPY: {len(copy_signals)} signal(s), "
             f"{sum(1 for x in copy_signals if x['fresh'])} fresh\n"
+            f"CONSENSUS: LONG {consensus_now.get('long_count')} / "
+            f"SHORT {consensus_now.get('short_count')} / "
+            f"FLAT {consensus_now.get('flat_count')} "
+            f"(pool {consensus_now.get('enabled_pool')}, "
+            f"valid {consensus_now.get('valid')})\n"
             f"EQUITY: {s['equity']:.4f}\n"
             f"REALIZED PNL: {s['realized_pnl']:.4f}\n"
             f"CLOSED RECORDS: {len(s['trades'])}\n"
