@@ -4281,6 +4281,12 @@
       "equity": 74.20340533187652,
       "marked_equity": 74.20340533187652,
       "price": 78066.5
+    },
+    {
+      "timestamp": "2026-11-01T23:56:45.806038+00:00",
+      "equity": 74.20340533187652,
+      "marked_equity": 74.20340533187652,
+      "price": 78329.5
     }
   ],
   "position": null,
@@ -4290,7 +4296,7 @@
   "consecutive_lock_until": 1793581200,
   "daily_date": "2026-11-01",
   "daily_start_equity": 75.1875515575673,
-  "daily_loss_lock": false,
+  "daily_loss_lock": true,
   "daily_stop_count": 2,
   "next_risk_multiplier": 0.5,
   "drawdown_pause_until": 0,
@@ -4366,13 +4372,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-23T01:01:21.838369+00:00",
-      "type": "POSITION_CLOSED",
-      "message": "SHORT closed: MAX_HOLD_TIME",
-      "net_pnl": -0.14535927908487584,
-      "equity": 99.98294318126045
-    },
     {
       "timestamp": "2026-10-25T00:17:03.777478+00:00",
       "type": "DAILY_RISK_RESET",
@@ -5895,6 +5894,11 @@
       "type": "CONSECUTIVE_LOSS_COOLDOWN",
       "losses": 7,
       "pause_seconds": 7200
+    },
+    {
+      "timestamp": "2026-11-01T23:56:45.805889+00:00",
+      "type": "DAILY_STOP_LOCK",
+      "stops": 2
     }
   ],
   "econ_calendar": {
@@ -5941,10 +5945,10 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "SHORT",
-          "szi": -1.7,
-          "entry_px": 78080.3,
+          "szi": -3.1,
+          "entry_px": 78120.0,
           "event_ts": 1793498663.248,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5965,7 +5969,7 @@
           "szi": -6.0,
           "entry_px": 77873.4,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5986,7 +5990,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793473053.618,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6011,7 +6015,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6029,9 +6033,9 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "SHORT",
-          "szi": -2.0,
-          "entry_px": 78078.1,
-          "updated_ts": 1793575612
+          "szi": -3.1,
+          "entry_px": 78120.0,
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6051,7 +6055,7 @@
           "side": "SHORT",
           "szi": -6.0,
           "entry_px": 77873.4,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6071,7 +6075,7 @@
           "side": "SHORT",
           "szi": -12.9055,
           "entry_px": 78774.7,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6089,9 +6093,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -95.5,
-          "entry_px": 79891.2,
-          "updated_ts": 1793575612
+          "szi": -96.25,
+          "entry_px": 79879.2,
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6111,7 +6115,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6131,7 +6135,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6171,7 +6175,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6191,7 +6195,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793575612
+          "updated_ts": 1793577403
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6262,7 +6266,7 @@
           "side": null
         }
       ],
-      "ts": 1793575612,
+      "ts": 1793577403,
       "enabled_pool": 9
     }
   },
