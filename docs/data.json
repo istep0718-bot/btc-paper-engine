@@ -1,48 +1,276 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
-  "generated_at": "2026-11-01T11:56:53.398968+00:00",
+  "generated_at": "2026-11-01T12:31:25.882567+00:00",
   "market_status": "OK",
-  "price": 77930.5,
+  "price": 77829.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
-  "equity": 75.1875515575673,
-  "marked_equity": 75.1875515575673,
+  "equity": 75.13970463887115,
+  "marked_equity": 75.05048626180562,
   "realized_pnl": -24.795391623693153,
-  "unrealized_pnl": 0.0,
-  "unrealized_pnl_gross": 0.0,
-  "net_pnl": -24.812448442432697,
-  "net_pnl_pct": -24.812448442432697,
-  "position": null,
-  "open_position": null,
-  "has_position": false,
+  "unrealized_pnl": -0.08921837706553237,
+  "unrealized_pnl_gross": -0.02221713889369783,
+  "net_pnl": -24.949513738194383,
+  "net_pnl_pct": -24.949513738194383,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 77811.43460000001,
+    "quantity": 0.0012298171584192651,
+    "leverage": 40.0,
+    "margin_used": 2.3923459348074627,
+    "notional": 95.6938373922985,
+    "planned_risk": 0.4699221972347996,
+    "effective_risk_pct": 0.6250000000000052,
+    "stop_price": 78045.70024202418,
+    "initial_stop_price": 78045.70024202418,
+    "risk_distance": 234.2656420241724,
+    "entry_fee": 0.04784691869614925,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-11-01T12:31:22+00:00",
+    "opened_timestamp": 1793536282,
+    "last_funding_ts": 1793536282,
+    "last_checked_candle_ts": 1793535300000,
+    "entry_signal_score": 0,
+    "score": 0,
+    "score_breakdown": {
+      "consensus_signal": 0
+    },
+    "setup": "E",
+    "regime": "NEUTRAL",
+    "origin_build": "BTC_PAPER_V20_6_PRO_2026-11-01",
+    "targets": {
+      "tp1_price": 77460.03613696375,
+      "tp2_price": 77108.63767392749,
+      "be_price": 77663.59287426001
+    },
+    "zone_room_r": 0.01039247573383623,
+    "source_trader": null,
+    "source_trader_label": null,
+    "source_entry_price": null,
+    "copy_source_event_ts": null,
+    "copy_detection_lag_seconds": null,
+    "consensus_ratio": 1.0,
+    "consensus_long_count": 0,
+    "consensus_short_count": 5,
+    "consensus_flat_count": 4,
+    "consensus_members": [
+      {
+        "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+        "label": "HL-F79D",
+        "side": null
+      },
+      {
+        "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+        "label": "HL-684B",
+        "side": "SHORT"
+      },
+      {
+        "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+        "label": "HL-D918",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+        "label": "HL-4A6F",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+        "label": "HL-8888",
+        "side": "SHORT"
+      },
+      {
+        "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+        "label": "HL-7ACA",
+        "side": null
+      },
+      {
+        "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+        "label": "HL-C463",
+        "side": null
+      },
+      {
+        "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+        "label": "HL-2274",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+        "label": "HL-2B76",
+        "side": null
+      }
+    ],
+    "qty_initial": 0.0012298171584192651,
+    "risk_usd_initial": 0.4699221972347996,
+    "entry_equity": 75.1875515575673,
+    "risk_multiplier": 0.125,
+    "tp1_taken": false,
+    "tp2_taken": false,
+    "hold_extensions": 0,
+    "trend_flip_exit": false,
+    "runner_floor_active": false,
+    "partial_taken": false,
+    "be_moved": false,
+    "trail_active": false,
+    "best_price": 77827.0,
+    "worst_price": 77827.0,
+    "mfe_r": 0.0,
+    "mae_r": 0.0,
+    "acc_net_pnl": 0.0,
+    "acc_fees": 0.04784691869614925,
+    "acc_funding": 0.0,
+    "acc_r": 0.0,
+    "saw_stop_loss": false,
+    "entry_event_within_24h": false,
+    "entry_event_upcoming_24h": false,
+    "entry_event_name": null,
+    "unrealized_pnl": -0.08921837706553237,
+    "unrealized_pnl_gross": -0.02221713889369783
+  },
+  "open_position": {
+    "side": "SHORT",
+    "entry_price": 77811.43460000001,
+    "quantity": 0.0012298171584192651,
+    "leverage": 40.0,
+    "margin_used": 2.3923459348074627,
+    "notional": 95.6938373922985,
+    "planned_risk": 0.4699221972347996,
+    "effective_risk_pct": 0.6250000000000052,
+    "stop_price": 78045.70024202418,
+    "initial_stop_price": 78045.70024202418,
+    "risk_distance": 234.2656420241724,
+    "entry_fee": 0.04784691869614925,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-11-01T12:31:22+00:00",
+    "opened_timestamp": 1793536282,
+    "last_funding_ts": 1793536282,
+    "last_checked_candle_ts": 1793535300000,
+    "entry_signal_score": 0,
+    "score": 0,
+    "score_breakdown": {
+      "consensus_signal": 0
+    },
+    "setup": "E",
+    "regime": "NEUTRAL",
+    "origin_build": "BTC_PAPER_V20_6_PRO_2026-11-01",
+    "targets": {
+      "tp1_price": 77460.03613696375,
+      "tp2_price": 77108.63767392749,
+      "be_price": 77663.59287426001
+    },
+    "zone_room_r": 0.01039247573383623,
+    "source_trader": null,
+    "source_trader_label": null,
+    "source_entry_price": null,
+    "copy_source_event_ts": null,
+    "copy_detection_lag_seconds": null,
+    "consensus_ratio": 1.0,
+    "consensus_long_count": 0,
+    "consensus_short_count": 5,
+    "consensus_flat_count": 4,
+    "consensus_members": [
+      {
+        "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+        "label": "HL-F79D",
+        "side": null
+      },
+      {
+        "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+        "label": "HL-684B",
+        "side": "SHORT"
+      },
+      {
+        "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+        "label": "HL-D918",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+        "label": "HL-4A6F",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+        "label": "HL-8888",
+        "side": "SHORT"
+      },
+      {
+        "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+        "label": "HL-7ACA",
+        "side": null
+      },
+      {
+        "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+        "label": "HL-C463",
+        "side": null
+      },
+      {
+        "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+        "label": "HL-2274",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+        "label": "HL-2B76",
+        "side": null
+      }
+    ],
+    "qty_initial": 0.0012298171584192651,
+    "risk_usd_initial": 0.4699221972347996,
+    "entry_equity": 75.1875515575673,
+    "risk_multiplier": 0.125,
+    "tp1_taken": false,
+    "tp2_taken": false,
+    "hold_extensions": 0,
+    "trend_flip_exit": false,
+    "runner_floor_active": false,
+    "partial_taken": false,
+    "be_moved": false,
+    "trail_active": false,
+    "best_price": 77827.0,
+    "worst_price": 77827.0,
+    "mfe_r": 0.0,
+    "mae_r": 0.0,
+    "acc_net_pnl": 0.0,
+    "acc_fees": 0.04784691869614925,
+    "acc_funding": 0.0,
+    "acc_r": 0.0,
+    "saw_stop_loss": false,
+    "entry_event_within_24h": false,
+    "entry_event_upcoming_24h": false,
+    "entry_event_name": null,
+    "unrealized_pnl": -0.08921837706553237,
+    "unrealized_pnl_gross": -0.02221713889369783
+  },
+  "has_position": true,
   "signal": {
     "direction": "WAIT",
     "score": 0,
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 48.475,
-    "atr": 84.59051,
-    "ema9": 78007.2201342311,
-    "ema21": 77985.09596298734,
+    "rsi": 41.087,
+    "atr": 90.10217,
+    "ema9": 77950.31270872633,
+    "ema21": 77962.84970923165,
     "trend_15m": "SIDEWAYS",
     "trend_1h": "UP",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-01T11:56:53.398885+00:00",
-    "reference_price": 77939.0,
-    "previous_close": 77985.0,
+    "timestamp": "2026-11-01T12:31:25.882494+00:00",
+    "reference_price": 77827.0,
+    "previous_close": 77929.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 78008.85,
-      "upper": 78222.47422615426,
-      "lower": 77795.22577384576,
-      "width_pct": 0.5476922840273897,
-      "position": 0.336511988229346,
-      "state": "INSIDE"
+      "middle": 78008.1,
+      "upper": 78223.22033841551,
+      "lower": 77792.9796615845,
+      "width_pct": 0.5515333367060824,
+      "position": 0.07907280795968262,
+      "state": "NEAR_LOWER"
     },
     "fibonacci": {
       "swing_high": 81955.0,
@@ -57,24 +285,24 @@
       "trend": "UP"
     },
     "regime": "NEUTRAL",
-    "adx": 25.6,
-    "atr_percentile": 63.0,
+    "adx": 23.28,
+    "atr_percentile": 72.0,
     "macd": {
-      "line": 44.1919,
-      "signal": 69.1081,
-      "hist": -24.9162,
-      "hist_prev": -20.4728
+      "line": 12.492,
+      "signal": 46.8126,
+      "hist": -34.3207,
+      "hist_prev": -28.0273
     },
-    "vwap": 77852.95497395078,
-    "relative_volume": 0.829,
+    "vwap": 77854.36077965857,
+    "relative_volume": 2.379,
     "htf_bias": "NEUTRAL",
     "structure_bias": "MIXED",
-    "support": 77928.0,
-    "resistance": 78000.0,
-    "premium": -0.0002052677,
+    "support": 77809.0,
+    "resistance": 77850.0,
+    "premium": 0.0,
     "setup": null,
     "score_breakdown": {},
-    "entry_status": "合意見送り: コストフィルター（想定値幅が往復コストの1.5倍未満）",
+    "entry_status": "合意参入: トップトレーダー合意 100% でSHORT（セットアップE）",
     "evaluation_notes": [
       "A/LONG: 上位足バイアス不一致",
       "A/SHORT: 上位足バイアス不一致",
@@ -84,13 +312,13 @@
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 0.0,
+    "daily_loss_pct": 0.18229785772016122,
     "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "daily_stop_count": 0,
-    "drawdown_pct": 26.289486047180183,
-    "current_drawdown_pct": 26.289486047180183,
-    "max_drawdown_pct": 26.289486047180183,
+    "drawdown_pct": 26.42385873503069,
+    "current_drawdown_pct": 26.42385873503069,
+    "max_drawdown_pct": 26.42385873503069,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
     "drawdown_lock": false,
@@ -6129,23 +6357,15 @@
       "equity": 75.1875515575673,
       "marked_equity": 75.1875515575673,
       "price": 77930.5
+    },
+    {
+      "timestamp": "2026-11-01T12:31:25.882553+00:00",
+      "equity": 75.13970463887115,
+      "marked_equity": 75.05048626180562,
+      "price": 77829.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-10-27T11:18:27.952651+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00069375,
-      "hours": 0.5839
-    },
-    {
-      "timestamp": "2026-10-27T11:18:27.952679+00:00",
-      "type": "POSITION_CLOSED",
-      "side": "SHORT",
-      "reason": "TRAIL_STOP",
-      "net_pnl": -0.051575964331884425,
-      "fraction": 1.0
-    },
     {
       "timestamp": "2026-10-27T15:13:39.734496+00:00",
       "type": "POSITION_OPENED",
@@ -6862,6 +7082,76 @@
       "trader": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
       "label": "HL-F79D",
       "previous_side": "LONG"
+    },
+    {
+      "timestamp": "2026-11-01T12:31:25.882461+00:00",
+      "type": "CONSENSUS_ENTRY",
+      "side": "SHORT",
+      "entry_price": 77811.43460000001,
+      "consensus_ratio": 1.0,
+      "long_count": 0,
+      "short_count": 5,
+      "flat_count": 4,
+      "members": [
+        {
+          "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+          "label": "HL-F79D",
+          "side": null
+        },
+        {
+          "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+          "label": "HL-684B",
+          "side": "SHORT"
+        },
+        {
+          "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+          "label": "HL-D918",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+          "label": "HL-4A6F",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+          "label": "HL-8888",
+          "side": "SHORT"
+        },
+        {
+          "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+          "label": "HL-7ACA",
+          "side": null
+        },
+        {
+          "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+          "label": "HL-C463",
+          "side": null
+        },
+        {
+          "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+          "label": "HL-2274",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+          "label": "HL-2B76",
+          "side": null
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-01T12:31:25.882473+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "setup": "E",
+      "regime": "NEUTRAL",
+      "score": 0,
+      "entry_price": 77811.43460000001,
+      "stop_price": 78045.70024202418,
+      "quantity": 0.0012298171584192651,
+      "leverage": 40.0,
+      "effective_risk_pct": 0.6250000000000052
     }
   ],
   "stats_by_setup": {
@@ -6924,26 +7214,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 48.475,
-    "atr": 84.59051,
+    "rsi_15m": 41.087,
+    "atr": 90.10217,
     "bollinger": {
-      "middle": 78008.85,
-      "upper": 78222.47422615426,
-      "lower": 77795.22577384576,
-      "width_pct": 0.5476922840273897,
-      "position": 0.336511988229346,
-      "state": "INSIDE"
+      "middle": 78008.1,
+      "upper": 78223.22033841551,
+      "lower": 77792.9796615845,
+      "width_pct": 0.5515333367060824,
+      "position": 0.07907280795968262,
+      "state": "NEAR_LOWER"
     },
-    "adx": 25.6,
-    "atr_percentile": 63.0,
+    "adx": 23.28,
+    "atr_percentile": 72.0,
     "macd": {
-      "line": 44.1919,
-      "signal": 69.1081,
-      "hist": -24.9162,
-      "hist_prev": -20.4728
+      "line": 12.492,
+      "signal": 46.8126,
+      "hist": -34.3207,
+      "hist_prev": -28.0273
     },
-    "vwap": 77852.95497395078,
-    "relative_volume": 0.829
+    "vwap": 77854.36077965857,
+    "relative_volume": 2.379
   },
   "fibonacci": {
     "swing_high": 81955.0,
@@ -7063,7 +7353,7 @@
     "short_ratio": 1.0,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1793534211,
+    "updated_ts": 1793536282,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
