@@ -1,8 +1,8 @@
 {
-  "build": "BTC_PAPER_V20_4_PRO_2026-10-30",
-  "generated_at": "2026-11-01T00:26:14.064563+00:00",
+  "build": "BTC_PAPER_V20_5_PRO_2026-11-01",
+  "generated_at": "2026-11-01T01:38:18.322455+00:00",
   "market_status": "OK",
-  "price": 77596.5,
+  "price": 77709.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -22,26 +22,26 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 45.271,
-    "atr": 69.13888,
-    "ema9": 77520.17537732927,
-    "ema21": 77536.86276678997,
+    "rsi": 55.664,
+    "atr": 71.89762,
+    "ema9": 77590.51186764328,
+    "ema21": 77568.89860155477,
     "trend_15m": "SIDEWAYS",
     "trend_1h": "UP",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-01T00:26:14.064506+00:00",
-    "reference_price": 77489.0,
-    "previous_close": 77535.0,
+    "timestamp": "2026-11-01T01:38:18.322387+00:00",
+    "reference_price": 77622.0,
+    "previous_close": 77661.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 77535.35,
-      "upper": 77647.56635353192,
-      "lower": 77423.1336464681,
-      "width_pct": 0.2894585593072381,
-      "position": 0.2934792989560799,
+      "middle": 77551.1,
+      "upper": 77688.53784049526,
+      "lower": 77413.66215950475,
+      "width_pct": 0.35444459329463684,
+      "position": 0.7579347861713533,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -57,27 +57,28 @@
       "trend": "UP"
     },
     "regime": "RANGE",
-    "adx": 15.44,
-    "atr_percentile": 3.0,
+    "adx": 17.06,
+    "atr_percentile": 15.0,
     "macd": {
-      "line": -11.0587,
-      "signal": -2.1448,
-      "hist": -8.9139,
-      "hist_prev": -8.1983
+      "line": 17.1759,
+      "signal": 5.2537,
+      "hist": 11.9223,
+      "hist_prev": 12.1434
     },
-    "vwap": 77500.33333333333,
-    "relative_volume": 0.641,
+    "vwap": 77627.2885076254,
+    "relative_volume": 4.053,
     "htf_bias": "NEUTRAL",
-    "structure_bias": "DOWN",
-    "support": 77390.0,
-    "resistance": 77497.0,
-    "premium": -1.2887e-06,
+    "structure_bias": "MIXED",
+    "support": 77522.0,
+    "resistance": 77633.0,
+    "premium": 1.41556e-05,
     "setup": null,
     "score_breakdown": {},
-    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム RANGE）",
+    "entry_status": "合意見送り: コストフィルター（想定値幅が往復コストの2倍未満）",
     "evaluation_notes": [
       "A/LONG: レジーム不一致",
-      "A/SHORT: レジーム不一致"
+      "A/SHORT: レジーム不一致",
+      "CONSENSUS: LONG 1 / SHORT 4 / FLAT 5（建玉 5名、参入条件: 成立 SHORT）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -6038,15 +6039,15 @@
       "equity": 75.1875515575673,
       "marked_equity": 75.1875515575673,
       "price": 77596.5
+    },
+    {
+      "timestamp": "2026-11-01T01:38:18.322444+00:00",
+      "equity": 75.1875515575673,
+      "marked_equity": 75.1875515575673,
+      "price": 77709.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-10-27T10:06:26.201113+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00131577,
-      "hours": 0.6644
-    },
     {
       "timestamp": "2026-10-27T10:43:25.099707+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -6763,6 +6764,16 @@
     {
       "timestamp": "2026-11-01T00:26:14.064456+00:00",
       "type": "DAILY_RESET"
+    },
+    {
+      "timestamp": "2026-11-01T01:38:16.102772+00:00",
+      "type": "CONSENSUS_TRADER_AUTO_DISABLED",
+      "trader": "0xb0026ca48937bd18c5941c05decab68b0fcced8a",
+      "label": "HL-ED8A",
+      "reason": "inactive_30d",
+      "closes": 0,
+      "win_rate": 0.0,
+      "realized_pnl": 0
     }
   ],
   "stats_by_setup": {
@@ -6825,26 +6836,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 45.271,
-    "atr": 69.13888,
+    "rsi_15m": 55.664,
+    "atr": 71.89762,
     "bollinger": {
-      "middle": 77535.35,
-      "upper": 77647.56635353192,
-      "lower": 77423.1336464681,
-      "width_pct": 0.2894585593072381,
-      "position": 0.2934792989560799,
+      "middle": 77551.1,
+      "upper": 77688.53784049526,
+      "lower": 77413.66215950475,
+      "width_pct": 0.35444459329463684,
+      "position": 0.7579347861713533,
       "state": "INSIDE"
     },
-    "adx": 15.44,
-    "atr_percentile": 3.0,
+    "adx": 17.06,
+    "atr_percentile": 15.0,
     "macd": {
-      "line": -11.0587,
-      "signal": -2.1448,
-      "hist": -8.9139,
-      "hist_prev": -8.1983
+      "line": 17.1759,
+      "signal": 5.2537,
+      "hist": 11.9223,
+      "hist_prev": 12.1434
     },
-    "vwap": 77500.33333333333,
-    "relative_volume": 0.641
+    "vwap": 77627.2885076254,
+    "relative_volume": 4.053
   },
   "fibonacci": {
     "swing_high": 81955.0,
@@ -6875,7 +6886,12 @@
     "tp1_at_r": 1.5,
     "tp2_at_r": 3.0,
     "copy_traders": 3,
-    "copy_follow_source_exit": true
+    "copy_follow_source_exit": true,
+    "consensus_traders": 10,
+    "consensus_min_active": 5,
+    "consensus_entry_ratio": 0.8,
+    "consensus_exit_ratio": 0.5,
+    "consensus_min_pool": 7
   },
   "last_error": null,
   "next_high_event": {
@@ -6906,11 +6922,11 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793407132,
+          "ts": 1793497080,
           "fills": 2000,
-          "closes": 909,
-          "win_rate": 0.6304,
-          "realized_pnl": 44925.16
+          "closes": 910,
+          "win_rate": 0.6308,
+          "realized_pnl": 44412.65
         }
       },
       {
@@ -6921,11 +6937,11 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793407132,
+          "ts": 1793497080,
           "fills": 2000,
-          "closes": 1056,
-          "win_rate": 0.5436,
-          "realized_pnl": 13272.61
+          "closes": 1011,
+          "win_rate": 0.452,
+          "realized_pnl": 10257.64
         }
       },
       {
@@ -6936,11 +6952,179 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793407132,
-          "fills": 1481,
-          "closes": 660,
-          "win_rate": 0.4667,
-          "realized_pnl": 64969.61
+          "ts": 1793497080,
+          "fills": 1521,
+          "closes": 661,
+          "win_rate": 0.466,
+          "realized_pnl": 64666.67
+        }
+      }
+    ]
+  },
+  "consensus": {
+    "enabled": true,
+    "min_active": 5,
+    "entry_ratio": 0.8,
+    "exit_ratio": 0.5,
+    "min_pool": 7,
+    "long_count": 1,
+    "short_count": 4,
+    "flat_count": 5,
+    "positioned": 5,
+    "long_ratio": 0.2,
+    "short_ratio": 0.8,
+    "enabled_pool": 10,
+    "valid": true,
+    "updated_ts": 1793497080,
+    "traders": [
+      {
+        "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+        "label": "HL-F79D",
+        "side": "LONG",
+        "source_entry_price": 77591.7,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 777,
+          "closes": 369,
+          "win_rate": 0.5718,
+          "realized_pnl": 61652.43
+        }
+      },
+      {
+        "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+        "label": "HL-684B",
+        "side": null,
+        "source_entry_price": null,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 2579,
+          "closes": 1076,
+          "win_rate": 0.6561,
+          "realized_pnl": 56221.26
+        }
+      },
+      {
+        "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+        "label": "HL-D918",
+        "side": "SHORT",
+        "source_entry_price": 77164.5,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 1171,
+          "closes": 556,
+          "win_rate": 0.5647,
+          "realized_pnl": 40502.14
+        }
+      },
+      {
+        "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+        "label": "HL-4A6F",
+        "side": "SHORT",
+        "source_entry_price": 78774.7,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 239,
+          "closes": 79,
+          "win_rate": 0.443,
+          "realized_pnl": 80439.98
+        }
+      },
+      {
+        "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+        "label": "HL-8888",
+        "side": "SHORT",
+        "source_entry_price": 79982.6,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 5627,
+          "closes": 2613,
+          "win_rate": 0.7807,
+          "realized_pnl": 459906.38
+        }
+      },
+      {
+        "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+        "label": "HL-7ACA",
+        "side": null,
+        "source_entry_price": null,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 43,
+          "closes": 30,
+          "win_rate": 0.5,
+          "realized_pnl": 6215.98
+        }
+      },
+      {
+        "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+        "label": "HL-C463",
+        "side": null,
+        "source_entry_price": null,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 179,
+          "closes": 106,
+          "win_rate": 0.9151,
+          "realized_pnl": 19686.19
+        }
+      },
+      {
+        "address": "0xb0026ca48937bd18c5941c05decab68b0fcced8a",
+        "label": "HL-ED8A",
+        "side": null,
+        "source_entry_price": null,
+        "auto_disabled": true,
+        "disabled_reason": "inactive_30d",
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 0,
+          "closes": 0,
+          "win_rate": 0.0,
+          "realized_pnl": 0
+        }
+      },
+      {
+        "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+        "label": "HL-2274",
+        "side": "SHORT",
+        "source_entry_price": 81670.3,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 216,
+          "closes": 49,
+          "win_rate": 1.0,
+          "realized_pnl": 75965.9
+        }
+      },
+      {
+        "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+        "label": "HL-2B76",
+        "side": null,
+        "source_entry_price": null,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 260,
+          "closes": 129,
+          "win_rate": 0.6124,
+          "realized_pnl": 6723.57
         }
       }
     ]

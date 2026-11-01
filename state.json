@@ -1,5 +1,5 @@
 {
-  "build": "BTC_PAPER_V20_4_PRO_2026-10-30",
+  "build": "BTC_PAPER_V20_5_PRO_2026-11-01",
   "initial_equity": 100.0,
   "equity": 75.1875515575673,
   "peak_equity": 102.00383571561161,
@@ -3833,6 +3833,12 @@
       "equity": 75.1875515575673,
       "marked_equity": 75.1875515575673,
       "price": 77596.5
+    },
+    {
+      "timestamp": "2026-11-01T01:38:18.322444+00:00",
+      "equity": 75.1875515575673,
+      "marked_equity": 75.1875515575673,
+      "price": 77709.5
     }
   ],
   "position": null,
@@ -5198,6 +5204,16 @@
     {
       "timestamp": "2026-11-01T00:26:14.064456+00:00",
       "type": "DAILY_RESET"
+    },
+    {
+      "timestamp": "2026-11-01T01:38:16.102772+00:00",
+      "type": "CONSENSUS_TRADER_AUTO_DISABLED",
+      "trader": "0xb0026ca48937bd18c5941c05decab68b0fcced8a",
+      "label": "HL-ED8A",
+      "reason": "inactive_30d",
+      "closes": 0,
+      "win_rate": 0.0,
+      "realized_pnl": 0
     }
   ],
   "econ_calendar": {
@@ -5224,7 +5240,7 @@
     "last_block_log_ts": 0
   },
   "copy": {
-    "last_recheck_ts": 1793407132,
+    "last_recheck_ts": 1793497080,
     "traders": {
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
@@ -5233,18 +5249,18 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793454460.877,
-          "updated_ts": 1793492773
+          "updated_ts": 1793497080
         },
         "auto_disabled": false,
         "disabled_reason": null,
         "disabled_ts": 0,
         "last_error_ts": 0,
         "reeval": {
-          "ts": 1793407132,
+          "ts": 1793497080,
           "fills": 2000,
-          "closes": 909,
-          "win_rate": 0.6304,
-          "realized_pnl": 44925.16
+          "closes": 910,
+          "win_rate": 0.6308,
+          "realized_pnl": 44412.65
         }
       },
       "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
@@ -5254,18 +5270,18 @@
           "szi": -3.0,
           "entry_px": 77164.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793492773
+          "updated_ts": 1793497080
         },
         "auto_disabled": false,
         "disabled_reason": null,
         "disabled_ts": 0,
         "last_error_ts": 0,
         "reeval": {
-          "ts": 1793407132,
+          "ts": 1793497080,
           "fills": 2000,
-          "closes": 1056,
-          "win_rate": 0.5436,
-          "realized_pnl": 13272.61
+          "closes": 1011,
+          "win_rate": 0.452,
+          "realized_pnl": 10257.64
         }
       },
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
@@ -5275,20 +5291,289 @@
           "szi": 7.02241,
           "entry_px": 77591.7,
           "event_ts": 1793473053.618,
-          "updated_ts": 1793492773
+          "updated_ts": 1793497080
         },
         "auto_disabled": false,
         "disabled_reason": null,
         "disabled_ts": 0,
         "last_error_ts": 0,
         "reeval": {
-          "ts": 1793407132,
-          "fills": 1481,
-          "closes": 660,
-          "win_rate": 0.4667,
-          "realized_pnl": 64969.61
+          "ts": 1793497080,
+          "fills": 1521,
+          "closes": 661,
+          "win_rate": 0.466,
+          "realized_pnl": 64666.67
         }
       }
+    }
+  },
+  "consensus": {
+    "last_recheck_ts": 1793497080,
+    "traders": {
+      "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
+        "label": "HL-F79D",
+        "snapshot": {
+          "side": "LONG",
+          "szi": 7.02241,
+          "entry_px": 77591.7,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 777,
+          "closes": 369,
+          "win_rate": 0.5718,
+          "realized_pnl": 61652.43
+        }
+      },
+      "0x24e370916722584204322fad3c179a7fbde6684b": {
+        "label": "HL-684B",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 2579,
+          "closes": 1076,
+          "win_rate": 0.6561,
+          "realized_pnl": 56221.26
+        }
+      },
+      "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
+        "label": "HL-D918",
+        "snapshot": {
+          "side": "SHORT",
+          "szi": -3.0,
+          "entry_px": 77164.5,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 1171,
+          "closes": 556,
+          "win_rate": 0.5647,
+          "realized_pnl": 40502.14
+        }
+      },
+      "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f": {
+        "label": "HL-4A6F",
+        "snapshot": {
+          "side": "SHORT",
+          "szi": -12.9055,
+          "entry_px": 78774.7,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 239,
+          "closes": 79,
+          "win_rate": 0.443,
+          "realized_pnl": 80439.98
+        }
+      },
+      "0x418aa6bf98a2b2bc93779f810330d88cde488888": {
+        "label": "HL-8888",
+        "snapshot": {
+          "side": "SHORT",
+          "szi": -94.0,
+          "entry_px": 79982.6,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 5627,
+          "closes": 2613,
+          "win_rate": 0.7807,
+          "realized_pnl": 459906.38
+        }
+      },
+      "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd": {
+        "label": "HL-7ACA",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 43,
+          "closes": 30,
+          "win_rate": 0.5,
+          "realized_pnl": 6215.98
+        }
+      },
+      "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463": {
+        "label": "HL-C463",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 179,
+          "closes": 106,
+          "win_rate": 0.9151,
+          "realized_pnl": 19686.19
+        }
+      },
+      "0xb0026ca48937bd18c5941c05decab68b0fcced8a": {
+        "label": "HL-ED8A",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": true,
+        "disabled_reason": "inactive_30d",
+        "disabled_ts": 1793497080,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 0,
+          "closes": 0,
+          "win_rate": 0.0,
+          "realized_pnl": 0
+        }
+      },
+      "0x8738542e8fa99afda8eecc8acdae17b68f532274": {
+        "label": "HL-2274",
+        "snapshot": {
+          "side": "SHORT",
+          "szi": -30.59863,
+          "entry_px": 81670.3,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 216,
+          "closes": 49,
+          "win_rate": 1.0,
+          "realized_pnl": 75965.9
+        }
+      },
+      "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
+        "label": "HL-2B76",
+        "snapshot": {
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793497080
+        },
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "disabled_ts": 0,
+        "last_error_ts": 0,
+        "reeval": {
+          "ts": 1793497080,
+          "fills": 260,
+          "closes": 129,
+          "win_rate": 0.6124,
+          "realized_pnl": 6723.57
+        }
+      }
+    },
+    "current": {
+      "fetched": 10,
+      "long_count": 1,
+      "short_count": 4,
+      "flat_count": 5,
+      "positioned": 5,
+      "long_ratio": 0.2,
+      "short_ratio": 0.8,
+      "valid": true,
+      "members": [
+        {
+          "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+          "label": "HL-F79D",
+          "side": "LONG"
+        },
+        {
+          "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+          "label": "HL-684B",
+          "side": null
+        },
+        {
+          "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+          "label": "HL-D918",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+          "label": "HL-4A6F",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+          "label": "HL-8888",
+          "side": "SHORT"
+        },
+        {
+          "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+          "label": "HL-7ACA",
+          "side": null
+        },
+        {
+          "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+          "label": "HL-C463",
+          "side": null
+        },
+        {
+          "address": "0xb0026ca48937bd18c5941c05decab68b0fcced8a",
+          "label": "HL-ED8A",
+          "side": null
+        },
+        {
+          "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+          "label": "HL-2274",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+          "label": "HL-2B76",
+          "side": null
+        }
+      ],
+      "ts": 1793497080,
+      "enabled_pool": 10
     }
   },
   "open_trade": null,
