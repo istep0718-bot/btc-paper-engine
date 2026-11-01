@@ -1,9 +1,9 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
   "initial_equity": 100.0,
-  "equity": 74.71647672212515,
+  "equity": 74.67267877599696,
   "peak_equity": 102.00383571561161,
-  "max_drawdown_pct": 26.75130675434998,
+  "max_drawdown_pct": 26.819072008692057,
   "realized_pnl": -25.266466459135298,
   "trades": [
     {
@@ -4114,18 +4114,136 @@
       "equity": 74.71647672212515,
       "marked_equity": 74.71647672212515,
       "price": 77721.5
+    },
+    {
+      "timestamp": "2026-11-01T19:44:55.419960+00:00",
+      "equity": 74.67267877599696,
+      "marked_equity": 74.64735356341379,
+      "price": 77755.5
     }
   ],
-  "position": null,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 77787.4394,
+    "quantity": 0.0011260930161995871,
+    "leverage": 40.0,
+    "margin_used": 2.189897306409715,
+    "notional": 87.59589225638861,
+    "planned_risk": 0.46697797951328596,
+    "effective_risk_pct": 0.6250000000000051,
+    "stop_price": 78054.33190346339,
+    "initial_stop_price": 78054.33190346339,
+    "risk_distance": 266.89250346339,
+    "entry_fee": 0.04379794612819431,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-11-01T19:44:52+00:00",
+    "opened_timestamp": 1793562292,
+    "last_funding_ts": 1793562292,
+    "last_checked_candle_ts": 1793560500000,
+    "entry_signal_score": 0,
+    "score": 0,
+    "score_breakdown": {
+      "consensus_signal": 0
+    },
+    "setup": "E",
+    "regime": "HIGH_VOLATILITY",
+    "origin_build": "BTC_PAPER_V20_6_PRO_2026-11-01",
+    "targets": {
+      "tp1_price": 77387.10064480492,
+      "tp2_price": 76986.76188960983,
+      "be_price": 77639.64326514001
+    },
+    "zone_room_r": 0.14402577630014143,
+    "source_trader": null,
+    "source_trader_label": null,
+    "source_entry_price": null,
+    "copy_source_event_ts": null,
+    "copy_detection_lag_seconds": null,
+    "consensus_ratio": 1.0,
+    "consensus_long_count": 0,
+    "consensus_short_count": 5,
+    "consensus_flat_count": 4,
+    "consensus_members": [
+      {
+        "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+        "label": "HL-F79D",
+        "side": null
+      },
+      {
+        "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+        "label": "HL-684B",
+        "side": "SHORT"
+      },
+      {
+        "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+        "label": "HL-D918",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+        "label": "HL-4A6F",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+        "label": "HL-8888",
+        "side": "SHORT"
+      },
+      {
+        "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+        "label": "HL-7ACA",
+        "side": null
+      },
+      {
+        "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+        "label": "HL-C463",
+        "side": null
+      },
+      {
+        "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+        "label": "HL-2274",
+        "side": "SHORT"
+      },
+      {
+        "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+        "label": "HL-2B76",
+        "side": null
+      }
+    ],
+    "qty_initial": 0.0011260930161995871,
+    "risk_usd_initial": 0.46697797951328596,
+    "entry_equity": 74.71647672212515,
+    "risk_multiplier": 0.125,
+    "tp1_taken": false,
+    "tp2_taken": false,
+    "hold_extensions": 0,
+    "trend_flip_exit": false,
+    "runner_floor_active": false,
+    "partial_taken": false,
+    "be_moved": false,
+    "trail_active": false,
+    "best_price": 77803.0,
+    "worst_price": 77803.0,
+    "mfe_r": 0.0,
+    "mae_r": 0.0,
+    "acc_net_pnl": 0.0,
+    "acc_fees": 0.04379794612819431,
+    "acc_funding": 0.0,
+    "acc_r": 0.0,
+    "saw_stop_loss": false,
+    "entry_event_within_24h": false,
+    "entry_event_upcoming_24h": false,
+    "entry_event_name": null
+  },
   "last_close_ts": 1793541600,
-  "last_entry_candle": 1793542500000,
+  "last_entry_candle": 1793560500000,
   "consecutive_losses": 6,
   "consecutive_lock_until": 1793548800,
   "daily_date": "2026-11-01",
   "daily_start_equity": 75.1875515575673,
   "daily_loss_lock": false,
   "daily_stop_count": 1,
-  "next_risk_multiplier": 0.5,
+  "next_risk_multiplier": 1.0,
   "drawdown_pause_until": 0,
   "stats_by_setup": {
     "LEGACY": {
@@ -5627,6 +5745,76 @@
       "timestamp": "2026-11-01T15:56:30.107221+00:00",
       "type": "ECON_CALENDAR_UPDATED",
       "events": 4
+    },
+    {
+      "timestamp": "2026-11-01T19:44:55.419861+00:00",
+      "type": "CONSENSUS_ENTRY",
+      "side": "SHORT",
+      "entry_price": 77787.4394,
+      "consensus_ratio": 1.0,
+      "long_count": 0,
+      "short_count": 5,
+      "flat_count": 4,
+      "members": [
+        {
+          "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
+          "label": "HL-F79D",
+          "side": null
+        },
+        {
+          "address": "0x24e370916722584204322fad3c179a7fbde6684b",
+          "label": "HL-684B",
+          "side": "SHORT"
+        },
+        {
+          "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+          "label": "HL-D918",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
+          "label": "HL-4A6F",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+          "label": "HL-8888",
+          "side": "SHORT"
+        },
+        {
+          "address": "0xc35bf47aca839e371eb70fc5d16a5b747ad4d8dd",
+          "label": "HL-7ACA",
+          "side": null
+        },
+        {
+          "address": "0xa8bbbd1f531f5b904f750d02c3b0e338f202c463",
+          "label": "HL-C463",
+          "side": null
+        },
+        {
+          "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
+          "label": "HL-2274",
+          "side": "SHORT"
+        },
+        {
+          "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
+          "label": "HL-2B76",
+          "side": null
+        }
+      ]
+    },
+    {
+      "timestamp": "2026-11-01T19:44:55.419873+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "setup": "E",
+      "regime": "HIGH_VOLATILITY",
+      "score": 0,
+      "entry_price": 77787.4394,
+      "stop_price": 78054.33190346339,
+      "quantity": 0.0011260930161995871,
+      "leverage": 40.0,
+      "effective_risk_pct": 0.6250000000000051
     }
   ],
   "econ_calendar": {
@@ -5676,7 +5864,7 @@
           "szi": -1.5,
           "entry_px": 78068.3,
           "event_ts": 1793498663.248,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5697,7 +5885,7 @@
           "szi": -6.0,
           "entry_px": 77873.4,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5718,7 +5906,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793473053.618,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5743,7 +5931,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5763,7 +5951,7 @@
           "side": "SHORT",
           "szi": -1.5,
           "entry_px": 78068.3,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5783,7 +5971,7 @@
           "side": "SHORT",
           "szi": -6.0,
           "entry_px": 77873.4,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5803,7 +5991,7 @@
           "side": "SHORT",
           "szi": -12.9055,
           "entry_px": 78774.7,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5823,7 +6011,7 @@
           "side": "SHORT",
           "szi": -94.0,
           "entry_px": 79937.3,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5843,7 +6031,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5863,7 +6051,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5903,7 +6091,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5923,7 +6111,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793560345
+          "updated_ts": 1793562292
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5994,7 +6182,7 @@
           "side": null
         }
       ],
-      "ts": 1793560345,
+      "ts": 1793562292,
       "enabled_pool": 9
     }
   },
