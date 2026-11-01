@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
   "initial_equity": 100.0,
-  "equity": 74.67267877599696,
+  "equity": 74.67321712575145,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 26.819072008692057,
   "realized_pnl": -25.266466459135298,
@@ -4120,6 +4120,12 @@
       "equity": 74.67267877599696,
       "marked_equity": 74.64735356341379,
       "price": 77755.5
+    },
+    {
+      "timestamp": "2026-11-01T20:14:24.263743+00:00",
+      "equity": 74.67321712575145,
+      "marked_equity": 74.65127255701222,
+      "price": 77752.5
     }
   ],
   "position": {
@@ -4135,11 +4141,11 @@
     "initial_stop_price": 78054.33190346339,
     "risk_distance": 266.89250346339,
     "entry_fee": 0.04379794612819431,
-    "funding_pnl": 0.0,
+    "funding_pnl": 0.0005383497544923883,
     "entry_time": "2026-11-01T19:44:52+00:00",
     "opened_timestamp": 1793562292,
-    "last_funding_ts": 1793562292,
-    "last_checked_candle_ts": 1793560500000,
+    "last_funding_ts": 1793564062,
+    "last_checked_candle_ts": 1793562300000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -4222,10 +4228,10 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 77803.0,
-    "worst_price": 77803.0,
-    "mfe_r": 0.0,
-    "mae_r": 0.0,
+    "best_price": 77697.0,
+    "worst_price": 77806.0,
+    "mfe_r": 0.33886077288195027,
+    "mae_r": 0.0695433545683798,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.04379794612819431,
     "acc_funding": 0.0,
@@ -4233,7 +4239,9 @@
     "saw_stop_loss": false,
     "entry_event_within_24h": false,
     "entry_event_upcoming_24h": false,
-    "entry_event_name": null
+    "entry_event_name": null,
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1793541600,
   "last_entry_candle": 1793560500000,
@@ -5815,6 +5823,12 @@
       "quantity": 0.0011260930161995871,
       "leverage": 40.0,
       "effective_risk_pct": 0.6250000000000051
+    },
+    {
+      "timestamp": "2026-11-01T20:14:24.263607+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00053835,
+      "hours": 0.4917
     }
   ],
   "econ_calendar": {
@@ -5864,7 +5878,7 @@
           "szi": -1.5,
           "entry_px": 78068.3,
           "event_ts": 1793498663.248,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5885,7 +5899,7 @@
           "szi": -6.0,
           "entry_px": 77873.4,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5906,7 +5920,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793473053.618,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5931,7 +5945,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5951,7 +5965,7 @@
           "side": "SHORT",
           "szi": -1.5,
           "entry_px": 78068.3,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5971,7 +5985,7 @@
           "side": "SHORT",
           "szi": -6.0,
           "entry_px": 77873.4,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5991,7 +6005,7 @@
           "side": "SHORT",
           "szi": -12.9055,
           "entry_px": 78774.7,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6011,7 +6025,7 @@
           "side": "SHORT",
           "szi": -94.0,
           "entry_px": 79937.3,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6031,7 +6045,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6051,7 +6065,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6091,7 +6105,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6111,7 +6125,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793562292
+          "updated_ts": 1793564062
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6182,7 +6196,7 @@
           "side": null
         }
       ],
-      "ts": 1793562292,
+      "ts": 1793564062,
       "enabled_pool": 9
     }
   },
