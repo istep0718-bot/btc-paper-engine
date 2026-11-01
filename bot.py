@@ -61,6 +61,26 @@ Design pillars (fixing V19.x fatal flaws):
     the same daily re-evaluation / auto-disable as Setup D, and E
     stops opening new positions when the enabled pool drops below
     seven.
+  * V20.6: Setup E gets its own cost-filter multiple
+    (COST_FILTER_MULT_E = 1.5x, vs the shared COST_FILTER_MULT =
+    2.0x; user-approved 2026-11-01). The cost filter uses the
+    structural stop distance as the unit of expected movement, but
+    E's expected move is the vetted-trader consensus itself (in
+    the 45-day reconstruction its winners held for days and ran
+    several percent), so the stop distance systematically
+    understates it -- a category mismatch. The shared 2.0x is also
+    structurally unreachable in low-volatility cycles: the stop is
+    clamped to <= 2.6 x ATR, so once ATR falls below ~0.146% of
+    price the required 2.0x distance exceeds the clamp and every
+    setup is vetoed on structure alone (2026-11-01: ATR $88 =
+    0.113% of price, required distance $296 vs clamp cap $229,
+    while the consensus sat at 100% SHORT all day). Only E is
+    relaxed -- its entry premise does not depend on that 15m
+    distance -- and A/B/C/D/F keep 2.0x so their running
+    measurement series stay comparable. E has no live trades yet,
+    so its measurement starts cleanly at 1.5x; the rejection
+    reason keeps the "コストフィルター（...）" form and now
+    records the multiple that was applied.
 """
 
 import json
@@ -70,7 +90,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_5_PRO_2026-11-01"
+BUILD = "BTC_PAPER_V20_6_PRO_2026-11-01"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -135,6 +155,12 @@ COST_FILTER_MULT = 2.0       # risk distance must be >= 2x round-trip cost
 # (max R ~= 2.2x round-trip cost). 2x caps cost drag at 50% of initial
 # risk as a hard ceiling; the +1R breakeven and staged exits reduce the
 # realized drag further.
+COST_FILTER_MULT_E = 1.5     # setup E only (V20.6): E's expected move
+# is the vetted-trader consensus itself, not the 15m structural stop
+# distance the shared filter measures, so E gets a lower multiple.
+# Still caps cost drag at ~67% of initial risk. All other setups
+# (A/B/C/D/F) keep COST_FILTER_MULT so their measurement series stay
+# comparable.
 SETUP_C_RISK_MULT = 0.5      # range fades take half risk
 
 # --- Setup F (V20.4): trend continuation / momentum ----------------
@@ -1620,11 +1646,15 @@ def _finalize_candidate(ctx, side, setup, stop_anchor, breakdown_extra=None):
 
     # Cost filter: the risk distance (our unit of expected movement)
     # must be a healthy multiple of the round-trip cost per unit.
+    # Setup E uses its own lower multiple (V20.6, COST_FILTER_MULT_E):
+    # its expected move is the trader consensus, which the structural
+    # stop distance systematically understates.
     round_trip_cost = entry * ROUND_TRIP_COST_RATE
-    if distance < COST_FILTER_MULT * round_trip_cost:
+    cost_mult = COST_FILTER_MULT_E if setup == "E" else COST_FILTER_MULT
+    if distance < cost_mult * round_trip_cost:
         return None, (
             f"コストフィルター（想定値幅が往復コストの"
-            f"{COST_FILTER_MULT:.0f}倍未満）"
+            f"{cost_mult:g}倍未満）"
         )
 
     # Zone room: never enter with < 1.5R of room to the opposing zone.
