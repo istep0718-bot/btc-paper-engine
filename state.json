@@ -3839,6 +3839,12 @@
       "equity": 75.1875515575673,
       "marked_equity": 75.1875515575673,
       "price": 77709.5
+    },
+    {
+      "timestamp": "2026-11-01T02:26:59.221633+00:00",
+      "equity": 75.1875515575673,
+      "marked_equity": 75.1875515575673,
+      "price": 77691.5
     }
   ],
   "position": null,
@@ -5214,6 +5220,17 @@
       "closes": 0,
       "win_rate": 0.0,
       "realized_pnl": 0
+    },
+    {
+      "timestamp": "2026-11-01T02:26:57.511804+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "SHORT",
+      "source_entry_price": 77825.0,
+      "source_event_ts": 1793498663,
+      "age_seconds": 1353,
+      "fresh": true
     }
   ],
   "econ_calendar": {
@@ -5245,11 +5262,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "event_ts": 1793454460.877,
-          "updated_ts": 1793497080
+          "side": "SHORT",
+          "szi": -0.2,
+          "entry_px": 77825.0,
+          "event_ts": 1793498663.248,
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5270,7 +5287,7 @@
           "szi": -3.0,
           "entry_px": 77164.5,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5291,7 +5308,7 @@
           "szi": 7.02241,
           "entry_px": 77591.7,
           "event_ts": 1793473053.618,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5316,7 +5333,7 @@
           "side": "LONG",
           "szi": 7.02241,
           "entry_px": 77591.7,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5333,10 +5350,10 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1793497080
+          "side": "SHORT",
+          "szi": -0.2,
+          "entry_px": 77825.0,
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5356,7 +5373,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77164.5,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5376,7 +5393,7 @@
           "side": "SHORT",
           "szi": -12.9055,
           "entry_px": 78774.7,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5396,7 +5413,7 @@
           "side": "SHORT",
           "szi": -94.0,
           "entry_px": 79982.6,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5416,7 +5433,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5436,7 +5453,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5476,7 +5493,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5496,7 +5513,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793497080
+          "updated_ts": 1793500017
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5512,13 +5529,13 @@
       }
     },
     "current": {
-      "fetched": 10,
+      "fetched": 9,
       "long_count": 1,
-      "short_count": 4,
-      "flat_count": 5,
-      "positioned": 5,
-      "long_ratio": 0.2,
-      "short_ratio": 0.8,
+      "short_count": 5,
+      "flat_count": 3,
+      "positioned": 6,
+      "long_ratio": 0.16666666666666666,
+      "short_ratio": 0.8333333333333334,
       "valid": true,
       "members": [
         {
@@ -5529,7 +5546,7 @@
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
           "label": "HL-684B",
-          "side": null
+          "side": "SHORT"
         },
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
@@ -5557,11 +5574,6 @@
           "side": null
         },
         {
-          "address": "0xb0026ca48937bd18c5941c05decab68b0fcced8a",
-          "label": "HL-ED8A",
-          "side": null
-        },
-        {
           "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
           "label": "HL-2274",
           "side": "SHORT"
@@ -5572,8 +5584,8 @@
           "side": null
         }
       ],
-      "ts": 1793497080,
-      "enabled_pool": 10
+      "ts": 1793500017,
+      "enabled_pool": 9
     }
   },
   "open_trade": null,
