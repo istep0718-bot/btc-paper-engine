@@ -1,9 +1,9 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
   "initial_equity": 100.0,
-  "equity": 75.13970463887115,
+  "equity": 75.14084698405502,
   "peak_equity": 102.00383571561161,
-  "max_drawdown_pct": 26.42385873503069,
+  "max_drawdown_pct": 26.59880148415425,
   "realized_pnl": -24.795391623693153,
   "trades": [
     {
@@ -3929,6 +3929,12 @@
       "equity": 75.13970463887115,
       "marked_equity": 75.05048626180562,
       "price": 77829.5
+    },
+    {
+      "timestamp": "2026-11-01T13:28:42.523288+00:00",
+      "equity": 75.14084698405502,
+      "marked_equity": 74.87318029257712,
+      "price": 77974.5
     }
   ],
   "position": {
@@ -3944,11 +3950,11 @@
     "initial_stop_price": 78045.70024202418,
     "risk_distance": 234.2656420241724,
     "entry_fee": 0.04784691869614925,
-    "funding_pnl": 0.0,
+    "funding_pnl": 0.0011423451838705634,
     "entry_time": "2026-11-01T12:31:22+00:00",
     "opened_timestamp": 1793536282,
-    "last_funding_ts": 1793536282,
-    "last_checked_candle_ts": 1793535300000,
+    "last_funding_ts": 1793539720,
+    "last_checked_candle_ts": 1793538000000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -4031,10 +4037,10 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 77827.0,
-    "worst_price": 77827.0,
-    "mfe_r": 0.0,
-    "mae_r": 0.0,
+    "best_price": 77793.0,
+    "worst_price": 78012.0,
+    "mfe_r": 0.07869101008890422,
+    "mae_r": 0.856145178896089,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.04784691869614925,
     "acc_funding": 0.0,
@@ -4042,7 +4048,9 @@
     "saw_stop_loss": false,
     "entry_event_within_24h": false,
     "entry_event_upcoming_24h": false,
-    "entry_event_name": null
+    "entry_event_name": null,
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1793385900,
   "last_entry_candle": 1793535300000,
@@ -5504,6 +5512,12 @@
       "quantity": 0.0012298171584192651,
       "leverage": 40.0,
       "effective_risk_pct": 0.6250000000000052
+    },
+    {
+      "timestamp": "2026-11-01T13:28:42.523126+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00114235,
+      "hours": 0.955
     }
   ],
   "econ_calendar": {
@@ -5521,10 +5535,10 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "SHORT",
-          "szi": -2.0,
+          "szi": -1.0,
           "entry_px": 78082.5,
           "event_ts": 1793498663.248,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5545,7 +5559,7 @@
           "szi": -6.0,
           "entry_px": 77873.4,
           "event_ts": 1793329607.183,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5566,7 +5580,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793473053.618,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5591,7 +5605,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5609,9 +5623,9 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "SHORT",
-          "szi": -2.0,
+          "szi": -1.0,
           "entry_px": 78082.5,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5631,7 +5645,7 @@
           "side": "SHORT",
           "szi": -6.0,
           "entry_px": 77873.4,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5651,7 +5665,7 @@
           "side": "SHORT",
           "szi": -12.9055,
           "entry_px": 78774.7,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5671,7 +5685,7 @@
           "side": "SHORT",
           "szi": -94.75,
           "entry_px": 79951.7,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5691,7 +5705,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5711,7 +5725,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5751,7 +5765,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5771,7 +5785,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793536282
+          "updated_ts": 1793539720
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -5842,7 +5856,7 @@
           "side": null
         }
       ],
-      "ts": 1793536282,
+      "ts": 1793539720,
       "enabled_pool": 9
     }
   },
