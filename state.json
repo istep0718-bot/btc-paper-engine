@@ -1,9 +1,9 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
   "initial_equity": 100.0,
-  "equity": 73.77631300506991,
+  "equity": 73.77782575292183,
   "peak_equity": 102.00383571561161,
-  "max_drawdown_pct": 27.871367707794615,
+  "max_drawdown_pct": 27.998819427152373,
   "realized_pnl": -26.143434443473517,
   "trades": [
     {
@@ -4734,6 +4734,12 @@
       "equity": 73.77631300506991,
       "marked_equity": 73.57397158725877,
       "price": 77900.5
+    },
+    {
+      "timestamp": "2026-11-02T15:44:44.021820+00:00",
+      "equity": 73.77782575292183,
+      "marked_equity": 73.44547869268028,
+      "price": 77980.5
     }
   ],
   "position": {
@@ -4749,11 +4755,11 @@
     "initial_stop_price": 78250.92213079182,
     "risk_distance": 420.49133079181775,
     "entry_fee": 0.06319573271702854,
-    "funding_pnl": 0.0,
+    "funding_pnl": 0.0015127478519138707,
     "entry_time": "2026-11-02T14:47:13+00:00",
     "opened_timestamp": 1793630833,
-    "last_funding_ts": 1793630833,
-    "last_checked_candle_ts": 1793629800000,
+    "last_funding_ts": 1793634280,
+    "last_checked_candle_ts": 1793632500000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -4836,10 +4842,10 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 77846.0,
-    "worst_price": 77846.0,
-    "mfe_r": 0.0,
-    "mae_r": 0.0,
+    "best_price": 77687.0,
+    "worst_price": 78108.0,
+    "mfe_r": 0.34110287061069866,
+    "mae_r": 0.6601068313996243,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.06319573271702854,
     "acc_funding": 0.0,
@@ -4847,7 +4853,9 @@
     "saw_stop_loss": false,
     "entry_event_within_24h": false,
     "entry_event_upcoming_24h": false,
-    "entry_event_name": null
+    "entry_event_name": null,
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1793626200,
   "last_entry_candle": 1793629800000,
@@ -4942,20 +4950,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-26T08:27:57.852434+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00663103,
-      "hours": 0.7256
-    },
-    {
-      "timestamp": "2026-10-26T08:27:57.852472+00:00",
-      "type": "POSITION_PARTIALLY_CLOSED",
-      "side": "SHORT",
-      "reason": "PARTIAL_TAKE_PROFIT",
-      "net_pnl": 2.312200226457825,
-      "fraction": 0.4
-    },
     {
       "timestamp": "2026-10-26T09:12:24.684656+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -6643,6 +6637,19 @@
       "quantity": 0.0016239337767362976,
       "leverage": 40.0,
       "effective_risk_pct": 1.25
+    },
+    {
+      "timestamp": "2026-11-02T15:44:41.277288+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "previous_side": "SHORT"
+    },
+    {
+      "timestamp": "2026-11-02T15:44:44.021658+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00151275,
+      "hours": 0.9575
     }
   ],
   "econ_calendar": {
@@ -6688,11 +6695,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -0.2,
-          "entry_px": 78100.0,
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
           "event_ts": 1793627113.765,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6759,7 +6766,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6776,10 +6783,10 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -0.2,
-          "entry_px": 78100.0,
-          "updated_ts": 1793630833
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6799,7 +6806,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77984.2,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6817,9 +6824,9 @@
         "label": "HL-4A6F",
         "snapshot": {
           "side": "SHORT",
-          "szi": -12.9055,
-          "entry_px": 78774.7,
-          "updated_ts": 1793630833
+          "szi": -13.3044,
+          "entry_px": 78753.6,
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6839,7 +6846,7 @@
           "side": "SHORT",
           "szi": -94.75,
           "entry_px": 79773.0,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6859,7 +6866,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6879,7 +6886,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6919,7 +6926,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6939,7 +6946,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793630833
+          "updated_ts": 1793634280
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6957,9 +6964,9 @@
     "current": {
       "fetched": 9,
       "long_count": 0,
-      "short_count": 5,
-      "flat_count": 4,
-      "positioned": 5,
+      "short_count": 4,
+      "flat_count": 5,
+      "positioned": 4,
       "long_ratio": 0.0,
       "short_ratio": 1.0,
       "valid": true,
@@ -6972,7 +6979,7 @@
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
           "label": "HL-684B",
-          "side": "SHORT"
+          "side": null
         },
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
@@ -7010,7 +7017,7 @@
           "side": null
         }
       ],
-      "ts": 1793630833,
+      "ts": 1793634280,
       "enabled_pool": 9
     }
   },
