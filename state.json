@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
   "initial_equity": 100.0,
-  "equity": 73.72881912541409,
+  "equity": 73.72947275275303,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 27.790125512962316,
   "realized_pnl": -26.22547320511263,
@@ -4472,6 +4472,12 @@
       "equity": 73.72881912541409,
       "marked_equity": 73.95207964913689,
       "price": 77946.5
+    },
+    {
+      "timestamp": "2026-11-02T11:33:18.729453+00:00",
+      "equity": 73.72947275275303,
+      "marked_equity": 74.056121530307,
+      "price": 77820.5
     }
   ],
   "position": {
@@ -4483,15 +4489,15 @@
     "notional": 64.18161391461213,
     "planned_risk": 0.4609841873509269,
     "effective_risk_pct": 0.625000000000004,
-    "stop_price": 78686.82081968272,
+    "stop_price": 78124.62284981999,
     "initial_stop_price": 78686.82081968272,
     "risk_distance": 413.4786196827226,
     "entry_fee": 0.03209080695730607,
-    "funding_pnl": 0.0034399562235623363,
+    "funding_pnl": 0.004093583562491355,
     "entry_time": "2026-11-02T06:27:07+00:00",
     "opened_timestamp": 1793600827,
-    "last_funding_ts": 1793616263,
-    "last_checked_candle_ts": 1793614500000,
+    "last_funding_ts": 1793619196,
+    "last_checked_candle_ts": 1793618100000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -4572,11 +4578,11 @@
     "trend_flip_exit": false,
     "runner_floor_active": false,
     "partial_taken": false,
-    "be_moved": false,
+    "be_moved": true,
     "trail_active": false,
-    "best_price": 77882.0,
+    "best_price": 77822.0,
     "worst_price": 78388.0,
-    "mfe_r": 0.9464629641558987,
+    "mfe_r": 1.0915732483249816,
     "mae_r": 0.2773004323366998,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.03209080695730607,
@@ -4671,18 +4677,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-26T03:13:23.442132+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00011937,
-      "hours": 0.3917
-    },
-    {
-      "timestamp": "2026-10-26T03:45:46.189351+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00029148,
-      "hours": 0.5397
-    },
     {
       "timestamp": "2026-10-26T04:23:35.574294+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -6308,6 +6302,17 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00076595,
       "hours": 0.9547
+    },
+    {
+      "timestamp": "2026-11-02T11:33:18.729278+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00065363,
+      "hours": 0.8147
+    },
+    {
+      "timestamp": "2026-11-02T11:33:18.729357+00:00",
+      "type": "STOP_MOVED_TO_BREAKEVEN",
+      "stop_price": 78124.62284981999
     }
   ],
   "econ_calendar": {
@@ -6357,7 +6362,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793608848.206,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6424,7 +6429,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6444,7 +6449,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6464,7 +6469,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77984.2,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6484,7 +6489,7 @@
           "side": "SHORT",
           "szi": -12.9055,
           "entry_px": 78774.7,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6502,9 +6507,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -95.5,
+          "szi": -94.75,
           "entry_px": 79814.4,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6524,7 +6529,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6544,7 +6549,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6584,7 +6589,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6604,7 +6609,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793616263
+          "updated_ts": 1793619196
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6675,7 +6680,7 @@
           "side": null
         }
       ],
-      "ts": 1793616263,
+      "ts": 1793619196,
       "enabled_pool": 9
     }
   },
