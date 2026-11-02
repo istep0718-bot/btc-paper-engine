@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_6_PRO_2026-11-01",
   "initial_equity": 100.0,
-  "equity": 73.82588821716315,
+  "equity": 73.82681443067911,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 27.998819427152373,
   "realized_pnl": -26.114863375563726,
@@ -4901,6 +4901,12 @@
       "equity": 73.82588821716315,
       "marked_equity": 73.8664859858871,
       "price": 76791.5
+    },
+    {
+      "timestamp": "2026-11-02T22:21:58.162088+00:00",
+      "equity": 73.82681443067911,
+      "marked_equity": 73.6685629460412,
+      "price": 76969.5
     }
   ],
   "position": {
@@ -4916,11 +4922,11 @@
     "initial_stop_price": 77562.66216485703,
     "risk_distance": 681.0415648570274,
     "entry_fee": 0.04291336753474627,
-    "funding_pnl": 0.0007217790011746907,
+    "funding_pnl": 0.0016479925171329645,
     "entry_time": "2026-11-02T20:49:46+00:00",
     "opened_timestamp": 1793652586,
-    "last_funding_ts": 1793655008,
-    "last_checked_candle_ts": 1793654100000,
+    "last_funding_ts": 1793658116,
+    "last_checked_candle_ts": 1793656800000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -5111,14 +5117,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-26T14:15:49.456712+00:00",
-      "type": "POSITION_CLOSED",
-      "side": "LONG",
-      "reason": "STOP_LOSS",
-      "net_pnl": -8.722346320671848,
-      "fraction": 1.0
-    },
     {
       "timestamp": "2026-10-26T15:48:51.924035+00:00",
       "type": "POSITION_OPENED",
@@ -6865,6 +6863,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00072178,
       "hours": 0.6728
+    },
+    {
+      "timestamp": "2026-11-02T22:21:58.161921+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00092621,
+      "hours": 0.8633
     }
   ],
   "econ_calendar": {
@@ -6914,7 +6918,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793627113.765,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -6981,7 +6985,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7001,7 +7005,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7021,7 +7025,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77984.2,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7041,7 +7045,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7059,9 +7063,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -91.0,
-          "entry_px": 79713.4,
-          "updated_ts": 1793655008
+          "szi": -91.75,
+          "entry_px": 79691.2,
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7081,7 +7085,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7101,7 +7105,7 @@
           "side": "LONG",
           "szi": 2.81765,
           "entry_px": 77121.0,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7141,7 +7145,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7161,7 +7165,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793655008
+          "updated_ts": 1793658116
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7232,7 +7236,7 @@
           "side": null
         }
       ],
-      "ts": 1793655008,
+      "ts": 1793658116,
       "enabled_pool": 9
     }
   },
