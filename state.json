@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_8_PRO_2026-11-03",
   "initial_equity": 100.0,
-  "equity": 73.32532686557317,
+  "equity": 73.3267380119928,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 28.51033375394082,
   "realized_pnl": -26.59798902002925,
@@ -5074,6 +5074,12 @@
       "equity": 73.32532686557317,
       "marked_equity": 72.92355680848799,
       "price": 77107.5
+    },
+    {
+      "timestamp": "2026-11-03T05:24:33.898473+00:00",
+      "equity": 73.3267380119928,
+      "marked_equity": 73.39832899086274,
+      "price": 76814.5
     }
   ],
   "position": {
@@ -5089,11 +5095,11 @@
     "initial_stop_price": 77334.67366119557,
     "risk_distance": 422.05926119556534,
     "entry_fee": 0.06208526869143783,
-    "funding_pnl": 0.0024579730334019934,
+    "funding_pnl": 0.0038691194530344657,
     "entry_time": "2026-11-03T02:54:57+00:00",
     "opened_timestamp": 1793674497,
-    "last_funding_ts": 1793680198,
-    "last_checked_candle_ts": 1793678400000,
+    "last_funding_ts": 1793683471,
+    "last_checked_candle_ts": 1793682000000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -5177,9 +5183,9 @@
     "be_moved": false,
     "trail_active": false,
     "best_price": 76544.0,
-    "worst_price": 76965.0,
+    "worst_price": 77133.0,
     "mfe_r": 0.8733711918933694,
-    "mae_r": 0.12411906292875012,
+    "mae_r": 0.5221674306487408,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.06208526869143783,
     "acc_funding": 0.0,
@@ -5295,18 +5301,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-26T23:22:42.916852+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00565894,
-      "hours": 0.3922
-    },
-    {
-      "timestamp": "2026-10-26T23:53:23.830322+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00737826,
-      "hours": 0.5114
-    },
     {
       "timestamp": "2026-10-26T23:53:23.830354+00:00",
       "type": "POSITION_CLOSED",
@@ -7097,6 +7091,23 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.0013551,
       "hours": 0.8731
+    },
+    {
+      "timestamp": "2026-11-03T05:24:31.978585+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 76904.5,
+      "source_event_ts": 1793682304,
+      "age_seconds": 1166,
+      "fresh": true
+    },
+    {
+      "timestamp": "2026-11-03T05:24:33.895834+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00141115,
+      "hours": 0.9092
     }
   ],
   "econ_calendar": {
@@ -7142,11 +7153,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "event_ts": 1793627113.765,
-          "updated_ts": 1793680198
+          "side": "LONG",
+          "szi": 0.4,
+          "entry_px": 76904.5,
+          "event_ts": 1793682304.208,
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7213,7 +7224,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7230,10 +7241,10 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1793680198
+          "side": "LONG",
+          "szi": 0.4,
+          "entry_px": 76904.5,
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7253,7 +7264,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77984.2,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7273,7 +7284,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7291,9 +7302,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -91.75,
+          "szi": -91.0,
           "entry_px": 79584.9,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7313,7 +7324,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7333,7 +7344,7 @@
           "side": "LONG",
           "szi": 2.81765,
           "entry_px": 77121.0,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7373,7 +7384,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7393,7 +7404,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793680198
+          "updated_ts": 1793683471
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7410,12 +7421,12 @@
     },
     "current": {
       "fetched": 9,
-      "long_count": 1,
+      "long_count": 2,
       "short_count": 4,
-      "flat_count": 4,
-      "positioned": 5,
-      "long_ratio": 0.2,
-      "short_ratio": 0.8,
+      "flat_count": 3,
+      "positioned": 6,
+      "long_ratio": 0.3333333333333333,
+      "short_ratio": 0.6666666666666666,
       "valid": true,
       "members": [
         {
@@ -7426,7 +7437,7 @@
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
           "label": "HL-684B",
-          "side": null
+          "side": "LONG"
         },
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
@@ -7464,7 +7475,7 @@
           "side": null
         }
       ],
-      "ts": 1793680198,
+      "ts": 1793683471,
       "enabled_pool": 9
     }
   },
