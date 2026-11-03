@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_8_PRO_2026-11-03",
   "initial_equity": 100.0,
-  "equity": 73.32286889253977,
+  "equity": 73.32397176835444,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 28.086948701584426,
   "realized_pnl": -26.59798902002925,
@@ -5062,6 +5062,12 @@
       "equity": 73.32286889253977,
       "marked_equity": 73.35407070451933,
       "price": 76839.5
+    },
+    {
+      "timestamp": "2026-11-03T03:37:36.901760+00:00",
+      "equity": 73.32397176835444,
+      "marked_equity": 73.61527981510797,
+      "price": 76678.5
     }
   ],
   "position": {
@@ -5077,11 +5083,11 @@
     "initial_stop_price": 77334.67366119557,
     "risk_distance": 422.05926119556534,
     "entry_fee": 0.06208526869143783,
-    "funding_pnl": 0.0,
+    "funding_pnl": 0.0011028758146715137,
     "entry_time": "2026-11-03T02:54:57+00:00",
     "opened_timestamp": 1793674497,
-    "last_funding_ts": 1793674497,
-    "last_checked_candle_ts": 1793673000000,
+    "last_funding_ts": 1793677055,
+    "last_checked_candle_ts": 1793675700000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -5164,10 +5170,10 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 76928.0,
-    "worst_price": 76928.0,
-    "mfe_r": 0.0,
-    "mae_r": 0.0,
+    "best_price": 76544.0,
+    "worst_price": 76965.0,
+    "mfe_r": 0.8733711918933694,
+    "mae_r": 0.12411906292875012,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.06208526869143783,
     "acc_funding": 0.0,
@@ -5175,7 +5181,9 @@
     "saw_stop_loss": false,
     "entry_event_within_24h": false,
     "entry_event_upcoming_24h": true,
-    "entry_event_name": "Congressional Elections"
+    "entry_event_name": "Congressional Elections",
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1793667600,
   "last_entry_candle": 1793673000000,
@@ -5281,12 +5289,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-26T22:25:43.616817+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00560632,
-      "hours": 0.4533
-    },
     {
       "timestamp": "2026-10-26T22:59:10.939662+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -7083,6 +7085,12 @@
       "quantity": 0.0016144365700156936,
       "leverage": 40.0,
       "effective_risk_pct": 1.25
+    },
+    {
+      "timestamp": "2026-11-03T03:37:36.901565+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00110288,
+      "hours": 0.7106
     }
   ],
   "econ_calendar": {
@@ -7132,7 +7140,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793627113.765,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7199,7 +7207,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7219,7 +7227,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7239,7 +7247,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77984.2,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7259,7 +7267,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7277,9 +7285,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -91.75,
-          "entry_px": 79629.8,
-          "updated_ts": 1793674497
+          "szi": -91.0,
+          "entry_px": 79606.2,
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7299,7 +7307,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7319,7 +7327,7 @@
           "side": "LONG",
           "szi": 2.81765,
           "entry_px": 77121.0,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7359,7 +7367,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793674497
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7376,10 +7384,10 @@
       "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
         "label": "HL-2B76",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -1.45049,
-          "entry_px": 77185.6,
-          "updated_ts": 1793674497
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793677055
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7397,11 +7405,11 @@
     "current": {
       "fetched": 9,
       "long_count": 1,
-      "short_count": 5,
-      "flat_count": 3,
-      "positioned": 6,
-      "long_ratio": 0.16666666666666666,
-      "short_ratio": 0.8333333333333334,
+      "short_count": 4,
+      "flat_count": 4,
+      "positioned": 5,
+      "long_ratio": 0.2,
+      "short_ratio": 0.8,
       "valid": true,
       "members": [
         {
@@ -7447,10 +7455,10 @@
         {
           "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
           "label": "HL-2B76",
-          "side": "SHORT"
+          "side": null
         }
       ],
-      "ts": 1793674497,
+      "ts": 1793677055,
       "enabled_pool": 9
     }
   },
