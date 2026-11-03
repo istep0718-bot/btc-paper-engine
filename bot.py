@@ -107,6 +107,22 @@ Design pillars (fixing V19.x fatal flaws):
     -/+ 0.5R: after TP1 the worst case is ~scratch overall
     (+0.3R locked by TP1 vs -0.5R x 80% runner), while a full
     retracement to entry can no longer kill the runner.
+  * V20.8: PAPER_NEVER_STOP (user direction 2026-11-03: this is
+    a simulation, so make it never stop, to keep verifying).
+    Every mechanism that halted entries is now alert-only in
+    paper mode: the DD >= 30% hard pause, the daily loss lock,
+    the daily stop-count lock, the consecutive-loss cooldown,
+    the Setup E DD veto, and the DD >= 20% "setup A only"
+    restriction. Threshold crossings are still recorded as
+    events (DRAWDOWN_LIMIT_CROSSED / DAILY_LOSS_LIMIT_CROSSED /
+    DAILY_STOP_LIMIT_CROSSED / CONSECUTIVE_LOSS_ALERT) and all
+    DD / daily statistics keep updating, so the dashboard keeps
+    showing the same health picture -- the engine just keeps
+    trading through it. Risk sizing throttles (DD x0.5 / x0.25,
+    post-cooldown x0.5) are unchanged: they scale size, they do
+    not stop measurement. Locks inherited from a pre-V20.8 state
+    file are cleared on the first run. For a future live build,
+    set PAPER_NEVER_STOP = False to restore every halt.
 """
 
 import json
@@ -116,7 +132,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_7_PRO_2026-11-03"
+BUILD = "BTC_PAPER_V20_8_PRO_2026-11-03"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -221,6 +237,12 @@ DD_THROTTLE_2 = 20.0         # DD >= 20% -> risk x 0.25, setup A only
 DD_HARD_PAUSE = 30.0         # DD >= 30% -> 6h circuit breaker
 DRAWDOWN_PAUSE_SECONDS = 21600
 DAILY_LOSS_LIMIT = 0.10      # daily loss lock at -10%
+PAPER_NEVER_STOP = True      # V20.8: paper-only engine. Every entry-
+                             # halting lock (DD hard pause, daily loss /
+                             # stop locks, consecutive-loss cooldown,
+                             # setup vetoes) becomes an alert event
+                             # instead of a halt, so verification never
+                             # stops. Set False to restore halts (live).
 DAILY_STOP_LIMIT = 2         # or after 2 losing stop-outs in a day
 MAX_CONSECUTIVE_LOSSES = 3   # 3 losses -> 2h cooldown + next risk halved
 CONSECUTIVE_PAUSE_SECONDS = 7200
@@ -3065,16 +3087,24 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
             if pos.get("saw_stop_loss"):
                 s["daily_stop_count"] = i(s.get("daily_stop_count")) + 1
             if s["consecutive_losses"] >= MAX_CONSECUTIVE_LOSSES:
-                s["consecutive_lock_until"] = (
-                    ts_now + CONSECUTIVE_PAUSE_SECONDS
-                )
                 s["next_risk_multiplier"] = 0.5
-                event(
-                    s,
-                    "CONSECUTIVE_LOSS_COOLDOWN",
-                    losses=s["consecutive_losses"],
-                    pause_seconds=CONSECUTIVE_PAUSE_SECONDS,
-                )
+                if PAPER_NEVER_STOP:
+                    if s["consecutive_losses"] == MAX_CONSECUTIVE_LOSSES:
+                        event(
+                            s,
+                            "CONSECUTIVE_LOSS_ALERT",
+                            losses=s["consecutive_losses"],
+                        )
+                else:
+                    s["consecutive_lock_until"] = (
+                        ts_now + CONSECUTIVE_PAUSE_SECONDS
+                    )
+                    event(
+                        s,
+                        "CONSECUTIVE_LOSS_COOLDOWN",
+                        losses=s["consecutive_losses"],
+                        pause_seconds=CONSECUTIVE_PAUSE_SECONDS,
+                    )
         else:
             s["consecutive_losses"] = 0
 
@@ -3262,7 +3292,16 @@ def refresh_risk_state(s, marked_equity, now_s=None):
         s["daily_start_equity"] = marked_equity
         s["daily_loss_lock"] = False
         s["daily_stop_count"] = 0
+        s["daily_loss_alerted"] = False
+        s["daily_stop_alerted"] = False
         event(s, "DAILY_RESET")
+
+    if PAPER_NEVER_STOP:
+        # V20.8: clear any lock inherited from a pre-V20.8 state
+        # file; in paper mode the engine never halts entries.
+        s["daily_loss_lock"] = False
+        s["drawdown_pause_until"] = 0
+        s["consecutive_lock_until"] = 0
 
     daily_start = max(f(s.get("daily_start_equity")), 0.01)
     daily_loss_pct = max(
@@ -3270,22 +3309,41 @@ def refresh_risk_state(s, marked_equity, now_s=None):
     )
 
     if daily_loss_pct >= DAILY_LOSS_LIMIT * 100:
-        if not s["daily_loss_lock"]:
-            event(s, "DAILY_LOSS_LOCK", daily_loss_pct=daily_loss_pct)
-        s["daily_loss_lock"] = True
+        if PAPER_NEVER_STOP:
+            if not s.get("daily_loss_alerted"):
+                event(s, "DAILY_LOSS_LIMIT_CROSSED",
+                      daily_loss_pct=daily_loss_pct)
+            s["daily_loss_alerted"] = True
+        else:
+            if not s["daily_loss_lock"]:
+                event(s, "DAILY_LOSS_LOCK", daily_loss_pct=daily_loss_pct)
+            s["daily_loss_lock"] = True
 
     if i(s.get("daily_stop_count")) >= DAILY_STOP_LIMIT:
-        if not s["daily_loss_lock"]:
-            event(s, "DAILY_STOP_LOCK", stops=s["daily_stop_count"])
-        s["daily_loss_lock"] = True
+        if PAPER_NEVER_STOP:
+            if not s.get("daily_stop_alerted"):
+                event(s, "DAILY_STOP_LIMIT_CROSSED",
+                      stops=s["daily_stop_count"])
+            s["daily_stop_alerted"] = True
+        else:
+            if not s["daily_loss_lock"]:
+                event(s, "DAILY_STOP_LOCK", stops=s["daily_stop_count"])
+            s["daily_loss_lock"] = True
 
     s["peak_equity"] = max(f(s.get("peak_equity")), marked_equity)
     dd = current_drawdown_pct(s, marked_equity)
     s["max_drawdown_pct"] = max(f(s.get("max_drawdown_pct")), dd)
 
-    if dd >= DD_HARD_PAUSE and s["drawdown_pause_until"] < ts_now:
-        s["drawdown_pause_until"] = ts_now + DRAWDOWN_PAUSE_SECONDS
-        event(s, "DRAWDOWN_PAUSE_STARTED", drawdown_pct=dd)
+    if dd >= DD_HARD_PAUSE:
+        if PAPER_NEVER_STOP:
+            if not s.get("dd_limit_alerted"):
+                event(s, "DRAWDOWN_LIMIT_CROSSED", drawdown_pct=dd)
+            s["dd_limit_alerted"] = True
+        elif s["drawdown_pause_until"] < ts_now:
+            s["drawdown_pause_until"] = ts_now + DRAWDOWN_PAUSE_SECONDS
+            event(s, "DRAWDOWN_PAUSE_STARTED", drawdown_pct=dd)
+    elif dd < DD_HARD_PAUSE - 2.0:
+        s["dd_limit_alerted"] = False
 
     if (
         s["drawdown_pause_until"]
@@ -3303,7 +3361,8 @@ def risk_controls(s, dd_pct):
     allowed = ("A", "B", "C", "F")
     if dd_pct >= DD_THROTTLE_2:
         mult = 0.25
-        allowed = ("A",)
+        if not PAPER_NEVER_STOP:
+            allowed = ("A",)
     elif dd_pct >= DD_THROTTLE_1:
         mult = 0.5
     mult *= clamp(f(s.get("next_risk_multiplier"), 1.0), 0.1, 1.0)
@@ -3978,7 +4037,7 @@ def main():
                 "イベント回避（EVENT_RISK）: "
                 "合意信号も新規エントリー見送り"
             )
-        elif _cons_side and dd >= DD_HARD_PAUSE:
+        elif _cons_side and dd >= DD_HARD_PAUSE and not PAPER_NEVER_STOP:
             status = "合意見送り: DDハードポーズ帯（30%以上）"
         elif _cons_side:
             cand_e, reason_e = _candidate_consensus(
@@ -4002,7 +4061,7 @@ def main():
                 "イベント回避（EVENT_RISK）: "
                 "コピー信号も新規エントリー見送り"
             )
-        elif copy_signals and dd >= DD_HARD_PAUSE:
+        elif copy_signals and dd >= DD_HARD_PAUSE and not PAPER_NEVER_STOP:
             status = "コピー見送り: DDハードポーズ帯（30%以上）"
         elif copy_signals:
             fresh = next(
