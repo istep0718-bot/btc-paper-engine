@@ -13,7 +13,7 @@ Design pillars (fixing V19.x fatal flaws):
   * Setup-separated strategies (A pullback / B breakout / C range fade),
     each trade tagged and measured separately.
   * Confluence scoring incl. cost filter (expected move must dwarf costs).
-  * Exit redesign: structural stop, +1R breakeven, thin/late staged
+  * Exit redesign: structural stop, thin/late staged
     partials at +1.5R / +3R (20% each, 60% runner), wide Chandelier
     trail (ATR x 3.5) with a +1R profit floor, trend-flip runner exit,
     24h max hold extendable to 72h while the trend cooperates, time stop.
@@ -81,6 +81,32 @@ Design pillars (fixing V19.x fatal flaws):
     so its measurement starts cleanly at 1.5x; the rejection
     reason keeps the "コストフィルター（...）" form and now
     records the multiple that was applied.
+  * V20.7: the +1R breakeven stop move is removed (user direction
+    2026-11-03: "take-profit is too fast"). The BE move fired
+    before TP1 (1.5R) and glued the stop to entry + costs, so
+    ordinary pullbacks killed the runner at ~breakeven right
+    after (or even before) the first partial: e.g. the 2026-11-02
+    Setup E short took TP1 (+$0.09 on the 20% slice) and the
+    remaining 80% was stopped at breakeven 15 minutes later,
+    netting ~zero on a trade that had run +1.5R. That contradicts
+    the house style (thin partials, let runners run maximally).
+    From V20.7 a position keeps its structural stop until the
+    post-TP1 Chandelier trail (ATR x 3.5) or the profit floor
+    (MFE >= +2R -> stop may not fall below entry +/- 1R) lifts
+    it; stops still only ever move in the trade's favor. Entry
+    logic, setups, risk and the staged partial fractions are
+    unchanged. Positions opened under V20.6 or earlier keep the
+    stop they already have (never loosened); be_moved /
+    BREAKEVEN_STOP remain only as legacy labels for those.
+    V20.7 also adds runner room (RUNNER_ROOM_R = 0.5): at TP1
+    depth the raw Chandelier candidate (best -/+ 3.5 x ATR)
+    sits ~at entry because 1.5R ~= 3.5 x ATR, so removing the
+    breakeven move alone would still leave the stop glued to
+    entry via the trail. Until the profit floor arms, the
+    trail may therefore not pull the stop tighter than entry
+    -/+ 0.5R: after TP1 the worst case is ~scratch overall
+    (+0.3R locked by TP1 vs -0.5R x 80% runner), while a full
+    retracement to entry can no longer kill the runner.
 """
 
 import json
@@ -90,7 +116,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_6_PRO_2026-11-01"
+BUILD = "BTC_PAPER_V20_7_PRO_2026-11-03"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -127,13 +153,19 @@ ROUND_TRIP_COST_RATE = 2 * FEE_RATE + 2 * SLIPPAGE_RATE + STOP_EXTRA_SLIPPAGE
 STOP_ATR_MIN = 1.8           # structural stop clamped into [1.8, 2.6] x ATR
 STOP_ATR_MAX = 2.6
 STOP_STRUCT_BUFFER_ATR = 0.15  # buffer beyond the swing/zone for the stop
-BREAKEVEN_AT_R = 1.0         # move stop to entry + costs at +1R
+BREAKEVEN_AT_R = 1.0         # legacy (V20.7: the +1R breakeven stop
+                             # move was removed; kept only so old
+                             # state files / labels still parse)
 TP1_AT_R = 1.5               # first partial at +1.5R ...
 TP1_FRACTION = 0.20          # ... closing 20% of the initial quantity
 TP2_AT_R = 3.0               # second partial at +3.0R ...
 TP2_FRACTION = 0.20          # ... closing 20% of the initial quantity
                              # (runner keeps 60% of the initial size)
 CHANDELIER_ATR = 3.5         # runner trail: best price -/+ ATR x 3.5
+RUNNER_ROOM_R = 0.5          # v20.7: until the profit floor arms, the
+                             # post-TP1 trail may not pull the stop
+                             # tighter than entry -/+ 0.5R (room for a
+                             # full retracement after the first partial)
 RUNNER_FLOOR_ARM_R = 2.0     # once MFE >= +2R, the runner stop may not
 RUNNER_FLOOR_R = 1.0         # fall below entry +/- 1R (never give back
                              # the whole move)
@@ -153,8 +185,8 @@ COST_FILTER_MULT = 2.0       # risk distance must be >= 2x round-trip cost
 # NOTE: with the stop clamped to <= 2.6 x ATR and typical 15m ATR at
 # 0.16-0.25% of price, a 3x multiple could mathematically never pass
 # (max R ~= 2.2x round-trip cost). 2x caps cost drag at 50% of initial
-# risk as a hard ceiling; the +1R breakeven and staged exits reduce the
-# realized drag further.
+# risk as a hard ceiling; the staged exits reduce the realized drag
+# further.
 COST_FILTER_MULT_E = 1.5     # setup E only (V20.6): E's expected move
 # is the vetted-trader consensus itself, not the 15m structural stop
 # distance the shared filter measures, so E gets a lower multiple.
@@ -3362,23 +3394,11 @@ def manage_position(s, candles, price, ctx, funding, now_s=None):
             )
             return
 
-        # --- Breakeven at +1R ---
-        if not pos.get("be_moved"):
-            be_trigger = (
-                entry + distance * BREAKEVEN_AT_R if side == "LONG"
-                else entry - distance * BREAKEVEN_AT_R
-            )
-            reached = (
-                high >= be_trigger if side == "LONG"
-                else low <= be_trigger
-            )
-            if reached:
-                if side == "LONG":
-                    pos["stop_price"] = max(f(pos.get("stop_price")), be_price)
-                else:
-                    pos["stop_price"] = min(f(pos.get("stop_price")), be_price)
-                pos["be_moved"] = True
-                event(s, "STOP_MOVED_TO_BREAKEVEN", stop_price=pos["stop_price"])
+        # --- Breakeven at +1R: REMOVED in V20.7 ---
+        # The stop stays at the structural level until the post-TP1
+        # Chandelier trail or the +2R profit floor lifts it. The old
+        # +1R breakeven move glued the stop to entry and killed
+        # runners on ordinary pullbacks (see V20.7 note above).
 
         # --- Partial take-profit 1: +1.5R, 20% of initial quantity ---
         if not pos.get("tp1_taken") and tp1 > 0:
@@ -3445,6 +3465,24 @@ def manage_position(s, candles, price, ctx, funding, now_s=None):
                     if floor_stop < new_stop:
                         new_stop = floor_stop
                         pos["runner_floor_active"] = True
+            # V20.7 runner room: until the profit floor arms
+            # (MFE >= RUNNER_FLOOR_ARM_R), the trail may not pull the
+            # stop tighter than entry -/+ RUNNER_ROOM_R. At TP1 depth
+            # (1.5R ~= 3.5 x ATR) the raw Chandelier candidate sits
+            # ~at entry, so without this room a full retracement
+            # kills the runner right after the first partial -- the
+            # exact failure of the 2026-11-02 Setup E short. The cap
+            # never loosens a stop that is already tighter (legacy
+            # positions keep the stop they have).
+            if f(pos.get("mfe_r")) < RUNNER_FLOOR_ARM_R:
+                if side == "LONG":
+                    room_stop = entry - distance * RUNNER_ROOM_R
+                    if f(pos.get("stop_price")) <= room_stop:
+                        new_stop = min(new_stop, room_stop)
+                else:
+                    room_stop = entry + distance * RUNNER_ROOM_R
+                    if f(pos.get("stop_price")) >= room_stop:
+                        new_stop = max(new_stop, room_stop)
             if new_stop != f(pos.get("stop_price")):
                 pos["stop_price"] = new_stop
                 pos["trail_active"] = True
