@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V20_8_PRO_2026-11-03",
-  "generated_at": "2026-11-03T13:04:13.721838+00:00",
+  "generated_at": "2026-11-03T14:19:04.669736+00:00",
   "market_status": "OK",
-  "price": 77304.5,
+  "price": 77228.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -22,27 +22,27 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 68.432,
-    "atr": 167.55167,
-    "ema9": 77229.46222660193,
-    "ema21": 77076.8169503784,
+    "rsi": 52.957,
+    "atr": 205.30589,
+    "ema9": 77347.77738241293,
+    "ema21": 77207.15220667887,
     "trend_15m": "UP",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-03T13:04:13.721776+00:00",
-    "reference_price": 77402.0,
-    "previous_close": 77374.0,
+    "timestamp": "2026-11-03T14:19:04.669658+00:00",
+    "reference_price": 77235.0,
+    "previous_close": 77364.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 77013.2,
-      "upper": 77501.88419250063,
-      "lower": 76524.51580749937,
-      "width_pct": 1.2690920322766233,
-      "position": 0.8978029225894201,
-      "state": "NEAR_UPPER"
+      "middle": 77204.85,
+      "upper": 77602.37850212281,
+      "lower": 76807.3214978772,
+      "width_pct": 1.0298018897072,
+      "position": 0.5379218091771948,
+      "state": "INSIDE"
     },
     "fibonacci": {
       "swing_high": 78854.0,
@@ -56,35 +56,36 @@
       },
       "trend": "DOWN"
     },
-    "regime": "RANGE",
-    "adx": 19.06,
-    "atr_percentile": 10.0,
+    "regime": "NEUTRAL",
+    "adx": 22.09,
+    "atr_percentile": 55.0,
     "macd": {
-      "line": 137.1365,
-      "signal": 92.925,
-      "hist": 44.2114,
-      "hist_prev": 43.6258
+      "line": 147.4406,
+      "signal": 137.2972,
+      "hist": 10.1433,
+      "hist_prev": 32.27
     },
-    "vwap": 76918.21228864901,
-    "relative_volume": 0.642,
+    "vwap": 77018.21761397018,
+    "relative_volume": 2.639,
     "htf_bias": "DOWN",
     "structure_bias": "UP",
     "support": 77231.0,
-    "resistance": 77942.0,
-    "premium": -0.0002302038,
+    "resistance": 77244.0,
+    "premium": -0.0002472521,
     "setup": null,
     "score_breakdown": {},
-    "entry_status": "同じ15分足での再エントリー防止",
+    "entry_status": "イベント回避（EVENT_RISK）: コピー信号も新規エントリー見送り",
     "evaluation_notes": [
-      "A/LONG: レジーム不一致",
-      "B/LONG: レンジレジームではブレイクアウト禁止",
-      "C/LONG: RSI/BB極値でない",
+      "A/LONG: 上位足バイアス不一致",
+      "B/LONG: 上位足が逆行",
+      "C/LONG: レンジレジーム限定",
       "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: レジーム不一致",
-      "B/SHORT: レンジレジームではブレイクアウト禁止",
-      "C/SHORT: ゾーン端に未到達",
+      "A/SHORT: 押し目/戻りが未形成",
+      "B/SHORT: ブレイク足の実体が弱い",
+      "C/SHORT: レンジレジーム限定",
       "F/SHORT: レジーム不一致（確立したトレンド限定）",
-      "CONSENSUS: LONG 1 / SHORT 5 / FLAT 3（建玉 6名、参入条件: 成立 SHORT）"
+      "COPY OPEN: HL-684B LONG（ラグ 675秒、新鮮）",
+      "CONSENSUS: LONG 2 / SHORT 5 / FLAT 2（建玉 7名、参入条件: 未達）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -9363,16 +9364,15 @@
       "equity": 72.42764531683245,
       "marked_equity": 72.42764531683245,
       "price": 77304.5
+    },
+    {
+      "timestamp": "2026-11-03T14:19:04.669724+00:00",
+      "equity": 72.42764531683245,
+      "marked_equity": 72.42764531683245,
+      "price": 77228.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-10-30T15:16:41.331811+00:00",
-      "type": "COPY_SOURCE_FLAT",
-      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
-      "label": "HL-684B",
-      "previous_side": "LONG"
-    },
     {
       "timestamp": "2026-10-30T17:29:09.099514+00:00",
       "type": "COPY_SIGNAL_OPEN",
@@ -10460,6 +10460,17 @@
       "fraction": 1.0,
       "setup": "E",
       "r_multiple": -1.0436
+    },
+    {
+      "timestamp": "2026-11-03T14:19:02.812530+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 77163.8,
+      "source_event_ts": 1793714866,
+      "age_seconds": 675,
+      "fresh": true
     }
   ],
   "stats_by_setup": {
@@ -10577,26 +10588,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 68.432,
-    "atr": 167.55167,
+    "rsi_15m": 52.957,
+    "atr": 205.30589,
     "bollinger": {
-      "middle": 77013.2,
-      "upper": 77501.88419250063,
-      "lower": 76524.51580749937,
-      "width_pct": 1.2690920322766233,
-      "position": 0.8978029225894201,
-      "state": "NEAR_UPPER"
+      "middle": 77204.85,
+      "upper": 77602.37850212281,
+      "lower": 76807.3214978772,
+      "width_pct": 1.0298018897072,
+      "position": 0.5379218091771948,
+      "state": "INSIDE"
     },
-    "adx": 19.06,
-    "atr_percentile": 10.0,
+    "adx": 22.09,
+    "atr_percentile": 55.0,
     "macd": {
-      "line": 137.1365,
-      "signal": 92.925,
-      "hist": 44.2114,
-      "hist_prev": 43.6258
+      "line": 147.4406,
+      "signal": 137.2972,
+      "hist": 10.1433,
+      "hist_prev": 32.27
     },
-    "vwap": 76918.21228864901,
-    "relative_volume": 0.642
+    "vwap": 77018.21761397018,
+    "relative_volume": 2.639
   },
   "fibonacci": {
     "swing_high": 78854.0,
@@ -10640,12 +10651,12 @@
     "category": "OTHER_HIGH",
     "timestamp": 1793718960,
     "time": "2026-11-03T15:16:00+00:00",
-    "in_window": false
+    "in_window": true
   },
   "event_risk": {
-    "blocked": false,
-    "active_event": null,
-    "active_category": null,
+    "blocked": true,
+    "active_event": "Congressional Elections",
+    "active_category": "OTHER_HIGH",
     "calendar_updated_ts": 1793637780,
     "calendar_stale": false,
     "calendar_last_error": null
@@ -10658,8 +10669,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": null,
-        "source_entry_price": null,
+        "side": "LONG",
+        "source_entry_price": 77163.8,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -10708,21 +10719,21 @@
     "entry_ratio": 0.8,
     "exit_ratio": 0.5,
     "min_pool": 7,
-    "long_count": 1,
+    "long_count": 2,
     "short_count": 5,
-    "flat_count": 3,
-    "positioned": 6,
-    "long_ratio": 0.16666666666666666,
-    "short_ratio": 0.8333333333333334,
+    "flat_count": 2,
+    "positioned": 7,
+    "long_ratio": 0.2857142857142857,
+    "short_ratio": 0.7142857142857143,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1793711051,
+    "updated_ts": 1793715542,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
         "label": "HL-F79D",
         "side": "SHORT",
-        "source_entry_price": 77180.8,
+        "source_entry_price": 77216.8,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -10736,8 +10747,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": null,
-        "source_entry_price": null,
+        "side": "LONG",
+        "source_entry_price": 77163.8,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -10782,7 +10793,7 @@
         "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
         "label": "HL-8888",
         "side": "SHORT",
-        "source_entry_price": 79442.6,
+        "source_entry_price": 79428.5,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {

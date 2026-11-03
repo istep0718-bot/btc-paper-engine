@@ -5247,6 +5247,12 @@
       "equity": 72.42764531683245,
       "marked_equity": 72.42764531683245,
       "price": 77304.5
+    },
+    {
+      "timestamp": "2026-11-03T14:19:04.669724+00:00",
+      "equity": 72.42764531683245,
+      "marked_equity": 72.42764531683245,
+      "price": 77228.5
     }
   ],
   "position": null,
@@ -5365,12 +5371,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-27T02:55:51.362208+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00019491,
-      "hours": 0.1583
-    },
     {
       "timestamp": "2026-10-27T02:59:48.726125+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -7167,6 +7167,17 @@
       "fraction": 1.0,
       "setup": "E",
       "r_multiple": -1.0436
+    },
+    {
+      "timestamp": "2026-11-03T14:19:02.812530+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 77163.8,
+      "source_event_ts": 1793714866,
+      "age_seconds": 675,
+      "fresh": true
     }
   ],
   "econ_calendar": {
@@ -7212,11 +7223,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "event_ts": 1793682304.208,
-          "updated_ts": 1793711051
+          "side": "LONG",
+          "szi": 1.0,
+          "entry_px": 77163.8,
+          "event_ts": 1793714866.642,
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7281,9 +7292,9 @@
         "label": "HL-F79D",
         "snapshot": {
           "side": "SHORT",
-          "szi": -15.78775,
-          "entry_px": 77180.8,
-          "updated_ts": 1793711051
+          "szi": -16.82242,
+          "entry_px": 77216.8,
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7300,10 +7311,10 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1793711051
+          "side": "LONG",
+          "szi": 1.0,
+          "entry_px": 77163.8,
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7323,7 +7334,7 @@
           "side": "SHORT",
           "szi": -3.0,
           "entry_px": 77984.2,
-          "updated_ts": 1793711051
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7343,7 +7354,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793711051
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7361,9 +7372,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -93.25,
-          "entry_px": 79442.6,
-          "updated_ts": 1793711051
+          "szi": -92.5,
+          "entry_px": 79428.5,
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7383,7 +7394,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793711051
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7403,7 +7414,7 @@
           "side": "LONG",
           "szi": 2.81765,
           "entry_px": 77121.0,
-          "updated_ts": 1793711051
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7443,7 +7454,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793711051
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7463,7 +7474,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793711051
+          "updated_ts": 1793715542
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -7480,12 +7491,12 @@
     },
     "current": {
       "fetched": 9,
-      "long_count": 1,
+      "long_count": 2,
       "short_count": 5,
-      "flat_count": 3,
-      "positioned": 6,
-      "long_ratio": 0.16666666666666666,
-      "short_ratio": 0.8333333333333334,
+      "flat_count": 2,
+      "positioned": 7,
+      "long_ratio": 0.2857142857142857,
+      "short_ratio": 0.7142857142857143,
       "valid": true,
       "members": [
         {
@@ -7496,7 +7507,7 @@
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
           "label": "HL-684B",
-          "side": null
+          "side": "LONG"
         },
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
@@ -7534,7 +7545,7 @@
           "side": null
         }
       ],
-      "ts": 1793711051,
+      "ts": 1793715542,
       "enabled_pool": 9
     }
   },
