@@ -123,6 +123,24 @@ Design pillars (fixing V19.x fatal flaws):
     not stop measurement. Locks inherited from a pre-V20.8 state
     file are cleared on the first run. For a future live build,
     set PAPER_NEVER_STOP = False to restore every halt.
+  * V20.9: shadow measurement of the two round-4 watchlist signals
+    (backtest-v4-results.md). Setup G = squeeze breakout (1h):
+    Bollinger(20, 2.0) width of the previous bar at a 100-bar low,
+    then a close outside the band; stop 1.5 x ATR(14). Setup H =
+    Donchian-55 breakout (4h) with ATR-expansion confirmation
+    (ATR(14) above its trailing 50-bar mean); stop 1.5 x ATR(14).
+    Both are MEASUREMENT ONLY: they never open real paper
+    positions, never touch equity / risk state / daily stats, and
+    keep their records in the separate state["shadow"] namespace
+    (positions, ledger, per-setup stats). Exits follow the round-3
+    reference: initial stop or a single full take-profit at +1.5R
+    (no time stop), with a 7-day horizon close, and the +1R / +1.5R
+    / +2R first-hit outcomes recorded exactly as the round-4 screen
+    measured them (66.7% for G, 52.3% for H, vs the 40.0% driftless
+    fair line). The rules are the screen definitions verbatim --
+    no re-tuning -- so forward evidence accumulates honestly until
+    each setup has >= 40 forward shadow trades. Entry logic, risk
+    and exits for setups A-F are unchanged from V20.8.
 """
 
 import json
@@ -132,7 +150,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_8_PRO_2026-11-03"
+BUILD = "BTC_PAPER_V20_9_PRO_2026-11-04"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -329,6 +347,29 @@ CONSENSUS_MIN_POOL = 7           # enabled pool below this -> E halted
 CONSENSUS_MIN_FETCHED = 5        # fewer successful polls -> reading
                                  # is invalid (no entry, no exit)
 
+# --- Shadow measurement (V20.9): round-4 watchlist ------------------
+# Setups G (squeeze breakout, 1h) and H (Donchian-55, 4h) are
+# MEASUREMENT ONLY. They never open real positions and never touch
+# equity, risk state or daily stats; all of their records live in
+# state["shadow"]. The rules below are the round-4 screen
+# definitions verbatim (backtest-v4-results.md) -- do not re-tune.
+SHADOW_ENABLED = True
+SHADOW_TP_R = 1.5            # reference exit: single full TP at +1.5R
+SHADOW_HORIZON_BARS_G = 168  # 7 days of 1h bars (screen horizon)
+SHADOW_HORIZON_BARS_H = 42   # 7 days of 4h bars (screen horizon)
+SHADOW_LEDGER_LIMIT = 500    # completed shadow trades kept in state
+# G: previous bar's Bollinger(20, 2.0) width at a low vs the 100
+# width values before it, then this bar closes outside the band.
+SHADOW_G_BB_PERIOD = 20
+SHADOW_G_BB_DEV = 2.0
+SHADOW_G_SQUEEZE_LOOKBACK = 100
+SHADOW_G_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14)
+# H: close beyond the prior 55 bars' high/low with ATR(14) above
+# its trailing 50-bar mean (volatility-expansion confirmation).
+SHADOW_H_CHANNEL = 55
+SHADOW_H_ATR_SMA = 50
+SHADOW_H_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14)
+
 # ============================================================
 # UTILITIES
 # ============================================================
@@ -461,6 +502,7 @@ def default_state():
             "traders": {},
             "current": None,
         },
+        "shadow": _new_shadow_state(),
     }
 
 
@@ -662,6 +704,32 @@ def load_state():
         s["consensus"]["last_recheck_ts"] = max(
             0, i(s["consensus"].get("last_recheck_ts"))
         )
+
+    if not isinstance(s.get("shadow"), dict):
+        s["shadow"] = _new_shadow_state()
+    else:
+        _sh = s["shadow"]
+        _fresh = _new_shadow_state()
+        for _k, _v in _fresh.items():
+            if _k not in _sh:
+                _sh[_k] = _v
+        if not isinstance(_sh.get("positions"), dict):
+            _sh["positions"] = {"G": None, "H": None}
+        for _setup in ("G", "H"):
+            if _setup not in _sh["positions"]:
+                _sh["positions"][_setup] = None
+            if not isinstance(
+                (_sh.get("stats") or {}).get(_setup), dict
+            ):
+                _sh.setdefault("stats", {})[_setup] = (
+                    _empty_shadow_stats()
+                )
+        if not isinstance(_sh.get("ledger"), list):
+            _sh["ledger"] = []
+        if not isinstance(_sh.get("ghosts"), list):
+            _sh["ghosts"] = []
+        if not isinstance(_sh.get("last_bar_t"), dict):
+            _sh["last_bar_t"] = {"G": 0, "H": 0}
 
     pos = s.get("position") or s.get("open_position")
     s["position"] = pos if isinstance(pos, dict) else None
@@ -2797,6 +2865,479 @@ def _consensus_dashboard_payload(s):
 
 
 # ============================================================
+# SHADOW MEASUREMENT (V20.9): setups G / H, measurement only
+# ============================================================
+# Round-4 watchlist signals (backtest-v4-results.md), implemented
+# with the screen's exact definitions and judged prospectively.
+# HARD ISOLATION: this section reads only the already-fetched
+# closed 1h / 4h candles and writes only state["shadow"]. It never
+# touches the real position, equity, risk state, daily stats, the
+# A-F evaluation order, or PAPER_NEVER_STOP behavior, and
+# update_shadow() swallows its own errors into shadow["last_error"]
+# so a shadow failure can never break the trading cycle.
+
+def _empty_shadow_stats():
+    return {
+        "signals": 0,
+        "opened": 0,
+        "closed": 0,
+        "exits": {"TP_1_5R": 0, "STOP": 0, "HORIZON": 0},
+        "first_hit": {
+            "1.0": {"hit": 0, "stop": 0, "censored": 0},
+            "1.5": {"hit": 0, "stop": 0, "censored": 0},
+            "2.0": {"hit": 0, "stop": 0, "censored": 0},
+        },
+        "total_r_gross": 0.0,
+        "total_r_net": 0.0,
+    }
+
+
+def _new_shadow_state():
+    return {
+        "positions": {"G": None, "H": None},
+        "ghosts": [],
+        "ledger": [],
+        "stats": {"G": _empty_shadow_stats(),
+                  "H": _empty_shadow_stats()},
+        "last_bar_t": {"G": 0, "H": 0},
+        "next_id": 1,
+        "events": [],
+        "last_error": None,
+        "updated_at": None,
+    }
+
+
+def _shadow_event(book, kind, **extra):
+    book.setdefault("events", []).append({
+        "timestamp": iso_now(), "type": kind, **extra,
+    })
+    book["events"] = book["events"][-100:]
+
+
+def _bb_series(closes, period, dev):
+    """Bollinger mid/upper/lower/width aligned with closes.
+
+    Population SD, exactly as bot.bollinger computes each window
+    (and as the round-4 screen's bollinger_series does). Warmup
+    entries are None. width = (upper - lower) / mid.
+    """
+    n = len(closes)
+    mid = [None] * n
+    upper = [None] * n
+    lower = [None] * n
+    width = [None] * n
+    for j in range(period - 1, n):
+        window = closes[j - period + 1:j + 1]
+        m = sum(window) / period
+        var = sum((x - m) ** 2 for x in window) / period
+        sd = math.sqrt(max(var, 0.0))
+        u = m + dev * sd
+        l = m - dev * sd
+        mid[j] = m
+        upper[j] = u
+        lower[j] = l
+        width[j] = (u - l) / m if m else None
+    return mid, upper, lower, width
+
+
+def _shadow_signals_g(candles):
+    """Setup G (round-4 F6 base rule), per-bar signals or None.
+
+    Bar j signals when bar j-1's Bollinger width is <= every one of
+    the 100 width values before it (a 100-bar-low squeeze) and bar
+    j closes outside its own band. Stop distance 1.5 x ATR(14).
+    """
+    closes = [c["c"] for c in candles]
+    atrs = atr_series(candles, 14)
+    _mid, up, lo, width = _bb_series(
+        closes, SHADOW_G_BB_PERIOD, SHADOW_G_BB_DEV)
+    lb = SHADOW_G_SQUEEZE_LOOKBACK
+    out = [None] * len(candles)
+    for j in range(lb + 2, len(candles)):
+        w_prev = width[j - 1]
+        window = width[j - lb - 1:j - 1]
+        if w_prev is None or any(w is None for w in window):
+            continue
+        w_min = min(window)
+        if w_prev > w_min:
+            continue
+        a = atrs[j]
+        if not a or a <= 0:
+            continue
+        side = None
+        if closes[j] > up[j]:
+            side = "LONG"
+        elif closes[j] < lo[j]:
+            side = "SHORT"
+        if side is None:
+            continue
+        out[j] = {
+            "side": side,
+            "atr": a,
+            "dist": SHADOW_G_STOP_ATR * a,
+            "context": {
+                "bb_width_prev": w_prev,
+                "bb_width_min_lookback": w_min,
+                "bb_upper": up[j],
+                "bb_lower": lo[j],
+                "bb_mid": _mid[j],
+            },
+        }
+    return out
+
+
+def _shadow_signals_h(candles):
+    """Setup H (round-4 F2 Donchian-55 rule), per-bar signals/None.
+
+    Bar j signals when it closes beyond the highest high / lowest
+    low of the 55 bars strictly before it, with ATR(14) above its
+    trailing 50-bar mean. Stop distance 1.5 x ATR(14).
+    """
+    closes = [c["c"] for c in candles]
+    highs = [c["h"] for c in candles]
+    lows = [c["l"] for c in candles]
+    atrs = atr_series(candles, 14)
+    n = len(candles)
+    sma_n = SHADOW_H_ATR_SMA
+    atr_sma = [None] * n
+    for j in range(sma_n - 1, n):
+        atr_sma[j] = sum(atrs[j - sma_n + 1:j + 1]) / sma_n
+    ch = SHADOW_H_CHANNEL
+    out = [None] * n
+    for j in range(ch, n):
+        a = atrs[j]
+        if not a or a <= 0 or atr_sma[j] is None:
+            continue
+        if not a > atr_sma[j]:
+            continue
+        hi = max(highs[j - ch:j])
+        lo = min(lows[j - ch:j])
+        side = None
+        if closes[j] > hi:
+            side = "LONG"
+        elif closes[j] < lo:
+            side = "SHORT"
+        if side is None:
+            continue
+        out[j] = {
+            "side": side,
+            "atr": a,
+            "dist": SHADOW_H_STOP_ATR * a,
+            "context": {
+                "channel_high": hi,
+                "channel_low": lo,
+                "atr_sma50": atr_sma[j],
+            },
+        }
+    return out
+
+
+def _shadow_open(book, setup, candle, sig, tf_ms):
+    entry = f(candle["c"])
+    dist = f(sig["dist"])
+    sign = 1.0 if sig["side"] == "LONG" else -1.0
+    pos = {
+        "id": i(book.get("next_id"), 1),
+        "setup": setup,
+        "side": sig["side"],
+        "entry_bar_t": i(candle["t"]),
+        "entry_time": iso_of((i(candle["t"]) + tf_ms) // 1000),
+        "entry_price": entry,
+        "atr": f(sig["atr"]),
+        "risk_distance": dist,
+        "stop_price": entry - sign * dist,
+        "tp_price": entry + sign * SHADOW_TP_R * dist,
+        "mfe_r": 0.0,
+        "mae_r": 0.0,
+        "bars_held": 0,
+        "first_hit": {"1.0": None, "1.5": None, "2.0": None},
+        "context": sig.get("context") or {},
+        "origin_build": BUILD,
+    }
+    book["next_id"] = i(book.get("next_id"), 1) + 1
+    book["positions"][setup] = pos
+    stats = book["stats"][setup]
+    stats["signals"] += 1
+    stats["opened"] += 1
+    _shadow_event(
+        book, "SHADOW_OPEN", setup=setup, side=pos["side"],
+        entry_price=entry, risk_distance=dist,
+        entry_time=pos["entry_time"],
+    )
+    return pos
+
+
+def _shadow_close(book, setup, pos, candle, reason, exit_price,
+                  tf_ms):
+    dist = f(pos["risk_distance"])
+    entry = f(pos["entry_price"])
+    sign = 1.0 if pos["side"] == "LONG" else -1.0
+    gross_r = sign * (exit_price - entry) / dist if dist > 0 else 0.0
+    cost_r = ROUND_TRIP_COST_RATE * entry / dist if dist > 0 else 0.0
+    rec = {
+        "id": pos["id"],
+        "setup": setup,
+        "side": pos["side"],
+        "entry_time": pos["entry_time"],
+        "entry_bar_t": pos["entry_bar_t"],
+        "entry_price": entry,
+        "atr": pos["atr"],
+        "risk_distance": dist,
+        "stop_price": pos["stop_price"],
+        "tp_price": pos["tp_price"],
+        "exit_time": iso_of((i(candle["t"]) + tf_ms) // 1000),
+        "exit_bar_t": i(candle["t"]),
+        "exit_price": exit_price,
+        "exit_reason": reason,
+        "gross_r": gross_r,
+        "cost_r": cost_r,
+        "net_r": gross_r - cost_r,
+        "mfe_r": pos["mfe_r"],
+        "mae_r": pos["mae_r"],
+        "bars_held": pos["bars_held"],
+        "first_hit": dict(pos["first_hit"]),
+        "context": pos.get("context") or {},
+        "origin_build": pos.get("origin_build", BUILD),
+    }
+    book["ledger"].append(rec)
+    book["ledger"] = book["ledger"][-SHADOW_LEDGER_LIMIT:]
+    stats = book["stats"][setup]
+    stats["closed"] += 1
+    stats["exits"][reason] = stats["exits"].get(reason, 0) + 1
+    stats["total_r_gross"] += gross_r
+    stats["total_r_net"] += rec["net_r"]
+    for th in ("1.0", "1.5", "2.0"):
+        v = pos["first_hit"].get(th)
+        if v is not None:
+            stats["first_hit"][th][v] += 1
+    book["positions"][setup] = None
+    # A TP close can leave the +2R first-hit unresolved; keep
+    # walking a ghost until it resolves or the horizon ends, so
+    # the ledger stays comparable with the round-4 screen.
+    if pos["first_hit"].get("2.0") is None:
+        book["ghosts"].append({
+            "setup": setup,
+            "ledger_id": pos["id"],
+            "side": pos["side"],
+            "entry_price": entry,
+            "risk_distance": dist,
+            "stop_price": pos["stop_price"],
+            "bars_done": pos["bars_held"],
+        })
+    _shadow_event(
+        book, "SHADOW_CLOSE", setup=setup, side=pos["side"],
+        reason=reason, gross_r=round(gross_r, 4),
+        exit_time=rec["exit_time"],
+    )
+    return rec
+
+
+def _shadow_walk_bar(book, setup, pos, candle, horizon_bars, tf_ms):
+    """Advance one open shadow position by one closed bar.
+
+    Pessimistic intrabar, exactly as the round-4 screen: a bar
+    that touches the stop resolves every pending threshold as
+    "stop" before any favorable touch counts. Returns the ledger
+    record if the position closed on this bar, else None.
+    """
+    dist = f(pos["risk_distance"])
+    entry = f(pos["entry_price"])
+    long_side = pos["side"] == "LONG"
+    fav = f(candle["h"]) if long_side else f(candle["l"])
+    adv = f(candle["l"]) if long_side else f(candle["h"])
+    sign = 1.0 if long_side else -1.0
+
+    pos["mfe_r"] = max(pos["mfe_r"], sign * (fav - entry) / dist)
+    pos["mae_r"] = max(pos["mae_r"], -sign * (adv - entry) / dist)
+    pos["bars_held"] += 1
+
+    stop_touched = (
+        adv <= pos["stop_price"] if long_side
+        else adv >= pos["stop_price"]
+    )
+    if stop_touched:
+        for th in ("1.0", "1.5", "2.0"):
+            if pos["first_hit"][th] is None:
+                pos["first_hit"][th] = "stop"
+        return _shadow_close(
+            book, setup, pos, candle, "STOP", pos["stop_price"],
+            tf_ms)
+
+    for th, mult in (("1.0", 1.0), ("1.5", 1.5), ("2.0", 2.0)):
+        if pos["first_hit"][th] is not None:
+            continue
+        level = entry + sign * mult * dist
+        if (long_side and fav >= level) or \
+                (not long_side and fav <= level):
+            pos["first_hit"][th] = "hit"
+
+    if pos["first_hit"]["1.5"] == "hit":
+        return _shadow_close(
+            book, setup, pos, candle, "TP_1_5R", pos["tp_price"],
+            tf_ms)
+
+    if pos["bars_held"] >= horizon_bars:
+        for th in ("1.0", "1.5", "2.0"):
+            if pos["first_hit"][th] is None:
+                pos["first_hit"][th] = "censored"
+        return _shadow_close(
+            book, setup, pos, candle, "HORIZON", f(candle["c"]),
+            tf_ms)
+    return None
+
+
+def _shadow_walk_ghost(book, ghost, candle, horizon_bars):
+    """Resolve a TP-closed trade's pending +2R first-hit."""
+    dist = f(ghost["risk_distance"])
+    entry = f(ghost["entry_price"])
+    long_side = ghost["side"] == "LONG"
+    fav = f(candle["h"]) if long_side else f(candle["l"])
+    adv = f(candle["l"]) if long_side else f(candle["h"])
+    ghost["bars_done"] += 1
+
+    outcome = None
+    stop_touched = (
+        adv <= ghost["stop_price"] if long_side
+        else adv >= ghost["stop_price"]
+    )
+    if stop_touched:
+        outcome = "stop"
+    else:
+        level = entry + (1.0 if long_side else -1.0) * 2.0 * dist
+        if (long_side and fav >= level) or \
+                (not long_side and fav <= level):
+            outcome = "hit"
+        elif ghost["bars_done"] >= horizon_bars:
+            outcome = "censored"
+    if outcome is None:
+        return
+    for rec in book["ledger"]:
+        if rec.get("id") == ghost["ledger_id"] and \
+                rec.get("setup") == ghost["setup"]:
+            rec["first_hit"]["2.0"] = outcome
+            break
+    stats = book["stats"][ghost["setup"]]
+    stats["first_hit"]["2.0"][outcome] += 1
+    book["ghosts"].remove(ghost)
+
+
+def _shadow_process_setup(book, setup, candles, tf_ms, horizon_bars,
+                          signals):
+    """Process newly closed bars in order: walk the open shadow
+    position (and ghosts) first, then evaluate the entry signal.
+
+    Occupancy replicates the round-4 screen exactly: the screen's
+    free_from = entry_bar + binary_offset (binary_offset is
+    0-based from the first walked bar), so after a TP / STOP
+    resolution the resolution bar itself is already eligible for
+    a new entry at its close, while after a horizon (censored)
+    resolution the next entry comes one bar later.
+    """
+    last_t = i((book.get("last_bar_t") or {}).get(setup))
+    for j, candle in enumerate(candles):
+        t = i(candle.get("t"))
+        if t <= 0 or t <= last_t:
+            continue
+        for ghost in list(book.get("ghosts") or []):
+            if ghost.get("setup") == setup:
+                _shadow_walk_ghost(book, ghost, candle, horizon_bars)
+        pos = (book.get("positions") or {}).get(setup)
+        may_enter = pos is None
+        if pos is not None:
+            rec = _shadow_walk_bar(
+                book, setup, pos, candle, horizon_bars, tf_ms)
+            if rec is not None and rec["exit_reason"] != "HORIZON":
+                may_enter = True
+        if may_enter:
+            sig = signals[j] if j < len(signals) else None
+            if sig:
+                _shadow_open(book, setup, candle, sig, tf_ms)
+        last_t = t
+    book["last_bar_t"][setup] = last_t
+
+
+def update_shadow(s, c1, c4):
+    """Advance shadow measurement for setups G (1h) and H (4h).
+
+    Reads only the closed candles main() already fetched; writes
+    only state["shadow"]. Fully guarded: any failure is recorded
+    in shadow["last_error"] and never propagates.
+    """
+    if not SHADOW_ENABLED:
+        return None
+    book = s.get("shadow")
+    if not isinstance(book, dict):
+        book = _new_shadow_state()
+        s["shadow"] = book
+    for key, value in _new_shadow_state().items():
+        if key not in book:
+            book[key] = value
+    summary = {}
+    plan = (
+        ("G", c1, 3_600_000, SHADOW_HORIZON_BARS_G,
+         _shadow_signals_g),
+        ("H", c4, 14_400_000, SHADOW_HORIZON_BARS_H,
+         _shadow_signals_h),
+    )
+    for setup, candles, tf_ms, horizon_bars, sigfn in plan:
+        try:
+            if candles and len(candles) >= 35:
+                signals = sigfn(candles)
+                _shadow_process_setup(
+                    book, setup, candles, tf_ms, horizon_bars,
+                    signals)
+            stats = book["stats"][setup]
+            summary[setup] = {
+                "open": book["positions"].get(setup) is not None,
+                "closed": stats["closed"],
+                "signals": stats["signals"],
+            }
+        except Exception as exc:  # shadow must never break the cycle
+            book["last_error"] = f"{type(exc).__name__}: {exc}"
+            summary[setup] = {"error": book["last_error"]}
+    book["updated_at"] = iso_now()
+    return summary
+
+
+def _shadow_dashboard_payload(s):
+    book = s.get("shadow") or {}
+    setups = {}
+    for setup, rule in (
+        ("G", "SQUEEZE_BREAKOUT_1H_ROUND4_F6"),
+        ("H", "DONCHIAN55_4H_ROUND4_F2"),
+    ):
+        stats = (book.get("stats") or {}).get(setup) \
+            or _empty_shadow_stats()
+        fh15 = (stats.get("first_hit") or {}).get("1.5") or {}
+        resolved15 = i(fh15.get("hit")) + i(fh15.get("stop"))
+        setups[setup] = {
+            "rule": rule,
+            "measurement_only": True,
+            "open_position": (book.get("positions") or {}).get(setup),
+            "signals": i(stats.get("signals")),
+            "opened": i(stats.get("opened")),
+            "closed": i(stats.get("closed")),
+            "exits": stats.get("exits"),
+            "first_hit": stats.get("first_hit"),
+            "first_hit_rate_1_5r": (
+                i(fh15.get("hit")) / resolved15 if resolved15 else None
+            ),
+            "total_r_gross": stats.get("total_r_gross"),
+            "total_r_net": stats.get("total_r_net"),
+        }
+    return {
+        "enabled": SHADOW_ENABLED,
+        "measurement_only": True,
+        "note": "シャドー測定専用（V20.9）: 実ポジション・資産・"
+                "リスク管理には一切影響しません",
+        "setups": setups,
+        "recent_ledger": (book.get("ledger") or [])[-20:],
+        "last_error": book.get("last_error"),
+        "updated_at": book.get("updated_at"),
+    }
+
+
+# ============================================================
 # POSITION ACCOUNTING
 # ============================================================
 
@@ -3844,12 +4385,15 @@ def make_dashboard(s, price, funding, sig, status):
             "consensus_entry_ratio": CONSENSUS_ENTRY_RATIO,
             "consensus_exit_ratio": CONSENSUS_EXIT_RATIO,
             "consensus_min_pool": CONSENSUS_MIN_POOL,
+            "shadow_enabled": SHADOW_ENABLED,
+            "shadow_tp_r": SHADOW_TP_R,
         },
         "last_error": s.get("last_error"),
         "next_high_event": _next_high_event_payload(s),
         "event_risk": _event_risk_payload(s),
         "copy_trading": _copy_dashboard_payload(s),
         "consensus": _consensus_dashboard_payload(s),
+        "shadow": _shadow_dashboard_payload(s),
     }
 
 
@@ -3938,6 +4482,12 @@ def main():
                     flat_count=consensus_now.get("flat_count"),
                 )
                 close_position(s, price, _verdict, now_s=now)
+
+        # Shadow measurement (V20.9): setups G / H watchlist
+        # tracking. Fully isolated -- reads only the 1h / 4h
+        # candles already fetched above and writes only
+        # state["shadow"]; update_shadow guards its own errors.
+        shadow_summary = update_shadow(s, c1, c4)
 
         had_position = bool(s.get("position"))
 
@@ -4121,6 +4671,9 @@ def main():
             f"FLAT {consensus_now.get('flat_count')} "
             f"(pool {consensus_now.get('enabled_pool')}, "
             f"valid {consensus_now.get('valid')})\n"
+            f"SHADOW (measurement only): "
+            f"G closed {(shadow_summary or {}).get('G', {}).get('closed')} / "
+            f"H closed {(shadow_summary or {}).get('H', {}).get('closed')}\n"
             f"EQUITY: {s['equity']:.4f}\n"
             f"REALIZED PNL: {s['realized_pnl']:.4f}\n"
             f"CLOSED RECORDS: {len(s['trades'])}\n"
