@@ -141,6 +141,26 @@ Design pillars (fixing V19.x fatal flaws):
     no re-tuning -- so forward evidence accumulates honestly until
     each setup has >= 40 forward shadow trades. Entry logic, risk
     and exits for setups A-F are unchanged from V20.8.
+  * V20.10: shadow measurement of setup I (early long), added in
+    the same fully isolated style as G / H. Motivation: in a
+    down-to-up reversal the live A / F longs wait for the
+    structure bias to flip UP, so their first long can lag the
+    turn; I measures exactly that lead window. LONG only,
+    evaluated once per main (15m) cycle from the live context
+    snapshot: htf_bias UP, 1h and 15m trends UP, structure bias
+    NOT yet UP (once structure has flipped it is A / F territory
+    and I stays silent), relative volume >= 1.2 and price above
+    VWAP. One shadow position at a time. Stop 1.5 x ATR(14) of
+    the 15m candles; exits follow the same round-3 reference as
+    G / H (no time stop, single full take-profit at +1.5R, 7-day
+    horizon = 672 x 15m bars) and the +1R / +1.5R / +2R first-hit
+    outcomes are recorded the same way. Judged, like G / H, once
+    >= 40 forward shadow trades accumulate, by the +1.5R
+    first-hit rate against the 40.0% driftless fair line.
+    MEASUREMENT ONLY: I never opens a real paper position and
+    never touches equity / risk state / daily stats; its records
+    live in state["shadow"] alongside G / H. Entry logic, risk
+    and exits for setups A-H are unchanged from V20.9.
 """
 
 import json
@@ -150,7 +170,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_9_PRO_2026-11-04"
+BUILD = "BTC_PAPER_V20_10_PRO_2026-11-05"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -369,6 +389,16 @@ SHADOW_G_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14)
 SHADOW_H_CHANNEL = 55
 SHADOW_H_ATR_SMA = 50
 SHADOW_H_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14)
+# --- Shadow measurement (V20.10): setup I, early long ---------------
+# LONG only, evaluated once per main (15m) cycle from the live
+# context snapshot (see _shadow_signal_i): htf_bias UP, 1h and 15m
+# trends UP, structure bias NOT yet UP, relative volume >= 1.2 and
+# price above VWAP. Same isolation / reference exit as G / H; the
+# definition is fixed -- do not re-tune. Judged at >= 40 forward
+# shadow trades by the +1.5R first-hit rate vs the 40.0% fair line.
+SHADOW_HORIZON_BARS_I = 672  # 7 days of 15m bars (screen horizon)
+SHADOW_I_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14) (15m)
+SHADOW_I_MIN_RELVOL = 1.2    # relative volume entry threshold
 
 # ============================================================
 # UTILITIES
@@ -714,8 +744,8 @@ def load_state():
             if _k not in _sh:
                 _sh[_k] = _v
         if not isinstance(_sh.get("positions"), dict):
-            _sh["positions"] = {"G": None, "H": None}
-        for _setup in ("G", "H"):
+            _sh["positions"] = {"G": None, "H": None, "I": None}
+        for _setup in ("G", "H", "I"):
             if _setup not in _sh["positions"]:
                 _sh["positions"][_setup] = None
             if not isinstance(
@@ -729,7 +759,10 @@ def load_state():
         if not isinstance(_sh.get("ghosts"), list):
             _sh["ghosts"] = []
         if not isinstance(_sh.get("last_bar_t"), dict):
-            _sh["last_bar_t"] = {"G": 0, "H": 0}
+            _sh["last_bar_t"] = {"G": 0, "H": 0, "I": 0}
+        for _setup in ("G", "H", "I"):
+            if _setup not in _sh["last_bar_t"]:
+                _sh["last_bar_t"][_setup] = 0
 
     pos = s.get("position") or s.get("open_position")
     s["position"] = pos if isinstance(pos, dict) else None
@@ -2865,16 +2898,21 @@ def _consensus_dashboard_payload(s):
 
 
 # ============================================================
-# SHADOW MEASUREMENT (V20.9): setups G / H, measurement only
+# SHADOW MEASUREMENT (V20.9 / V20.10): setups G / H / I,
+# measurement only
 # ============================================================
 # Round-4 watchlist signals (backtest-v4-results.md), implemented
 # with the screen's exact definitions and judged prospectively.
+# Setup I (V20.10) is the early-long lead window defined in the
+# V20.10 changelog entry, evaluated from the live context.
 # HARD ISOLATION: this section reads only the already-fetched
-# closed 1h / 4h candles and writes only state["shadow"]. It never
-# touches the real position, equity, risk state, daily stats, the
-# A-F evaluation order, or PAPER_NEVER_STOP behavior, and
-# update_shadow() swallows its own errors into shadow["last_error"]
-# so a shadow failure can never break the trading cycle.
+# closed candles (1h / 4h for G / H, 15m for I) plus the read-only
+# context snapshot for I, and writes only state["shadow"]. It
+# never touches the real position, equity, risk state, daily
+# stats, the A-F evaluation order, or PAPER_NEVER_STOP behavior,
+# and update_shadow() swallows its own errors into
+# shadow["last_error"] so a shadow failure can never break the
+# trading cycle.
 
 def _empty_shadow_stats():
     return {
@@ -2894,12 +2932,13 @@ def _empty_shadow_stats():
 
 def _new_shadow_state():
     return {
-        "positions": {"G": None, "H": None},
+        "positions": {"G": None, "H": None, "I": None},
         "ghosts": [],
         "ledger": [],
         "stats": {"G": _empty_shadow_stats(),
-                  "H": _empty_shadow_stats()},
-        "last_bar_t": {"G": 0, "H": 0},
+                  "H": _empty_shadow_stats(),
+                  "I": _empty_shadow_stats()},
+        "last_bar_t": {"G": 0, "H": 0, "I": 0},
         "next_id": 1,
         "events": [],
         "last_error": None,
@@ -3030,6 +3069,53 @@ def _shadow_signals_h(candles):
             },
         }
     return out
+
+
+def _shadow_signal_i(ctx):
+    """Setup I (V20.10): early long, from the main-cycle context.
+
+    LONG only. Fires when the higher-timeframe picture has turned
+    up but the 15m structure has NOT flipped yet -- the lead
+    window the live A / F longs cannot take:
+      htf_bias == "UP", trend_1h == "UP", trend_15m == "UP",
+      structure bias != "UP", relative_volume >= 1.2 and the
+      current (last closed 15m) price above VWAP.
+    Returns a G/H-shaped signal dict, or None. Stop distance is
+    1.5 x ATR(14) of the 15m candles (ctx["atr"]), as for G / H.
+    """
+    if not isinstance(ctx, dict):
+        return None
+    structure = (ctx.get("structure") or {}).get("structure")
+    atr15 = f(ctx.get("atr"))
+    price = f(ctx.get("price"))
+    vwap = f(ctx.get("vwap"))
+    relvol = f(ctx.get("relative_volume"))
+    if ctx.get("htf_bias") != "UP":
+        return None
+    if ctx.get("trend_1h") != "UP" or ctx.get("trend_15m") != "UP":
+        return None
+    if structure == "UP":
+        return None
+    if not relvol >= SHADOW_I_MIN_RELVOL:
+        return None
+    if not price > vwap:
+        return None
+    if not atr15 > 0:
+        return None
+    return {
+        "side": "LONG",
+        "atr": atr15,
+        "dist": SHADOW_I_STOP_ATR * atr15,
+        "context": {
+            "htf_bias": ctx.get("htf_bias"),
+            "trend_1h": ctx.get("trend_1h"),
+            "trend_15m": ctx.get("trend_15m"),
+            "structure_bias": structure,
+            "relative_volume": relvol,
+            "price": price,
+            "vwap": vwap,
+        },
+    }
 
 
 def _shadow_open(book, setup, candle, sig, tf_ms):
@@ -3256,11 +3342,12 @@ def _shadow_process_setup(book, setup, candles, tf_ms, horizon_bars,
     book["last_bar_t"][setup] = last_t
 
 
-def update_shadow(s, c1, c4):
-    """Advance shadow measurement for setups G (1h) and H (4h).
+def update_shadow(s, c1, c4, c15=None, ctx=None):
+    """Advance shadow measurement for setups G (1h), H (4h), I (15m).
 
-    Reads only the closed candles main() already fetched; writes
-    only state["shadow"]. Fully guarded: any failure is recorded
+    Reads only the closed candles main() already fetched, plus
+    the read-only context snapshot for setup I; writes only
+    state["shadow"]. Fully guarded: any failure is recorded
     in shadow["last_error"] and never propagates.
     """
     if not SHADOW_ENABLED:
@@ -3295,6 +3382,28 @@ def update_shadow(s, c1, c4):
         except Exception as exc:  # shadow must never break the cycle
             book["last_error"] = f"{type(exc).__name__}: {exc}"
             summary[setup] = {"error": book["last_error"]}
+    # Setup I rides the same walk/open machinery as G / H on the
+    # 15m bars; its signal is a single-cycle snapshot, so at most
+    # the latest closed bar can carry one (attached only when the
+    # context conditions fire this cycle).
+    try:
+        if c15 and len(c15) >= 35:
+            signals_i = [None] * len(c15)
+            sig_i = _shadow_signal_i(ctx)
+            if sig_i:
+                signals_i[-1] = sig_i
+            _shadow_process_setup(
+                book, "I", c15, 900_000, SHADOW_HORIZON_BARS_I,
+                signals_i)
+        stats = book["stats"]["I"]
+        summary["I"] = {
+            "open": book["positions"].get("I") is not None,
+            "closed": stats["closed"],
+            "signals": stats["signals"],
+        }
+    except Exception as exc:  # shadow must never break the cycle
+        book["last_error"] = f"{type(exc).__name__}: {exc}"
+        summary["I"] = {"error": book["last_error"]}
     book["updated_at"] = iso_now()
     return summary
 
@@ -3305,6 +3414,7 @@ def _shadow_dashboard_payload(s):
     for setup, rule in (
         ("G", "SQUEEZE_BREAKOUT_1H_ROUND4_F6"),
         ("H", "DONCHIAN55_4H_ROUND4_F2"),
+        ("I", "EARLY_LONG_15M_V20_10"),
     ):
         stats = (book.get("stats") or {}).get(setup) \
             or _empty_shadow_stats()
@@ -3328,8 +3438,8 @@ def _shadow_dashboard_payload(s):
     return {
         "enabled": SHADOW_ENABLED,
         "measurement_only": True,
-        "note": "シャドー測定専用（V20.9）: 実ポジション・資産・"
-                "リスク管理には一切影響しません",
+        "note": "シャドー測定専用（V20.9 G/H、V20.10 I）: "
+                "実ポジション・資産・リスク管理には一切影響しません",
         "setups": setups,
         "recent_ledger": (book.get("ledger") or [])[-20:],
         "last_error": book.get("last_error"),
@@ -4483,11 +4593,12 @@ def main():
                 )
                 close_position(s, price, _verdict, now_s=now)
 
-        # Shadow measurement (V20.9): setups G / H watchlist
-        # tracking. Fully isolated -- reads only the 1h / 4h
-        # candles already fetched above and writes only
-        # state["shadow"]; update_shadow guards its own errors.
-        shadow_summary = update_shadow(s, c1, c4)
+        # Shadow measurement (V20.9 G / H, V20.10 I): watchlist
+        # tracking. Fully isolated -- reads only the candles
+        # already fetched above plus the read-only context
+        # snapshot (setup I) and writes only state["shadow"];
+        # update_shadow guards its own errors.
+        shadow_summary = update_shadow(s, c1, c4, c15, ctx)
 
         had_position = bool(s.get("position"))
 
