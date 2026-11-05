@@ -1,18 +1,18 @@
 {
   "build": "BTC_PAPER_V20_11_PRO_2026-11-05",
-  "generated_at": "2026-11-05T00:34:49.422883+00:00",
+  "generated_at": "2026-11-05T01:51:13.733344+00:00",
   "market_status": "OK",
-  "price": 80699.5,
+  "price": 80781.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
-  "equity": 69.41416052629418,
-  "marked_equity": 69.16393057785758,
+  "equity": 69.41533864322797,
+  "marked_equity": 69.08964379206229,
   "realized_pnl": -30.529642931180334,
-  "unrealized_pnl": -0.2502299484365913,
-  "unrealized_pnl_gross": -0.1982786808793669,
-  "net_pnl": -30.836069422142415,
-  "net_pnl_pct": -30.836069422142415,
+  "unrealized_pnl": -0.3256948511656786,
+  "unrealized_pnl_gross": -0.2736907951284798,
+  "net_pnl": -30.91035620793771,
+  "net_pnl_pct": -30.91035620793771,
   "position": {
     "side": "SHORT",
     "entry_price": 80483.90000000001,
@@ -26,11 +26,11 @@
     "initial_stop_price": 81274.98850524248,
     "risk_distance": 791.088505242477,
     "entry_fee": 0.037008908914720605,
-    "funding_pnl": -0.0021308148711946784,
+    "funding_pnl": -0.0009526979374094057,
     "entry_time": "2026-11-04T16:22:32+00:00",
     "opened_timestamp": 1793809352,
-    "last_funding_ts": 1793838887,
-    "last_checked_candle_ts": 1793837700000,
+    "last_funding_ts": 1793843471,
+    "last_checked_candle_ts": 1793842200000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -127,8 +127,8 @@
     "entry_event_name": null,
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": -0.2502299484365913,
-    "unrealized_pnl_gross": -0.1982786808793669
+    "unrealized_pnl": -0.3256948511656786,
+    "unrealized_pnl_gross": -0.2736907951284798
   },
   "open_position": {
     "side": "SHORT",
@@ -143,11 +143,11 @@
     "initial_stop_price": 81274.98850524248,
     "risk_distance": 791.088505242477,
     "entry_fee": 0.037008908914720605,
-    "funding_pnl": -0.0021308148711946784,
+    "funding_pnl": -0.0009526979374094057,
     "entry_time": "2026-11-04T16:22:32+00:00",
     "opened_timestamp": 1793809352,
-    "last_funding_ts": 1793838887,
-    "last_checked_candle_ts": 1793837700000,
+    "last_funding_ts": 1793843471,
+    "last_checked_candle_ts": 1793842200000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -244,36 +244,45 @@
     "entry_event_name": null,
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": -0.2502299484365913,
-    "unrealized_pnl_gross": -0.1982786808793669
+    "unrealized_pnl": -0.3256948511656786,
+    "unrealized_pnl_gross": -0.2736907951284798
   },
   "has_position": true,
   "signal": {
-    "direction": "WAIT",
-    "score": 0,
-    "long_score": 0,
+    "direction": "LONG",
+    "score": 9,
+    "long_score": 9,
     "short_score": 0,
-    "score_edge": 0,
-    "rsi": 59.078,
-    "atr": 240.68464,
-    "ema9": 80564.95543265853,
-    "ema21": 80413.14176573115,
+    "score_edge": 9,
+    "rsi": 57.447,
+    "atr": 248.28673,
+    "ema9": 80558.33931617356,
+    "ema21": 80467.7485552596,
     "trend_15m": "UP",
     "trend_1h": "UP",
     "trend_4h": "UP",
-    "timestamp": "2026-11-05T00:34:49.422789+00:00",
-    "reference_price": 80679.0,
-    "previous_close": 80666.0,
+    "timestamp": "2026-11-05T01:51:13.733270+00:00",
+    "reference_price": 80696.0,
+    "previous_close": 80356.0,
     "reasons": [
-      "明確な方向優位性なし"
+      "htf_bias:+4",
+      "rsi:+1",
+      "vwap:+1",
+      "crowding:+1",
+      "volatility_fit:+1",
+      "trend_continuation:+1",
+      "setup F / regime TREND_UP"
     ],
-    "flags": [],
+    "flags": [
+      "コストフィルター通過",
+      "対向ゾーンまで 0.23R"
+    ],
     "bollinger": {
-      "middle": 80362.55,
-      "upper": 80903.68010450352,
-      "lower": 79821.41989549648,
-      "width_pct": 1.3467220851093489,
-      "position": 0.7923973341774572,
+      "middle": 80482.65,
+      "upper": 80940.2036143448,
+      "lower": 80025.09638565518,
+      "width_pct": 1.1370242265750734,
+      "position": 0.7331420770279673,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -289,29 +298,38 @@
       "trend": "UP"
     },
     "regime": "TREND_UP",
-    "adx": 27.98,
-    "atr_percentile": 28.0,
+    "adx": 25.22,
+    "atr_percentile": 37.0,
     "macd": {
-      "line": 188.6343,
-      "signal": 195.0291,
-      "hist": -6.3948,
-      "hist_prev": -8.3337
+      "line": 134.6342,
+      "signal": 165.1553,
+      "hist": -30.5211,
+      "hist_prev": -42.9194
     },
-    "vwap": 80622.62125667282,
-    "relative_volume": 0.37,
+    "vwap": 80567.74094914916,
+    "relative_volume": 0.339,
     "htf_bias": "UP",
-    "structure_bias": "UP",
+    "structure_bias": "MIXED",
     "support": 80355.0,
-    "resistance": 80685.0,
-    "premium": -0.0002973094,
-    "setup": null,
-    "score_breakdown": {},
+    "resistance": 80813.0,
+    "premium": -0.0005953405,
+    "setup": "F",
+    "score_breakdown": {
+      "htf_bias": 4,
+      "structure": 0,
+      "macd_momentum": 0,
+      "rsi": 1,
+      "volume": 0,
+      "vwap": 1,
+      "crowding": 1,
+      "volatility_fit": 1,
+      "trend_continuation": 1
+    },
     "entry_status": "保有中",
     "evaluation_notes": [
-      "A/LONG: 反転トリガー未発生",
+      "A/LONG: 押し目/戻りが未形成",
       "B/LONG: 出来高不足",
       "C/LONG: レンジレジーム限定",
-      "F/LONG: 継続トリガー未発生",
       "A/SHORT: レジーム不一致",
       "B/SHORT: 上位足が逆行",
       "C/SHORT: レンジレジーム限定",
@@ -322,12 +340,12 @@
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 0.0,
+    "daily_loss_pct": 0.10632888043346408,
     "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "daily_stop_count": 0,
-    "drawdown_pct": 32.19477474289519,
-    "current_drawdown_pct": 32.19477474289519,
+    "drawdown_pct": 32.26760218636742,
+    "current_drawdown_pct": 32.26760218636742,
     "max_drawdown_pct": 33.192501460560145,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
@@ -11818,19 +11836,15 @@
       "equity": 69.41416052629418,
       "marked_equity": 69.16393057785758,
       "price": 80699.5
+    },
+    {
+      "timestamp": "2026-11-05T01:51:13.733331+00:00",
+      "equity": 69.41533864322797,
+      "marked_equity": 69.08964379206229,
+      "price": 80781.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-02T13:48:23.612233+00:00",
-      "type": "POSITION_PARTIALLY_CLOSED",
-      "side": "SHORT",
-      "reason": "PARTIAL_TAKE_PROFIT_1",
-      "net_pnl": 0.08755803483232379,
-      "fraction": 0.2,
-      "setup": "E",
-      "r_multiple": 0.9497
-    },
     {
       "timestamp": "2026-11-02T13:48:23.612279+00:00",
       "type": "POSITION_CLOSED",
@@ -12902,6 +12916,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00074635,
       "hours": 0.8067
+    },
+    {
+      "timestamp": "2026-11-05T01:51:13.733130+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00117812,
+      "hours": 1.2733
     }
   ],
   "stats_by_setup": {
@@ -13019,26 +13039,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 59.078,
-    "atr": 240.68464,
+    "rsi_15m": 57.447,
+    "atr": 248.28673,
     "bollinger": {
-      "middle": 80362.55,
-      "upper": 80903.68010450352,
-      "lower": 79821.41989549648,
-      "width_pct": 1.3467220851093489,
-      "position": 0.7923973341774572,
+      "middle": 80482.65,
+      "upper": 80940.2036143448,
+      "lower": 80025.09638565518,
+      "width_pct": 1.1370242265750734,
+      "position": 0.7331420770279673,
       "state": "INSIDE"
     },
-    "adx": 27.98,
-    "atr_percentile": 28.0,
+    "adx": 25.22,
+    "atr_percentile": 37.0,
     "macd": {
-      "line": 188.6343,
-      "signal": 195.0291,
-      "hist": -6.3948,
-      "hist_prev": -8.3337
+      "line": 134.6342,
+      "signal": 165.1553,
+      "hist": -30.5211,
+      "hist_prev": -42.9194
     },
-    "vwap": 80622.62125667282,
-    "relative_volume": 0.37
+    "vwap": 80567.74094914916,
+    "relative_volume": 0.339
   },
   "fibonacci": {
     "swing_high": 81177.0,
@@ -13160,7 +13180,7 @@
     "short_ratio": 0.8333333333333334,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1793838887,
+    "updated_ts": 1793843471,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -13226,7 +13246,7 @@
         "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
         "label": "HL-8888",
         "side": "SHORT",
-        "source_entry_price": 79273.0,
+        "source_entry_price": 79282.6,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -13359,7 +13379,7 @@
         "disabled_reason": null,
         "is_copy_target": false,
         "side": "SHORT",
-        "source_entry_price": 79273.0,
+        "source_entry_price": 79282.6,
         "closes_30d": 2748,
         "win_rate_30d": 0.861,
         "realized_pnl_30d": 589332.37,
@@ -13692,6 +13712,6 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-05T00:34:49.422497+00:00"
+    "updated_at": "2026-11-05T01:51:13.732930+00:00"
   }
 }
