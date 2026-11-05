@@ -6625,6 +6625,12 @@
       "equity": 72.1262002093678,
       "marked_equity": 72.1262002093678,
       "price": 76090.5
+    },
+    {
+      "timestamp": "2026-11-05T20:57:24.290525+00:00",
+      "equity": 72.1262002093678,
+      "marked_equity": 72.1262002093678,
+      "price": 76207.5
     }
   ],
   "position": null,
@@ -6743,11 +6749,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-29T14:30:54.580305+00:00",
-      "type": "ECON_CALENDAR_UPDATED",
-      "events": 5
-    },
     {
       "timestamp": "2026-10-30T00:13:26.816920+00:00",
       "type": "COPY_SIGNAL_OPEN",
@@ -8775,6 +8776,13 @@
       "source_event_ts": 1793900825,
       "age_seconds": 2027,
       "fresh": false
+    },
+    {
+      "timestamp": "2026-11-05T20:57:22.083262+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "previous_side": "LONG"
     }
   ],
   "econ_calendar": {
@@ -8820,11 +8828,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "LONG",
-          "szi": 0.70455,
-          "entry_px": 76042.6,
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
           "event_ts": 1793900825.266,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8891,7 +8899,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8908,10 +8916,10 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "LONG",
-          "szi": 0.70455,
-          "entry_px": 76042.6,
-          "updated_ts": 1793909597
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8931,7 +8939,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8951,7 +8959,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8969,9 +8977,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -88.75,
-          "entry_px": 78943.0,
-          "updated_ts": 1793909597
+          "szi": -89.5,
+          "entry_px": 78921.1,
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8991,7 +8999,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9011,7 +9019,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9051,7 +9059,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9071,7 +9079,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793909597
+          "updated_ts": 1793912241
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9088,12 +9096,12 @@
     },
     "current": {
       "fetched": 9,
-      "long_count": 1,
+      "long_count": 0,
       "short_count": 3,
-      "flat_count": 5,
-      "positioned": 4,
-      "long_ratio": 0.25,
-      "short_ratio": 0.75,
+      "flat_count": 6,
+      "positioned": 3,
+      "long_ratio": 0.0,
+      "short_ratio": 1.0,
       "valid": true,
       "members": [
         {
@@ -9104,7 +9112,7 @@
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
           "label": "HL-684B",
-          "side": "LONG"
+          "side": null
         },
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
@@ -9142,7 +9150,7 @@
           "side": null
         }
       ],
-      "ts": 1793909597,
+      "ts": 1793912241,
       "enabled_pool": 9
     }
   },
@@ -9350,7 +9358,7 @@
     "last_bar_t": {
       "G": 1793905200000,
       "H": 1793894400000,
-      "I": 1793907900000
+      "I": 1793910600000
     },
     "next_id": 4,
     "events": [
@@ -9410,7 +9418,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-05T20:13:20.116343+00:00"
+    "updated_at": "2026-11-05T20:57:24.290430+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
