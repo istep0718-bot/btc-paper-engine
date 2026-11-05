@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_11_PRO_2026-11-05",
   "initial_equity": 100.0,
-  "equity": 69.41789431399359,
+  "equity": 69.41883290104467,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 33.192501460560145,
   "realized_pnl": -30.529642931180334,
@@ -6172,6 +6172,12 @@
       "equity": 69.41789431399359,
       "marked_equity": 69.26705716427335,
       "price": 80591.5
+    },
+    {
+      "timestamp": "2026-11-05T05:37:49.535952+00:00",
+      "equity": 69.41883290104467,
+      "marked_equity": 69.32781549129261,
+      "price": 80526.5
     }
   ],
   "position": {
@@ -6187,11 +6193,11 @@
     "initial_stop_price": 81274.98850524248,
     "risk_distance": 791.088505242477,
     "entry_fee": 0.037008908914720605,
-    "funding_pnl": 0.0016029728282015783,
+    "funding_pnl": 0.002541559879288798,
     "entry_time": "2026-11-04T16:22:32+00:00",
     "opened_timestamp": 1793809352,
-    "last_funding_ts": 1793853415,
-    "last_checked_candle_ts": 1793852100000,
+    "last_funding_ts": 1793857067,
+    "last_checked_candle_ts": 1793855700000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -6404,16 +6410,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-28T21:25:51.353218+00:00",
-      "type": "POSITION_OPENED",
-      "side": "LONG",
-      "entry_price": 81366.7701,
-      "stop_price": 80921.17534799999,
-      "quantity": 0.0019502712525511065,
-      "leverage": 10.0,
-      "effective_risk_pct": 1.375274524114371
-    },
     {
       "timestamp": "2026-10-28T22:04:19.952362+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -8425,6 +8421,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00098613,
       "hours": 1.0658
+    },
+    {
+      "timestamp": "2026-11-05T05:37:49.533677+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00093859,
+      "hours": 1.0144
     }
   ],
   "econ_calendar": {
@@ -8474,7 +8476,7 @@
           "szi": -0.3,
           "entry_px": 80900.0,
           "event_ts": 1793832298.863,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8541,7 +8543,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8561,7 +8563,7 @@
           "side": "SHORT",
           "szi": -0.3,
           "entry_px": 80900.0,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8579,9 +8581,9 @@
         "label": "HL-D918",
         "snapshot": {
           "side": "SHORT",
-          "szi": -10.0,
+          "szi": -9.8,
           "entry_px": 79294.0,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8601,7 +8603,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8619,9 +8621,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -103.75,
+          "szi": -103.0,
           "entry_px": 79303.1,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8641,7 +8643,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8661,7 +8663,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8701,7 +8703,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793853415
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8718,10 +8720,10 @@
       "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
         "label": "HL-2B76",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1793853415
+          "side": "SHORT",
+          "szi": -2.48513,
+          "entry_px": 80477.9,
+          "updated_ts": 1793857067
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8739,9 +8741,9 @@
     "current": {
       "fetched": 9,
       "long_count": 0,
-      "short_count": 5,
-      "flat_count": 4,
-      "positioned": 5,
+      "short_count": 6,
+      "flat_count": 3,
+      "positioned": 6,
       "long_ratio": 0.0,
       "short_ratio": 1.0,
       "valid": true,
@@ -8789,10 +8791,10 @@
         {
           "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
           "label": "HL-2B76",
-          "side": null
+          "side": "SHORT"
         }
       ],
-      "ts": 1793853415,
+      "ts": 1793857067,
       "enabled_pool": 9
     }
   },
@@ -8998,9 +9000,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1793847600000,
+      "G": 1793851200000,
       "H": 1793836800000,
-      "I": 1793852100000
+      "I": 1793855700000
     },
     "next_id": 4,
     "events": [
@@ -9060,7 +9062,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-05T04:36:56.842969+00:00"
+    "updated_at": "2026-11-05T05:37:49.533447+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
