@@ -1,18 +1,18 @@
 {
   "build": "BTC_PAPER_V20_11_PRO_2026-11-05",
-  "generated_at": "2026-11-05T01:51:13.733344+00:00",
+  "generated_at": "2026-11-05T02:44:16.405603+00:00",
   "market_status": "OK",
-  "price": 80781.5,
+  "price": 80578.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
-  "equity": 69.41533864322797,
-  "marked_equity": 69.08964379206229,
+  "equity": 69.41615335323672,
+  "marked_equity": 69.27728015151013,
   "realized_pnl": -30.529642931180334,
-  "unrealized_pnl": -0.3256948511656786,
-  "unrealized_pnl_gross": -0.2736907951284798,
-  "net_pnl": -30.91035620793771,
-  "net_pnl_pct": -30.91035620793771,
+  "unrealized_pnl": -0.13887320172659665,
+  "unrealized_pnl_gross": -0.08699982936543199,
+  "net_pnl": -30.722719848489874,
+  "net_pnl_pct": -30.72271984848987,
   "position": {
     "side": "SHORT",
     "entry_price": 80483.90000000001,
@@ -26,11 +26,11 @@
     "initial_stop_price": 81274.98850524248,
     "risk_distance": 791.088505242477,
     "entry_fee": 0.037008908914720605,
-    "funding_pnl": -0.0009526979374094057,
+    "funding_pnl": -0.00013798792866173682,
     "entry_time": "2026-11-04T16:22:32+00:00",
     "opened_timestamp": 1793809352,
-    "last_funding_ts": 1793843471,
-    "last_checked_candle_ts": 1793842200000,
+    "last_funding_ts": 1793846641,
+    "last_checked_candle_ts": 1793844900000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -127,8 +127,8 @@
     "entry_event_name": null,
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": -0.3256948511656786,
-    "unrealized_pnl_gross": -0.2736907951284798
+    "unrealized_pnl": -0.13887320172659665,
+    "unrealized_pnl_gross": -0.08699982936543199
   },
   "open_position": {
     "side": "SHORT",
@@ -143,11 +143,11 @@
     "initial_stop_price": 81274.98850524248,
     "risk_distance": 791.088505242477,
     "entry_fee": 0.037008908914720605,
-    "funding_pnl": -0.0009526979374094057,
+    "funding_pnl": -0.00013798792866173682,
     "entry_time": "2026-11-04T16:22:32+00:00",
     "opened_timestamp": 1793809352,
-    "last_funding_ts": 1793843471,
-    "last_checked_candle_ts": 1793842200000,
+    "last_funding_ts": 1793846641,
+    "last_checked_candle_ts": 1793844900000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -244,45 +244,36 @@
     "entry_event_name": null,
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": -0.3256948511656786,
-    "unrealized_pnl_gross": -0.2736907951284798
+    "unrealized_pnl": -0.13887320172659665,
+    "unrealized_pnl_gross": -0.08699982936543199
   },
   "has_position": true,
   "signal": {
-    "direction": "LONG",
-    "score": 9,
-    "long_score": 9,
+    "direction": "WAIT",
+    "score": 0,
+    "long_score": 0,
     "short_score": 0,
-    "score_edge": 9,
-    "rsi": 57.447,
-    "atr": 248.28673,
-    "ema9": 80558.33931617356,
-    "ema21": 80467.7485552596,
+    "score_edge": 0,
+    "rsi": 55.719,
+    "atr": 234.78825,
+    "ema9": 80611.16572988087,
+    "ema21": 80517.22656292982,
     "trend_15m": "UP",
     "trend_1h": "UP",
     "trend_4h": "UP",
-    "timestamp": "2026-11-05T01:51:13.733270+00:00",
-    "reference_price": 80696.0,
-    "previous_close": 80356.0,
+    "timestamp": "2026-11-05T02:44:16.405536+00:00",
+    "reference_price": 80650.0,
+    "previous_close": 80703.0,
     "reasons": [
-      "htf_bias:+4",
-      "rsi:+1",
-      "vwap:+1",
-      "crowding:+1",
-      "volatility_fit:+1",
-      "trend_continuation:+1",
-      "setup F / regime TREND_UP"
+      "明確な方向優位性なし"
     ],
-    "flags": [
-      "コストフィルター通過",
-      "対向ゾーンまで 0.23R"
-    ],
+    "flags": [],
     "bollinger": {
-      "middle": 80482.65,
-      "upper": 80940.2036143448,
-      "lower": 80025.09638565518,
-      "width_pct": 1.1370242265750734,
-      "position": 0.7331420770279673,
+      "middle": 80562.7,
+      "upper": 80920.43068082008,
+      "lower": 80204.96931917992,
+      "width_pct": 0.8880801681673555,
+      "position": 0.6220191678833246,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -297,55 +288,46 @@
       },
       "trend": "UP"
     },
-    "regime": "TREND_UP",
-    "adx": 25.22,
-    "atr_percentile": 37.0,
+    "regime": "TREND_DOWN",
+    "adx": 25.12,
+    "atr_percentile": 17.0,
     "macd": {
-      "line": 134.6342,
-      "signal": 165.1553,
-      "hist": -30.5211,
-      "hist_prev": -42.9194
+      "line": 130.0452,
+      "signal": 149.1098,
+      "hist": -19.0646,
+      "hist_prev": -19.3346
     },
-    "vwap": 80567.74094914916,
-    "relative_volume": 0.339,
+    "vwap": 80633.04053271395,
+    "relative_volume": 1.042,
     "htf_bias": "UP",
-    "structure_bias": "MIXED",
+    "structure_bias": "DOWN",
     "support": 80355.0,
-    "resistance": 80813.0,
-    "premium": -0.0005953405,
-    "setup": "F",
-    "score_breakdown": {
-      "htf_bias": 4,
-      "structure": 0,
-      "macd_momentum": 0,
-      "rsi": 1,
-      "volume": 0,
-      "vwap": 1,
-      "crowding": 1,
-      "volatility_fit": 1,
-      "trend_continuation": 1
-    },
+    "resistance": 80685.0,
+    "premium": -0.0003845677,
+    "setup": null,
+    "score_breakdown": {},
     "entry_status": "保有中",
     "evaluation_notes": [
-      "A/LONG: 押し目/戻りが未形成",
+      "A/LONG: レジーム不一致",
       "B/LONG: 出来高不足",
       "C/LONG: レンジレジーム限定",
-      "A/SHORT: レジーム不一致",
+      "F/LONG: レジーム不一致（確立したトレンド限定）",
+      "A/SHORT: 上位足バイアス不一致",
       "B/SHORT: 上位足が逆行",
       "C/SHORT: レンジレジーム限定",
-      "F/SHORT: レジーム不一致（確立したトレンド限定）",
+      "F/SHORT: 上位足バイアス不一致",
       "CONSENSUS: LONG 1 / SHORT 5 / FLAT 3（建玉 6名、参入条件: 成立 SHORT）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 0.10632888043346408,
+    "daily_loss_pct": 0.0,
     "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "daily_stop_count": 0,
-    "drawdown_pct": 32.26760218636742,
-    "current_drawdown_pct": 32.26760218636742,
+    "drawdown_pct": 32.08365188868355,
+    "current_drawdown_pct": 32.08365188868355,
     "max_drawdown_pct": 33.192501460560145,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
@@ -11842,19 +11824,15 @@
       "equity": 69.41533864322797,
       "marked_equity": 69.08964379206229,
       "price": 80781.5
+    },
+    {
+      "timestamp": "2026-11-05T02:44:16.405592+00:00",
+      "equity": 69.41615335323672,
+      "marked_equity": 69.27728015151013,
+      "price": 80578.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-02T13:48:23.612279+00:00",
-      "type": "POSITION_CLOSED",
-      "side": "SHORT",
-      "reason": "BREAKEVEN_STOP",
-      "net_pnl": -0.005519273193210842,
-      "fraction": 1.0,
-      "setup": "E",
-      "r_multiple": -0.015
-    },
     {
       "timestamp": "2026-11-02T14:47:15.301766+00:00",
       "type": "CONSENSUS_ENTRY",
@@ -12922,6 +12900,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00117812,
       "hours": 1.2733
+    },
+    {
+      "timestamp": "2026-11-05T02:44:16.405466+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00081471,
+      "hours": 0.8806
     }
   ],
   "stats_by_setup": {
@@ -13039,26 +13023,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 57.447,
-    "atr": 248.28673,
+    "rsi_15m": 55.719,
+    "atr": 234.78825,
     "bollinger": {
-      "middle": 80482.65,
-      "upper": 80940.2036143448,
-      "lower": 80025.09638565518,
-      "width_pct": 1.1370242265750734,
-      "position": 0.7331420770279673,
+      "middle": 80562.7,
+      "upper": 80920.43068082008,
+      "lower": 80204.96931917992,
+      "width_pct": 0.8880801681673555,
+      "position": 0.6220191678833246,
       "state": "INSIDE"
     },
-    "adx": 25.22,
-    "atr_percentile": 37.0,
+    "adx": 25.12,
+    "atr_percentile": 17.0,
     "macd": {
-      "line": 134.6342,
-      "signal": 165.1553,
-      "hist": -30.5211,
-      "hist_prev": -42.9194
+      "line": 130.0452,
+      "signal": 149.1098,
+      "hist": -19.0646,
+      "hist_prev": -19.3346
     },
-    "vwap": 80567.74094914916,
-    "relative_volume": 0.339
+    "vwap": 80633.04053271395,
+    "relative_volume": 1.042
   },
   "fibonacci": {
     "swing_high": 81177.0,
@@ -13127,11 +13111,11 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
+          "ts": 1793846641,
           "fills": 2000,
-          "closes": 909,
-          "win_rate": 0.6436,
-          "realized_pnl": 44812.16
+          "closes": 912,
+          "win_rate": 0.6568,
+          "realized_pnl": 45472.84
         }
       },
       {
@@ -13180,7 +13164,7 @@
     "short_ratio": 0.8333333333333334,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1793843471,
+    "updated_ts": 1793846641,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -13190,11 +13174,11 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
-          "fills": 901,
-          "closes": 404,
-          "win_rate": 0.6089,
-          "realized_pnl": 65717.27
+          "ts": 1793846641,
+          "fills": 1256,
+          "closes": 617,
+          "win_rate": 0.6126,
+          "realized_pnl": 103652.04
         }
       },
       {
@@ -13205,26 +13189,26 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
-          "fills": 2944,
-          "closes": 1199,
-          "win_rate": 0.7031,
-          "realized_pnl": 63806.94
+          "ts": 1793846641,
+          "fills": 3128,
+          "closes": 1249,
+          "win_rate": 0.6861,
+          "realized_pnl": 56804.36
         }
       },
       {
         "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
         "label": "HL-D918",
         "side": "SHORT",
-        "source_entry_price": 78998.0,
+        "source_entry_price": 79154.6,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
-          "fills": 1329,
-          "closes": 628,
-          "win_rate": 0.4522,
-          "realized_pnl": 32347.58
+          "ts": 1793846641,
+          "fills": 1302,
+          "closes": 662,
+          "win_rate": 0.3686,
+          "realized_pnl": 24797.54
         }
       },
       {
@@ -13235,8 +13219,8 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
-          "fills": 235,
+          "ts": 1793846641,
+          "fills": 231,
           "closes": 71,
           "win_rate": 0.3803,
           "realized_pnl": 27752.34
@@ -13246,15 +13230,15 @@
         "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
         "label": "HL-8888",
         "side": "SHORT",
-        "source_entry_price": 79282.6,
+        "source_entry_price": 79293.6,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
-          "fills": 5915,
-          "closes": 2748,
-          "win_rate": 0.861,
-          "realized_pnl": 589332.37
+          "ts": 1793846641,
+          "fills": 6023,
+          "closes": 2726,
+          "win_rate": 0.8874,
+          "realized_pnl": 619624.95
         }
       },
       {
@@ -13265,7 +13249,7 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
+          "ts": 1793846641,
           "fills": 43,
           "closes": 30,
           "win_rate": 0.5,
@@ -13280,7 +13264,7 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
+          "ts": 1793846641,
           "fills": 175,
           "closes": 77,
           "win_rate": 0.8831,
@@ -13310,7 +13294,7 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
+          "ts": 1793846641,
           "fills": 216,
           "closes": 49,
           "win_rate": 1.0,
@@ -13325,11 +13309,11 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
-          "ts": 1793759139,
-          "fills": 403,
-          "closes": 184,
-          "win_rate": 0.462,
-          "realized_pnl": 5600.33
+          "ts": 1793846641,
+          "fills": 586,
+          "closes": 208,
+          "win_rate": 0.4519,
+          "realized_pnl": 4124.78
         }
       }
     ]
@@ -13337,7 +13321,7 @@
   "trader_board": {
     "window_days": 30,
     "stats_source": "CONSENSUS_REEVAL_BTC_30D",
-    "stats_updated_ts": 1793759139,
+    "stats_updated_ts": 1793846641,
     "traders": [
       {
         "address": "0x8738542e8fa99afda8eecc8acdae17b68f532274",
@@ -13351,8 +13335,24 @@
         "closes_30d": 49,
         "win_rate_30d": 1.0,
         "realized_pnl_30d": 75965.9,
-        "stats_ts": 1793759139,
+        "stats_ts": 1793846641,
         "rank": 1,
+        "tier": "kami7"
+      },
+      {
+        "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
+        "label": "HL-8888",
+        "enabled": true,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "is_copy_target": false,
+        "side": "SHORT",
+        "source_entry_price": 79293.6,
+        "closes_30d": 2726,
+        "win_rate_30d": 0.8874,
+        "realized_pnl_30d": 619624.95,
+        "stats_ts": 1793846641,
+        "rank": 2,
         "tier": "kami7"
       },
       {
@@ -13367,23 +13367,7 @@
         "closes_30d": 77,
         "win_rate_30d": 0.8831,
         "realized_pnl_30d": 3981.71,
-        "stats_ts": 1793759139,
-        "rank": 2,
-        "tier": "kami7"
-      },
-      {
-        "address": "0x418aa6bf98a2b2bc93779f810330d88cde488888",
-        "label": "HL-8888",
-        "enabled": true,
-        "auto_disabled": false,
-        "disabled_reason": null,
-        "is_copy_target": false,
-        "side": "SHORT",
-        "source_entry_price": 79282.6,
-        "closes_30d": 2748,
-        "win_rate_30d": 0.861,
-        "realized_pnl_30d": 589332.37,
-        "stats_ts": 1793759139,
+        "stats_ts": 1793846641,
         "rank": 3,
         "tier": "kami7"
       },
@@ -13396,10 +13380,10 @@
         "is_copy_target": true,
         "side": "SHORT",
         "source_entry_price": 80900.0,
-        "closes_30d": 1199,
-        "win_rate_30d": 0.7031,
-        "realized_pnl_30d": 63806.94,
-        "stats_ts": 1793759139,
+        "closes_30d": 1249,
+        "win_rate_30d": 0.6861,
+        "realized_pnl_30d": 56804.36,
+        "stats_ts": 1793846641,
         "rank": 4,
         "tier": "kami7"
       },
@@ -13412,10 +13396,10 @@
         "is_copy_target": true,
         "side": null,
         "source_entry_price": null,
-        "closes_30d": 404,
-        "win_rate_30d": 0.6089,
-        "realized_pnl_30d": 65717.27,
-        "stats_ts": 1793759139,
+        "closes_30d": 617,
+        "win_rate_30d": 0.6126,
+        "realized_pnl_30d": 103652.04,
+        "stats_ts": 1793846641,
         "rank": 5,
         "tier": "kami7"
       },
@@ -13431,7 +13415,7 @@
         "closes_30d": 30,
         "win_rate_30d": 0.5,
         "realized_pnl_30d": 6215.98,
-        "stats_ts": 1793759139,
+        "stats_ts": 1793846641,
         "rank": 6,
         "tier": "kami7"
       },
@@ -13444,28 +13428,12 @@
         "is_copy_target": false,
         "side": "LONG",
         "source_entry_price": 79964.3,
-        "closes_30d": 184,
-        "win_rate_30d": 0.462,
-        "realized_pnl_30d": 5600.33,
-        "stats_ts": 1793759139,
+        "closes_30d": 208,
+        "win_rate_30d": 0.4519,
+        "realized_pnl_30d": 4124.78,
+        "stats_ts": 1793846641,
         "rank": 7,
         "tier": "kami7"
-      },
-      {
-        "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
-        "label": "HL-D918",
-        "enabled": true,
-        "auto_disabled": false,
-        "disabled_reason": null,
-        "is_copy_target": true,
-        "side": "SHORT",
-        "source_entry_price": 78998.0,
-        "closes_30d": 628,
-        "win_rate_30d": 0.4522,
-        "realized_pnl_30d": 32347.58,
-        "stats_ts": 1793759139,
-        "rank": 8,
-        "tier": "mid"
       },
       {
         "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
@@ -13479,7 +13447,23 @@
         "closes_30d": 71,
         "win_rate_30d": 0.3803,
         "realized_pnl_30d": 27752.34,
-        "stats_ts": 1793759139,
+        "stats_ts": 1793846641,
+        "rank": 8,
+        "tier": "mid"
+      },
+      {
+        "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
+        "label": "HL-D918",
+        "enabled": true,
+        "auto_disabled": false,
+        "disabled_reason": null,
+        "is_copy_target": true,
+        "side": "SHORT",
+        "source_entry_price": 79154.6,
+        "closes_30d": 662,
+        "win_rate_30d": 0.3686,
+        "realized_pnl_30d": 24797.54,
+        "stats_ts": 1793846641,
         "rank": 9,
         "tier": "low"
       },
@@ -13712,6 +13696,6 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-05T01:51:13.732930+00:00"
+    "updated_at": "2026-11-05T02:44:16.405324+00:00"
   }
 }
