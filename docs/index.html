@@ -198,6 +198,46 @@ table.tax tr.cur td{background:#fff3d6;font-weight:800}
 .taxNote{font-size:13.5px;color:#6b4b96;font-weight:500;line-height:1.7}
 .taxWarn{background:#fff8e6;border:2px solid #ffd97a;border-radius:14px;padding:12px 16px;font-size:14px;font-weight:700;color:#7a5a00;line-height:1.7}
 .taxYearChip{display:inline-block;background:#fdf0fa;border:2px solid var(--card-bd);border-radius:999px;padding:6px 14px;font-size:14.5px;font-weight:800;color:var(--ink2);margin:0 8px 8px 0}
+/* ===== トレーダー監視 ===== */
+.tb-zone{border-radius:20px;padding:16px;margin:16px 0}
+.tb-zoneHead{display:flex;align-items:center;gap:14px;margin-bottom:12px}
+.tb-zoneImg{width:76px;height:76px;border-radius:50%;object-fit:cover;border:3px solid #fff;box-shadow:0 4px 12px rgba(160,80,190,.25);flex:0 0 auto;background:#fff}
+.tb-zoneTitle{font-size:clamp(20px,3vw,26px);font-weight:800}
+.tb-zoneSub{font-size:13.5px;font-weight:700;color:var(--ink2)}
+.tb-kami{background:linear-gradient(160deg,#fff6d8,#ffe9f6 60%,#fff3c4);border:2.5px solid var(--gold);box-shadow:0 8px 24px rgba(255,170,40,.35)}
+.tb-kami .tb-zoneTitle{color:#a86a00;text-shadow:0 1px 0 #fff}
+.tb-mid{background:rgba(235,244,255,.75);border:2px solid #bcd6ff}
+.tb-mid .tb-zoneTitle{color:#1f5bb8}
+.tb-low{background:rgba(243,240,235,.8);border:2px solid #ddd3c4}
+.tb-low .tb-zoneTitle{color:#7a6a53}
+.tb-off{background:rgba(240,238,244,.85);border:2px dashed #c9c2d4}
+.tb-off .tb-zoneTitle{color:#8a8199}
+.tb-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.tb-card{background:rgba(255,255,255,.94);border:2px solid var(--card-bd);border-radius:18px;padding:14px 16px;box-shadow:0 4px 12px rgba(170,90,200,.12)}
+.tb-card.first{grid-column:1/-1;border:3px solid var(--gold);background:linear-gradient(150deg,#fffdf4,#fff0fa);box-shadow:0 10px 26px rgba(255,170,40,.45)}
+.tb-top{display:flex;gap:12px;align-items:center}
+.tb-face{width:64px;height:64px;border-radius:50%;object-fit:cover;border:2.5px solid var(--card-bd);flex:0 0 auto;background:#fff}
+.tb-card.first .tb-face{width:92px;height:92px;border-color:var(--gold)}
+.tb-rank{font-size:13px;font-weight:800;color:#fff;background:linear-gradient(90deg,#a678f0,#6d5df6);display:inline-block;padding:2px 10px;border-radius:999px}
+.tb-card.first .tb-rank{background:linear-gradient(90deg,#ffb52e,#ff8a3d);font-size:15px;padding:4px 14px}
+.tb-label{font-size:19px;font-weight:800;color:var(--ink);margin-top:3px}
+.tb-dbadge{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:#e546b0;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}
+.tb-offbadge{display:inline-block;font-size:12px;font-weight:800;color:#fff;background:#9a8fa8;border-radius:999px;padding:2px 9px;margin-left:6px;vertical-align:2px}
+.tb-winrate{font-size:34px;font-weight:800;color:#7b1e6e;line-height:1.15;margin-top:8px}
+.tb-card.first .tb-winrate{font-size:46px}
+.tb-winrate small{font-size:15px;color:var(--ink2);font-weight:800}
+.tb-wait{font-size:17px;font-weight:800;color:#8a6bb5;margin-top:10px}
+.tb-meta{font-size:14.5px;font-weight:700;color:var(--ink2);margin-top:5px;line-height:1.65}
+.tb-meta b{color:var(--ink)}
+.tb-side{font-weight:800}
+.tb-side.long{color:var(--blue-d)}
+.tb-side.short{color:#d6336c}
+.tb-addr{display:flex;gap:8px;align-items:flex-start;margin-top:10px;background:#faf3fd;border:1.5px solid #ecd9f7;border-radius:10px;padding:8px 10px}
+.tb-addr code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;word-break:break-all;line-height:1.5;color:#5a3a8a;flex:1}
+.tb-copy{flex:0 0 auto;font:inherit;font-size:12.5px;font-weight:800;color:#fff;background:linear-gradient(120deg,#ff9ad9,#c99af5);border:none;border-radius:999px;padding:6px 12px;cursor:pointer}
+.tb-copy:active{transform:scale(.96)}
+.tb-disabled{opacity:.6;filter:grayscale(.6)}
+@media(max-width:560px){.tb-grid{grid-template-columns:1fr}.tb-zoneImg{width:60px;height:60px}.tb-winrate{font-size:30px}.tb-card.first .tb-winrate{font-size:38px}.tb-card.first .tb-face{width:76px;height:76px}}
 /* ===== フッター ===== */
 #updated{text-align:center;font-size:13.5px;font-weight:700;color:#4a3578;margin-top:6px}
 .footNote{text-align:center;font-size:12px;color:#8a6bb5;margin-top:6px;line-height:1.6}
@@ -273,6 +313,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
     <button class="nav-btn" data-page="fib" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 1.8 L19.5 8.8 L12 22.2 L4.5 8.8 Z" fill="#7fd4ff"/><path d="M4.5 8.8 H19.5 M12 1.8 L8.6 8.8 L12 22.2 M12 1.8 L15.4 8.8 L12 22.2" stroke="#3b9bd8" fill="none" stroke-width="1.1"/></svg></span>フィボナッチ</button>
     <button class="nav-btn" data-page="settings" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5cf6" stroke-width="2.3" stroke-linecap="round"><path d="M12 2.6 V5.4 M12 18.6 V21.4 M2.6 12 H5.4 M18.6 12 H21.4 M5.2 5.2 L7.2 7.2 M16.8 16.8 L18.8 18.8 M18.8 5.2 L16.8 7.2 M7.2 16.8 L5.2 18.8"/><circle cx="12" cy="12" r="3.4" fill="#e546b0" stroke="none"/></svg></span>設定</button>
     <button class="nav-btn" data-page="tax" type="button"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.6" fill="#ffb52e"/><text x="12" y="16.8" font-size="12.5" font-weight="800" text-anchor="middle" fill="#a86a00" font-family="sans-serif">¥</text></svg></span>税金</button>
+    <button class="nav-btn" data-page="traders" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 8 L7.2 11.4 L12 4.6 L16.8 11.4 L21 8 L19.4 18.4 H4.6 Z" fill="#ffb52e"/><rect x="4.6" y="19.4" width="14.8" height="1.8" rx=".9" fill="#e546b0"/></svg></span>トレーダー監視</button>
   </nav>
 
   <main class="pages">
@@ -462,6 +503,14 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
           ・<b>円換算</b>：外貨建ての損益は、取引（約定・決済）時点の為替レートで円に換算するのが原則です。このダッシュボードでは便宜上、現在の換算レート（<span id="taxFxRate2">--</span>）を全期間に一律適用しているため、実際の申告額とは差が出ます。<br>
           ・<b>将来の改正</b>：令和8年度税制改正で、国内の暗号資産取引業者を通じた「特定暗号資産」等の取引について、税率20.315%（所得税15%＋復興0.315%＋住民税5%）の申告分離課税と、損失の3年間繰越控除が導入されることが決まりました。適用は改正金商法の施行日の属する年の翌年1月1日以後の取引からで、現在の見込みでは2028年1月1日開始です。なお、このBOTが使う海外取引所（Hyperliquid）は分離課税の対象業者には当たらない見込みで、その場合は改正後も現行の総合課税が続く見通しです。<span id="taxSepSample"></span>
         </div>
+      </div>
+    </section>
+
+    <section class="page" id="page-traders">
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M3 8 L7.2 11.4 L12 4.6 L16.8 11.4 L21 8 L19.4 18.4 H4.6 Z" fill="#ffb52e"/><rect x="4.6" y="19.4" width="14.8" height="1.8" rx=".9" fill="#e546b0"/></svg></span>トレーダー監視</h2>
+        <p class="defNote">BOTが追跡している凄腕トレーダー10人。順位は日次再評価の直近30日成績（BTC決済の勝率 → 決済回数 → 実現PnL）で決まります。👸 神7＝上位7人（王女様クラス）／⚔️ 中級＝兵士クラス／🧑‍🌾 下級＝最下位（村人クラス）。「コピー対象」バッジはセットアップDが実際に追随している3人です。<br>統計更新: <span id="traderStatsUpdated">集計待ち</span></p>
+        <div id="traderBoard"><p class="defNote">データを読み込み中…</p></div>
       </div>
     </section>
   </main>
@@ -838,6 +887,74 @@ sep.textContent=est.profit>0?(" 参考までに、もし今年の利益 "+yenFmt
 }
 }
 /* ===== メイン描画 ===== */
+/* ===== トレーダー監視 ===== */
+function fmtUnix(ts){const x=n(ts);if(x===null)return null;const dt=new Date(x*1000);if(Number.isNaN(dt.getTime()))return null;return dt.toLocaleString("ja-JP",{timeZone:"Asia/Tokyo",year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false})}
+const TB_TIERS={
+kami7:{img:"./tier-princess.svg",emoji:"👸",name:"神7",cls:"tb-kami",sub:"王女様クラス（上位7人）"},
+mid:{img:"./tier-soldier.svg",emoji:"⚔️",name:"中級",cls:"tb-mid",sub:"兵士クラス"},
+low:{img:"./tier-villager.svg",emoji:"🧑‍🌾",name:"下級",cls:"tb-low",sub:"村人クラス（最下位）"}
+};
+function tbSignedUsd(v){const x=n(v);if(x===null)return"--";return(x>0?"+":x<0?"-":"")+"$"+fmt(Math.abs(x))}
+function tbAddr(t){return '<div class="tb-addr"><code>'+esc(t.address||"")+'</code><button type="button" class="tb-copy" data-copy="'+esc(t.address||"")+'">コピー</button></div>'}
+function tbMeta(t){
+const wr=n(t.win_rate_30d);
+if(wr===null)return '<div class="tb-wait">勝率 集計待ち</div><div class="tb-meta">直近30日の成績はまだ集計されていません（日次再評価後に表示されます）</div>'+tbSide(t);
+const closes=n(t.closes_30d),pnl=n(t.realized_pnl_30d);
+return '<div class="tb-winrate"><small>勝率 </small>'+(wr*100).toFixed(1)+'%</div>'
++'<div class="tb-meta">直近30日 決済 <b>'+(closes===null?"--":closes)+'回</b> ｜ 実現PnL <b class="'+(pnl!==null&&pnl<0?"bad":"good")+'">'+tbSignedUsd(pnl)+'</b></div>'+tbSide(t);
+}
+function tbSide(t){
+const s=side(t.side);
+const ep=n(t.source_entry_price);
+if(s==="LONG")return '<div class="tb-meta">現在の建玉: <span class="tb-side long">LONG</span>'+(ep!==null?'（建値 '+usd(ep)+'）':"")+'</div>';
+if(s==="SHORT")return '<div class="tb-meta">現在の建玉: <span class="tb-side short">SHORT</span>'+(ep!==null?'（建値 '+usd(ep)+'）':"")+'</div>';
+return '<div class="tb-meta">現在の建玉: <b>なし</b></div>';
+}
+function tbCard(t,first){
+const tier=TB_TIERS[t.tier]||TB_TIERS.mid;
+return '<div class="tb-card'+(first?" first":"")+'">'
++'<div class="tb-top"><img class="tb-face" src="'+tier.img+'" alt="'+tier.name+'">'
++'<div><span class="tb-rank">'+(first?"👑 ":"")+esc(t.rank)+'位</span>'
++(t.is_copy_target?'<span class="tb-dbadge">コピー対象</span>':"")
++'<div class="tb-label">'+esc(t.label||"")+'</div></div></div>'
++tbMeta(t)+tbAddr(t)+'</div>';
+}
+function tbOffCard(t){
+return '<div class="tb-card tb-disabled">'
++'<div class="tb-top"><div><span class="tb-rank" style="background:#9a8fa8">対象外</span><span class="tb-offbadge">無効</span>'
++(t.is_copy_target?'<span class="tb-dbadge">コピー対象</span>':"")
++'<div class="tb-label">'+esc(t.label||"")+'</div></div></div>'
++tbMeta(t)+tbAddr(t)+'</div>';
+}
+function renderTraders(d){
+const wrap=$("traderBoard");if(!wrap)return;
+const upd=$("traderStatsUpdated");
+const board=get(d,["trader_board"],null);
+if(!board||!Array.isArray(board.traders)||!board.traders.length){wrap.innerHTML='<p class="defNote">トレーダーデータがまだありません</p>';if(upd)upd.textContent="集計待ち";return}
+if(upd)upd.textContent=fmtUnix(board.stats_updated_ts)||"集計待ち";
+const by={kami7:[],mid:[],low:[],off:[]};
+board.traders.forEach(t=>{if(!t||typeof t!=="object")return;if(!t.enabled||!t.tier||!by[t.tier])by.off.push(t);else by[t.tier].push(t)});
+let html="";
+for(const key of["kami7","mid","low"]){
+const list=by[key];if(!list.length)continue;const tier=TB_TIERS[key];
+html+='<div class="tb-zone '+tier.cls+'"><div class="tb-zoneHead"><img class="tb-zoneImg" src="'+tier.img+'" alt=""><div><div class="tb-zoneTitle">'+tier.emoji+" "+tier.name+'</div><div class="tb-zoneSub">'+tier.sub+'</div></div></div><div class="tb-grid">'
++list.map(t=>tbCard(t,key==="kami7"&&n(t.rank)===1)).join("")+'</div></div>';
+}
+if(by.off.length){
+html+='<div class="tb-zone tb-off"><div class="tb-zoneHead"><div><div class="tb-zoneTitle">🚫 無効メンバー</div><div class="tb-zoneSub">自動無効化されたトレーダー（順位・ティアの対象外）</div></div></div><div class="tb-grid">'
++by.off.map(tbOffCard).join("")+'</div></div>';
+}
+wrap.innerHTML=html;
+}
+document.addEventListener("click",async e=>{
+const btn=e.target&&e.target.closest?e.target.closest("[data-copy]"):null;if(!btn)return;
+const text=btn.getAttribute("data-copy");if(!text)return;
+let ok=false;
+try{await navigator.clipboard.writeText(text);ok=true}catch(_){
+const ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity="0";document.body.appendChild(ta);ta.select();try{ok=document.execCommand("copy")}catch(__){}ta.remove();
+}
+const orig=btn.textContent;btn.textContent=ok?"コピーしました":"コピー失敗";setTimeout(()=>{btn.textContent=orig},1600);
+});
 function render(d){if(!d||typeof d!=="object")throw new Error("JSONデータの形式が正しくありません。");lastData=d;const fxRate=n(get(d,["usdjpy","fx_rate","usd_jpy","USDJPY"]));if(fxRate!==null&&fxRate>50&&fxRate<300)USDJPY=fxRate;const price=n(get(d,["price","market.price","btc_price"]));const equity=n(get(d,["marked_equity","equity","metrics.equity"]));const initial=n(get(d,["initial_equity","initial_bankroll"],100))??100;const all=tradesOf(d);const closedTrades=closed(all);const pnlValues=closedTrades.map(pnlOf).filter(v=>v!==null);const wins=pnlValues.filter(v=>v>0).length;const losses=pnlValues.filter(v=>v<0).length;let winrate=n(get(d,["metrics.win_rate","win_rate","winrate"]));if(winrate!==null&&winrate>=0&&winrate<=1)winrate*=100;if(winrate===null&&pnlValues.length>0)winrate=wins/pnlValues.length*100;const realized=n(get(d,["realized_pnl","metrics.total_net_pnl"]))??pnlValues.reduce((a,b)=>a+b,0);const position=get(d,["position","open_position","open_trade"],null);const unrealized=n(get(d,["unrealized_pnl","position.unrealized_pnl","position.unrealized_pnl_usd","open_pnl"]))??0;const dd=n(get(d,["max_drawdown_pct","risk.max_drawdown_pct","metrics.max_drawdown_pct","risk.drawdown_pct","current_drawdown_pct"]));
 put("priceUsd",price===null?"--":usd(price));put("priceJpy",price===null?"":jpy(price));put("equityUsd",equity===null?"--":usd(equity));put("equityJpy",equity===null?"":jpy(equity));put("realizedUsd",signed(realized));color("realizedUsd",realized);put("winrateValue",winrate===null?"--":winrate.toFixed(1)+"%");put("winlossText",wins+"勝 "+losses+"敗");put("pnlUsd",signed(unrealized));put("pnlJpy",jpy(unrealized));color("pnlUsd",unrealized);put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
 const signal=side(get(d,["signal.direction","signal","current_signal"],"WAIT"));const score=n(get(d,["signal.score"]));const rsi=n(get(d,["signal.rsi","indicators.rsi_15m","rsi_15m"]));put("signalValue",signal);put("scoreValue",score===null?"--":score);put("rsiValue",rsi===null?"--":rsi.toFixed(1));$("signalValue").classList.remove("good","bad");if(signal==="LONG")$("signalValue").classList.add("good");if(signal==="SHORT")$("signalValue").classList.add("bad");const reasons=get(d,["signal.reasons","signal.reason"],[]);let reasonText="";if(Array.isArray(reasons))reasonText=reasons.filter(Boolean).slice(0,2).join("・");else if(typeof reasons==="string")reasonText=reasons;put("reasonValue",reasonText||"理由データなし");
@@ -861,6 +978,7 @@ renderLog(closedTrades);
 renderTax(d,closedTrades);
 renderFib(d,price);
 renderSettings(d);
+renderTraders(d);
 drawChart($("equityChart"),history);
 drawChart($("equityChartBig"),history);
 const generated=get(d,["generated_at","updated_at","timestamp"]);let timestampText="更新時刻不明";if(generated){const date=new Date(generated);if(!Number.isNaN(date.getTime()))timestampText="更新: "+date.toLocaleString("ja-JP",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})}put("updated",timestampText+" ｜ PAPER ONLY ｜ 60秒ごとに更新");updateChara(d,position,unrealized,closedTrades,initial);
