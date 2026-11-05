@@ -161,6 +161,25 @@ Design pillars (fixing V19.x fatal flaws):
     never touches equity / risk state / daily stats; its records
     live in state["shadow"] alongside G / H. Entry logic, risk
     and exits for setups A-H are unchanged from V20.9.
+  * V20.11: trader board for the dashboard (display only). The
+    daily re-evaluations already cache each tracked trader's
+    trailing-30d stats in state (Setup D book / consensus pool
+    book "reeval" records); V20.11 adds a read-only projection of
+    the consensus pool book (all ten CONSENSUS_TRADERS, BTC-only
+    stats -- the pool's canonical record) into the dashboard
+    payload as "trader_board": label, address, enabled (not
+    auto-disabled), is_copy_target (the three Setup D traders),
+    closes / win rate / realized PnL (30d), current BTC side,
+    stats timestamp, plus a rank and tier computed for display:
+    enabled members sort by win rate desc, ties by closes then
+    realized PnL; ranks 1-7 are tier "kami7", the last enabled
+    rank is "low", anything between is "mid"; auto-disabled
+    members get no rank or tier. Members whose re-evaluation has
+    not run yet report null stats (the dashboard shows them as
+    pending). No state is written, no re-evaluation / consensus /
+    copy logic changes, and the board never feeds back into any
+    trading decision. Entry logic, risk and exits for setups A-I
+    are unchanged from V20.10.
 """
 
 import json
@@ -170,7 +189,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_10_PRO_2026-11-05"
+BUILD = "BTC_PAPER_V20_11_PRO_2026-11-05"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -2898,6 +2917,78 @@ def _consensus_dashboard_payload(s):
 
 
 # ============================================================
+# TRADER BOARD (V20.11): dashboard monitoring payload
+# ============================================================
+# Read-only projection of the re-evaluation caches the daily
+# COPY_RECHECK machinery already maintains. The consensus pool
+# book covers all ten CONSENSUS_TRADERS with BTC-only trailing-
+# 30d stats and is the board's single source for closes / win
+# rate / realized PnL, the current BTC side and the
+# auto-disabled flag; the copy book only contributes the
+# is_copy_target flag for the three Setup D traders. Ranking and
+# tiers are presentation only: nothing here writes state or
+# feeds back into D / E decisions, sizing or risk.
+
+TRADER_BOARD_WINDOW_DAYS = 30  # matches the re-eval window
+
+
+def _trader_board_payload(s):
+    pool_book = s.get("consensus") or {}
+    pool_traders = pool_book.get("traders") or {}
+    copy_targets = {t["address"] for t in _copy_config_traders()}
+    entries = []
+    for meta in _consensus_config_traders():
+        addr = meta["address"]
+        rec = pool_traders.get(addr) or {}
+        snap = rec.get("snapshot") or {}
+        reeval = rec.get("reeval") or {}
+        entries.append({
+            "address": addr,
+            "label": meta["label"],
+            "enabled": not rec.get("auto_disabled"),
+            "auto_disabled": bool(rec.get("auto_disabled")),
+            "disabled_reason": rec.get("disabled_reason"),
+            "is_copy_target": addr in copy_targets,
+            "side": snap.get("side"),
+            "source_entry_price": snap.get("entry_px"),
+            "closes_30d": reeval.get("closes"),
+            "win_rate_30d": reeval.get("win_rate"),
+            "realized_pnl_30d": reeval.get("realized_pnl"),
+            "stats_ts": reeval.get("ts"),
+            "rank": None,
+            "tier": None,
+        })
+    ranked = [e for e in entries if e["enabled"]]
+    # Win rate desc; members without stats yet sink to the bottom
+    # of the enabled ranking. Ties: more closes, then more PnL.
+    ranked.sort(key=lambda e: (
+        -(e["win_rate_30d"] if e["win_rate_30d"] is not None
+          else -1.0),
+        -(e["closes_30d"] or 0),
+        -(e["realized_pnl_30d"] if e["realized_pnl_30d"] is not None
+          else 0.0),
+    ))
+    n = len(ranked)
+    for idx, e in enumerate(ranked):
+        rank = idx + 1
+        e["rank"] = rank
+        if rank == n and n > 7:
+            e["tier"] = "low"
+        elif rank <= 7:
+            e["tier"] = "kami7"
+        else:
+            e["tier"] = "mid"
+    ordered = ranked + [e for e in entries if not e["enabled"]]
+    stats_ts = [e["stats_ts"] for e in entries if e["stats_ts"]]
+    return {
+        "window_days": TRADER_BOARD_WINDOW_DAYS,
+        "stats_source": "CONSENSUS_REEVAL_BTC_30D",
+        "stats_updated_ts": max(stats_ts) if stats_ts else None,
+        "traders": ordered,
+    }
+
+
+# ============================================================
 # SHADOW MEASUREMENT (V20.9 / V20.10): setups G / H / I,
 # measurement only
 # ============================================================
@@ -4503,6 +4594,7 @@ def make_dashboard(s, price, funding, sig, status):
         "event_risk": _event_risk_payload(s),
         "copy_trading": _copy_dashboard_payload(s),
         "consensus": _consensus_dashboard_payload(s),
+        "trader_board": _trader_board_payload(s),
         "shadow": _shadow_dashboard_payload(s),
     }
 
