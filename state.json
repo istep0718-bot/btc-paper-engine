@@ -1,7 +1,7 @@
 {
-  "build": "BTC_PAPER_V20_10_PRO_2026-11-05",
+  "build": "BTC_PAPER_V20_11_PRO_2026-11-05",
   "initial_equity": 100.0,
-  "equity": 69.4134141799644,
+  "equity": 69.41416052629418,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 33.192501460560145,
   "realized_pnl": -30.529642931180334,
@@ -6142,6 +6142,12 @@
       "equity": 69.4134141799644,
       "marked_equity": 69.20735880873508,
       "price": 80651.5
+    },
+    {
+      "timestamp": "2026-11-05T00:34:49.422869+00:00",
+      "equity": 69.41416052629418,
+      "marked_equity": 69.16393057785758,
+      "price": 80699.5
     }
   ],
   "position": {
@@ -6157,11 +6163,11 @@
     "initial_stop_price": 81274.98850524248,
     "risk_distance": 791.088505242477,
     "entry_fee": 0.037008908914720605,
-    "funding_pnl": -0.0028771612009748774,
+    "funding_pnl": -0.0021308148711946784,
     "entry_time": "2026-11-04T16:22:32+00:00",
     "opened_timestamp": 1793809352,
-    "last_funding_ts": 1793835983,
-    "last_checked_candle_ts": 1793835000000,
+    "last_funding_ts": 1793838887,
+    "last_checked_candle_ts": 1793837700000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -6263,10 +6269,10 @@
   "last_entry_candle": 1793808000000,
   "consecutive_losses": 2,
   "consecutive_lock_until": 0,
-  "daily_date": "2026-11-04",
-  "daily_start_equity": 72.00687187891452,
+  "daily_date": "2026-11-05",
+  "daily_start_equity": 69.16318423152781,
   "daily_loss_lock": false,
-  "daily_stop_count": 2,
+  "daily_stop_count": 0,
   "next_risk_multiplier": 1.0,
   "drawdown_pause_until": 0,
   "stats_by_setup": {
@@ -6374,24 +6380,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-10-28T12:09:08.928633+00:00",
-      "type": "POSITION_CLOSED",
-      "side": "LONG",
-      "reason": "STOP_LOSS",
-      "net_pnl": -0.6577048346023564,
-      "fraction": 1.0
-    },
-    {
-      "timestamp": "2026-10-28T19:22:37.287033+00:00",
-      "type": "POSITION_OPENED",
-      "side": "LONG",
-      "entry_price": 81223.7415,
-      "stop_price": 80798.693694,
-      "quantity": 0.0019496848430672357,
-      "leverage": 10.0,
-      "effective_risk_pct": 1.3266097674163468
-    },
     {
       "timestamp": "2026-10-28T20:06:54.444586+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -8407,6 +8395,16 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00032443,
       "hours": 0.6267
+    },
+    {
+      "timestamp": "2026-11-05T00:34:49.419540+00:00",
+      "type": "DAILY_RESET"
+    },
+    {
+      "timestamp": "2026-11-05T00:34:49.422685+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00074635,
+      "hours": 0.8067
     }
   ],
   "econ_calendar": {
@@ -8456,7 +8454,7 @@
           "szi": -0.3,
           "entry_px": 80900.0,
           "event_ts": 1793832298.863,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8523,7 +8521,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8543,7 +8541,7 @@
           "side": "SHORT",
           "szi": -0.3,
           "entry_px": 80900.0,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8561,9 +8559,9 @@
         "label": "HL-D918",
         "snapshot": {
           "side": "SHORT",
-          "szi": -9.49537,
-          "entry_px": 78464.5,
-          "updated_ts": 1793835983
+          "szi": -12.3,
+          "entry_px": 78998.0,
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8583,7 +8581,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8603,7 +8601,7 @@
           "side": "SHORT",
           "szi": -103.75,
           "entry_px": 79273.0,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8623,7 +8621,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8643,7 +8641,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8683,7 +8681,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8703,7 +8701,7 @@
           "side": "LONG",
           "szi": 0.37617,
           "entry_px": 79964.3,
-          "updated_ts": 1793835983
+          "updated_ts": 1793838887
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -8774,7 +8772,7 @@
           "side": "LONG"
         }
       ],
-      "ts": 1793835983,
+      "ts": 1793838887,
       "enabled_pool": 9
     }
   },
@@ -8980,9 +8978,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1793829600000,
-      "H": 1793808000000,
-      "I": 1793835000000
+      "G": 1793833200000,
+      "H": 1793822400000,
+      "I": 1793837700000
     },
     "next_id": 4,
     "events": [
@@ -9042,7 +9040,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-04T23:46:25.357473+00:00"
+    "updated_at": "2026-11-05T00:34:49.422497+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
@@ -9140,6 +9138,6 @@
   "last_candle_ts": 1792907100000,
   "consecutive_loss_lock": true,
   "dd_limit_alerted": true,
-  "daily_stop_alerted": true,
+  "daily_stop_alerted": false,
   "daily_loss_alerted": false
 }
