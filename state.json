@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_11_PRO_2026-11-05",
   "initial_equity": 100.0,
-  "equity": 72.10139415210891,
+  "equity": 72.10241399174757,
   "peak_equity": 102.00383571561161,
   "max_drawdown_pct": 33.192501460560145,
   "realized_pnl": -27.856742971892604,
@@ -6739,6 +6739,12 @@
       "equity": 72.10139415210891,
       "marked_equity": 72.09177505647632,
       "price": 75925.5
+    },
+    {
+      "timestamp": "2026-11-06T14:34:26.280718+00:00",
+      "equity": 72.10241399174757,
+      "marked_equity": 72.6347670993483,
+      "price": 75427.5
     }
   ],
   "position": {
@@ -6754,11 +6760,11 @@
     "initial_stop_price": 76654.4694702283,
     "risk_distance": 684.666470228307,
     "entry_fee": 0.04130996004715526,
-    "funding_pnl": 0.016503902788283627,
+    "funding_pnl": 0.01752374242694777,
     "entry_time": "2026-11-05T21:36:18+00:00",
     "opened_timestamp": 1793914578,
-    "last_funding_ts": 1793972108,
-    "last_checked_candle_ts": 1793970900000,
+    "last_funding_ts": 1793975663,
+    "last_checked_candle_ts": 1793974500000,
     "entry_signal_score": 0,
     "score": 0,
     "score_breakdown": {
@@ -6975,20 +6981,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-01T00:26:14.064456+00:00",
-      "type": "DAILY_RESET"
-    },
-    {
-      "timestamp": "2026-11-01T01:38:16.102772+00:00",
-      "type": "CONSENSUS_TRADER_AUTO_DISABLED",
-      "trader": "0xb0026ca48937bd18c5941c05decab68b0fcced8a",
-      "label": "HL-ED8A",
-      "reason": "inactive_30d",
-      "closes": 0,
-      "win_rate": 0.0,
-      "realized_pnl": 0
-    },
     {
       "timestamp": "2026-11-01T02:26:57.511804+00:00",
       "type": "COPY_SIGNAL_OPEN",
@@ -9026,6 +9018,19 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.0012961,
       "hours": 1.255
+    },
+    {
+      "timestamp": "2026-11-06T14:34:23.959353+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "previous_side": "SHORT"
+    },
+    {
+      "timestamp": "2026-11-06T14:34:26.280594+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00101984,
+      "hours": 0.9875
     }
   ],
   "econ_calendar": {
@@ -9071,11 +9076,11 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -1.1,
-          "entry_px": 76053.7,
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
           "event_ts": 1793956552.69,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9142,7 +9147,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9159,10 +9164,10 @@
       "0x24e370916722584204322fad3c179a7fbde6684b": {
         "label": "HL-684B",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -1.1,
-          "entry_px": 76053.7,
-          "updated_ts": 1793972108
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9182,7 +9187,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9202,7 +9207,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9220,9 +9225,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -88.0,
+          "szi": -86.5,
           "entry_px": 78539.2,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9242,7 +9247,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9262,7 +9267,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9302,7 +9307,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9322,7 +9327,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1793972108
+          "updated_ts": 1793975663
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9340,9 +9345,9 @@
     "current": {
       "fetched": 9,
       "long_count": 0,
-      "short_count": 4,
-      "flat_count": 5,
-      "positioned": 4,
+      "short_count": 3,
+      "flat_count": 6,
+      "positioned": 3,
       "long_ratio": 0.0,
       "short_ratio": 1.0,
       "valid": true,
@@ -9355,7 +9360,7 @@
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
           "label": "HL-684B",
-          "side": "SHORT"
+          "side": null
         },
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
@@ -9393,7 +9398,7 @@
           "side": null
         }
       ],
-      "ts": 1793972108,
+      "ts": 1793975663,
       "enabled_pool": 9
     }
   },
@@ -9599,9 +9604,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1793966400000,
+      "G": 1793970000000,
       "H": 1793952000000,
-      "I": 1793970900000
+      "I": 1793974500000
     },
     "next_id": 4,
     "events": [
@@ -9661,7 +9666,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-06T13:35:10.231607+00:00"
+    "updated_at": "2026-11-06T14:34:26.280459+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
