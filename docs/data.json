@@ -1,8 +1,8 @@
 {
   "build": "BTC_PAPER_V20_11_PRO_2026-11-05",
-  "generated_at": "2026-11-07T20:03:49.201264+00:00",
+  "generated_at": "2026-11-07T20:42:30.603762+00:00",
   "market_status": "OK",
-  "price": 75759.5,
+  "price": 75725.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
@@ -22,26 +22,26 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 45.619,
-    "atr": 58.69602,
-    "ema9": 75781.0863926244,
-    "ema21": 75806.24134807065,
+    "rsi": 42.55,
+    "atr": 56.08994,
+    "ema9": 75774.53529127962,
+    "ema21": 75798.92673394267,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-07T20:03:49.201196+00:00",
-    "reference_price": 75779.0,
-    "previous_close": 75733.0,
+    "timestamp": "2026-11-07T20:42:30.603696+00:00",
+    "reference_price": 75746.0,
+    "previous_close": 75784.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 75783.75,
-      "upper": 75869.38147785715,
-      "lower": 75698.11852214285,
-      "width_pct": 0.2259890223356698,
-      "position": 0.4722648719906265,
+      "middle": 75776.05,
+      "upper": 75853.56767540374,
+      "lower": 75698.53232459626,
+      "width_pct": 0.2045967700975134,
+      "position": 0.30617323827441745,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -57,21 +57,21 @@
       "trend": "DOWN"
     },
     "regime": "NEUTRAL",
-    "adx": 24.22,
-    "atr_percentile": 3.0,
+    "adx": 24.35,
+    "atr_percentile": 0.0,
     "macd": {
-      "line": -31.8525,
-      "signal": -35.2888,
-      "hist": 3.4363,
-      "hist_prev": 2.4952
+      "line": -30.6715,
+      "signal": -33.468,
+      "hist": 2.7965,
+      "hist_prev": 4.4868
     },
-    "vwap": 75882.6784209214,
-    "relative_volume": 0.307,
+    "vwap": 75880.72095834723,
+    "relative_volume": 0.433,
     "htf_bias": "DOWN",
-    "structure_bias": "DOWN",
-    "support": 75769.0,
+    "structure_bias": "MIXED",
+    "support": 75731.0,
     "resistance": 75787.0,
-    "premium": -1.58351e-05,
+    "premium": -0.0001756024,
     "setup": null,
     "score_breakdown": {},
     "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム NEUTRAL）",
@@ -80,11 +80,11 @@
       "B/LONG: 上位足が逆行",
       "C/LONG: レンジレジーム限定",
       "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: 反転トリガー未発生",
+      "A/SHORT: コストフィルター（想定値幅が往復コストの2倍未満）",
       "B/SHORT: 出来高不足",
       "C/SHORT: レンジレジーム限定",
       "F/SHORT: レジーム不一致（確立したトレンド限定）",
-      "CONSENSUS: LONG 1 / SHORT 3 / FLAT 5（建玉 4名、参入条件: 未達）"
+      "CONSENSUS: LONG 0 / SHORT 3 / FLAT 6（建玉 3名、参入条件: 未達）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -13881,6 +13881,12 @@
       "equity": 72.22339802838674,
       "marked_equity": 72.22339802838674,
       "price": 75759.5
+    },
+    {
+      "timestamp": "2026-11-07T20:42:30.603751+00:00",
+      "equity": 72.22339802838674,
+      "marked_equity": 72.22339802838674,
+      "price": 75725.5
     }
   ],
   "events": [
@@ -14891,26 +14897,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 45.619,
-    "atr": 58.69602,
+    "rsi_15m": 42.55,
+    "atr": 56.08994,
     "bollinger": {
-      "middle": 75783.75,
-      "upper": 75869.38147785715,
-      "lower": 75698.11852214285,
-      "width_pct": 0.2259890223356698,
-      "position": 0.4722648719906265,
+      "middle": 75776.05,
+      "upper": 75853.56767540374,
+      "lower": 75698.53232459626,
+      "width_pct": 0.2045967700975134,
+      "position": 0.30617323827441745,
       "state": "INSIDE"
     },
-    "adx": 24.22,
-    "atr_percentile": 3.0,
+    "adx": 24.35,
+    "atr_percentile": 0.0,
     "macd": {
-      "line": -31.8525,
-      "signal": -35.2888,
-      "hist": 3.4363,
-      "hist_prev": 2.4952
+      "line": -30.6715,
+      "signal": -33.468,
+      "hist": 2.7965,
+      "hist_prev": 4.4868
     },
-    "vwap": 75882.6784209214,
-    "relative_volume": 0.307
+    "vwap": 75880.72095834723,
+    "relative_volume": 0.433
   },
   "fibonacci": {
     "swing_high": 81177.0,
@@ -15024,21 +15030,21 @@
     "entry_ratio": 0.8,
     "exit_ratio": 0.5,
     "min_pool": 7,
-    "long_count": 1,
+    "long_count": 0,
     "short_count": 3,
-    "flat_count": 5,
-    "positioned": 4,
-    "long_ratio": 0.25,
-    "short_ratio": 0.75,
+    "flat_count": 6,
+    "positioned": 3,
+    "long_ratio": 0.0,
+    "short_ratio": 1.0,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1794081827,
+    "updated_ts": 1794084148,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
         "label": "HL-F79D",
-        "side": "LONG",
-        "source_entry_price": 75761.5,
+        "side": null,
+        "source_entry_price": null,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -15278,8 +15284,8 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "is_copy_target": true,
-        "side": "LONG",
-        "source_entry_price": 75761.5,
+        "side": null,
+        "source_entry_price": null,
         "closes_30d": 737,
         "win_rate_30d": 0.5631,
         "realized_pnl_30d": -5499.77,
@@ -15591,6 +15597,6 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-07T20:03:49.201117+00:00"
+    "updated_at": "2026-11-07T20:42:30.603615+00:00"
   }
 }
