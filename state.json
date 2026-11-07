@@ -7069,6 +7069,12 @@
       "equity": 72.22339802838674,
       "marked_equity": 72.22339802838674,
       "price": 75853.5
+    },
+    {
+      "timestamp": "2026-11-07T00:40:44.410117+00:00",
+      "equity": 72.22339802838674,
+      "marked_equity": 72.22339802838674,
+      "price": 75943.5
     }
   ],
   "position": null,
@@ -7076,8 +7082,8 @@
   "last_entry_candle": 1794001500000,
   "consecutive_losses": 0,
   "consecutive_lock_until": 0,
-  "daily_date": "2026-11-06",
-  "daily_start_equity": 71.72710908030584,
+  "daily_date": "2026-11-07",
+  "daily_start_equity": 72.22339802838674,
   "daily_loss_lock": false,
   "daily_stop_count": 0,
   "next_risk_multiplier": 1.0,
@@ -7187,12 +7193,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-01T20:47:15.349749+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00059918,
-      "hours": 0.5472
-    },
     {
       "timestamp": "2026-11-01T21:23:01.107701+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -9119,6 +9119,10 @@
       "fraction": 1.0,
       "setup": "E",
       "r_multiple": -0.1528
+    },
+    {
+      "timestamp": "2026-11-07T00:40:44.405222+00:00",
+      "type": "DAILY_RESET"
     }
   ],
   "econ_calendar": {
@@ -9161,7 +9165,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793956552.69,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9225,10 +9229,10 @@
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
         "label": "HL-F79D",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1794009484
+          "side": "SHORT",
+          "szi": -12.33099,
+          "entry_px": 75909.6,
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9248,7 +9252,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9268,7 +9272,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9288,7 +9292,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9308,7 +9312,7 @@
           "side": "SHORT",
           "szi": -88.0,
           "entry_px": 78226.5,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9328,7 +9332,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9348,7 +9352,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9388,7 +9392,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9408,7 +9412,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794009484
+          "updated_ts": 1794012041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9426,9 +9430,9 @@
     "current": {
       "fetched": 9,
       "long_count": 0,
-      "short_count": 3,
-      "flat_count": 6,
-      "positioned": 3,
+      "short_count": 4,
+      "flat_count": 5,
+      "positioned": 4,
       "long_ratio": 0.0,
       "short_ratio": 1.0,
       "valid": true,
@@ -9436,7 +9440,7 @@
         {
           "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
           "label": "HL-F79D",
-          "side": null
+          "side": "SHORT"
         },
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
@@ -9479,7 +9483,7 @@
           "side": null
         }
       ],
-      "ts": 1794009484,
+      "ts": 1794012041,
       "enabled_pool": 9
     }
   },
@@ -9685,9 +9689,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1794002400000,
-      "H": 1793980800000,
-      "I": 1794007800000
+      "G": 1794006000000,
+      "H": 1793995200000,
+      "I": 1794010500000
     },
     "next_id": 4,
     "events": [
@@ -9747,7 +9751,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-06T23:58:07.168493+00:00"
+    "updated_at": "2026-11-07T00:40:44.408277+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
