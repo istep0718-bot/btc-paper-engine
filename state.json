@@ -7315,6 +7315,12 @@
       "equity": 72.22339802838674,
       "marked_equity": 72.22339802838674,
       "price": 76001.5
+    },
+    {
+      "timestamp": "2026-11-08T17:09:27.088582+00:00",
+      "equity": 72.22339802838674,
+      "marked_equity": 72.22339802838674,
+      "price": 75766.5
     }
   ],
   "position": null,
@@ -9402,7 +9408,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793956552.69,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9469,7 +9475,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9489,7 +9495,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9506,10 +9512,10 @@
       "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
         "label": "HL-D918",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -1.0,
-          "entry_px": 76001.0,
-          "updated_ts": 1794137079
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9529,7 +9535,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9548,8 +9554,8 @@
         "snapshot": {
           "side": "SHORT",
           "szi": -88.0,
-          "entry_px": 78149.3,
-          "updated_ts": 1794137079
+          "entry_px": 78132.0,
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9569,7 +9575,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9589,7 +9595,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9629,7 +9635,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9649,7 +9655,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794137079
+          "updated_ts": 1794157764
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9667,9 +9673,9 @@
     "current": {
       "fetched": 9,
       "long_count": 0,
-      "short_count": 4,
-      "flat_count": 5,
-      "positioned": 4,
+      "short_count": 3,
+      "flat_count": 6,
+      "positioned": 3,
       "long_ratio": 0.0,
       "short_ratio": 1.0,
       "valid": true,
@@ -9687,7 +9693,7 @@
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
           "label": "HL-D918",
-          "side": "SHORT"
+          "side": null
         },
         {
           "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
@@ -9720,40 +9726,13 @@
           "side": null
         }
       ],
-      "ts": 1794137079,
+      "ts": 1794157764,
       "enabled_pool": 9
     }
   },
   "shadow": {
     "positions": {
-      "G": {
-        "id": 4,
-        "setup": "G",
-        "side": "SHORT",
-        "entry_bar_t": 1794063600000,
-        "entry_time": "2026-11-07T16:00:00+00:00",
-        "entry_price": 75740.0,
-        "atr": 255.10218753227923,
-        "risk_distance": 382.65328129841885,
-        "stop_price": 76122.65328129842,
-        "tp_price": 75166.02007805237,
-        "mfe_r": 0.4991463795943391,
-        "mae_r": 0.6376529666021924,
-        "bars_held": 19,
-        "first_hit": {
-          "1.0": null,
-          "1.5": null,
-          "2.0": null
-        },
-        "context": {
-          "bb_width_prev": 0.004463357045335167,
-          "bb_width_min_lookback": 0.004842964158076212,
-          "bb_upper": 76140.57148979438,
-          "bb_lower": 75757.2285102056,
-          "bb_mid": 75948.9
-        },
-        "origin_build": "BTC_PAPER_V20_11_PRO_2026-11-05"
-      },
+      "G": null,
       "H": null,
       "I": null
     },
@@ -9861,37 +9840,72 @@
           "atr_sma50": 785.0836572015353
         },
         "origin_build": "BTC_PAPER_V20_9_PRO_2026-11-04"
+      },
+      {
+        "id": 4,
+        "setup": "G",
+        "side": "SHORT",
+        "entry_time": "2026-11-07T16:00:00+00:00",
+        "entry_bar_t": 1794063600000,
+        "entry_price": 75740.0,
+        "atr": 255.10218753227923,
+        "risk_distance": 382.65328129841885,
+        "stop_price": 76122.65328129842,
+        "tp_price": 75166.02007805237,
+        "exit_time": "2026-11-08T14:00:00+00:00",
+        "exit_bar_t": 1794142800000,
+        "exit_price": 76122.65328129842,
+        "exit_reason": "STOP",
+        "gross_r": -1.000000000000009,
+        "cost_r": 0.3760741303764553,
+        "net_r": -1.3760741303764643,
+        "mfe_r": 0.4991463795943391,
+        "mae_r": 1.1315726825358579,
+        "bars_held": 22,
+        "first_hit": {
+          "1.0": "stop",
+          "1.5": "stop",
+          "2.0": "stop"
+        },
+        "context": {
+          "bb_width_prev": 0.004463357045335167,
+          "bb_width_min_lookback": 0.004842964158076212,
+          "bb_upper": 76140.57148979438,
+          "bb_lower": 75757.2285102056,
+          "bb_mid": 75948.9
+        },
+        "origin_build": "BTC_PAPER_V20_11_PRO_2026-11-05"
       }
     ],
     "stats": {
       "G": {
         "signals": 3,
         "opened": 3,
-        "closed": 2,
+        "closed": 3,
         "exits": {
           "TP_1_5R": 2,
-          "STOP": 0,
+          "STOP": 1,
           "HORIZON": 0
         },
         "first_hit": {
           "1.0": {
             "hit": 2,
-            "stop": 0,
+            "stop": 1,
             "censored": 0
           },
           "1.5": {
             "hit": 2,
-            "stop": 0,
+            "stop": 1,
             "censored": 0
           },
           "2.0": {
             "hit": 2,
-            "stop": 0,
+            "stop": 1,
             "censored": 0
           }
         },
-        "total_r_gross": 3.000000000000019,
-        "total_r_net": 2.2983498641006306
+        "total_r_gross": 2.0000000000000098,
+        "total_r_net": 0.9222757337241663
       },
       "H": {
         "signals": 1,
@@ -9953,9 +9967,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1794132000000,
-      "H": 1794110400000,
-      "I": 1794135600000
+      "G": 1794153600000,
+      "H": 1794139200000,
+      "I": 1794156300000
     },
     "next_id": 5,
     "events": [
@@ -10021,10 +10035,19 @@
         "entry_price": 75740.0,
         "risk_distance": 382.65328129841885,
         "entry_time": "2026-11-07T16:00:00+00:00"
+      },
+      {
+        "timestamp": "2026-11-08T17:09:27.087844+00:00",
+        "type": "SHADOW_CLOSE",
+        "setup": "G",
+        "side": "SHORT",
+        "reason": "STOP",
+        "gross_r": -1.0,
+        "exit_time": "2026-11-08T14:00:00+00:00"
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-08T11:24:41.436598+00:00"
+    "updated_at": "2026-11-08T17:09:27.088458+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
