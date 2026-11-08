@@ -7321,6 +7321,12 @@
       "equity": 72.22339802838674,
       "marked_equity": 72.22339802838674,
       "price": 75766.5
+    },
+    {
+      "timestamp": "2026-11-08T21:06:49.686698+00:00",
+      "equity": 72.22339802838674,
+      "marked_equity": 72.22339802838674,
+      "price": 75659.5
     }
   ],
   "position": null,
@@ -7439,12 +7445,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-01T22:25:41.141343+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00052071,
-      "hours": 0.4756
-    },
     {
       "timestamp": "2026-11-01T22:58:21.646597+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -9366,10 +9366,15 @@
     {
       "timestamp": "2026-11-08T00:45:02.127466+00:00",
       "type": "DAILY_RESET"
+    },
+    {
+      "timestamp": "2026-11-08T21:06:47.581580+00:00",
+      "type": "ECON_CALENDAR_UPDATED",
+      "events": 4
     }
   ],
   "econ_calendar": {
-    "fetched_ts": 1794077468,
+    "fetched_ts": 1794172007,
     "events": [
       {
         "title": "Average Hourly Earnings m/m",
@@ -9391,6 +9396,34 @@
         "ts": 1793971800,
         "impact": "High",
         "source": "feed"
+      },
+      {
+        "title": "Core CPI m/m",
+        "category": "CPI",
+        "ts": 1794317400,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "CPI m/m",
+        "category": "CPI",
+        "ts": 1794317400,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "Core PPI m/m",
+        "category": "PPI",
+        "ts": 1794576600,
+        "impact": "High",
+        "source": "feed"
+      },
+      {
+        "title": "PPI m/m",
+        "category": "PPI",
+        "ts": 1794576600,
+        "impact": "High",
+        "source": "feed"
       }
     ],
     "last_error": null,
@@ -9408,7 +9441,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1793956552.69,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9475,7 +9508,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9495,7 +9528,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9515,7 +9548,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9535,7 +9568,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9554,8 +9587,8 @@
         "snapshot": {
           "side": "SHORT",
           "szi": -88.0,
-          "entry_px": 78132.0,
-          "updated_ts": 1794157764
+          "entry_px": 78112.8,
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9575,7 +9608,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9595,7 +9628,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9635,7 +9668,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9655,7 +9688,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794157764
+          "updated_ts": 1794172007
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9726,7 +9759,7 @@
           "side": null
         }
       ],
-      "ts": 1794157764,
+      "ts": 1794172007,
       "enabled_pool": 9
     }
   },
@@ -9967,9 +10000,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1794153600000,
-      "H": 1794139200000,
-      "I": 1794156300000
+      "G": 1794168000000,
+      "H": 1794153600000,
+      "I": 1794170700000
     },
     "next_id": 5,
     "events": [
@@ -10047,7 +10080,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-08T17:09:27.088458+00:00"
+    "updated_at": "2026-11-08T21:06:49.684876+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
