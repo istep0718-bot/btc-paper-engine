@@ -1,0 +1,59 @@
+name: HL-8888 Shadow Logger
+
+# Measurement-only logger: tracks HL-8888's BTC/ETH net-position direction
+# for 30 days (2026-11-10 to 2026-12-10) to test whether it leads BTC price.
+# Fully independent of the BTC Paper Engine workflow and bot.py; a failure
+# here never affects the paper engine.
+
+on:
+  workflow_dispatch:
+
+  schedule:
+    # Hourly, offset to :07 to avoid colliding with the paper engine's
+    # */15 runs and their pushes.
+    - cron: "7 * * * *"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: hl8888-shadow
+  cancel-in-progress: false
+
+jobs:
+  shadow-log:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Append one HL-8888 shadow sample
+        run: python hl8888_shadow.py
+
+      - name: Commit shadow log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/hl8888_shadow.jsonl
+          if git diff --cached --quiet; then
+            echo "No new sample; nothing to commit."
+            exit 0
+          fi
+          git commit -m "HL-8888 shadow: append hourly sample"
+          # The paper engine pushes to the same branch every 15 minutes;
+          # rebase-and-retry so a race never loses a sample.
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            git pull --rebase
+            sleep 5
+          done
+          git push
