@@ -7464,6 +7464,12 @@
       "equity": 72.40114324958832,
       "marked_equity": 72.40114324958832,
       "price": 74542.5
+    },
+    {
+      "timestamp": "2026-11-10T00:51:45.751157+00:00",
+      "equity": 72.40114324958832,
+      "marked_equity": 72.40114324958832,
+      "price": 74966.5
     }
   ],
   "position": null,
@@ -7471,8 +7477,8 @@
   "last_entry_candle": 1794207600000,
   "consecutive_losses": 0,
   "consecutive_lock_until": 0,
-  "daily_date": "2026-11-09",
-  "daily_start_equity": 72.22339802838674,
+  "daily_date": "2026-11-10",
+  "daily_start_equity": 72.40114324958832,
   "daily_loss_lock": false,
   "daily_stop_count": 0,
   "next_risk_multiplier": 1.0,
@@ -7582,26 +7588,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-02T01:45:11.023092+00:00",
-      "type": "COPY_TRADER_AUTO_DISABLED",
-      "trader": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
-      "label": "HL-D918",
-      "reason": "performance_decay_30d",
-      "closes": 1011,
-      "win_rate": 0.3858,
-      "realized_pnl": 9484.84
-    },
-    {
-      "timestamp": "2026-11-02T01:45:11.318477+00:00",
-      "type": "COPY_TRADER_AUTO_DISABLED",
-      "trader": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
-      "label": "HL-F79D",
-      "reason": "performance_decay_30d",
-      "closes": 760,
-      "win_rate": 0.4368,
-      "realized_pnl": 67320.41
-    },
     {
       "timestamp": "2026-11-02T01:45:19.022692+00:00",
       "type": "CONSENSUS_ENTRY",
@@ -9572,10 +9558,19 @@
       "fraction": 1.0,
       "setup": "E",
       "r_multiple": 0.1969
+    },
+    {
+      "timestamp": "2026-11-10T00:51:43.638798+00:00",
+      "type": "ECON_CALENDAR_UPDATED",
+      "events": 4
+    },
+    {
+      "timestamp": "2026-11-10T00:51:45.747336+00:00",
+      "type": "DAILY_RESET"
     }
   ],
   "econ_calendar": {
-    "fetched_ts": 1794172007,
+    "fetched_ts": 1794271903,
     "events": [
       {
         "title": "Core CPI m/m",
@@ -9621,7 +9616,7 @@
           "szi": 3.5,
           "entry_px": 74418.0,
           "event_ts": 1794181941.646,
-          "updated_ts": 1794246135
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9685,10 +9680,10 @@
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
         "label": "HL-F79D",
         "snapshot": {
-          "side": "LONG",
-          "szi": 20.17214,
-          "entry_px": 74893.5,
-          "updated_ts": 1794246135
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9708,7 +9703,7 @@
           "side": "LONG",
           "szi": 3.5,
           "entry_px": 74418.0,
-          "updated_ts": 1794246135
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9725,10 +9720,10 @@
       "0xca4336bba924332e7f1a08db0cd91d456d5cd918": {
         "label": "HL-D918",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1794246135
+          "side": "SHORT",
+          "szi": -0.44125,
+          "entry_px": 75133.0,
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9748,7 +9743,7 @@
           "side": "SHORT",
           "szi": -13.3044,
           "entry_px": 78753.6,
-          "updated_ts": 1794246135
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9766,9 +9761,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -84.25,
-          "entry_px": 77154.7,
-          "updated_ts": 1794246135
+          "szi": -85.0,
+          "entry_px": 77041.8,
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9788,7 +9783,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794246135
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9808,7 +9803,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794246135
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9848,7 +9843,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794246135
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9865,10 +9860,10 @@
       "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
         "label": "HL-2B76",
         "snapshot": {
-          "side": "LONG",
-          "szi": 2.0,
-          "entry_px": 75253.5,
-          "updated_ts": 1794246135
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1794271903
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -9885,18 +9880,18 @@
     },
     "current": {
       "fetched": 9,
-      "long_count": 3,
-      "short_count": 3,
-      "flat_count": 3,
-      "positioned": 6,
-      "long_ratio": 0.5,
-      "short_ratio": 0.5,
+      "long_count": 1,
+      "short_count": 4,
+      "flat_count": 4,
+      "positioned": 5,
+      "long_ratio": 0.2,
+      "short_ratio": 0.8,
       "valid": true,
       "members": [
         {
           "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
           "label": "HL-F79D",
-          "side": "LONG"
+          "side": null
         },
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
@@ -9906,7 +9901,7 @@
         {
           "address": "0xca4336bba924332e7f1a08db0cd91d456d5cd918",
           "label": "HL-D918",
-          "side": null
+          "side": "SHORT"
         },
         {
           "address": "0x9c16bc8f1104e4d2f72267eb981fa12de7cc4a6f",
@@ -9936,10 +9931,10 @@
         {
           "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
           "label": "HL-2B76",
-          "side": "LONG"
+          "side": null
         }
       ],
-      "ts": 1794246135,
+      "ts": 1794271903,
       "enabled_pool": 9
     }
   },
@@ -10180,9 +10175,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1794240000000,
-      "H": 1794225600000,
-      "I": 1794244500000
+      "G": 1794265200000,
+      "H": 1794254400000,
+      "I": 1794270600000
     },
     "next_id": 5,
     "events": [
@@ -10260,7 +10255,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-09T17:42:17.620415+00:00"
+    "updated_at": "2026-11-10T00:51:45.749606+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
