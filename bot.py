@@ -189,7 +189,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_11_PRO_2026-11-05"
+BUILD = "BTC_PAPER_V20_12_PRO_2026-11-12"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -203,16 +203,22 @@ DATA_FILE = ROOT / "docs" / "data.json"
 
 INITIAL_EQUITY = 100.0
 
-# Fixed leverage (position size is risk-based; leverage only caps margin).
+# Fixed leverage (position size is risk-based; leverage only sizes margin).
 LEVERAGE = 40.0
 
 # Unified effective risk per trade: 5% of equity at full stop-out
-# (including estimated round-trip costs). Planned == effective by
-# construction; the margin cap can only reduce it, never increase it.
+# (including estimated round-trip costs), before the margin band clamp
+# below. The clamp can raise the effective risk above this when the
+# risk-based size falls under the margin floor.
 RISK_PER_TRADE = 0.05
 
-# Maximum simulated margin allocation.
-MAX_MARGIN_FRACTION = 0.25
+# Simulated margin allocation band (V20.12, 2026-11-12 owner decision):
+# after risk-based sizing, the final margin of every NEW position is
+# clamped into [MIN_MARGIN_FRACTION, MAX_MARGIN_FRACTION] of current
+# equity, so the margin always lands between 25% and 50% of equity.
+# Positions opened before V20.12 are untouched.
+MIN_MARGIN_FRACTION = 0.25
+MAX_MARGIN_FRACTION = 0.50
 
 FEE_RATE = 0.0005            # taker fee per side (paper model)
 SLIPPAGE_RATE = 0.0002       # base slippage per side
@@ -3577,11 +3583,19 @@ def size_position(equity, entry, stop, risk_fraction):
 
     risk_quantity = risk_budget / estimated_cost_per_unit
 
-    margin_quantity = (
+    max_margin_quantity = (
         equity * MAX_MARGIN_FRACTION * LEVERAGE / entry
     )
+    min_margin_quantity = (
+        equity * MIN_MARGIN_FRACTION * LEVERAGE / entry
+    )
 
-    quantity = min(risk_quantity, margin_quantity)
+    # V20.12: clamp the final margin into the 25%-50% equity band.
+    # The risk-based quantity (with DD throttle etc. already applied
+    # via risk_fraction) is capped at the band top, then raised to the
+    # band floor when it falls below it.
+    quantity = min(risk_quantity, max_margin_quantity)
+    quantity = max(quantity, min_margin_quantity)
 
     if quantity <= 0:
         return None
@@ -4533,6 +4547,7 @@ def make_dashboard(s, price, funding, sig, status):
             ),
             "leverage": LEVERAGE,
             "risk_per_trade_pct": RISK_PER_TRADE * 100,
+            "min_margin_pct": MIN_MARGIN_FRACTION * 100,
             "max_margin_pct": MAX_MARGIN_FRACTION * 100,
             "paper_only": True,
             "live_trading_enabled": False,
@@ -4566,6 +4581,8 @@ def make_dashboard(s, price, funding, sig, status):
         "config": {
             "leverage": LEVERAGE,
             "risk_per_trade_pct": RISK_PER_TRADE * 100,
+            "min_margin_pct": MIN_MARGIN_FRACTION * 100,
+            "max_margin_pct": MAX_MARGIN_FRACTION * 100,
             "paper_only": True,
             "live_trading_enabled": False,
             "min_signal_score": MIN_SCORE,
