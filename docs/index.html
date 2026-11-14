@@ -328,6 +328,25 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
         <div class="stat"><div class="lab"><span class="sic"><svg viewBox="0 0 24 24"><path d="M12 2 L20 5 V11 C20 17 16.5 20.4 12 22 C7.5 20.4 4 17 4 11 V5 Z" fill="#ff8ac2"/></svg></span>最大DD</div><div class="big" id="maxddValue">--</div><div class="sub2">最大ドローダウン</div></div>
       </div>
 
+      <style>
+      .s0row{padding:10px 2px;border-bottom:1px dashed rgba(0,0,0,.08)}
+      .s0row:last-child{border-bottom:none}
+      .s0head{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap}
+      .s0name{font-weight:700}
+      .s0vals{font-size:.92em;opacity:.85}
+      .s0chip{font-size:.78em;font-weight:800;padding:2px 10px;border-radius:999px;color:#fff;white-space:nowrap}
+      .s0ok{background:#2ea86a}.s0ng{background:#e08a00}.s0na{background:#9aa0a6}
+      .s0bar{height:8px;background:rgba(0,0,0,.08);border-radius:99px;margin-top:6px;overflow:hidden}
+      .s0fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#8a5cf6,#e546b0)}
+      .s0fill.ok{background:linear-gradient(90deg,#2ea86a,#57c785)}
+      </style>
+      <div class="card" id="stage0Card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M12 2 L20 5 V11 C20 17 16.5 20.4 12 22 C7.5 20.4 4 17 4 11 V5 Z" fill="#8a5cf6"/><path d="M8.6 12.2 L11 14.6 L15.6 9.6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Stage 0 合格条件ボード（紙取引）</h2>
+        <div class="miniNote" id="s0Summary">読み込み中…</div>
+        <div id="s0Rows"></div>
+        <div class="miniNote">紙取引（ペーパー）の成績だけを表示しています。実資金の取引ではありません。最大DDは全期間の最大値です。</div>
+      </div>
+
       <div class="grid2">
         <div class="card">
           <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="3.6" y="12" width="4.4" height="8.4" rx="1.2" fill="#5579ee"/><rect x="9.8" y="7" width="4.4" height="13.4" rx="1.2" fill="#e546b0"/><rect x="16" y="2.8" width="4.4" height="17.6" rx="1.2" fill="#ffb52e"/></svg></span>資産の冒険グラフ (USD)</h2>
@@ -955,7 +974,31 @@ const ta=document.createElement("textarea");ta.value=text;ta.style.position="fix
 }
 const orig=btn.textContent;btn.textContent=ok?"コピーしました":"コピー失敗";setTimeout(()=>{btn.textContent=orig},1600);
 });
-function render(d){if(!d||typeof d!=="object")throw new Error("JSONデータの形式が正しくありません。");lastData=d;const fxRate=n(get(d,["usdjpy","fx_rate","usd_jpy","USDJPY"]));if(fxRate!==null&&fxRate>50&&fxRate<300)USDJPY=fxRate;const price=n(get(d,["price","market.price","btc_price"]));const equity=n(get(d,["marked_equity","equity","metrics.equity"]));const initial=n(get(d,["initial_equity","initial_bankroll"],100))??100;const all=tradesOf(d);const closedTrades=closed(all);const pnlValues=closedTrades.map(pnlOf).filter(v=>v!==null);const wins=pnlValues.filter(v=>v>0).length;const losses=pnlValues.filter(v=>v<0).length;let winrate=n(get(d,["metrics.win_rate","win_rate","winrate"]));if(winrate!==null&&winrate>=0&&winrate<=1)winrate*=100;if(winrate===null&&pnlValues.length>0)winrate=wins/pnlValues.length*100;const realized=n(get(d,["realized_pnl","metrics.total_net_pnl"]))??pnlValues.reduce((a,b)=>a+b,0);const position=get(d,["position","open_position","open_trade"],null);const unrealized=n(get(d,["unrealized_pnl","position.unrealized_pnl","position.unrealized_pnl_usd","open_pnl"]))??0;const dd=n(get(d,["max_drawdown_pct","risk.max_drawdown_pct","metrics.max_drawdown_pct","risk.drawdown_pct","current_drawdown_pct"]));
+function renderStage0(d){
+  const rows=[];
+  const closedN=n(get(d,["metrics.closed_trades","closed_trades"]));
+  rows.push({name:"往復回数",target:"100往復",cur:closedN===null?null:closedN+"往復",pass:closedN===null?null:closedN>=100,pct:closedN===null?0:Math.min(100,closedN/100*100)});
+  let days=null;
+  try{const all=tradesOf(d);let first=null;for(const t of all){const s=t&&(t.entry_time||t.opened_at||t.entry_timestamp||t.opened_timestamp);if(!s)continue;const dt=typeof s==="number"?new Date(s*1000):new Date(s);if(!isNaN(dt)&&(first===null||dt<first))first=dt}if(first){const nowT=d.generated_at?new Date(d.generated_at):new Date();days=Math.max(0,(nowT-first)/86400000)}}catch(e){}
+  rows.push({name:"運用期間",target:"3か月（90日）",cur:days===null?null:"約"+days.toFixed(0)+"日",pass:days===null?null:days>=90,pct:days===null?0:Math.min(100,days/90*100)});
+  const ev=n(get(d,["metrics.expectancy_per_trade","metrics.average_trade"]));
+  rows.push({name:"期待値",target:"0超（プラス）",cur:ev===null?null:(ev>0?"+":"")+"$"+ev.toFixed(3)+"／件",pass:ev===null?null:ev>0,pct:ev===null?0:(ev>0?100:Math.max(4,50+ev*100))});
+  const pf=n(get(d,["metrics.profit_factor"]));
+  rows.push({name:"プロフィットファクター",target:"1.2以上",cur:pf===null?null:pf.toFixed(2),pass:pf===null?null:pf>=1.2,pct:pf===null?0:Math.min(100,pf/1.2*100)});
+  const ddRaw=n(get(d,["risk.max_drawdown_pct","max_drawdown_pct"]));
+  const dd=ddRaw===null?null:Math.abs(ddRaw);
+  rows.push({name:"最大ドローダウン",target:"15%以下",cur:dd===null?null:dd.toFixed(1)+"%",pass:dd===null?null:dd<=15,pct:dd===null?0:(dd<=15?100:Math.min(100,15/Math.max(dd,0.01)*100))});
+  const box=document.getElementById("s0Rows");if(!box)return;
+  box.innerHTML=rows.map(r=>{
+    const chip=r.pass===null?'<span class="s0chip s0na">未確認</span>':(r.pass?'<span class="s0chip s0ok">到達</span>':'<span class="s0chip s0ng">未到達</span>');
+    const cur=r.cur===null?"データなし":r.cur;
+    return '<div class="s0row"><div class="s0head"><span class="s0name">'+r.name+'</span><span class="s0vals">現在 '+cur+' ／ 条件 '+r.target+'</span>'+chip+'</div><div class="s0bar"><div class="s0fill'+(r.pass?' ok':'')+'" style="width:'+r.pct.toFixed(0)+'%"></div></div></div>';
+  }).join("");
+  const okCount=rows.filter(r=>r.pass===true).length;
+  const sum=document.getElementById("s0Summary");
+  if(sum)sum.textContent="到達 "+okCount+" / 5 条件"+(okCount===5?"（全条件に到達しています）":"（あと "+(5-okCount)+" 条件）");
+}
+function render(d){if(!d||typeof d!=="object")throw new Error("JSONデータの形式が正しくありません。");lastData=d;try{renderStage0(d)}catch(e){console.warn("stage0",e)}const fxRate=n(get(d,["usdjpy","fx_rate","usd_jpy","USDJPY"]));if(fxRate!==null&&fxRate>50&&fxRate<300)USDJPY=fxRate;const price=n(get(d,["price","market.price","btc_price"]));const equity=n(get(d,["marked_equity","equity","metrics.equity"]));const initial=n(get(d,["initial_equity","initial_bankroll"],100))??100;const all=tradesOf(d);const closedTrades=closed(all);const pnlValues=closedTrades.map(pnlOf).filter(v=>v!==null);const wins=pnlValues.filter(v=>v>0).length;const losses=pnlValues.filter(v=>v<0).length;let winrate=n(get(d,["metrics.win_rate","win_rate","winrate"]));if(winrate!==null&&winrate>=0&&winrate<=1)winrate*=100;if(winrate===null&&pnlValues.length>0)winrate=wins/pnlValues.length*100;const realized=n(get(d,["realized_pnl","metrics.total_net_pnl"]))??pnlValues.reduce((a,b)=>a+b,0);const position=get(d,["position","open_position","open_trade"],null);const unrealized=n(get(d,["unrealized_pnl","position.unrealized_pnl","position.unrealized_pnl_usd","open_pnl"]))??0;const dd=n(get(d,["max_drawdown_pct","risk.max_drawdown_pct","metrics.max_drawdown_pct","risk.drawdown_pct","current_drawdown_pct"]));
 put("priceUsd",price===null?"--":usd(price));put("priceJpy",price===null?"":jpy(price));put("equityUsd",equity===null?"--":usd(equity));put("equityJpy",equity===null?"":jpy(equity));put("realizedUsd",signed(realized));color("realizedUsd",realized);put("winrateValue",winrate===null?"--":winrate.toFixed(1)+"%");put("winlossText",wins+"勝 "+losses+"敗");put("pnlUsd",signed(unrealized));put("pnlJpy",jpy(unrealized));color("pnlUsd",unrealized);put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
 const signal=side(get(d,["signal.direction","signal","current_signal"],"WAIT"));const score=n(get(d,["signal.score"]));const rsi=n(get(d,["signal.rsi","indicators.rsi_15m","rsi_15m"]));put("signalValue",signal);put("scoreValue",score===null?"--":score);put("rsiValue",rsi===null?"--":rsi.toFixed(1));$("signalValue").classList.remove("good","bad");if(signal==="LONG")$("signalValue").classList.add("good");if(signal==="SHORT")$("signalValue").classList.add("bad");const reasons=get(d,["signal.reasons","signal.reason"],[]);let reasonText="";if(Array.isArray(reasons))reasonText=reasons.filter(Boolean).slice(0,2).join("・");else if(typeof reasons==="string")reasonText=reasons;put("reasonValue",reasonText||"理由データなし");
 let positionSide="WAIT";if(position&&typeof position==="object")positionSide=side(get(position,["side","direction","type"],"WAIT"));else if(position)positionSide=side(position);put("positionValue",positionSide==="WAIT"?"NONE":positionSide);put("openPnlValue",signed(unrealized));color("openPnlValue",unrealized);
