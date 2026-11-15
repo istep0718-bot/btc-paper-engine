@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
   "initial_equity": 100.0,
-  "equity": 91.86833501979737,
+  "equity": 82.8953900756147,
   "peak_equity": 102.44757489202469,
   "max_drawdown_pct": 33.192501460560145,
-  "realized_pnl": -7.656682304597778,
+  "realized_pnl": -17.087553105645668,
   "trades": [
     {
       "side": "SHORT",
@@ -4319,6 +4319,80 @@
       "hold_extensions": 0,
       "trend_flip": false,
       "runner_floor_active": true,
+      "source_trader": null,
+      "source_trader_label": null,
+      "source_entry_price": null,
+      "copy_source_event_ts": null,
+      "copy_detection_lag_seconds": null,
+      "consensus_ratio": null,
+      "consensus_long_count": null,
+      "consensus_short_count": null,
+      "consensus_flat_count": null,
+      "consensus_members": null,
+      "consensus_at_exit": null
+    },
+    {
+      "side": "SHORT",
+      "direction": "SHORT",
+      "entry_price": 64562.085,
+      "exit_price": 65157.16483523006,
+      "quantity": 0.014300384022087047,
+      "leverage": 40.0,
+      "margin_used": 23.081565219165647,
+      "entry_time": "2026-11-15T17:45:28+00:00",
+      "exit_time": "2026-11-15T19:00:00+00:00",
+      "exit_timestamp": 1794769200,
+      "gross_pnl": -8.50987016759018,
+      "entry_fee": 0.4616313043833129,
+      "exit_fee": 0.465886239467108,
+      "fees": 0.9275175438504208,
+      "funding_pnl": 0.006516910392711794,
+      "net_pnl": -9.43087080104789,
+      "pnl": -9.43087080104789,
+      "reason": "STOP_LOSS",
+      "exit_reason": "STOP_LOSS",
+      "partial": false,
+      "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
+      "origin_build": "BTC_PAPER_V20_14_PRO_2026-11-15",
+      "setup": "F",
+      "regime": "TREND_DOWN",
+      "score": 10,
+      "score_breakdown": {
+        "htf_bias": 4,
+        "structure": 2,
+        "macd_momentum": 2,
+        "rsi": 1,
+        "volume": 0,
+        "vwap": 0,
+        "crowding": 0,
+        "volatility_fit": 0,
+        "trend_continuation": 1
+      },
+      "initial_stop_price": 65111.5867245229,
+      "stop_price_at_exit": 65111.5867245229,
+      "targets": {
+        "tp1_price": 63737.83241321564,
+        "tp2_price": 62913.57982643128,
+        "be_price": 64439.417038499996
+      },
+      "planned_risk": 9.612284638133213,
+      "effective_risk_pct": 10.411214043395665,
+      "risk_distance": 549.5017245229046,
+      "mfe_r": 0.36594061679167195,
+      "mae_r": 1.1590773451220582,
+      "r_multiple": -0.9811268762926942,
+      "zone_room_r": 0.29678705765954577,
+      "event_spanned": false,
+      "event_spanned_names": [],
+      "entry_event_within_24h": false,
+      "entry_event_upcoming_24h": true,
+      "entry_event_name": "Fed Chairman Warsh Speaks",
+      "tp1_taken": false,
+      "tp2_taken": false,
+      "tp_stage": 0,
+      "hold_extensions": 0,
+      "trend_flip": false,
+      "runner_floor_active": false,
       "source_trader": null,
       "source_trader_label": null,
       "source_entry_price": null,
@@ -8667,93 +8741,23 @@
       "equity": 91.86833501979737,
       "marked_equity": 89.02662205352192,
       "price": 64715.5
+    },
+    {
+      "timestamp": "2026-11-15T19:15:32.733327+00:00",
+      "equity": 82.8953900756147,
+      "marked_equity": 82.8953900756147,
+      "price": 65004.5
     }
   ],
-  "position": {
-    "side": "SHORT",
-    "entry_price": 64562.085,
-    "quantity": 0.014300384022087047,
-    "leverage": 40.0,
-    "margin_used": 23.081565219165647,
-    "notional": 923.2626087666258,
-    "planned_risk": 9.612284638133213,
-    "effective_risk_pct": 10.411214043395665,
-    "stop_price": 65111.5867245229,
-    "initial_stop_price": 65111.5867245229,
-    "risk_distance": 549.5017245229046,
-    "entry_fee": 0.4616313043833129,
-    "funding_pnl": 0.003705447518099534,
-    "entry_time": "2026-11-15T17:45:28+00:00",
-    "opened_timestamp": 1794764728,
-    "last_funding_ts": 1794769253,
-    "last_checked_candle_ts": 1794768300000,
-    "entry_signal_score": 10,
-    "score": 10,
-    "score_breakdown": {
-      "htf_bias": 4,
-      "structure": 2,
-      "macd_momentum": 2,
-      "rsi": 1,
-      "volume": 0,
-      "vwap": 0,
-      "crowding": 0,
-      "volatility_fit": 0,
-      "trend_continuation": 1
-    },
-    "setup": "F",
-    "regime": "TREND_DOWN",
-    "origin_build": "BTC_PAPER_V20_14_PRO_2026-11-15",
-    "targets": {
-      "tp1_price": 63737.83241321564,
-      "tp2_price": 62913.57982643128,
-      "be_price": 64439.417038499996
-    },
-    "zone_room_r": 0.29678705765954577,
-    "source_trader": null,
-    "source_trader_label": null,
-    "source_entry_price": null,
-    "copy_source_event_ts": null,
-    "copy_detection_lag_seconds": null,
-    "consensus_ratio": null,
-    "consensus_long_count": null,
-    "consensus_short_count": null,
-    "consensus_flat_count": null,
-    "consensus_members": null,
-    "qty_initial": 0.014300384022087047,
-    "risk_usd_initial": 9.612284638133213,
-    "entry_equity": 92.32626087666259,
-    "risk_multiplier": 1.0,
-    "tp1_taken": false,
-    "tp2_taken": false,
-    "hold_extensions": 0,
-    "trend_flip_exit": false,
-    "runner_floor_active": false,
-    "partial_taken": false,
-    "be_moved": false,
-    "trail_active": false,
-    "best_price": 64361.0,
-    "worst_price": 64778.0,
-    "mfe_r": 0.36594061679167195,
-    "mae_r": 0.39292870315823913,
-    "acc_net_pnl": 0.0,
-    "acc_fees": 0.4616313043833129,
-    "acc_funding": 0.0,
-    "acc_r": 0.0,
-    "saw_stop_loss": false,
-    "entry_event_within_24h": false,
-    "entry_event_upcoming_24h": true,
-    "entry_event_name": "Fed Chairman Warsh Speaks",
-    "event_spanned": false,
-    "event_spanned_names": []
-  },
-  "last_close_ts": 1794552300,
-  "last_entry_candle": 1794763800000,
-  "consecutive_losses": 0,
+  "position": null,
+  "last_close_ts": 1794769200,
+  "last_entry_candle": 1794769200000,
+  "consecutive_losses": 1,
   "consecutive_lock_until": 0,
   "daily_date": "2026-11-15",
   "daily_start_equity": 92.32626087666259,
   "daily_loss_lock": false,
-  "daily_stop_count": 0,
+  "daily_stop_count": 1,
   "next_risk_multiplier": 1.0,
   "drawdown_pause_until": 0,
   "stats_by_setup": {
@@ -8791,15 +8795,15 @@
       "funding_pnl": 0.13953008220985103
     },
     "F": {
-      "round_trips": 1,
+      "round_trips": 2,
       "wins": 1,
-      "losses": 0,
-      "net_pnl": 16.839649473879703,
+      "losses": 1,
+      "net_pnl": 7.408778672831813,
       "gross_win": 16.839649473879703,
-      "gross_loss": 0.0,
-      "total_r": 7.04390973285928,
-      "fees": 0.746101992319555,
-      "funding_pnl": 0.05750804965127505
+      "gross_loss": -9.43087080104789,
+      "total_r": 6.062782856566586,
+      "fees": 1.673619536169976,
+      "funding_pnl": 0.06402496004398685
     }
   },
   "stats_by_regime": {
@@ -8848,15 +8852,15 @@
       "funding_pnl": 0.0159953665362771
     },
     "TREND_DOWN": {
-      "round_trips": 2,
+      "round_trips": 3,
       "wins": 1,
-      "losses": 1,
-      "net_pnl": 16.35652382941418,
+      "losses": 2,
+      "net_pnl": 6.925653028366289,
       "gross_win": 16.839649473879703,
-      "gross_loss": -0.4831256444655232,
-      "total_r": 6.520678972578146,
-      "fees": 0.8321301306260918,
-      "funding_pnl": 0.06321701758088015
+      "gross_loss": -9.913996445513414,
+      "total_r": 5.539552096285452,
+      "fees": 1.7596476744765126,
+      "funding_pnl": 0.06973392797359194
     },
     "RANGE": {
       "round_trips": 2,
@@ -8872,18 +8876,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-03T03:37:36.901565+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00110288,
-      "hours": 0.7106
-    },
-    {
-      "timestamp": "2026-11-03T04:30:00.748097+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.0013551,
-      "hours": 0.8731
-    },
     {
       "timestamp": "2026-11-03T05:24:31.978585+00:00",
       "type": "COPY_SIGNAL_OPEN",
@@ -10754,6 +10746,22 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00163808,
       "hours": 0.2569
+    },
+    {
+      "timestamp": "2026-11-15T19:15:32.733091+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00281146,
+      "hours": 0.2436
+    },
+    {
+      "timestamp": "2026-11-15T19:15:32.733181+00:00",
+      "type": "POSITION_CLOSED",
+      "side": "SHORT",
+      "reason": "STOP_LOSS",
+      "net_pnl": -9.43087080104789,
+      "fraction": 1.0,
+      "setup": "F",
+      "r_multiple": -0.9811
     }
   ],
   "econ_calendar": {
@@ -10817,7 +10825,7 @@
           "szi": 2.5,
           "entry_px": 69940.1,
           "event_ts": 1794439412.007,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10884,7 +10892,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10904,7 +10912,7 @@
           "side": "LONG",
           "szi": 2.5,
           "entry_px": 69940.1,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10924,7 +10932,7 @@
           "side": "LONG",
           "szi": 5.0,
           "entry_px": 64089.5,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10944,7 +10952,7 @@
           "side": "LONG",
           "szi": 27.4888,
           "entry_px": 68790.0,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10964,7 +10972,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10982,9 +10990,9 @@
         "label": "HL-7ACA",
         "snapshot": {
           "side": "LONG",
-          "szi": 5.07475,
-          "entry_px": 68824.6,
-          "updated_ts": 1794769253
+          "szi": 5.08734,
+          "entry_px": 68814.8,
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11004,7 +11012,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11044,7 +11052,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794769253
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11061,10 +11069,10 @@
       "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
         "label": "HL-2B76",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -2.0,
-          "entry_px": 64162.0,
-          "updated_ts": 1794769253
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1794770130
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11082,11 +11090,11 @@
     "current": {
       "fetched": 9,
       "long_count": 4,
-      "short_count": 3,
-      "flat_count": 2,
-      "positioned": 7,
-      "long_ratio": 0.5714285714285714,
-      "short_ratio": 0.42857142857142855,
+      "short_count": 2,
+      "flat_count": 3,
+      "positioned": 6,
+      "long_ratio": 0.6666666666666666,
+      "short_ratio": 0.3333333333333333,
       "valid": true,
       "members": [
         {
@@ -11132,10 +11140,10 @@
         {
           "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
           "label": "HL-2B76",
-          "side": "SHORT"
+          "side": null
         }
       ],
-      "ts": 1794769253,
+      "ts": 1794770130,
       "enabled_pool": 9
     }
   },
@@ -11894,9 +11902,9 @@
     "last_bar_t": {
       "G": 1794765600000,
       "H": 1794744000000,
-      "I": 1794768300000,
-      "J": 1794768300000,
-      "K": 1794768300000
+      "I": 1794769200000,
+      "J": 1794769200000,
+      "K": 1794769200000
     },
     "next_id": 18,
     "events": [
@@ -12208,7 +12216,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-15T19:00:55.570888+00:00"
+    "updated_at": "2026-11-15T19:15:32.732857+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
