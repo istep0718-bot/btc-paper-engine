@@ -5086,3 +5086,12 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+    # ダッシュボード「チャート分析」用データの付加（表示専用）。
+    # 取引ロジックとは無関係で、失敗してもペーパー取引に影響させない。
+    try:
+        import chart_data
+
+        chart_data.main()
+    except Exception as chart_exc:
+        print("chart_data skipped:", chart_exc)
