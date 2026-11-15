@@ -180,6 +180,40 @@ Design pillars (fixing V19.x fatal flaws):
     copy logic changes, and the board never feeds back into any
     trading decision. Entry logic, risk and exits for setups A-I
     are unchanged from V20.10.
+  * V20.13: shadow measurement of setup J (failed-breakdown
+    reclaim long), added in the same fully isolated style as
+    G / H / I. Motivation (owner request, 2026-11-15): on
+    2026-11-15 BTC undercut to $61,970 and reclaimed to $65,200
+    within 75 minutes; the live setups are trend-aligned by
+    design and deliberately skip that bear-trap window, and the
+    engine had no pattern detection for it at all. J measures
+    exactly that window. LONG only, 15m bars, evaluated as a
+    per-bar signal series (like G / H), so every newly closed
+    bar is processed in order even when Actions runs are sparse
+    -- the reclaim cannot slip through a scheduling gap.
+    Definition (fixed -- do not re-tune): take a confirmed
+    fractal swing low L (k=3, the swing_points definition used
+    by market_structure). J fires on the first bar that closes
+    back above L after (a) some bar's low undercut L -- the
+    first such break after the swing was confirmed, with price
+    having traded above L into the break -- (b) every close
+    since the undercut stayed <= L, (c) the reclaim comes
+    within 8 bars (2h) of the undercut bar, and (d) the reclaim
+    bar's volume is >= 1.5x the mean of the prior 20 bars.
+    Each swing low can fire at most once. One shadow position
+    at a time. Stop 1.5 x ATR(14) of the 15m candles; exits
+    follow the same round-3 reference as G / H / I (no time
+    stop, single full take-profit at +1.5R, 7-day horizon =
+    672 x 15m bars) and the +1R / +1.5R / +2R first-hit
+    outcomes are recorded the same way. Judged, like G / H / I,
+    once >= 40 forward shadow trades accumulate, by the +1.5R
+    first-hit rate against the 40.0% driftless fair line.
+    MEASUREMENT ONLY: J never opens a real paper position and
+    never touches equity / risk state / daily stats; its
+    records live in state["shadow"] alongside G / H / I. The
+    Actions schedule already runs every 15 minutes and is
+    unchanged; the main cycle's cadence, entry logic, risk and
+    exits for setups A-I are unchanged from V20.12.
 """
 
 import json
@@ -189,7 +223,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_12_PRO_2026-11-12"
+BUILD = "BTC_PAPER_V20_13_PRO_2026-11-15"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -424,6 +458,24 @@ SHADOW_H_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14)
 SHADOW_HORIZON_BARS_I = 672  # 7 days of 15m bars (screen horizon)
 SHADOW_I_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14) (15m)
 SHADOW_I_MIN_RELVOL = 1.2    # relative volume entry threshold
+# --- Shadow measurement (V20.13): setup J, reclaim long -------------
+# LONG only, 15m bars, per-bar signal series (see
+# _shadow_signals_j): a confirmed fractal swing low (k=3, as in
+# market_structure) is undercut (a bar's low trades below it,
+# first break after confirmation, price above the level into
+# the break), every close since stays <= the level, and a bar
+# closes back above it within SHADOW_J_RECLAIM_BARS bars with
+# volume >= SHADOW_J_MIN_RELVOL x the mean of the prior
+# SHADOW_J_VOL_PERIOD bars. Same isolation / reference exit as
+# G / H / I; the definition is fixed -- do not re-tune. Judged
+# at >= 40 forward shadow trades by the +1.5R first-hit rate
+# vs the 40.0% fair line.
+SHADOW_HORIZON_BARS_J = 672  # 7 days of 15m bars (screen horizon)
+SHADOW_J_STOP_ATR = 1.5      # initial stop = 1.5 x ATR(14) (15m)
+SHADOW_J_SWING_K = 3         # fractal swing confirmation bars
+SHADOW_J_RECLAIM_BARS = 8    # reclaim within 8 bars (2h) of undercut
+SHADOW_J_MIN_RELVOL = 1.5    # reclaim-bar relative volume threshold
+SHADOW_J_VOL_PERIOD = 20     # relative volume baseline window
 
 # ============================================================
 # UTILITIES
@@ -769,8 +821,9 @@ def load_state():
             if _k not in _sh:
                 _sh[_k] = _v
         if not isinstance(_sh.get("positions"), dict):
-            _sh["positions"] = {"G": None, "H": None, "I": None}
-        for _setup in ("G", "H", "I"):
+            _sh["positions"] = {"G": None, "H": None, "I": None,
+                                "J": None}
+        for _setup in ("G", "H", "I", "J"):
             if _setup not in _sh["positions"]:
                 _sh["positions"][_setup] = None
             if not isinstance(
@@ -784,8 +837,8 @@ def load_state():
         if not isinstance(_sh.get("ghosts"), list):
             _sh["ghosts"] = []
         if not isinstance(_sh.get("last_bar_t"), dict):
-            _sh["last_bar_t"] = {"G": 0, "H": 0, "I": 0}
-        for _setup in ("G", "H", "I"):
+            _sh["last_bar_t"] = {"G": 0, "H": 0, "I": 0, "J": 0}
+        for _setup in ("G", "H", "I", "J"):
             if _setup not in _sh["last_bar_t"]:
                 _sh["last_bar_t"][_setup] = 0
 
@@ -3029,13 +3082,14 @@ def _empty_shadow_stats():
 
 def _new_shadow_state():
     return {
-        "positions": {"G": None, "H": None, "I": None},
+        "positions": {"G": None, "H": None, "I": None, "J": None},
         "ghosts": [],
         "ledger": [],
         "stats": {"G": _empty_shadow_stats(),
                   "H": _empty_shadow_stats(),
-                  "I": _empty_shadow_stats()},
-        "last_bar_t": {"G": 0, "H": 0, "I": 0},
+                  "I": _empty_shadow_stats(),
+                  "J": _empty_shadow_stats()},
+        "last_bar_t": {"G": 0, "H": 0, "I": 0, "J": 0},
         "next_id": 1,
         "events": [],
         "last_error": None,
@@ -3213,6 +3267,95 @@ def _shadow_signal_i(ctx):
             "vwap": vwap,
         },
     }
+
+
+def _shadow_signals_j(candles):
+    """Setup J (V20.13): failed-breakdown reclaim long, per-bar.
+
+    LONG only, on the 15m candles. A confirmed fractal swing low
+    L (swing_points with k=3, the market_structure definition;
+    the swing at index s is confirmed once bar s+3 exists) is
+    the reference level. Bar j fires when ALL of these hold:
+
+      * some bar u in [s+3, j-1] is the FIRST bar after
+        confirmation whose low trades below L (the undercut),
+        and at least one close in [s+3, u) was above L (the
+        level genuinely held as support into the break);
+      * every close in [u, j-1] is <= L (bar j is the first
+        reclaim close, not a late echo of one);
+      * j - u <= SHADOW_J_RECLAIM_BARS (reclaim within 2h);
+      * bar j closes above L;
+      * bar j's volume >= SHADOW_J_MIN_RELVOL x the mean volume
+        of the prior SHADOW_J_VOL_PERIOD bars.
+
+    Each swing low fires at most once across the whole series
+    (the scan is deterministic, so recomputation over the full
+    candle array on every cycle reproduces the same series).
+    Stop distance is 1.5 x ATR(14) of the 15m candles, as for I.
+    """
+    n = len(candles)
+    closes = [c["c"] for c in candles]
+    lows = [c["l"] for c in candles]
+    vols = [c["v"] for c in candles]
+    atrs = atr_series(candles, 14)
+    swings = swing_points(
+        candles, k=SHADOW_J_SWING_K, lookback=max(n, 1))
+    swing_lows = [s for s in swings if s["kind"] == "LOW"]
+    vp = SHADOW_J_VOL_PERIOD
+    out = [None] * n
+    used_swings = set()
+    for j in range(n):
+        a = atrs[j]
+        if not a or a <= 0 or j < vp:
+            continue
+        mean_v = sum(vols[j - vp:j]) / vp
+        if mean_v <= 0:
+            continue
+        relvol = vols[j] / mean_v
+        if relvol < SHADOW_J_MIN_RELVOL:
+            continue
+        for s in swing_lows:
+            si = s["index"]
+            if si in used_swings:
+                continue
+            confirm = si + SHADOW_J_SWING_K
+            if confirm > j:
+                continue
+            level = f(s["price"])
+            if not closes[j] > level:
+                continue
+            undercut = None
+            for t in range(confirm, j):
+                if lows[t] < level:
+                    undercut = t
+                    break
+            if undercut is None:
+                continue
+            if j - undercut > SHADOW_J_RECLAIM_BARS:
+                continue
+            if undercut > confirm and not any(
+                    closes[t] > level
+                    for t in range(confirm, undercut)):
+                continue
+            if any(closes[t] > level
+                   for t in range(undercut, j)):
+                continue
+            out[j] = {
+                "side": "LONG",
+                "atr": a,
+                "dist": SHADOW_J_STOP_ATR * a,
+                "context": {
+                    "swing_low": level,
+                    "swing_low_t": i(s["t"]),
+                    "undercut_bar_t": i(candles[undercut]["t"]),
+                    "undercut_low": lows[undercut],
+                    "bars_to_reclaim": j - undercut,
+                    "relative_volume": relvol,
+                },
+            }
+            used_swings.add(si)
+            break
+    return out
 
 
 def _shadow_open(book, setup, candle, sig, tf_ms):
@@ -3440,7 +3583,7 @@ def _shadow_process_setup(book, setup, candles, tf_ms, horizon_bars,
 
 
 def update_shadow(s, c1, c4, c15=None, ctx=None):
-    """Advance shadow measurement for setups G (1h), H (4h), I (15m).
+    """Advance shadow measurement: G (1h), H (4h), I / J (15m).
 
     Reads only the closed candles main() already fetched, plus
     the read-only context snapshot for setup I; writes only
@@ -3501,6 +3644,25 @@ def update_shadow(s, c1, c4, c15=None, ctx=None):
     except Exception as exc:  # shadow must never break the cycle
         book["last_error"] = f"{type(exc).__name__}: {exc}"
         summary["I"] = {"error": book["last_error"]}
+    # Setup J is a per-bar signal series on the 15m candles
+    # (like G / H): _shadow_process_setup walks every newly
+    # closed bar in order, so a reclaim is measured even when
+    # Actions runs are sparse.
+    try:
+        if c15 and len(c15) >= 35:
+            signals_j = _shadow_signals_j(c15)
+            _shadow_process_setup(
+                book, "J", c15, 900_000, SHADOW_HORIZON_BARS_J,
+                signals_j)
+        stats = book["stats"]["J"]
+        summary["J"] = {
+            "open": book["positions"].get("J") is not None,
+            "closed": stats["closed"],
+            "signals": stats["signals"],
+        }
+    except Exception as exc:  # shadow must never break the cycle
+        book["last_error"] = f"{type(exc).__name__}: {exc}"
+        summary["J"] = {"error": book["last_error"]}
     book["updated_at"] = iso_now()
     return summary
 
@@ -3512,6 +3674,7 @@ def _shadow_dashboard_payload(s):
         ("G", "SQUEEZE_BREAKOUT_1H_ROUND4_F6"),
         ("H", "DONCHIAN55_4H_ROUND4_F2"),
         ("I", "EARLY_LONG_15M_V20_10"),
+        ("J", "FAILED_BREAKDOWN_RECLAIM_LONG_15M_V20_13"),
     ):
         stats = (book.get("stats") or {}).get(setup) \
             or _empty_shadow_stats()
@@ -3535,7 +3698,7 @@ def _shadow_dashboard_payload(s):
     return {
         "enabled": SHADOW_ENABLED,
         "measurement_only": True,
-        "note": "シャドー測定専用（V20.9 G/H、V20.10 I）: "
+        "note": "シャドー測定専用（V20.9 G/H、V20.10 I、V20.13 J）: "
                 "実ポジション・資産・リスク管理には一切影響しません",
         "setups": setups,
         "recent_ledger": (book.get("ledger") or [])[-20:],
