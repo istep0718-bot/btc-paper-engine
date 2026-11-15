@@ -8747,6 +8747,12 @@
       "equity": 82.8953900756147,
       "marked_equity": 82.8953900756147,
       "price": 65004.5
+    },
+    {
+      "timestamp": "2026-11-15T19:30:43.323081+00:00",
+      "equity": 82.8953900756147,
+      "marked_equity": 82.8953900756147,
+      "price": 64970.5
     }
   ],
   "position": null,
@@ -8876,17 +8882,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-03T05:24:31.978585+00:00",
-      "type": "COPY_SIGNAL_OPEN",
-      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
-      "label": "HL-684B",
-      "side": "LONG",
-      "source_entry_price": 76904.5,
-      "source_event_ts": 1793682304,
-      "age_seconds": 1166,
-      "fresh": true
-    },
     {
       "timestamp": "2026-11-03T05:24:33.895834+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -10762,6 +10757,11 @@
       "fraction": 1.0,
       "setup": "F",
       "r_multiple": -0.9811
+    },
+    {
+      "timestamp": "2026-11-15T19:30:43.310557+00:00",
+      "type": "DAILY_LOSS_LIMIT_CROSSED",
+      "daily_loss_pct": 10.214721912811417
     }
   ],
   "econ_calendar": {
@@ -10825,7 +10825,7 @@
           "szi": 2.5,
           "entry_px": 69940.1,
           "event_ts": 1794439412.007,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10892,7 +10892,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10912,7 +10912,7 @@
           "side": "LONG",
           "szi": 2.5,
           "entry_px": 69940.1,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10932,7 +10932,7 @@
           "side": "LONG",
           "szi": 5.0,
           "entry_px": 64089.5,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10952,7 +10952,7 @@
           "side": "LONG",
           "szi": 27.4888,
           "entry_px": 68790.0,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10972,7 +10972,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10990,9 +10990,9 @@
         "label": "HL-7ACA",
         "snapshot": {
           "side": "LONG",
-          "szi": 5.08734,
-          "entry_px": 68814.8,
-          "updated_ts": 1794770130
+          "szi": 5.10036,
+          "entry_px": 68804.9,
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11012,7 +11012,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11052,7 +11052,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11072,7 +11072,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794770130
+          "updated_ts": 1794771041
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11143,7 +11143,7 @@
           "side": null
         }
       ],
-      "ts": 1794770130,
+      "ts": 1794771041,
       "enabled_pool": 9
     }
   },
@@ -11902,9 +11902,9 @@
     "last_bar_t": {
       "G": 1794765600000,
       "H": 1794744000000,
-      "I": 1794769200000,
-      "J": 1794769200000,
-      "K": 1794769200000
+      "I": 1794770100000,
+      "J": 1794770100000,
+      "K": 1794770100000
     },
     "next_id": 18,
     "events": [
@@ -12216,7 +12216,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-15T19:15:32.732857+00:00"
+    "updated_at": "2026-11-15T19:30:43.322941+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
@@ -12315,5 +12315,5 @@
   "consecutive_loss_lock": true,
   "dd_limit_alerted": false,
   "daily_stop_alerted": false,
-  "daily_loss_alerted": false
+  "daily_loss_alerted": true
 }
