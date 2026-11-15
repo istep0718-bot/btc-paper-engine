@@ -347,6 +347,29 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
         <div class="miniNote">紙取引（ペーパー）の成績だけを表示しています。実資金の取引ではありません。最大DDは全期間の最大値です。</div>
       </div>
 
+      <style>
+      .tfTabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+      .tfTab{font:inherit;font-size:15px;font-weight:800;color:var(--ink2);background:#fdf3fb;border:2px solid var(--card-bd);border-radius:999px;padding:7px 16px;cursor:pointer}
+      .tfTab.active{background:linear-gradient(120deg,#ff9ad9,#c99af5);color:#fff;border-color:#fff;box-shadow:0 4px 10px rgba(220,80,190,.35)}
+      #btcChart{height:360px;border-radius:12px;overflow:hidden}
+      .chartLegend{display:flex;gap:6px 16px;flex-wrap:wrap;margin-top:10px;font-size:13.5px;font-weight:700;color:var(--ink2)}
+      .chartLegend .sw{display:inline-block;width:18px;border-top:3px solid;margin-right:5px;vertical-align:middle}
+      @media (max-width:820px){#btcChart{height:300px}}
+      </style>
+      <div class="card" id="btcChartCard">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="3.6" y="12" width="4.4" height="8.4" rx="1.2" fill="#5579ee"/><rect x="9.8" y="7" width="4.4" height="13.4" rx="1.2" fill="#e546b0"/><rect x="16" y="2.8" width="4.4" height="17.6" rx="1.2" fill="#ffb52e"/></svg></span>チャート分析（BTC）</h2>
+        <div class="tfTabs" id="tfTabs">
+          <button type="button" class="tfTab active" data-tf="1h">1時間足</button>
+          <button type="button" class="tfTab" data-tf="4h">4時間足</button>
+          <button type="button" class="tfTab" data-tf="1d">日足</button>
+          <button type="button" class="tfTab" data-tf="1w">週足</button>
+          <button type="button" class="tfTab" data-tf="1M">月足</button>
+        </div>
+        <div id="btcChart"></div>
+        <div class="chartLegend" id="btcChartLegend">読み込み中…</div>
+        <div class="miniNote">線は直近のスイング高値・安値から自動で引いています。水平線＝レジスタンス／サポート、斜め線＝トレンドライン、黄色の破線＝平行チャネル。データ：Hyperliquid（15分ごとに更新）。</div>
+      </div>
+
       <div class="grid2">
         <div class="card">
           <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="3.6" y="12" width="4.4" height="8.4" rx="1.2" fill="#5579ee"/><rect x="9.8" y="7" width="4.4" height="13.4" rx="1.2" fill="#e546b0"/><rect x="16" y="2.8" width="4.4" height="17.6" rx="1.2" fill="#ffb52e"/></svg></span>資産の冒険グラフ (USD)</h2>
@@ -542,6 +565,92 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
 </footer>
 </div>
 <div id="error" role="status" aria-live="polite"></div>
+<script src="https://cdn.jsdelivr.net/npm/lightweight-charts@4.2.0/dist/lightweight-charts.standalone.production.js"></script>
+<script>
+"use strict";
+/* ===== チャート分析（BTC価格チャート＋自動ライン） ===== */
+let btcChartObj=null,btcCandleSeries=null,btcLineSeries=[],btcTf="1h",btcChartData=null,btcChartGen=null;
+function fmtPx(v){const x=Number(v);if(!Number.isFinite(x))return"--";return "$"+Math.round(x).toLocaleString("en-US")}
+function initBtcChart(){
+  const el=document.getElementById("btcChart");
+  if(!el)return false;
+  if(typeof LightweightCharts==="undefined"){
+    const lg=document.getElementById("btcChartLegend");
+    if(lg)lg.textContent="チャートライブラリを読み込めませんでした";
+    return false;
+  }
+  btcChartObj=LightweightCharts.createChart(el,{
+    layout:{background:{type:"solid",color:"rgba(255,255,255,0)"},textColor:"#5a3a8a",fontFamily:"'M PLUS Rounded 1c',sans-serif",fontSize:12},
+    grid:{vertLines:{color:"rgba(190,120,210,.14)"},horzLines:{color:"rgba(190,120,210,.14)"}},
+    rightPriceScale:{borderColor:"#f3c6ea"},
+    timeScale:{borderColor:"#f3c6ea",timeVisible:true,secondsVisible:false},
+    crosshair:{vertLine:{color:"#c99af5"},horzLine:{color:"#c99af5"}}
+  });
+  btcCandleSeries=null;btcLineSeries=[];
+  if(window.ResizeObserver){
+    new ResizeObserver(()=>{if(btcChartObj)btcChartObj.resize(el.clientWidth,el.clientHeight)}).observe(el);
+  }
+  return true;
+}
+function clearBtcSeries(){
+  if(btcCandleSeries){try{btcChartObj.removeSeries(btcCandleSeries)}catch(e){}btcCandleSeries=null}
+  btcLineSeries.forEach(s=>{try{btcChartObj.removeSeries(s)}catch(e){}});
+  btcLineSeries=[];
+}
+function addBtcLine(points,color,width,dashed){
+  const s=btcChartObj.addLineSeries({color:color,lineWidth:width||2,lineStyle:dashed?LightweightCharts.LineStyle.Dashed:LightweightCharts.LineStyle.Solid,priceLineVisible:false,lastValueVisible:false,crosshairMarkerVisible:false});
+  s.setData(points.map(p=>({time:p[0],value:p[1]})));
+  btcLineSeries.push(s);
+}
+function drawBtcTf(){
+  if(!btcChartObj)return;
+  const legend=document.getElementById("btcChartLegend");
+  const tfMap=(btcChartData&&btcChartData.timeframes)?btcChartData.timeframes:{};
+  const tf=tfMap[btcTf];
+  clearBtcSeries();
+  if(!tf||!Array.isArray(tf.candles)||!tf.candles.length){
+    if(legend)legend.textContent="この時間足のデータはまだありません";
+    return;
+  }
+  const data=tf.candles.map(c=>({time:c[0],open:c[1],high:c[2],low:c[3],close:c[4]}));
+  btcCandleSeries=btcChartObj.addCandlestickSeries({upColor:"#e546b0",downColor:"#3478d8",borderVisible:false,wickUpColor:"#e546b0",wickDownColor:"#3478d8"});
+  btcCandleSeries.setData(data);
+  const L=tf.lines||{};
+  const items=[];
+  (L.resistance||[]).forEach(p=>{
+    btcCandleSeries.createPriceLine({price:p,color:"#c2187a",lineWidth:1,lineStyle:LightweightCharts.LineStyle.Dashed,title:"レジスタンス"});
+    items.push('<span><span class="sw" style="border-color:#c2187a"></span>レジスタンス '+fmtPx(p)+'</span>');
+  });
+  (L.support||[]).forEach(p=>{
+    btcCandleSeries.createPriceLine({price:p,color:"#1f5bb8",lineWidth:1,lineStyle:LightweightCharts.LineStyle.Dashed,title:"サポート"});
+    items.push('<span><span class="sw" style="border-color:#1f5bb8"></span>サポート '+fmtPx(p)+'</span>');
+  });
+  if(L.trend_high){addBtcLine(L.trend_high,"#8a5cf6",2,false);items.push('<span><span class="sw" style="border-color:#8a5cf6"></span>トレンドライン（高値）</span>')}
+  if(L.trend_low){addBtcLine(L.trend_low,"#b04fd8",2,false);items.push('<span><span class="sw" style="border-color:#b04fd8"></span>トレンドライン（安値）</span>')}
+  if(L.channel&&L.channel.points){addBtcLine(L.channel.points,"#e8a400",2,true);items.push('<span><span class="sw" style="border-color:#e8a400"></span>平行チャネル</span>')}
+  if(legend)legend.innerHTML=items.length?items.join(""):"ラインは引けませんでした";
+  const from=Math.max(0,data.length-90);
+  btcChartObj.timeScale().setVisibleLogicalRange({from:from,to:data.length+8});
+}
+function renderBtcChart(d){
+  const ch=d&&d.chart;
+  const legend=document.getElementById("btcChartLegend");
+  if(!ch||!ch.timeframes){
+    if(legend&&!btcChartData)legend.textContent="チャートデータ準備中です（次回の自動更新で表示されます）";
+    return;
+  }
+  if(btcChartGen===ch.generated_at&&btcChartObj)return;
+  btcChartGen=ch.generated_at||null;
+  btcChartData=ch;
+  if(!btcChartObj){if(!initBtcChart())return}
+  drawBtcTf();
+}
+document.querySelectorAll("#tfTabs .tfTab").forEach(b=>b.addEventListener("click",()=>{
+  btcTf=b.dataset.tf;
+  document.querySelectorAll("#tfTabs .tfTab").forEach(x=>x.classList.toggle("active",x===b));
+  drawBtcTf();
+}));
+</script>
 <script>
 "use strict";
 let USDJPY=150;
@@ -1023,6 +1132,7 @@ renderTax(d,closedTrades);
 renderFib(d,price);
 renderSettings(d);
 renderTraders(d);
+try{renderBtcChart(d)}catch(e){console.warn("btcchart",e)}
 drawChart($("equityChart"),history);
 drawChart($("equityChartBig"),history);
 const generated=get(d,["generated_at","updated_at","timestamp"]);let timestampText="更新時刻不明";if(generated){const date=new Date(generated);if(!Number.isNaN(date.getTime()))timestampText="更新: "+date.toLocaleString("ja-JP",{month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})}put("updated",timestampText+" ｜ PAPER ONLY ｜ 60秒ごとに更新");updateChara(d,position,unrealized,closedTrades,initial);
