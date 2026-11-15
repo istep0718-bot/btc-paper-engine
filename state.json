@@ -8535,6 +8535,12 @@
       "equity": 92.32626087666259,
       "marked_equity": 92.32626087666259,
       "price": 63864.5
+    },
+    {
+      "timestamp": "2026-11-15T02:53:32.608958+00:00",
+      "equity": 92.32626087666259,
+      "marked_equity": 92.32626087666259,
+      "price": 64745.5
     }
   ],
   "position": null,
@@ -8542,7 +8548,7 @@
   "last_entry_candle": 1794581100000,
   "consecutive_losses": 0,
   "consecutive_lock_until": 0,
-  "daily_date": "2026-11-14",
+  "daily_date": "2026-11-15",
   "daily_start_equity": 92.32626087666259,
   "daily_loss_lock": false,
   "daily_stop_count": 0,
@@ -8664,12 +8670,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-02T23:41:24.685800+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00070151,
-      "hours": 0.6539
-    },
     {
       "timestamp": "2026-11-03T00:13:43.113308+00:00",
       "type": "DAILY_RESET"
@@ -10602,6 +10602,10 @@
       "timestamp": "2026-11-14T07:59:34.414850+00:00",
       "type": "ECON_CALENDAR_UPDATED",
       "events": 4
+    },
+    {
+      "timestamp": "2026-11-15T02:53:32.607126+00:00",
+      "type": "DAILY_RESET"
     }
   ],
   "econ_calendar": {
@@ -10634,10 +10638,10 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "LONG",
-          "szi": 4.5,
+          "szi": 2.5,
           "entry_px": 69940.1,
           "event_ts": 1794439412.007,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10701,10 +10705,10 @@
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
         "label": "HL-F79D",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1794698575
+          "side": "SHORT",
+          "szi": -14.8319,
+          "entry_px": 62768.1,
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10722,9 +10726,9 @@
         "label": "HL-684B",
         "snapshot": {
           "side": "LONG",
-          "szi": 4.5,
+          "szi": 2.5,
           "entry_px": 69940.1,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10742,9 +10746,9 @@
         "label": "HL-D918",
         "snapshot": {
           "side": "LONG",
-          "szi": 7.0,
-          "entry_px": 65356.7,
-          "updated_ts": 1794698575
+          "szi": 6.0,
+          "entry_px": 64117.3,
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10764,7 +10768,7 @@
           "side": "LONG",
           "szi": 27.4888,
           "entry_px": 68790.0,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10782,9 +10786,9 @@
         "label": "HL-8888",
         "snapshot": {
           "side": "SHORT",
-          "szi": -13.0,
+          "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10802,9 +10806,9 @@
         "label": "HL-7ACA",
         "snapshot": {
           "side": "LONG",
-          "szi": 4.05199,
-          "entry_px": 69870.7,
-          "updated_ts": 1794698575
+          "szi": 4.23475,
+          "entry_px": 69599.4,
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10824,7 +10828,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10864,7 +10868,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10884,7 +10888,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794698575
+          "updated_ts": 1794711210
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -10902,17 +10906,17 @@
     "current": {
       "fetched": 9,
       "long_count": 4,
-      "short_count": 2,
-      "flat_count": 3,
-      "positioned": 6,
-      "long_ratio": 0.6666666666666666,
-      "short_ratio": 0.3333333333333333,
+      "short_count": 3,
+      "flat_count": 2,
+      "positioned": 7,
+      "long_ratio": 0.5714285714285714,
+      "short_ratio": 0.42857142857142855,
       "valid": true,
       "members": [
         {
           "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
           "label": "HL-F79D",
-          "side": null
+          "side": "SHORT"
         },
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
@@ -10955,7 +10959,7 @@
           "side": null
         }
       ],
-      "ts": 1794698575,
+      "ts": 1794711210,
       "enabled_pool": 9
     }
   },
@@ -10973,11 +10977,11 @@
         "risk_distance": 1851.0949013727643,
         "stop_price": 67573.09490137277,
         "tp_price": 62945.35764794085,
-        "mfe_r": 0.4132689250198243,
+        "mfe_r": 1.3235410016974765,
         "mae_r": 0.2749723958628635,
-        "bars_held": 1,
+        "bars_held": 2,
         "first_hit": {
-          "1.0": null,
+          "1.0": "hit",
           "1.5": null,
           "2.0": null
         },
@@ -11320,9 +11324,9 @@
       }
     },
     "last_bar_t": {
-      "G": 1794693600000,
-      "H": 1794672000000,
-      "I": 1794697200000
+      "G": 1794704400000,
+      "H": 1794686400000,
+      "I": 1794709800000
     },
     "next_id": 9,
     "events": [
@@ -11463,7 +11467,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-14T23:22:57.394302+00:00"
+    "updated_at": "2026-11-15T02:53:32.608832+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
