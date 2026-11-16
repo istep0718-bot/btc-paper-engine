@@ -93,6 +93,17 @@ def main():
         fh.write(json.dumps(record, ensure_ascii=False) + "\n")
 
     print(json.dumps(record, ensure_ascii=False))
+
+    # Whale-aggregate shadow (measurement only): rides along on this
+    # hourly run to append one cohort snapshot to docs/whale_shadow.jsonl.
+    # Fully guarded — any failure here must never affect the HL-8888
+    # sample above or this script's exit status.
+    try:
+        import whale_shadow
+        whale_shadow.run()
+    except Exception as exc:  # noqa: BLE001
+        print(f"whale_shadow: skipped ({exc})", file=sys.stderr)
+
     return 0
 
 
