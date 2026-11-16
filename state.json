@@ -9299,6 +9299,12 @@
       "equity": 86.57015316485112,
       "marked_equity": 86.57015316485112,
       "price": 63900.5
+    },
+    {
+      "timestamp": "2026-11-16T12:45:34.414182+00:00",
+      "equity": 86.57015316485112,
+      "marked_equity": 86.57015316485112,
+      "price": 64254.5
     }
   ],
   "position": null,
@@ -11389,7 +11395,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1794790195.12,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11456,7 +11462,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11476,7 +11482,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11494,9 +11500,9 @@
         "label": "HL-D918",
         "snapshot": {
           "side": "LONG",
-          "szi": 9.0,
+          "szi": 8.5874,
           "entry_px": 64120.8,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11516,7 +11522,7 @@
           "side": "LONG",
           "szi": 27.4888,
           "entry_px": 68790.0,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11536,7 +11542,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11554,9 +11560,9 @@
         "label": "HL-7ACA",
         "snapshot": {
           "side": "LONG",
-          "szi": 5.98595,
-          "entry_px": 68211.3,
-          "updated_ts": 1794832246
+          "szi": 5.99897,
+          "entry_px": 68202.4,
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11576,7 +11582,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11616,7 +11622,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11636,7 +11642,7 @@
           "side": "LONG",
           "szi": 2.0,
           "entry_px": 64821.0,
-          "updated_ts": 1794832246
+          "updated_ts": 1794833132
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -11707,7 +11713,7 @@
           "side": "LONG"
         }
       ],
-      "ts": 1794832246,
+      "ts": 1794833132,
       "enabled_pool": 9
     }
   },
@@ -11716,7 +11722,35 @@
       "G": null,
       "H": null,
       "I": null,
-      "J": null,
+      "J": {
+        "id": 19,
+        "setup": "J",
+        "side": "LONG",
+        "entry_bar_t": 1794832200000,
+        "entry_time": "2026-11-16T12:45:00+00:00",
+        "entry_price": 64319.0,
+        "atr": 251.84406200883683,
+        "risk_distance": 377.7660930132553,
+        "stop_price": 63941.233906986745,
+        "tp_price": 64885.64913951988,
+        "mfe_r": 0.0,
+        "mae_r": 0.0,
+        "bars_held": 0,
+        "first_hit": {
+          "1.0": null,
+          "1.5": null,
+          "2.0": null
+        },
+        "context": {
+          "swing_low": 64098.0,
+          "swing_low_t": 1794820500000,
+          "undercut_bar_t": 1794830400000,
+          "undercut_low": 63941.0,
+          "bars_to_reclaim": 2,
+          "relative_volume": 1.6068933511881192
+        },
+        "origin_build": "BTC_PAPER_V20_14_PRO_2026-11-15"
+      },
       "K": null
     },
     "ghosts": [],
@@ -12441,8 +12475,8 @@
         "total_r_net": 0.0
       },
       "J": {
-        "signals": 7,
-        "opened": 7,
+        "signals": 8,
+        "opened": 8,
         "closed": 7,
         "exits": {
           "TP_1_5R": 3,
@@ -12502,11 +12536,11 @@
     "last_bar_t": {
       "G": 1794826800000,
       "H": 1794816000000,
-      "I": 1794831300000,
-      "J": 1794831300000,
-      "K": 1794831300000
+      "I": 1794832200000,
+      "J": 1794832200000,
+      "K": 1794832200000
     },
-    "next_id": 19,
+    "next_id": 20,
     "events": [
       {
         "timestamp": "2026-11-04T01:31:55.084641+00:00",
@@ -12831,10 +12865,19 @@
         "reason": "STOP",
         "gross_r": -1.0,
         "exit_time": "2026-11-16T12:30:00+00:00"
+      },
+      {
+        "timestamp": "2026-11-16T12:45:34.409527+00:00",
+        "type": "SHADOW_OPEN",
+        "setup": "J",
+        "side": "LONG",
+        "entry_price": 64319.0,
+        "risk_distance": 377.7660930132553,
+        "entry_time": "2026-11-16T12:45:00+00:00"
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-16T12:30:48.754080+00:00"
+    "updated_at": "2026-11-16T12:45:34.414058+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
