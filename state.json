@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
   "initial_equity": 100.0,
-  "equity": 86.13730239902686,
+  "equity": 86.13986661898724,
   "peak_equity": 102.44757489202469,
   "max_drawdown_pct": 33.192501460560145,
   "realized_pnl": -13.412790016409268,
@@ -9845,6 +9845,12 @@
       "equity": 86.13730239902686,
       "marked_equity": 84.72940560745877,
       "price": 64142.5
+    },
+    {
+      "timestamp": "2026-11-17T11:15:38.379884+00:00",
+      "equity": 86.13986661898724,
+      "marked_equity": 82.6230861568941,
+      "price": 64298.5
     }
   ],
   "position": {
@@ -9860,11 +9866,11 @@
     "initial_stop_price": 64533.95876293457,
     "risk_distance": 450.77796293456777,
     "entry_fee": 0.43285076582425563,
-    "funding_pnl": 0.0,
+    "funding_pnl": 0.0025642199603752745,
     "entry_time": "2026-11-17T11:00:52+00:00",
     "opened_timestamp": 1794913252,
-    "last_funding_ts": 1794913252,
-    "last_checked_candle_ts": 1794912300000,
+    "last_funding_ts": 1794914136,
+    "last_checked_candle_ts": 1794913200000,
     "entry_signal_score": 12,
     "score": 12,
     "score_breakdown": {
@@ -9909,10 +9915,10 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 64096.0,
-    "worst_price": 64096.0,
-    "mfe_r": 0.0,
-    "mae_r": 0.0,
+    "best_price": 64074.0,
+    "worst_price": 64361.0,
+    "mfe_r": 0.020366567922342156,
+    "mae_r": 0.6163105183567384,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.43285076582425563,
     "acc_funding": 0.0,
@@ -9920,7 +9926,9 @@
     "saw_stop_loss": false,
     "entry_event_within_24h": true,
     "entry_event_upcoming_24h": true,
-    "entry_event_name": "Fed Chairman Warsh Speaks"
+    "entry_event_name": "Fed Chairman Warsh Speaks",
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1794791728,
   "last_entry_candle": 1794912300000,
@@ -10048,16 +10056,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-03T22:22:42.255052+00:00",
-      "type": "POSITION_CLOSED",
-      "side": "SHORT",
-      "reason": "STOP_LOSS",
-      "net_pnl": -0.954327852032165,
-      "fraction": 1.0,
-      "setup": "D",
-      "r_multiple": -1.0541
-    },
     {
       "timestamp": "2026-11-03T22:22:42.255072+00:00",
       "type": "CONSECUTIVE_LOSS_ALERT",
@@ -11950,6 +11948,12 @@
       "quantity": 0.013509028747345064,
       "leverage": 40.0,
       "effective_risk_pct": 8.934263238920996
+    },
+    {
+      "timestamp": "2026-11-17T11:15:38.379757+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00256422,
+      "hours": 0.2456
     }
   ],
   "econ_calendar": {
@@ -11999,7 +12003,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1794790195.12,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12066,7 +12070,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12086,7 +12090,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12106,7 +12110,7 @@
           "side": "LONG",
           "szi": 5.00009,
           "entry_px": 64120.8,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12126,7 +12130,7 @@
           "side": "LONG",
           "szi": 27.9499,
           "entry_px": 68735.5,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12146,7 +12150,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12166,7 +12170,7 @@
           "side": "LONG",
           "szi": 6.25163,
           "entry_px": 68054.1,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12186,7 +12190,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12226,7 +12230,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1794913252
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12243,10 +12247,10 @@
       "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
         "label": "HL-2B76",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1794913252
+          "side": "LONG",
+          "szi": 2.0,
+          "entry_px": 64183.0,
+          "updated_ts": 1794914136
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12263,12 +12267,12 @@
     },
     "current": {
       "fetched": 9,
-      "long_count": 3,
+      "long_count": 4,
       "short_count": 2,
-      "flat_count": 4,
-      "positioned": 5,
-      "long_ratio": 0.6,
-      "short_ratio": 0.4,
+      "flat_count": 3,
+      "positioned": 6,
+      "long_ratio": 0.6666666666666666,
+      "short_ratio": 0.3333333333333333,
       "valid": true,
       "members": [
         {
@@ -12314,10 +12318,10 @@
         {
           "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
           "label": "HL-2B76",
-          "side": null
+          "side": "LONG"
         }
       ],
-      "ts": 1794913252,
+      "ts": 1794914136,
       "enabled_pool": 9
     }
   },
@@ -13220,9 +13224,9 @@
     "last_bar_t": {
       "G": 1794909600000,
       "H": 1794888000000,
-      "I": 1794912300000,
-      "J": 1794912300000,
-      "K": 1794912300000
+      "I": 1794913200000,
+      "J": 1794913200000,
+      "K": 1794913200000
     },
     "next_id": 22,
     "events": [
@@ -13606,7 +13610,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-17T11:00:54.519470+00:00"
+    "updated_at": "2026-11-17T11:15:38.379604+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
