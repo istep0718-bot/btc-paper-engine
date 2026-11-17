@@ -309,6 +309,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
   <nav class="sidebar" aria-label="メニュー">
     <button class="nav-btn active" data-page="home" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 3 L22 12 H19 V21 H14 V15 H10 V21 H5 V12 H2 Z" fill="#e546b0"/></svg></span>ホーム</button>
     <button class="nav-btn" data-page="log" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 1.8 L14.2 4 V12.6 L12 16 L9.8 12.6 V4 Z" fill="#8a5cf6"/><rect x="6.6" y="15.6" width="10.8" height="2.6" rx="1.3" fill="#e546b0"/><rect x="10.8" y="18.2" width="2.4" height="4" rx="1.2" fill="#8a5cf6"/></svg></span>バトルログ</button>
+    <button class="nav-btn" data-page="predict15" type="button"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#7fd4ff"/><path d="M12 6.8 V12 L15.6 14.2" stroke="#1d6fb8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 1.4 L14.2 4.6 H9.8 Z" fill="#e546b0"/></svg></span>15分予測</button>
     <button class="nav-btn" data-page="chart" type="button"><span class="ic"><svg viewBox="0 0 24 24"><rect x="3.6" y="12" width="4.4" height="8.4" rx="1.2" fill="#5579ee"/><rect x="9.8" y="7" width="4.4" height="13.4" rx="1.2" fill="#e546b0"/><rect x="16" y="2.8" width="4.4" height="17.6" rx="1.2" fill="#ffb52e"/></svg></span>資産グラフ</button>
     <button class="nav-btn" data-page="fib" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M12 1.8 L19.5 8.8 L12 22.2 L4.5 8.8 Z" fill="#7fd4ff"/><path d="M4.5 8.8 H19.5 M12 1.8 L8.6 8.8 L12 22.2 M12 1.8 L15.4 8.8 L12 22.2" stroke="#3b9bd8" fill="none" stroke-width="1.1"/></svg></span>フィボナッチ</button>
     <button class="nav-btn" data-page="settings" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5cf6" stroke-width="2.3" stroke-linecap="round"><path d="M12 2.6 V5.4 M12 18.6 V21.4 M2.6 12 H5.4 M18.6 12 H21.4 M5.2 5.2 L7.2 7.2 M16.8 16.8 L18.8 18.8 M18.8 5.2 L16.8 7.2 M7.2 16.8 L5.2 18.8"/><circle cx="12" cy="12" r="3.4" fill="#e546b0" stroke="none"/></svg></span>設定</button>
@@ -446,6 +447,37 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
           </table>
         </div>
         <div class="miniNote" style="margin-top:12px">新しい順に最大50件まで表示しています。</div>
+      </div>
+    </section>
+
+    <!-- ===== 15分予測 ===== -->
+    <section class="page" id="page-predict15">
+      <style>
+      .p15chip{display:inline-block;font-size:.82em;font-weight:800;padding:2px 11px;border-radius:999px;color:#fff;white-space:nowrap}
+      .p15up{background:#2ea86a}.p15down{background:#e5484d}.p15na{background:#9aa0a6}
+      .p15verdict{font-size:34px;font-weight:900;line-height:1.15}
+      .p15sigRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px dashed rgba(0,0,0,.08)}
+      .p15sigName{font-weight:700}
+      .p15sigSub{font-size:.85em;opacity:.8;font-weight:400}
+      </style>
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#7fd4ff"/><path d="M12 6.8 V12 L15.6 14.2" stroke="#1d6fb8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 1.4 L14.2 4.6 H9.8 Z" fill="#e546b0"/></svg></span>15分UP/DOWN予測（計測専用）</h2>
+        <div class="miniNote">15分ごとのラウンド（:00 / :15 / :30 / :45 開始）について、開始の約3分前に3つのシグナルで予測します。3シグナルが全て一致した時だけ「ベット候補」、1つでも食い違いや中立があれば「見送り」です。これは予測の計測・表示専用で、実ベットや注文は行いません。</div>
+        <div id="p15Next"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M12 2 L20 5 V11 C20 17 16.5 20.4 12 22 C7.5 20.4 4 17 4 11 V5 Z" fill="#8a5cf6"/><path d="M8.6 12.2 L11 14.6 L15.6 9.6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>予測の成績</h2>
+        <div id="p15Stats"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>予測ログ</h2>
+        <div class="tableWrap">
+          <table class="log">
+            <thead><tr><th>ラウンド</th><th>開始価格</th><th>終値</th><th>実際</th><th>トレーダー</th><th>トレンド</th><th>テクニカル</th><th>最終判定</th><th>結果</th></tr></thead>
+            <tbody id="p15LogBody"></tbody>
+          </table>
+        </div>
+        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「実際」はそのラウンドの15分足の終値と始値の比較、「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。</div>
       </div>
     </section>
 
@@ -1146,6 +1178,53 @@ load();
 setInterval(()=>{load()},60000);
 window.addEventListener("resize",()=>{if(lastData)requestAnimationFrame(()=>drawAllCharts())});
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
+</script>
+<script>
+"use strict";
+/* ===== 15分予測 ===== */
+function p15time(isoStr){if(!isoStr)return"--";const dt=new Date(isoStr);if(Number.isNaN(dt.getTime()))return"--";return dt.toLocaleString("ja-JP",{timeZone:"Asia/Tokyo",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false})}
+function p15px(v){const x=Number(v);if(!Number.isFinite(x))return"--";return "$"+x.toLocaleString("en-US",{maximumFractionDigits:1})}
+function p15chip(v){if(v==="UP")return '<span class="p15chip p15up">UP</span>';if(v==="DOWN")return '<span class="p15chip p15down">DOWN</span>';if(v==="FLAT")return '<span class="p15chip p15na">FLAT</span>';return '<span class="p15chip p15na">—</span>'}
+function p15verdictHtml(v){if(v==="UP")return '<span style="color:#2ea86a">UP</span> <span style="font-size:16px">ベット候補</span>';if(v==="DOWN")return '<span style="color:#e5484d">DOWN</span> <span style="font-size:16px">ベット候補</span>';return '<span style="color:#9aa0a6">見送り</span>'}
+async function p15fetch(){for(const p of ["./predict15.json","./docs/predict15.json"]){try{const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"});if(r.ok)return await r.json()}catch(e){}}return null}
+function p15render(d){
+const nextBox=document.getElementById("p15Next"),statsBox=document.getElementById("p15Stats"),body=document.getElementById("p15LogBody");
+if(!nextBox)return;
+if(!d){nextBox.innerHTML='<p class="defNote">予測データがまだありません（初回の予測は次のラウンド開始の約3分前に生成されます）</p>';if(statsBox)statsBox.innerHTML="";if(body)body.innerHTML="";return}
+const nx=d.next_round;
+if(nx){
+const tc=nx.traders_counts||{};
+nextBox.innerHTML=
+'<div class="kv"><span class="k">対象ラウンド</span><span class="v">'+p15time(nx.round_start_iso)+' 開始</span></div>'
++'<div style="margin:10px 0 4px"><div class="p15verdict">'+p15verdictHtml(nx.verdict)+'</div></div>'
++'<div class="p15sigRow"><span class="p15sigName">トップトレーダー <span class="p15sigSub">（ベスト10の建玉：ロング '+(tc.long??"--")+' / ショート '+(tc.short??"--")+' / なし '+(tc.flat??"--")+'）</span></span>'+p15chip(nx.signals.traders)+'</div>'
++'<div class="p15sigRow"><span class="p15sigName">トレンド <span class="p15sigSub">（1時間足）</span></span>'+p15chip(nx.signals.trend)+'</div>'
++'<div class="p15sigRow"><span class="p15sigName">テクニカル <span class="p15sigSub">（15分足 RSI / MACD / EMA）</span></span>'+p15chip(nx.signals.technical)+'</div>'
++'<div class="kv" style="margin-top:8px"><span class="k">予測時点のBTC価格</span><span class="v">'+p15px(nx.price_at_prediction)+'</span></div>'
++'<div class="kv"><span class="k">予測確定時刻</span><span class="v">'+p15time(nx.predicted_at_iso)+'</span></div>';
+}else{
+nextBox.innerHTML='<p class="defNote">次ラウンドの予測はまだ生成されていません</p>';
+}
+const st=d.stats||{};
+const rate=v=>(v===null||v===undefined)?"--":(v*100).toFixed(1)+"%";
+if(statsBox)statsBox.innerHTML=
+'<div class="kv"><span class="k">ベット候補の的中率</span><span class="v">'+rate(st.bet_rate)+'（'+(st.bet_hits??0)+' / '+(st.bet_rounds??0)+'）</span></div>'
++'<div class="kv"><span class="k">全体の的中率</span><span class="v">'+rate(st.all_rate)+'（'+(st.all_hits??0)+' / '+(st.all_rounds??0)+'）</span></div>'
++'<div class="kv"><span class="k">決着済みラウンド</span><span class="v">'+(st.settled??0)+' 件</span></div>'
++'<div class="miniNote">全体の的中率は、見送りラウンドも分母に入れた保守的な数字です（見送りは的中に数えません）。</div>';
+if(body){
+const rows=(d.rounds||[]).map(r=>{
+const tc=r.traders_counts||{};
+const res=r.settled?(r.hit===true?'<b style="color:#2ea86a">的中</b>':(r.hit===false?'<b style="color:#e5484d">不的中</b>':"—")):"進行中";
+const verdict=r.verdict==="SKIP"?'<span class="p15chip p15na">見送り</span>':p15chip(r.verdict);
+return '<tr><td>'+p15time(r.round_start_iso)+'</td><td>'+p15px(r.start_price)+'</td><td>'+p15px(r.end_price)+'</td><td>'+(r.actual?p15chip(r.actual):"—")+'</td><td>'+p15chip(r.signals.traders)+' <span style="opacity:.75;font-size:.9em">'+(tc.long??"-")+'/'+(tc.short??"-")+'</span></td><td>'+p15chip(r.signals.trend)+'</td><td>'+p15chip(r.signals.technical)+'</td><td>'+verdict+'</td><td>'+res+'</td></tr>';
+}).join("");
+body.innerHTML=rows||'<tr><td colspan="9">まだ記録がありません</td></tr>';
+}
+}
+async function loadPredict15(){try{p15render(await p15fetch())}catch(e){console.warn("predict15",e)}}
+loadPredict15();
+setInterval(loadPredict15,60000);
 </script>
 </body>
 </html>
