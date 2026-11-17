@@ -1,14 +1,16 @@
 {
- "updated_at": "2026-11-17T23:17:10+00:00",
- "updated_ts": 1794957430,
+ "updated_at": "2026-11-17T23:27:10+00:00",
+ "updated_ts": 1794958030,
  "next_round": {
-  "round_start_ts": 1794957300,
-  "round_start_iso": "2026-11-17T23:15:00+00:00",
-  "predicted_at_iso": "2026-11-17T23:12:11+00:00",
-  "price_at_prediction": 65173.0,
+  "round_start_ts": 1794958200,
+  "round_start_iso": "2026-11-17T23:30:00+00:00",
+  "predicted_at_iso": "2026-11-17T23:27:10+00:00",
+  "price_at_prediction": 64994.5,
+  "strategy_version": "v2.0-regime",
+  "regime": "RANGE",
   "signals": {
    "traders": "NEUTRAL",
-   "trend": "UP",
+   "trend": "NEUTRAL",
    "technical": "UP"
   },
   "traders_counts": {
@@ -16,7 +18,7 @@
    "short": 2,
    "flat": 7
   },
-  "verdict": "UP",
+  "verdict": "SKIP",
   "start_price": null,
   "end_price": null,
   "actual": null,
@@ -53,18 +55,66 @@
    "rounds": 52,
    "stake_per_round": 4.0,
    "payout_multiple": 2.0,
+   "model_note": "virtual_fixed_multiple",
    "invested": 208.0,
    "returned": 192.0,
    "pnl": -16.0,
    "return_rate": 0.9230769230769231
-  }
+  },
+  "coverage": 0.7536231884057971,
+  "by_direction": {
+   "UP": {
+    "hits": 3,
+    "total": 11,
+    "rate": 0.2727272727272727
+   },
+   "DOWN": {
+    "hits": 21,
+    "total": 41,
+    "rate": 0.5121951219512195
+   }
+  },
+  "streaks": {
+   "max_miss": 3,
+   "current_miss": 3
+  },
+  "sample_status": "insufficient",
+  "sample_threshold": 100,
+  "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1794958200,
+   "round_start_iso": "2026-11-17T23:30:00+00:00",
+   "predicted_at_iso": "2026-11-17T23:27:10+00:00",
+   "price_at_prediction": 64994.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "RANGE",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "NEUTRAL",
+    "technical": "UP"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 2,
+    "flat": 7
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1794957300,
    "round_start_iso": "2026-11-17T23:15:00+00:00",
    "predicted_at_iso": "2026-11-17T23:12:11+00:00",
    "price_at_prediction": 65173.0,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -88,6 +138,8 @@
    "round_start_iso": "2026-11-17T23:00:00+00:00",
    "predicted_at_iso": "2026-11-17T22:57:19+00:00",
    "price_at_prediction": 64727.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -111,6 +163,8 @@
    "round_start_iso": "2026-11-17T22:45:00+00:00",
    "predicted_at_iso": "2026-11-17T22:42:12+00:00",
    "price_at_prediction": 64794.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -134,6 +188,8 @@
    "round_start_iso": "2026-11-17T22:30:00+00:00",
    "predicted_at_iso": "2026-11-17T22:27:09+00:00",
    "price_at_prediction": 64535.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -157,6 +213,8 @@
    "round_start_iso": "2026-11-17T22:15:00+00:00",
    "predicted_at_iso": "2026-11-17T22:12:11+00:00",
    "price_at_prediction": 64476.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -180,6 +238,8 @@
    "round_start_iso": "2026-11-17T22:00:00+00:00",
    "predicted_at_iso": "2026-11-17T21:57:14+00:00",
    "price_at_prediction": 64267.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -203,6 +263,8 @@
    "round_start_iso": "2026-11-17T21:45:00+00:00",
    "predicted_at_iso": "2026-11-17T21:42:12+00:00",
    "price_at_prediction": 64376.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -226,6 +288,8 @@
    "round_start_iso": "2026-11-17T21:30:00+00:00",
    "predicted_at_iso": "2026-11-17T21:27:11+00:00",
    "price_at_prediction": 64378.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -249,6 +313,8 @@
    "round_start_iso": "2026-11-17T21:15:00+00:00",
    "predicted_at_iso": "2026-11-17T21:12:10+00:00",
    "price_at_prediction": 64074.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -272,6 +338,8 @@
    "round_start_iso": "2026-11-17T21:00:00+00:00",
    "predicted_at_iso": "2026-11-17T20:57:09+00:00",
    "price_at_prediction": 63868.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -299,6 +367,8 @@
    "round_start_iso": "2026-11-17T20:45:00+00:00",
    "predicted_at_iso": "2026-11-17T20:42:16+00:00",
    "price_at_prediction": 63966.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -322,6 +392,8 @@
    "round_start_iso": "2026-11-17T20:30:00+00:00",
    "predicted_at_iso": "2026-11-17T20:27:10+00:00",
    "price_at_prediction": 64062.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -345,6 +417,8 @@
    "round_start_iso": "2026-11-17T20:15:00+00:00",
    "predicted_at_iso": "2026-11-17T20:12:13+00:00",
    "price_at_prediction": 63737.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -372,6 +446,8 @@
    "round_start_iso": "2026-11-17T20:00:00+00:00",
    "predicted_at_iso": "2026-11-17T19:57:14+00:00",
    "price_at_prediction": 63755.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -399,6 +475,8 @@
    "round_start_iso": "2026-11-17T19:45:00+00:00",
    "predicted_at_iso": "2026-11-17T19:42:22+00:00",
    "price_at_prediction": 63707.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -426,6 +504,8 @@
    "round_start_iso": "2026-11-17T19:30:00+00:00",
    "predicted_at_iso": "2026-11-17T19:27:15+00:00",
    "price_at_prediction": 63750.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -453,6 +533,8 @@
    "round_start_iso": "2026-11-17T19:15:00+00:00",
    "predicted_at_iso": "2026-11-17T19:12:11+00:00",
    "price_at_prediction": 63798.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -480,6 +562,8 @@
    "round_start_iso": "2026-11-17T19:00:00+00:00",
    "predicted_at_iso": "2026-11-17T18:57:10+00:00",
    "price_at_prediction": 63735.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -507,6 +591,8 @@
    "round_start_iso": "2026-11-17T18:45:00+00:00",
    "predicted_at_iso": "2026-11-17T18:42:27+00:00",
    "price_at_prediction": 63711.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -534,6 +620,8 @@
    "round_start_iso": "2026-11-17T18:30:00+00:00",
    "predicted_at_iso": "2026-11-17T18:27:10+00:00",
    "price_at_prediction": 64035.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -561,6 +649,8 @@
    "round_start_iso": "2026-11-17T18:15:00+00:00",
    "predicted_at_iso": "2026-11-17T18:12:11+00:00",
    "price_at_prediction": 63706.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -588,6 +678,8 @@
    "round_start_iso": "2026-11-17T18:00:00+00:00",
    "predicted_at_iso": "2026-11-17T17:57:09+00:00",
    "price_at_prediction": 63815.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -615,6 +707,8 @@
    "round_start_iso": "2026-11-17T17:45:00+00:00",
    "predicted_at_iso": "2026-11-17T17:42:11+00:00",
    "price_at_prediction": 63678.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -642,6 +736,8 @@
    "round_start_iso": "2026-11-17T17:30:00+00:00",
    "predicted_at_iso": "2026-11-17T17:27:10+00:00",
    "price_at_prediction": 63762.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -669,6 +765,8 @@
    "round_start_iso": "2026-11-17T17:15:00+00:00",
    "predicted_at_iso": "2026-11-17T17:12:12+00:00",
    "price_at_prediction": 63860.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -696,6 +794,8 @@
    "round_start_iso": "2026-11-17T17:00:00+00:00",
    "predicted_at_iso": "2026-11-17T16:57:11+00:00",
    "price_at_prediction": 63456.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -723,6 +823,8 @@
    "round_start_iso": "2026-11-17T16:45:00+00:00",
    "predicted_at_iso": "2026-11-17T16:42:12+00:00",
    "price_at_prediction": 63722.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -750,6 +852,8 @@
    "round_start_iso": "2026-11-17T16:30:00+00:00",
    "predicted_at_iso": "2026-11-17T16:27:10+00:00",
    "price_at_prediction": 63930.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -777,6 +881,8 @@
    "round_start_iso": "2026-11-17T16:15:00+00:00",
    "predicted_at_iso": "2026-11-17T16:12:11+00:00",
    "price_at_prediction": 64109.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -804,6 +910,8 @@
    "round_start_iso": "2026-11-17T16:00:00+00:00",
    "predicted_at_iso": "2026-11-17T15:57:11+00:00",
    "price_at_prediction": 63862.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -831,6 +939,8 @@
    "round_start_iso": "2026-11-17T15:45:00+00:00",
    "predicted_at_iso": "2026-11-17T15:42:17+00:00",
    "price_at_prediction": 64351.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -858,6 +968,8 @@
    "round_start_iso": "2026-11-17T15:30:00+00:00",
    "predicted_at_iso": "2026-11-17T15:27:09+00:00",
    "price_at_prediction": 65135.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -885,6 +997,8 @@
    "round_start_iso": "2026-11-17T15:15:00+00:00",
    "predicted_at_iso": "2026-11-17T15:12:12+00:00",
    "price_at_prediction": 64694.0,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -908,6 +1022,8 @@
    "round_start_iso": "2026-11-17T15:00:00+00:00",
    "predicted_at_iso": "2026-11-17T14:57:11+00:00",
    "price_at_prediction": 64966.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -935,6 +1051,8 @@
    "round_start_iso": "2026-11-17T14:45:00+00:00",
    "predicted_at_iso": "2026-11-17T14:42:13+00:00",
    "price_at_prediction": 65217.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -962,6 +1080,8 @@
    "round_start_iso": "2026-11-17T14:30:00+00:00",
    "predicted_at_iso": "2026-11-17T14:27:10+00:00",
    "price_at_prediction": 64879.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -989,6 +1109,8 @@
    "round_start_iso": "2026-11-17T14:15:00+00:00",
    "predicted_at_iso": "2026-11-17T14:12:11+00:00",
    "price_at_prediction": 64978.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -1016,6 +1138,8 @@
    "round_start_iso": "2026-11-17T14:00:00+00:00",
    "predicted_at_iso": "2026-11-17T13:57:10+00:00",
    "price_at_prediction": 65047.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -1043,6 +1167,8 @@
    "round_start_iso": "2026-11-17T13:45:00+00:00",
    "predicted_at_iso": "2026-11-17T13:42:15+00:00",
    "price_at_prediction": 64942.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -1070,6 +1196,8 @@
    "round_start_iso": "2026-11-17T13:30:00+00:00",
    "predicted_at_iso": "2026-11-17T13:27:10+00:00",
    "price_at_prediction": 65037.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -1097,6 +1225,8 @@
    "round_start_iso": "2026-11-17T13:15:00+00:00",
    "predicted_at_iso": "2026-11-17T13:12:12+00:00",
    "price_at_prediction": 65033.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -1124,6 +1254,8 @@
    "round_start_iso": "2026-11-17T13:00:00+00:00",
    "predicted_at_iso": "2026-11-17T12:57:16+00:00",
    "price_at_prediction": 65058.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
@@ -1151,6 +1283,8 @@
    "round_start_iso": "2026-11-17T12:45:00+00:00",
    "predicted_at_iso": "2026-11-17T12:42:11+00:00",
    "price_at_prediction": 64952.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1174,6 +1308,8 @@
    "round_start_iso": "2026-11-17T12:30:00+00:00",
    "predicted_at_iso": "2026-11-17T12:27:11+00:00",
    "price_at_prediction": 64959.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1197,6 +1333,8 @@
    "round_start_iso": "2026-11-17T12:15:00+00:00",
    "predicted_at_iso": "2026-11-17T12:12:10+00:00",
    "price_at_prediction": 64833.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1220,6 +1358,8 @@
    "round_start_iso": "2026-11-17T12:00:00+00:00",
    "predicted_at_iso": "2026-11-17T11:57:09+00:00",
    "price_at_prediction": 64905.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1243,6 +1383,8 @@
    "round_start_iso": "2026-11-17T11:45:00+00:00",
    "predicted_at_iso": "2026-11-17T11:42:11+00:00",
    "price_at_prediction": 64789.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1266,6 +1408,8 @@
    "round_start_iso": "2026-11-17T11:30:00+00:00",
    "predicted_at_iso": "2026-11-17T11:27:10+00:00",
    "price_at_prediction": 64374.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1289,6 +1433,8 @@
    "round_start_iso": "2026-11-17T11:15:00+00:00",
    "predicted_at_iso": "2026-11-17T11:12:11+00:00",
    "price_at_prediction": 64280.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1316,6 +1462,8 @@
    "round_start_iso": "2026-11-17T11:00:00+00:00",
    "predicted_at_iso": "2026-11-17T10:57:10+00:00",
    "price_at_prediction": 64127.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1343,6 +1491,8 @@
    "round_start_iso": "2026-11-17T10:45:00+00:00",
    "predicted_at_iso": "2026-11-17T10:42:20+00:00",
    "price_at_prediction": 64248.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1370,6 +1520,8 @@
    "round_start_iso": "2026-11-17T10:30:00+00:00",
    "predicted_at_iso": "2026-11-17T10:27:19+00:00",
    "price_at_prediction": 64117.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1397,6 +1549,8 @@
    "round_start_iso": "2026-11-17T10:15:00+00:00",
    "predicted_at_iso": "2026-11-17T10:12:11+00:00",
    "price_at_prediction": 64314.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1424,6 +1578,8 @@
    "round_start_iso": "2026-11-17T10:00:00+00:00",
    "predicted_at_iso": "2026-11-17T09:57:09+00:00",
    "price_at_prediction": 64327.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1451,6 +1607,8 @@
    "round_start_iso": "2026-11-17T09:45:00+00:00",
    "predicted_at_iso": "2026-11-17T09:42:21+00:00",
    "price_at_prediction": 64464.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1478,6 +1636,8 @@
    "round_start_iso": "2026-11-17T09:30:00+00:00",
    "predicted_at_iso": "2026-11-17T09:27:10+00:00",
    "price_at_prediction": 64330.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1505,6 +1665,8 @@
    "round_start_iso": "2026-11-17T09:15:00+00:00",
    "predicted_at_iso": "2026-11-17T09:12:11+00:00",
    "price_at_prediction": 64229.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1532,6 +1694,8 @@
    "round_start_iso": "2026-11-17T09:00:00+00:00",
    "predicted_at_iso": "2026-11-17T08:57:10+00:00",
    "price_at_prediction": 64285.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1559,6 +1723,8 @@
    "round_start_iso": "2026-11-17T08:45:00+00:00",
    "predicted_at_iso": "2026-11-17T08:42:10+00:00",
    "price_at_prediction": 64346.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1586,6 +1752,8 @@
    "round_start_iso": "2026-11-17T08:30:00+00:00",
    "predicted_at_iso": "2026-11-17T08:27:10+00:00",
    "price_at_prediction": 64560.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1613,6 +1781,8 @@
    "round_start_iso": "2026-11-17T08:15:00+00:00",
    "predicted_at_iso": "2026-11-17T08:12:11+00:00",
    "price_at_prediction": 64532.0,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1640,6 +1810,8 @@
    "round_start_iso": "2026-11-17T08:00:00+00:00",
    "predicted_at_iso": "2026-11-17T07:57:09+00:00",
    "price_at_prediction": 64676.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1667,6 +1839,8 @@
    "round_start_iso": "2026-11-17T07:45:00+00:00",
    "predicted_at_iso": "2026-11-17T07:42:11+00:00",
    "price_at_prediction": 64583.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1694,6 +1868,8 @@
    "round_start_iso": "2026-11-17T07:30:00+00:00",
    "predicted_at_iso": "2026-11-17T07:27:09+00:00",
    "price_at_prediction": 64645.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1721,6 +1897,8 @@
    "round_start_iso": "2026-11-17T07:15:00+00:00",
    "predicted_at_iso": "2026-11-17T07:12:10+00:00",
    "price_at_prediction": 64616.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1748,6 +1926,8 @@
    "round_start_iso": "2026-11-17T07:00:00+00:00",
    "predicted_at_iso": "2026-11-17T06:57:09+00:00",
    "price_at_prediction": 64529.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1775,6 +1955,8 @@
    "round_start_iso": "2026-11-17T06:45:00+00:00",
    "predicted_at_iso": "2026-11-17T06:42:11+00:00",
    "price_at_prediction": 64366.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1802,6 +1984,8 @@
    "round_start_iso": "2026-11-17T06:30:00+00:00",
    "predicted_at_iso": "2026-11-17T06:27:17+00:00",
    "price_at_prediction": 64593.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1829,6 +2013,8 @@
    "round_start_iso": "2026-11-17T06:15:00+00:00",
    "predicted_at_iso": "2026-11-17T06:12:11+00:00",
    "price_at_prediction": 64707.0,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "DOWN",
@@ -1856,6 +2042,8 @@
    "round_start_iso": "2026-11-17T06:00:00+00:00",
    "predicted_at_iso": "2026-11-17T05:46:48+00:00",
    "price_at_prediction": 64893.5,
+   "strategy_version": null,
+   "regime": null,
    "signals": {
     "traders": "NEUTRAL",
     "trend": "UP",
