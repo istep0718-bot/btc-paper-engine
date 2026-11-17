@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-17T18:57:10+00:00",
- "updated_ts": 1794941830,
+ "updated_at": "2026-11-17T19:02:10+00:00",
+ "updated_ts": 1794942130,
  "next_round": {
   "round_start_ts": 1794942000,
   "round_start_iso": "2026-11-17T19:00:00+00:00",
@@ -25,13 +25,13 @@
   "sim": null
  },
  "stats": {
-  "settled": 51,
-  "bet_rounds": 44,
+  "settled": 52,
+  "bet_rounds": 45,
   "bet_hits": 22,
-  "bet_rate": 0.5,
-  "all_rounds": 51,
+  "bet_rate": 0.4888888888888889,
+  "all_rounds": 52,
   "all_hits": 22,
-  "all_rate": 0.43137254901960786,
+  "all_rate": 0.4230769230769231,
   "signal_rates": {
    "traders": {
     "hits": 0,
@@ -40,23 +40,23 @@
    },
    "analysis": {
     "hits": 22,
-    "total": 44,
-    "rate": 0.5
+    "total": 45,
+    "rate": 0.4888888888888889
    },
    "verdict": {
     "hits": 22,
-    "total": 44,
-    "rate": 0.5
+    "total": 45,
+    "rate": 0.4888888888888889
    }
   },
   "sim": {
-   "rounds": 44,
+   "rounds": 45,
    "stake_per_round": 4.0,
    "payout_multiple": 2.0,
-   "invested": 176.0,
+   "invested": 180.0,
    "returned": 176.0,
-   "pnl": 0.0,
-   "return_rate": 1.0
+   "pnl": -4.0,
+   "return_rate": 0.9777777777777777
   }
  },
  "rounds": [
@@ -99,12 +99,16 @@
     "flat": 7
    },
    "verdict": "DOWN",
-   "start_price": null,
-   "end_price": null,
-   "actual": null,
-   "hit": null,
-   "settled": false,
-   "sim": null
+   "start_price": 63707.0,
+   "end_price": 63742.0,
+   "actual": "UP",
+   "hit": false,
+   "settled": true,
+   "sim": {
+    "stake": 4.0,
+    "payout": 0.0,
+    "pnl": -4.0
+   }
   },
   {
    "round_start_ts": 1794940200,
