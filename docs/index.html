@@ -459,6 +459,13 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       .p15sigRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px dashed rgba(0,0,0,.08)}
       .p15sigName{font-weight:700}
       .p15sigSub{font-size:.85em;opacity:.8;font-weight:400}
+      .p15bet{font-size:1.05em;padding:4px 15px;box-shadow:0 0 0 2px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.25)}
+      .p15betTag{font-size:.72em;font-weight:800;color:#b26a00;margin-top:3px;letter-spacing:.04em}
+      .p15mis{display:inline-block;background:#fff1d6;border:1px solid #f0b95a;border-radius:8px;padding:2px 8px;white-space:nowrap}
+      .p15misTag{font-size:.72em;font-weight:800;color:#b26a00;margin-top:3px}
+      .p15markOk{color:#2ea86a;font-size:1.3em}
+      .p15markNg{color:#e5484d;font-size:1.3em}
+      .p15pxSub{font-size:.78em;opacity:.65;margin-top:2px;white-space:nowrap}
       </style>
       <div class="card">
         <h2><span class="hic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#7fd4ff"/><path d="M12 6.8 V12 L15.6 14.2" stroke="#1d6fb8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 1.4 L14.2 4.6 H9.8 Z" fill="#e546b0"/></svg></span>15分UP/DOWN予測（計測専用）</h2>
@@ -473,11 +480,11 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
         <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>予測ログ</h2>
         <div class="tableWrap">
           <table class="log">
-            <thead><tr><th>ラウンド</th><th>開始価格</th><th>終値</th><th>実際</th><th>トレーダー</th><th>トレンド</th><th>テクニカル</th><th>最終判定</th><th>結果</th></tr></thead>
+            <thead><tr><th>時刻</th><th>トレーダー</th><th>分析</th><th>判定</th><th>結果</th></tr></thead>
             <tbody id="p15LogBody"></tbody>
           </table>
         </div>
-        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「実際」はそのラウンドの15分足の終値と始値の比較、「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。</div>
+        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。</div>
       </div>
     </section>
 
@@ -1186,6 +1193,11 @@ function p15time(isoStr){if(!isoStr)return"--";const dt=new Date(isoStr);if(Numb
 function p15px(v){const x=Number(v);if(!Number.isFinite(x))return"--";return "$"+x.toLocaleString("en-US",{maximumFractionDigits:1})}
 function p15chip(v){if(v==="UP")return '<span class="p15chip p15up">UP</span>';if(v==="DOWN")return '<span class="p15chip p15down">DOWN</span>';if(v==="FLAT")return '<span class="p15chip p15na">FLAT</span>';return '<span class="p15chip p15na">—</span>'}
 function p15verdictHtml(v){if(v==="UP")return '<span style="color:#2ea86a">UP</span> <span style="font-size:16px">ベット候補</span>';if(v==="DOWN")return '<span style="color:#e5484d">DOWN</span> <span style="font-size:16px">ベット候補</span>';return '<span style="color:#9aa0a6">見送り</span>'}
+function p15dirTxt(v){return v==="UP"?"UP":(v==="DOWN"?"DOWN":"—")}
+function p15dirCol(v){return v==="UP"?"#2ea86a":(v==="DOWN"?"#e5484d":"#9aa0a6")}
+function p15analysisHtml(tr,te){const a=tr||"NEUTRAL",b=te||"NEUTRAL";const inner='<b style="color:'+p15dirCol(a)+'">'+p15dirTxt(a)+'</b><span style="opacity:.5"> / </span><b style="color:'+p15dirCol(b)+'">'+p15dirTxt(b)+'</b>';if(a!==b)return '<span class="p15mis">'+inner+'</span><div class="p15misTag">不一致</div>';return inner}
+function p15verdictCell(v){if(v==="UP"||v==="DOWN")return '<span class="p15chip '+(v==="UP"?"p15up":"p15down")+' p15bet">'+v+'</span><div class="p15betTag">ベット候補</div>';return '<span class="p15chip p15na">見送り</span>'}
+function p15resultHtml(r){if(!r.settled)return "—";let s=r.actual?p15chip(r.actual):"—";if(r.hit===true)s+=' <b class="p15markOk">○</b>';else if(r.hit===false)s+=' <b class="p15markNg">×</b>';if(r.start_price!=null&&r.end_price!=null)s+='<div class="p15pxSub">'+p15px(r.start_price)+' → '+p15px(r.end_price)+'</div>';return s}
 async function p15fetch(){for(const p of ["./predict15.json","./docs/predict15.json"]){try{const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"});if(r.ok)return await r.json()}catch(e){}}return null}
 function p15render(d){
 const nextBox=document.getElementById("p15Next"),statsBox=document.getElementById("p15Stats"),body=document.getElementById("p15LogBody");
@@ -1215,11 +1227,10 @@ if(statsBox)statsBox.innerHTML=
 if(body){
 const rows=(d.rounds||[]).map(r=>{
 const tc=r.traders_counts||{};
-const res=r.settled?(r.hit===true?'<b style="color:#2ea86a">的中</b>':(r.hit===false?'<b style="color:#e5484d">不的中</b>':"—")):"進行中";
-const verdict=r.verdict==="SKIP"?'<span class="p15chip p15na">見送り</span>':p15chip(r.verdict);
-return '<tr><td>'+p15time(r.round_start_iso)+'</td><td>'+p15px(r.start_price)+'</td><td>'+p15px(r.end_price)+'</td><td>'+(r.actual?p15chip(r.actual):"—")+'</td><td>'+p15chip(r.signals.traders)+' <span style="opacity:.75;font-size:.9em">'+(tc.long??"-")+'/'+(tc.short??"-")+'</span></td><td>'+p15chip(r.signals.trend)+'</td><td>'+p15chip(r.signals.technical)+'</td><td>'+verdict+'</td><td>'+res+'</td></tr>';
+const sg=r.signals||{};
+return '<tr><td>'+p15time(r.round_start_iso)+'</td><td>'+p15chip(sg.traders)+' <span style="opacity:.75;font-size:.9em">'+(tc.long??"-")+'/'+(tc.short??"-")+'</span></td><td>'+p15analysisHtml(sg.trend,sg.technical)+'</td><td>'+p15verdictCell(r.verdict)+'</td><td>'+p15resultHtml(r)+'</td></tr>';
 }).join("");
-body.innerHTML=rows||'<tr><td colspan="9">まだ記録がありません</td></tr>';
+body.innerHTML=rows||'<tr><td colspan="5">まだ記録がありません</td></tr>';
 }
 }
 async function loadPredict15(){try{p15render(await p15fetch())}catch(e){console.warn("predict15",e)}}
