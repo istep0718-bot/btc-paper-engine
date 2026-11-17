@@ -491,7 +491,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
             <tbody id="p15LogBody"></tbody>
           </table>
         </div>
-        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。結果欄の内訳（トレーダー／分析の ○×）は、各シグナルが実際の方向と一致したかどうかで、対象外の場合は — です。</div>
+        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。結果欄の内訳（トレーダー／分析の ○×）は、各シグナルが実際の方向と一致したかどうかで、対象外の場合は — です。結果欄の「シミュ」は、ベット候補だった場合の賭け金シミュレーション（毎回4 USDT・等倍モデル）の損益です。</div>
       </div>
     </section>
 
@@ -1205,7 +1205,8 @@ function p15dirCol(v){return v==="UP"?"#2ea86a":(v==="DOWN"?"#e5484d":"#9aa0a6")
 function p15analysisHtml(tr,te){const a=tr||"NEUTRAL",b=te||"NEUTRAL";const inner='<b style="color:'+p15dirCol(a)+'">'+p15dirTxt(a)+'</b><span style="opacity:.5"> / </span><b style="color:'+p15dirCol(b)+'">'+p15dirTxt(b)+'</b>';if(a!==b)return '<span class="p15mis">'+inner+'</span><div class="p15misTag">不一致</div>';return inner}
 function p15verdictCell(v){if(v==="UP"||v==="DOWN")return '<span class="p15chip '+(v==="UP"?"p15up":"p15down")+' p15bet">'+v+'</span><div class="p15betTag">ベット候補</div>';return '<span class="p15chip p15na">見送り</span>'}
 function p15markFor(dir,actual){if((dir==="UP"||dir==="DOWN")&&(actual==="UP"||actual==="DOWN"))return dir===actual?"○":"×";return "—"}
-function p15resultHtml(r){if(!r.settled)return "—";const sg=r.signals||{};let s=r.actual?p15chip(r.actual):"—";if(r.hit===true)s+=' <b class="p15markOk">○</b>';else if(r.hit===false)s+=' <b class="p15markNg">×</b>';const anaDir=(sg.trend===sg.technical)?sg.trend:null;s+='<div class="p15brk">トレーダー '+p15markFor(sg.traders,r.actual)+'　分析 '+p15markFor(anaDir,r.actual)+'</div>';if(r.start_price!=null&&r.end_price!=null)s+='<div class="p15pxSub">'+p15px(r.start_price)+' → '+p15px(r.end_price)+'</div>';return s}
+function p15simHtml(r){if(!r.sim)return"";const p=Number(r.sim.pnl);if(r.actual==="FLAT")return '<div class="p15brk">シミュ ±0（返金）</div>';const col=p>0?"#2ea86a":(p<0?"#e5484d":"inherit");const txt=(p>0?"+":p<0?"−":"±")+Math.abs(p).toLocaleString("en-US",{maximumFractionDigits:2});return '<div class="p15brk">シミュ <b style="color:'+col+'">'+txt+' USDT</b></div>'}
+function p15resultHtml(r){if(!r.settled)return "—";const sg=r.signals||{};let s=r.actual?p15chip(r.actual):"—";if(r.hit===true)s+=' <b class="p15markOk">○</b>';else if(r.hit===false)s+=' <b class="p15markNg">×</b>';const anaDir=(sg.trend===sg.technical)?sg.trend:null;s+='<div class="p15brk">トレーダー '+p15markFor(sg.traders,r.actual)+'　分析 '+p15markFor(anaDir,r.actual)+'</div>';s+=p15simHtml(r);if(r.start_price!=null&&r.end_price!=null)s+='<div class="p15pxSub">'+p15px(r.start_price)+' → '+p15px(r.end_price)+'</div>';return s}
 function p15rates(rounds){const t={n:0,h:0},a={n:0,h:0},v={n:0,h:0};for(const r of (rounds||[])){if(!r.settled)continue;const act=r.actual;if(act!=="UP"&&act!=="DOWN")continue;const sg=r.signals||{};if(sg.traders==="UP"||sg.traders==="DOWN"){t.n++;if(sg.traders===act)t.h++}if((sg.trend==="UP"||sg.trend==="DOWN")&&sg.trend===sg.technical){a.n++;if(sg.trend===act)a.h++}if(r.verdict==="UP"||r.verdict==="DOWN"){v.n++;if(r.hit===true)v.h++}}return{t,a,v}}
 function p15rateHtml(lab,x){const pct=x.n?Math.round(x.h/x.n*100)+"%":"—";return '<div class="p15rate"><div class="p15rateVal">'+pct+'</div><div class="p15rateLab">'+lab+'（'+x.h+'/'+x.n+'）</div></div>'}
 async function p15fetch(){for(const p of ["./predict15.json","./docs/predict15.json"]){try{const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"});if(r.ok)return await r.json()}catch(e){}}return null}
@@ -1229,11 +1230,23 @@ nextBox.innerHTML='<p class="defNote">次ラウンドの予測はまだ生成さ
 }
 const st=d.stats||{};
 const rate=v=>(v===null||v===undefined)?"--":(v*100).toFixed(1)+"%";
+const sim=st.sim||{};
+const usdt=v=>(v===null||v===undefined)?"--":Number(v).toLocaleString("en-US",{maximumFractionDigits:2})+" USDT";
+const pnlTxt=v=>(v===null||v===undefined)?"--":((v>0?"+":v<0?"−":"±")+Math.abs(Number(v)).toLocaleString("en-US",{maximumFractionDigits:2})+" USDT");
+const pnlCol=v=>v>0?"#2ea86a":(v<0?"#e5484d":"inherit");
 if(statsBox)statsBox.innerHTML=
 '<div class="kv"><span class="k">ベット候補の的中率</span><span class="v">'+rate(st.bet_rate)+'（'+(st.bet_hits??0)+' / '+(st.bet_rounds??0)+'）</span></div>'
 +'<div class="kv"><span class="k">全体の的中率</span><span class="v">'+rate(st.all_rate)+'（'+(st.all_hits??0)+' / '+(st.all_rounds??0)+'）</span></div>'
 +'<div class="kv"><span class="k">決着済みラウンド</span><span class="v">'+(st.settled??0)+' 件</span></div>'
-+'<div class="miniNote">全体の的中率は、見送りラウンドも分母に入れた保守的な数字です（見送りは的中に数えません）。</div>';
++'<div class="miniNote">全体の的中率は、見送りラウンドも分母に入れた保守的な数字です（見送りは的中に数えません）。</div>'
++'<div style="border-top:1px dashed rgba(0,0,0,.12);margin-top:10px;padding-top:8px">'
++'<div class="kv"><span class="k" style="font-weight:800">賭け金シミュレーション（対象 '+(sim.rounds??0)+' ラウンド）</span><span class="v"></span></div>'
++'<div class="kv"><span class="k">投資（累計）</span><span class="v">'+usdt(sim.invested)+'</span></div>'
++'<div class="kv"><span class="k">回収（累計）</span><span class="v">'+usdt(sim.returned)+'</span></div>'
++'<div class="kv"><span class="k">回収率</span><span class="v">'+rate(sim.return_rate)+'</span></div>'
++'<div class="kv"><span class="k">損益</span><span class="v" style="color:'+pnlCol(sim.pnl)+'">'+pnlTxt(sim.pnl)+'</span></div>'
++'<div class="miniNote">ベット候補のラウンドに毎回 '+(sim.stake_per_round??4)+' USDT を賭けたと仮定した等倍モデル（的中で回収 '+((sim.stake_per_round??4)*(sim.payout_multiple??2))+' USDT、はずれは 0、実際の方向が FLAT の場合は賭け金返金）で、手数料はなし。あくまでシミュレーションで、実際のベットは行いません。</div>'
++'</div>';
 if(rateBar){const rr=p15rates(d.rounds);rateBar.innerHTML='<div class="p15rateBar">'+p15rateHtml("トレーダー",rr.t)+p15rateHtml("分析",rr.a)+p15rateHtml("判定",rr.v)+'</div>'}
 if(body){
 const rows=(d.rounds||[]).map(r=>{

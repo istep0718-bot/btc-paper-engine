@@ -49,6 +49,16 @@ Accuracy definitions (also shown on the dashboard):
   all rate - every settled round is in the denominator; only bet hits
              count in the numerator (a SKIP round can never be a hit)
 
+Bet simulation (paper only, no real orders): every settled bet round
+(verdict UP/DOWN) is treated as a flat BET_USDT stake under an
+even-money binary model - a hit returns stake * PAYOUT_MULTIPLE
+(stake plus the same amount of profit), a miss returns 0, and a FLAT
+actual refunds the stake. SKIP rounds stake nothing. The aggregates
+(total staked, total returned, return rate, profit) are recomputed
+from the full log on every run, so they cover all past settled rounds
+retroactively. PAYOUT_MULTIPLE is a single constant so the model can
+later be swapped for real Polymarket prices.
+
 Cohort definition for the traders signal ("best 10"): the public
 leaderboard (stats-data.hyperliquid.xyz, no auth) ranked by all-time
 PnL, descending, skipping the HLP protocol vault. PnL is used rather
@@ -92,6 +102,8 @@ ALIGN_MIN = 8  # of the top 10, same-direction members needed for a signal
 EXCLUDE_ADDRESSES = {
     "0xdfc24b077bc1425ad1dea75bcb6f8158e10df303",  # HLP vault
 }
+BET_USDT = 4.0  # simulated stake per bet round
+PAYOUT_MULTIPLE = 2.0  # even-money binary: a hit returns stake * this
 PAUSE_SEC = 0.15  # between info API calls, same as whale_shadow.py
 USER_AGENT = "Mozilla/5.0 (compatible; predict15-logger/1.0)"
 RECENT_ROUNDS_IN_SUMMARY = 96
@@ -407,6 +419,25 @@ def settle_pending(predictions, results, now_ts):
 
 # ---------------------------------------------------------------- summary
 
+def sim_for_round(verdict, actual, hit):
+    """Simulated bet outcome for one settled round. Returns None when
+    no bet was placed (SKIP verdict); otherwise a dict with the stake,
+    the amount returned and the profit under the even-money model."""
+    if verdict not in ("UP", "DOWN") or actual is None:
+        return None
+    if actual == "FLAT":
+        payout = BET_USDT  # stake refunded
+    elif hit:
+        payout = BET_USDT * PAYOUT_MULTIPLE
+    else:
+        payout = 0.0
+    return {
+        "stake": BET_USDT,
+        "payout": payout,
+        "pnl": payout - BET_USDT,
+    }
+
+
 def build_summary(predictions, results, now_ts):
     rounds = []
     for start_ts in sorted(predictions, reverse=True):
@@ -428,6 +459,9 @@ def build_summary(predictions, results, now_ts):
             "actual": res["actual"] if res else None,
             "hit": res["hit"] if res else None,
             "settled": res is not None,
+            "sim": sim_for_round(pred["verdict"],
+                                 res["actual"] if res else None,
+                                 res["hit"] if res else None),
         })
 
     settled_rounds = [r for r in rounds if r["settled"]]
@@ -435,6 +469,20 @@ def build_summary(predictions, results, now_ts):
            if r["verdict"] in ("UP", "DOWN") and r["actual"] in ("UP", "DOWN")]
     bet_hits = sum(1 for r in bet if r["hit"])
     all_hits = sum(1 for r in settled_rounds if r["hit"])
+
+    sim_rounds = [r for r in settled_rounds if r["sim"]]
+    sim_invested = sum(r["sim"]["stake"] for r in sim_rounds)
+    sim_returned = sum(r["sim"]["payout"] for r in sim_rounds)
+    sim = {
+        "rounds": len(sim_rounds),
+        "stake_per_round": BET_USDT,
+        "payout_multiple": PAYOUT_MULTIPLE,
+        "invested": sim_invested,
+        "returned": sim_returned,
+        "pnl": sim_returned - sim_invested,
+        "return_rate": (sim_returned / sim_invested) if sim_invested else None,
+    }
+
     stats = {
         "settled": len(settled_rounds),
         "bet_rounds": len(bet),
@@ -443,6 +491,7 @@ def build_summary(predictions, results, now_ts):
         "all_rounds": len(settled_rounds),
         "all_hits": all_hits,
         "all_rate": (all_hits / len(settled_rounds)) if settled_rounds else None,
+        "sim": sim,
     }
 
     next_round = None
