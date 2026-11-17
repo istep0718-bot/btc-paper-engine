@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-17T06:27:17+00:00",
- "updated_ts": 1794896837,
+ "updated_at": "2026-11-17T06:42:11+00:00",
+ "updated_ts": 1794897731,
  "next_round": {
-  "round_start_ts": 1794897000,
-  "round_start_iso": "2026-11-17T06:30:00+00:00",
-  "predicted_at_iso": "2026-11-17T06:27:17+00:00",
-  "price_at_prediction": 64593.5,
+  "round_start_ts": 1794897900,
+  "round_start_iso": "2026-11-17T06:45:00+00:00",
+  "predicted_at_iso": "2026-11-17T06:42:11+00:00",
+  "price_at_prediction": 64366.5,
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
@@ -25,13 +25,30 @@
   "sim": null
  },
  "stats": {
-  "settled": 1,
+  "settled": 2,
   "bet_rounds": 0,
   "bet_hits": 0,
   "bet_rate": null,
-  "all_rounds": 1,
+  "all_rounds": 2,
   "all_hits": 0,
   "all_rate": 0.0,
+  "signal_rates": {
+   "traders": {
+    "hits": 0,
+    "total": 0,
+    "rate": null
+   },
+   "analysis": {
+    "hits": 1,
+    "total": 2,
+    "rate": 0.5
+   },
+   "verdict": {
+    "hits": 0,
+    "total": 0,
+    "rate": null
+   }
+  },
   "sim": {
    "rounds": 0,
    "stake_per_round": 4.0,
@@ -43,6 +60,29 @@
   }
  },
  "rounds": [
+  {
+   "round_start_ts": 1794897900,
+   "round_start_iso": "2026-11-17T06:45:00+00:00",
+   "predicted_at_iso": "2026-11-17T06:42:11+00:00",
+   "price_at_prediction": 64366.5,
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 2,
+    "short": 1,
+    "flat": 7
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1794897000,
    "round_start_iso": "2026-11-17T06:30:00+00:00",
@@ -82,11 +122,11 @@
     "flat": 7
    },
    "verdict": "SKIP",
-   "start_price": null,
-   "end_price": null,
-   "actual": null,
+   "start_price": 64715.0,
+   "end_price": 64567.0,
+   "actual": "DOWN",
    "hit": null,
-   "settled": false,
+   "settled": true,
    "sim": null
   },
   {
