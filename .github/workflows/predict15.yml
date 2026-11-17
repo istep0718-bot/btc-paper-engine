@@ -10,12 +10,20 @@ name: Predict15 Logger
 # Trigger: cron-job.org dispatches this workflow at :12/:27/:42/:57
 # (three minutes before each round starts; one minute would be too
 # tight because Actions startup plus the Pages rebuild can take
-# 1-2 minutes). GitHub's own schedule is intentionally not used (it
-# was too unreliable for the paper engine, which is why the external
-# timer exists).
+# 1-2 minutes). A second cron-job.org job dispatches it with
+# mode=settle at :02/:17/:32/:47 so finished rounds settle ~2 minutes
+# after they end instead of waiting for the next prediction run.
+# GitHub's own schedule is intentionally not used (it was too
+# unreliable for the paper engine, which is why the external timer
+# exists).
 
 on:
   workflow_dispatch:
+    inputs:
+      mode:
+        description: "full = settle + predict next round; settle = settle only"
+        required: false
+        default: "full"
 
 permissions:
   contents: write
@@ -39,7 +47,7 @@ jobs:
           python-version: "3.12"
 
       - name: Settle finished rounds and predict the next round
-        run: python predict15.py
+        run: python predict15.py ${{ inputs.mode == 'settle' && '--settle-only' || '' }}
 
       - name: Commit prediction log
         run: |
