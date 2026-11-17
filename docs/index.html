@@ -484,7 +484,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       <div class="card">
         <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>予測ログ</h2>
         <div id="p15RateBar"></div>
-        <div class="miniNote" style="margin-bottom:10px">勝率の定義：トレーダー＝シグナルが中立（—）でなかったラウンド、分析＝トレンドとテクニカルが一致したラウンド、判定＝見送りを除くベット候補のみ。実際の方向がFLATのラウンドは除き、表示中の直近最大96ラウンドで集計しています。</div>
+        <div class="miniNote" style="margin-bottom:10px">勝率の定義：トレーダー＝シグナルが中立（—）でなかったラウンド、分析＝トレンドとテクニカルが一致したラウンド、判定＝見送りを除くベット候補のみ。実際の方向がFLATのラウンドは除き、決着済みの全ラウンドで集計しています。</div>
         <div class="tableWrap">
           <table class="log">
             <thead><tr><th>時刻</th><th>トレーダー</th><th>分析</th><th>判定</th><th>結果</th></tr></thead>
@@ -1247,7 +1247,7 @@ if(statsBox)statsBox.innerHTML=
 +'<div class="kv"><span class="k">損益</span><span class="v" style="color:'+pnlCol(sim.pnl)+'">'+pnlTxt(sim.pnl)+'</span></div>'
 +'<div class="miniNote">ベット候補のラウンドに毎回 '+(sim.stake_per_round??4)+' USDT を賭けたと仮定した等倍モデル（的中で回収 '+((sim.stake_per_round??4)*(sim.payout_multiple??2))+' USDT、はずれは 0、実際の方向が FLAT の場合は賭け金返金）で、手数料はなし。あくまでシミュレーションで、実際のベットは行いません。</div>'
 +'</div>';
-if(rateBar){const rr=p15rates(d.rounds);rateBar.innerHTML='<div class="p15rateBar">'+p15rateHtml("トレーダー",rr.t)+p15rateHtml("分析",rr.a)+p15rateHtml("判定",rr.v)+'</div>'}
+if(rateBar){const sr=st.signal_rates;const rr=(sr&&sr.traders&&sr.analysis&&sr.verdict)?{t:{h:sr.traders.hits,n:sr.traders.total},a:{h:sr.analysis.hits,n:sr.analysis.total},v:{h:sr.verdict.hits,n:sr.verdict.total}}:p15rates(d.rounds);rateBar.innerHTML='<div class="p15rateBar">'+p15rateHtml("トレーダー",rr.t)+p15rateHtml("分析",rr.a)+p15rateHtml("判定",rr.v)+'</div>'}
 if(body){
 const rows=(d.rounds||[]).map(r=>{
 const tc=r.traders_counts||{};

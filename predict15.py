@@ -35,6 +35,13 @@ Pages rebuild can take 1-2 minutes) this script:
      reads (next round, accuracy stats, recent rounds merged from the
      JSONL log).
 
+With `--settle-only` (dispatched at :02/:17/:32/:47 with workflow
+input mode=settle) the run performs only steps 1 and 3 - it settles
+finished rounds and rewrites the summary, but never creates a new
+prediction - so results appear on the dashboard a couple of minutes
+after a round ends instead of waiting for the next prediction run.
+Without the flag the behaviour is exactly as described above.
+
 Records live in docs/predict15.jsonl as two line types:
   {"type": "prediction", round_start_ts, round_end_ts, predicted_at_ts,
    price_at_prediction, signals{traders,trend,technical},
@@ -48,6 +55,14 @@ Accuracy definitions (also shown on the dashboard):
   bet rate - settled bet rounds only (verdict UP/DOWN, actual UP/DOWN)
   all rate - every settled round is in the denominator; only bet hits
              count in the numerator (a SKIP round can never be a hit)
+  signal rates - computed here over ALL settled rounds and stored in
+             the summary as stats.signal_rates, so the dashboard's
+             win-rate bar renders exactly these numbers instead of
+             recomputing them from the (truncated) rounds list:
+             traders = rounds where the traders signal was UP/DOWN,
+             analysis = rounds where trend and technical agreed on a
+             direction, verdict = the bet rounds above. Rounds whose
+             actual direction is FLAT are excluded from all three.
 
 Bet simulation (paper only, no real orders): every settled bet round
 (verdict UP/DOWN) is treated as a flat BET_USDT stake under an
@@ -470,6 +485,26 @@ def build_summary(predictions, results, now_ts):
     bet_hits = sum(1 for r in bet if r["hit"])
     all_hits = sum(1 for r in settled_rounds if r["hit"])
 
+    def _sig_rate(pairs):
+        total = len(pairs)
+        hits = sum(1 for dir_, act in pairs if dir_ == act)
+        return {"hits": hits, "total": total,
+                "rate": (hits / total) if total else None}
+
+    directional = [r for r in settled_rounds
+                   if r["actual"] in ("UP", "DOWN")]
+    signal_rates = {
+        "traders": _sig_rate([
+            (r["signals"]["traders"], r["actual"]) for r in directional
+            if r["signals"]["traders"] in ("UP", "DOWN")]),
+        "analysis": _sig_rate([
+            (r["signals"]["trend"], r["actual"]) for r in directional
+            if r["signals"]["trend"] in ("UP", "DOWN")
+            and r["signals"]["trend"] == r["signals"]["technical"]]),
+        "verdict": _sig_rate([
+            (r["verdict"], r["actual"]) for r in bet]),
+    }
+
     sim_rounds = [r for r in settled_rounds if r["sim"]]
     sim_invested = sum(r["sim"]["stake"] for r in sim_rounds)
     sim_returned = sum(r["sim"]["payout"] for r in sim_rounds)
@@ -491,6 +526,7 @@ def build_summary(predictions, results, now_ts):
         "all_rounds": len(settled_rounds),
         "all_hits": all_hits,
         "all_rate": (all_hits / len(settled_rounds)) if settled_rounds else None,
+        "signal_rates": signal_rates,
         "sim": sim,
     }
 
@@ -561,7 +597,7 @@ def self_commit():
 
 # ---------------------------------------------------------------- main
 
-def run():
+def run(settle_only=False):
     now_ts = int(time.time())
     predictions, results = read_log()
 
@@ -570,7 +606,9 @@ def run():
         print(f"predict15: settled {settled} round(s)")
 
     target = (now_ts // ROUND_SEC + 1) * ROUND_SEC
-    if target in predictions:
+    if settle_only:
+        print("predict15: settle-only run; skipping prediction")
+    elif target in predictions:
         print(f"predict15: prediction for {iso(target)} already exists, "
               "skipping")
     else:
@@ -614,8 +652,9 @@ def run():
 
 
 def main():
+    settle_only = "--settle-only" in sys.argv[1:]
     try:
-        run()
+        run(settle_only=settle_only)
     except RateLimited as exc:
         print(f"predict15: rate limited, stopping: {exc}", file=sys.stderr)
         return 1
