@@ -452,37 +452,87 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
 
     <!-- ===== 15分予測 ===== -->
     <section class="page" id="page-predict15">
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=DotGothic16&display=swap" rel="stylesheet">
       <style>
-      .p15chip{display:inline-block;font-size:.82em;font-weight:800;padding:2px 11px;border-radius:999px;color:#fff;white-space:nowrap}
-      .p15up{background:#2ea86a}.p15down{background:#e5484d}.p15na{background:#9aa0a6}
-      .p15verdict{font-size:34px;font-weight:900;line-height:1.15}
-      .p15sigRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px dashed rgba(0,0,0,.08)}
-      .p15sigName{font-weight:700}
-      .p15sigSub{font-size:.85em;opacity:.8;font-weight:400}
-      .p15bet{font-size:1.05em;padding:4px 15px;box-shadow:0 0 0 2px rgba(0,0,0,.14),0 2px 8px rgba(0,0,0,.25)}
-      .p15betTag{font-size:.72em;font-weight:800;color:#b26a00;margin-top:3px;letter-spacing:.04em}
-      .p15mis{display:inline-block;background:#fff1d6;border:1px solid #f0b95a;border-radius:8px;padding:2px 8px;white-space:nowrap}
-      .p15misTag{font-size:.72em;font-weight:800;color:#b26a00;margin-top:3px}
-      .p15markOk{color:#2ea86a;font-size:1.3em}
-      .p15markNg{color:#e5484d;font-size:1.3em}
-      .p15pxSub{font-size:.78em;opacity:.65;margin-top:2px;white-space:nowrap}
-      .p15rateBar{display:flex;gap:10px;margin:2px 0 6px}
-      .p15rate{flex:1;text-align:center;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:8px 4px}
-      .p15rateVal{font-size:22px;font-weight:900;line-height:1.2}
-      .p15rateLab{font-size:.8em;font-weight:700;opacity:.75}
-      .p15brk{font-size:.78em;opacity:.8;margin-top:2px;white-space:nowrap}
+      /* ===== 15分予測：ドラクエ風RPGレイアウト ===== */
+      #page-predict15{background:linear-gradient(180deg,#00002c 0%,#000056 55%,#00002c 100%);border-radius:18px;padding:14px 12px 18px;font-family:"DotGothic16","M PLUS Rounded 1c",-apple-system,BlinkMacSystemFont,sans-serif;color:#fff}
+      #page-predict15 .dqWin{background:#010138;border:3px solid #fff;border-radius:10px;box-shadow:inset 0 0 0 3px #010138,inset 0 0 0 5px rgba(255,255,255,.9),0 6px 18px rgba(0,0,0,.5);padding:16px 16px 14px;margin-bottom:16px}
+      #page-predict15 .dqHead{font-size:20px;letter-spacing:.05em;margin-bottom:10px}
+      #page-predict15 .dqHead::before{content:"▶ ";color:#ffd94d}
+      .dqStatusFlex{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+      .dqCharBox{text-align:center;min-width:128px;flex:0 0 auto;margin:0 auto}
+      .dqCharWrap{position:relative;display:inline-block}
+      .dqChar{font-size:76px;line-height:1.1;filter:drop-shadow(0 5px 0 rgba(0,0,0,.4));animation:p15float 2.6s ease-in-out infinite}
+      .dqCharHurt{filter:grayscale(.6) sepia(.5) brightness(.72) drop-shadow(0 5px 0 rgba(0,0,0,.4))}
+      .dqCharDead{filter:grayscale(.3) opacity(.92) drop-shadow(0 5px 0 rgba(0,0,0,.4))}
+      .dqFx{position:absolute;top:-8px;right:-18px;font-size:26px;animation:p15spark 1.1s ease-in-out infinite}
+      .dqFxHurt{position:absolute;top:-6px;right:-16px;font-size:24px;animation:p15spin 2.2s linear infinite}
+      @keyframes p15float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+      @keyframes p15spark{0%,100%{transform:scale(1) rotate(0deg);opacity:1}50%{transform:scale(1.3) rotate(20deg);opacity:.75}}
+      @keyframes p15spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+      @keyframes p15blink{0%,60%{opacity:1}61%,100%{opacity:0}}
+      .dqCharName{font-size:19px;margin-top:6px}
+      .dqDeadTxt{color:#ff6b6b;font-size:17px;margin-top:2px}
+      .dqStatBox{flex:1 1 220px;min-width:210px}
+      .dqStatRow{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:5px 2px;border-bottom:1px dashed rgba(255,255,255,.3);font-size:17px}
+      .dqStatRow:last-child{border-bottom:none}
+      .dqHpBarWrap{display:flex;align-items:center;gap:8px;padding:5px 2px;border-bottom:1px dashed rgba(255,255,255,.3);font-size:17px}
+      .dqHpBar{flex:1;height:14px;border:2px solid #fff;border-radius:4px;background:rgba(255,255,255,.12);overflow:hidden}
+      .dqHpFill{height:100%;transition:width .6s ease}
+      .dqChestBox{text-align:center;flex:0 0 auto;margin:0 auto;animation:p15float 2.2s ease-in-out infinite}
+      .dqChestSvg{width:92px;height:auto;display:block;margin:0 auto}
+      .dqChestTxt{color:#ffd94d;font-size:16px;margin-top:2px}
+      .dqChestMini{width:26px;height:auto;vertical-align:-6px}
+      .dqMsgLine{font-size:16.5px;line-height:1.75;letter-spacing:.02em}
+      .dqMsgCursor{color:#ffd94d;animation:p15blink 1s steps(1) infinite}
+      #page-predict15 .kv{border-bottom:1px dashed rgba(255,255,255,.3)}
+      #page-predict15 .kv .k{color:#a9c1ff}
+      #page-predict15 .kv .v{color:#fff}
+      #page-predict15 .miniNote{color:#aebfff}
+      #page-predict15 .defNote{color:#aebfff}
+      #page-predict15 .tableWrap{border:2px solid rgba(255,255,255,.55);border-radius:8px}
+      #page-predict15 table.log th{background:rgba(255,255,255,.15);color:#fff}
+      #page-predict15 table.log td{color:#eef2ff;border-bottom:1px solid rgba(255,255,255,.16)}
+      #page-predict15 table.log tr:nth-child(even) td{background:rgba(255,255,255,.05)}
+      .p15chip{display:inline-block;font-size:.82em;padding:2px 11px;border:2px solid rgba(255,255,255,.85);border-radius:6px;color:#fff;white-space:nowrap}
+      .p15up{background:#1d9e57}.p15down{background:#d92f35}.p15na{background:#5a6478}
+      .p15verdict{font-size:36px;line-height:1.15;letter-spacing:.03em}
+      .p15sigRow{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 2px;border-bottom:1px dashed rgba(255,255,255,.3)}
+      .p15sigName{font-weight:400}
+      .p15sigSub{font-size:.85em;opacity:.8}
+      .p15bet{font-size:1.05em;padding:4px 15px;box-shadow:0 0 0 2px #ffd94d,0 2px 8px rgba(0,0,0,.4)}
+      .p15betTag{font-size:.72em;color:#ffd94d;margin-top:3px;letter-spacing:.04em}
+      .p15mis{display:inline-block;background:rgba(255,217,77,.15);border:1px solid #ffd94d;border-radius:6px;padding:1px 6px;white-space:nowrap}
+      .p15misTag{font-size:.72em;color:#ffd94d;margin-top:3px}
+      .p15markOk{color:#4be07a;font-size:1.3em}
+      .p15markNg{color:#ff6b6b;font-size:1.3em}
+      .p15pxSub{font-size:.78em;opacity:.7;margin-top:2px;white-space:nowrap}
+      .p15rateBar{display:flex;gap:10px;margin:2px 0 6px;flex-wrap:wrap}
+      .p15rate{flex:1 1 90px;text-align:center;background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.55);border-radius:8px;padding:8px 4px}
+      .p15rateVal{font-size:22px;line-height:1.2}
+      .p15rateLab{font-size:.8em;opacity:.85}
+      .p15brk{font-size:.78em;opacity:.85;margin-top:2px;white-space:nowrap}
+      @media (max-width:560px){.dqChar{font-size:60px}.dqChestSvg{width:74px}#page-predict15 .dqWin{padding:13px 12px 11px}}
       </style>
-      <div class="card">
-        <h2><span class="hic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#7fd4ff"/><path d="M12 6.8 V12 L15.6 14.2" stroke="#1d6fb8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 1.4 L14.2 4.6 H9.8 Z" fill="#e546b0"/></svg></span>15分UP/DOWN予測（計測専用）</h2>
-        <div class="miniNote">15分ごとのラウンド（:00 / :15 / :30 / :45 開始）について、開始の約3分前に予測します。判定は「分析」（トレンドとテクニカル）だけで決め、この2つが一致した時だけ「ベット候補」、食い違いや中立があれば「見送り」です。「トレーダー」は参考表示で、判定には使いません。これは予測の計測・表示専用で、実ベットや注文は行いません。</div>
+      <div class="dqWin">
+        <div id="p15Status"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="dqWin">
+        <div id="p15Msg"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="dqWin">
+        <div class="dqHead">つぎの ラウンドの よそう</div>
+        <div class="miniNote" style="margin-bottom:8px">15分ごとのラウンド（:00 / :15 / :30 / :45 開始）について、開始の約3分前に予測します。判定は「分析」（トレンドとテクニカル）だけで決め、この2つが一致した時だけ「ベット候補」、食い違いや中立があれば「見送り」です。「トレーダー」は参考表示で、判定には使いません。これは予測の計測・表示専用で、実ベットや注文は行いません。</div>
         <div id="p15Next"><p class="defNote">データを読み込み中…</p></div>
       </div>
-      <div class="card">
-        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M12 2 L20 5 V11 C20 17 16.5 20.4 12 22 C7.5 20.4 4 17 4 11 V5 Z" fill="#8a5cf6"/><path d="M8.6 12.2 L11 14.6 L15.6 9.6" stroke="#fff" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></span>予測の成績</h2>
+      <div class="dqWin">
+        <div class="dqHead">せいせき</div>
         <div id="p15Stats"><p class="defNote">データを読み込み中…</p></div>
       </div>
-      <div class="card">
-        <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>予測ログ</h2>
+      <div class="dqWin">
+        <div class="dqHead">よそう ログ</div>
         <div id="p15RateBar"></div>
         <div class="miniNote" style="margin-bottom:10px">勝率の定義：トレーダー＝シグナルが中立（—）でなかったラウンド（参考表示で、判定には使いません）、分析＝トレンドとテクニカルが一致したラウンド、判定＝見送りを除くベット候補のみ。実際の方向がFLATのラウンドは除き、決着済みの全ラウンドで集計しています。</div>
         <div class="tableWrap">
@@ -1199,21 +1249,21 @@ document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});
 function p15time(isoStr){if(!isoStr)return"--";const dt=new Date(isoStr);if(Number.isNaN(dt.getTime()))return"--";return dt.toLocaleString("ja-JP",{timeZone:"Asia/Tokyo",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit",hour12:false})}
 function p15px(v){const x=Number(v);if(!Number.isFinite(x))return"--";return "$"+x.toLocaleString("en-US",{maximumFractionDigits:1})}
 function p15chip(v){if(v==="UP")return '<span class="p15chip p15up">UP</span>';if(v==="DOWN")return '<span class="p15chip p15down">DOWN</span>';if(v==="FLAT")return '<span class="p15chip p15na">FLAT</span>';return '<span class="p15chip p15na">—</span>'}
-function p15verdictHtml(v){if(v==="UP")return '<span style="color:#2ea86a">UP</span> <span style="font-size:16px">ベット候補</span>';if(v==="DOWN")return '<span style="color:#e5484d">DOWN</span> <span style="font-size:16px">ベット候補</span>';return '<span style="color:#9aa0a6">見送り</span>'}
+function p15verdictHtml(v){if(v==="UP")return '<span style="color:#4be07a">UP</span> <span style="font-size:16px">ベット候補</span>';if(v==="DOWN")return '<span style="color:#ff6b6b">DOWN</span> <span style="font-size:16px">ベット候補</span>';return '<span style="color:#c0c8d8">見送り</span>'}
 function p15dirTxt(v){return v==="UP"?"UP":(v==="DOWN"?"DOWN":"—")}
-function p15dirCol(v){return v==="UP"?"#2ea86a":(v==="DOWN"?"#e5484d":"#9aa0a6")}
+function p15dirCol(v){return v==="UP"?"#4be07a":(v==="DOWN"?"#ff6b6b":"#c0c8d8")}
 function p15analysisHtml(tr,te){const a=tr||"NEUTRAL",b=te||"NEUTRAL";const inner='<b style="color:'+p15dirCol(a)+'">'+p15dirTxt(a)+'</b><span style="opacity:.5"> / </span><b style="color:'+p15dirCol(b)+'">'+p15dirTxt(b)+'</b>';if(a!==b)return '<span class="p15mis">'+inner+'</span><div class="p15misTag">不一致</div>';return inner}
 function p15verdictCell(v){if(v==="UP"||v==="DOWN")return '<span class="p15chip '+(v==="UP"?"p15up":"p15down")+' p15bet">'+v+'</span><div class="p15betTag">ベット候補</div>';return '<span class="p15chip p15na">見送り</span>'}
 function p15markFor(dir,actual){if((dir==="UP"||dir==="DOWN")&&(actual==="UP"||actual==="DOWN"))return dir===actual?"○":"×";return "—"}
-function p15simHtml(r){if(!r.sim)return"";const p=Number(r.sim.pnl);if(r.actual==="FLAT")return '<div class="p15brk">シミュ ±0（返金）</div>';const col=p>0?"#2ea86a":(p<0?"#e5484d":"inherit");const txt=(p>0?"+":p<0?"−":"±")+Math.abs(p).toLocaleString("en-US",{maximumFractionDigits:2});return '<div class="p15brk">シミュ <b style="color:'+col+'">'+txt+' USDT</b></div>'}
+function p15simHtml(r){if(!r.sim)return"";const p=Number(r.sim.pnl);if(r.actual==="FLAT")return '<div class="p15brk">シミュ ±0（返金）</div>';const col=p>0?"#4be07a":(p<0?"#ff6b6b":"inherit");const txt=(p>0?"+":p<0?"−":"±")+Math.abs(p).toLocaleString("en-US",{maximumFractionDigits:2});return '<div class="p15brk">シミュ <b style="color:'+col+'">'+txt+' USDT</b></div>'}
 function p15resultHtml(r){if(!r.settled)return "—";const sg=r.signals||{};let s=r.actual?p15chip(r.actual):"—";if(r.hit===true)s+=' <b class="p15markOk">○</b>';else if(r.hit===false)s+=' <b class="p15markNg">×</b>';const anaDir=(sg.trend===sg.technical)?sg.trend:null;s+='<div class="p15brk">トレーダー '+p15markFor(sg.traders,r.actual)+'　分析 '+p15markFor(anaDir,r.actual)+'</div>';s+=p15simHtml(r);if(r.start_price!=null&&r.end_price!=null)s+='<div class="p15pxSub">'+p15px(r.start_price)+' → '+p15px(r.end_price)+'</div>';return s}
 function p15rates(rounds){const t={n:0,h:0},a={n:0,h:0},v={n:0,h:0};for(const r of (rounds||[])){if(!r.settled)continue;const act=r.actual;if(act!=="UP"&&act!=="DOWN")continue;const sg=r.signals||{};if(sg.traders==="UP"||sg.traders==="DOWN"){t.n++;if(sg.traders===act)t.h++}if((sg.trend==="UP"||sg.trend==="DOWN")&&sg.trend===sg.technical){a.n++;if(sg.trend===act)a.h++}if(r.verdict==="UP"||r.verdict==="DOWN"){v.n++;if(r.hit===true)v.h++}}return{t,a,v}}
 function p15rateHtml(lab,x){const pct=x.n?Math.round(x.h/x.n*100)+"%":"—";return '<div class="p15rate"><div class="p15rateVal">'+pct+'</div><div class="p15rateLab">'+lab+'（'+x.h+'/'+x.n+'）</div></div>'}
 async function p15fetch(){for(const p of ["./predict15.json","./docs/predict15.json"]){try{const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"});if(r.ok)return await r.json()}catch(e){}}return null}
 function p15render(d){
-const nextBox=document.getElementById("p15Next"),statsBox=document.getElementById("p15Stats"),body=document.getElementById("p15LogBody"),rateBar=document.getElementById("p15RateBar");
+const nextBox=document.getElementById("p15Next"),statsBox=document.getElementById("p15Stats"),body=document.getElementById("p15LogBody"),rateBar=document.getElementById("p15RateBar"),statusBox=document.getElementById("p15Status"),msgBox=document.getElementById("p15Msg");
 if(!nextBox)return;
-if(!d){nextBox.innerHTML='<p class="defNote">予測データがまだありません（初回の予測は次のラウンド開始の約3分前に生成されます）</p>';if(statsBox)statsBox.innerHTML="";if(body)body.innerHTML="";if(rateBar)rateBar.innerHTML="";return}
+if(!d){nextBox.innerHTML='<p class="defNote">予測データがまだありません（初回の予測は次のラウンド開始の約3分前に生成されます）</p>';if(statsBox)statsBox.innerHTML="";if(body)body.innerHTML="";if(rateBar)rateBar.innerHTML="";if(statusBox)statusBox.innerHTML="";if(msgBox)msgBox.innerHTML="";return}
 const nx=d.next_round;
 if(nx){
 const tc=nx.traders_counts||{};
@@ -1233,7 +1283,7 @@ const rate=v=>(v===null||v===undefined)?"--":(v*100).toFixed(1)+"%";
 const sim=st.sim||{};
 const usdt=v=>(v===null||v===undefined)?"--":Number(v).toLocaleString("en-US",{maximumFractionDigits:2})+" USDT";
 const pnlTxt=v=>(v===null||v===undefined)?"--":((v>0?"+":v<0?"−":"±")+Math.abs(Number(v)).toLocaleString("en-US",{maximumFractionDigits:2})+" USDT");
-const pnlCol=v=>v>0?"#2ea86a":(v<0?"#e5484d":"inherit");
+const pnlCol=v=>v>0?"#4be07a":(v<0?"#ff6b6b":"inherit");
 if(statsBox)statsBox.innerHTML=
 '<div class="kv"><span class="k">ベット候補の的中率</span><span class="v">'+rate(st.bet_rate)+'（'+(st.bet_hits??0)+' / '+(st.bet_rounds??0)+'）</span></div>'
 +'<div class="kv"><span class="k">全体の的中率</span><span class="v">'+rate(st.all_rate)+'（'+(st.all_hits??0)+' / '+(st.all_rounds??0)+'）</span></div>'
@@ -1256,6 +1306,81 @@ return '<tr><td>'+p15time(r.round_start_iso)+'</td><td>'+p15chip(sg.traders)+' <
 }).join("");
 body.innerHTML=rows||'<tr><td colspan="5">まだ記録がありません</td></tr>';
 }
+const q15=p15quest(d.rounds);
+if(statusBox)statusBox.innerHTML=p15statusHtml(q15);
+if(msgBox)msgBox.innerHTML=p15msgHtml(q15,nx);
+}
+function p15hm(isoStr){if(!isoStr)return"--";const dt=new Date(isoStr);if(Number.isNaN(dt.getTime()))return"--";return dt.toLocaleString("ja-JP",{timeZone:"Asia/Tokyo",hour:"2-digit",minute:"2-digit",hour12:false})}
+function p15chestSvg(open,cls){
+if(open)return '<svg class="'+cls+'" viewBox="0 0 64 52" aria-hidden="true"><g transform="rotate(-26 10 30)"><path d="M8 30 Q8 14 32 14 Q56 14 56 30 Z" fill="#b57a3a"/><rect x="28" y="14" width="8" height="16" fill="#ffd94d"/></g><ellipse cx="32" cy="29" rx="19" ry="4.5" fill="#ffe98a"/><rect x="8" y="29" width="48" height="15" rx="2" fill="#96582a"/><rect x="28" y="29" width="8" height="15" fill="#ffd94d"/></svg>';
+return '<svg class="'+cls+'" viewBox="0 0 64 52" aria-hidden="true"><path d="M8 27 Q8 11 32 11 Q56 11 56 27 Z" fill="#b57a3a"/><rect x="8" y="27" width="48" height="17" rx="2" fill="#96582a"/><rect x="28" y="11" width="8" height="33" fill="#ffd94d"/><rect x="26.5" y="24" width="11" height="11" rx="2" fill="#ffd94d" stroke="#a67c00" stroke-width="1.5"/><circle cx="32" cy="29.5" r="2.2" fill="#7a4d00"/></svg>';
+}
+function p15quest(rounds){
+const list=[...(rounds||[])].reverse();
+let hp=100,dead=false,chests=0,betSettled=0,lastType=null;const events=[];
+for(const r of list){
+if(!r||!r.settled)continue;
+const isBet=r.verdict==="UP"||r.verdict==="DOWN";
+if(!isBet){events.push({type:"skip",r});lastType="skip";continue}
+if(r.hit===null||r.hit===undefined){events.push({type:"flat",r});lastType="flat";continue}
+betSettled++;
+if(r.hit===true){
+chests++;
+if(dead){hp=30;dead=false;events.push({type:"revive",r});lastType="revive"}
+else{hp=Math.min(100,hp+10);events.push({type:"hit",r});lastType="hit"}
+}else{
+hp=Math.max(0,hp-20);
+if(hp<=0&&!dead){dead=true;events.push({type:"death",r});lastType="death"}
+else{events.push({type:"miss",r});lastType="miss"}
+}
+}
+return{hp,dead,chests,betSettled,level:1+Math.floor(betSettled/5),events,lastType};
+}
+function p15statusHtml(q){
+const hpPct=Math.max(0,Math.min(100,q.hp));
+const hpCol=q.dead?"#8a8f9e":(q.hp>50?"#3ddc5a":(q.hp>20?"#ffd94d":"#ff5252"));
+let charEmoji="\u{1F9D9}\u{200D}\u{2640}\u{FE0F}",charCls="dqChar",fx="";
+if(q.dead){charEmoji="\u{1F47B}";charCls+=" dqCharDead"}
+else if(q.lastType==="hit"||q.lastType==="revive"){fx='<span class="dqFx">\u{2728}</span>'}
+else if(q.lastType==="miss"||q.hp<=40){charCls+=" dqCharHurt";fx='<span class="dqFxHurt">\u{1F4AB}</span>'}
+const stateTxt=q.dead?"しんでしまった！":(q.hp<=40?"ススまみれ…（ピンチ）":(q.lastType==="miss"?"ダメージを うけている":"げんき"));
+let h='<div class="dqStatusFlex"><div class="dqCharBox"><div class="dqCharWrap"><div class="'+charCls+'">'+charEmoji+'</div>'+fx+'</div><div class="dqCharName">まほうしょうじょ</div>'+(q.dead?'<div class="dqDeadTxt">しんでしまった！</div>':"")+'</div>'
++'<div class="dqStatBox">'
++'<div class="dqStatRow"><span>レベル</span><b>LV '+q.level+'</b></div>'
++'<div class="dqHpBarWrap"><span>HP</span><div class="dqHpBar"><div class="dqHpFill" style="width:'+hpPct+'%;background:'+hpCol+'"></div></div><b>'+q.hp+' / 100</b></div>'
++'<div class="dqStatRow"><span>たからばこ</span><b>'+p15chestSvg(false,"dqChestMini")+' \u{D7} '+q.chests+'</b></div>'
++'<div class="dqStatRow"><span>じょうたい</span><b>'+stateTxt+'</b></div>'
++'<div class="dqStatRow"><span>たたかった かいすう</span><b>'+q.betSettled+' かい</b></div>'
++'</div>';
+if(q.lastType==="hit"||q.lastType==="revive"){
+h+='<div class="dqChestBox">'+p15chestSvg(true,"dqChestSvg")+'<div class="dqChestTxt">たからばこを あけた！</div></div>';
+}
+h+='</div>';
+return h;
+}
+function p15pnlTxt(r){
+if(!r.sim)return"";
+const p=Number(r.sim.pnl);
+if(!Number.isFinite(p))return"";
+if(r.actual==="FLAT")return"（\u{B1}0 USDT）";
+return"（"+(p>0?"+":"-")+Math.abs(p).toLocaleString("en-US",{maximumFractionDigits:2})+" USDT）";
+}
+function p15msgHtml(q,nx){
+const lines=[];
+const evs=q.events.slice(-4);
+for(const e of evs){
+const r=e.r,t=p15hm(r.round_start_iso);
+if(e.type==="skip"){lines.push("まほうしょうじょは ようすを みている（"+t+"・見送り）");continue}
+lines.push(t+"の たたかい！ まほうしょうじょの よそうは "+r.verdict+"！");
+if(e.type==="hit")lines.push("かいしんの いちげき！ たからばこを てにいれた！"+p15pnlTxt(r));
+else if(e.type==="revive"){lines.push("かいしんの いちげき！ たからばこを てにいれた！"+p15pnlTxt(r));lines.push("まほうしょうじょは いきかえった！（HP 30で ふっかつ）")}
+else if(e.type==="miss")lines.push("つうこんの いちげき…！ まほうしょうじょは 20の ダメージを うけた"+p15pnlTxt(r));
+else if(e.type==="death"){lines.push("つうこんの いちげき…！ まほうしょうじょは 20の ダメージを うけた"+p15pnlTxt(r));lines.push("まほうしょうじょは しんでしまった！")}
+else if(e.type==="flat")lines.push("ひきわけ！ ダメージは なかった"+p15pnlTxt(r));
+}
+if(nx)lines.push("つぎの たたかいは "+p15time(nx.round_start_iso)+" スタート！ よそうは "+((nx.verdict==="UP"||nx.verdict==="DOWN")?nx.verdict+"（ベット候補）":"見送り"));
+if(!lines.length)lines.push("まほうしょうじょは たたかいの じゅんびを している…");
+return lines.map(s=>'<div class="dqMsgLine">'+s+'</div>').join("")+'<div class="dqMsgLine"><span class="dqMsgCursor">\u{25BC}</span></div>';
 }
 async function loadPredict15(){try{p15render(await p15fetch())}catch(e){console.warn("predict15",e)}}
 loadPredict15();
