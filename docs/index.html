@@ -466,6 +466,11 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       .p15markOk{color:#2ea86a;font-size:1.3em}
       .p15markNg{color:#e5484d;font-size:1.3em}
       .p15pxSub{font-size:.78em;opacity:.65;margin-top:2px;white-space:nowrap}
+      .p15rateBar{display:flex;gap:10px;margin:2px 0 6px}
+      .p15rate{flex:1;text-align:center;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:8px 4px}
+      .p15rateVal{font-size:22px;font-weight:900;line-height:1.2}
+      .p15rateLab{font-size:.8em;font-weight:700;opacity:.75}
+      .p15brk{font-size:.78em;opacity:.8;margin-top:2px;white-space:nowrap}
       </style>
       <div class="card">
         <h2><span class="hic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#7fd4ff"/><path d="M12 6.8 V12 L15.6 14.2" stroke="#1d6fb8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 1.4 L14.2 4.6 H9.8 Z" fill="#e546b0"/></svg></span>15分UP/DOWN予測（計測専用）</h2>
@@ -478,13 +483,15 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       </div>
       <div class="card">
         <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>予測ログ</h2>
+        <div id="p15RateBar"></div>
+        <div class="miniNote" style="margin-bottom:10px">勝率の定義：トレーダー＝シグナルが中立（—）でなかったラウンド、分析＝トレンドとテクニカルが一致したラウンド、判定＝見送りを除くベット候補のみ。実際の方向がFLATのラウンドは除き、表示中の直近最大96ラウンドで集計しています。</div>
         <div class="tableWrap">
           <table class="log">
             <thead><tr><th>時刻</th><th>トレーダー</th><th>分析</th><th>判定</th><th>結果</th></tr></thead>
             <tbody id="p15LogBody"></tbody>
           </table>
         </div>
-        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。</div>
+        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。結果欄の内訳（トレーダー／分析の ○×）は、各シグナルが実際の方向と一致したかどうかで、対象外の場合は — です。</div>
       </div>
     </section>
 
@@ -1197,12 +1204,15 @@ function p15dirTxt(v){return v==="UP"?"UP":(v==="DOWN"?"DOWN":"—")}
 function p15dirCol(v){return v==="UP"?"#2ea86a":(v==="DOWN"?"#e5484d":"#9aa0a6")}
 function p15analysisHtml(tr,te){const a=tr||"NEUTRAL",b=te||"NEUTRAL";const inner='<b style="color:'+p15dirCol(a)+'">'+p15dirTxt(a)+'</b><span style="opacity:.5"> / </span><b style="color:'+p15dirCol(b)+'">'+p15dirTxt(b)+'</b>';if(a!==b)return '<span class="p15mis">'+inner+'</span><div class="p15misTag">不一致</div>';return inner}
 function p15verdictCell(v){if(v==="UP"||v==="DOWN")return '<span class="p15chip '+(v==="UP"?"p15up":"p15down")+' p15bet">'+v+'</span><div class="p15betTag">ベット候補</div>';return '<span class="p15chip p15na">見送り</span>'}
-function p15resultHtml(r){if(!r.settled)return "—";let s=r.actual?p15chip(r.actual):"—";if(r.hit===true)s+=' <b class="p15markOk">○</b>';else if(r.hit===false)s+=' <b class="p15markNg">×</b>';if(r.start_price!=null&&r.end_price!=null)s+='<div class="p15pxSub">'+p15px(r.start_price)+' → '+p15px(r.end_price)+'</div>';return s}
+function p15markFor(dir,actual){if((dir==="UP"||dir==="DOWN")&&(actual==="UP"||actual==="DOWN"))return dir===actual?"○":"×";return "—"}
+function p15resultHtml(r){if(!r.settled)return "—";const sg=r.signals||{};let s=r.actual?p15chip(r.actual):"—";if(r.hit===true)s+=' <b class="p15markOk">○</b>';else if(r.hit===false)s+=' <b class="p15markNg">×</b>';const anaDir=(sg.trend===sg.technical)?sg.trend:null;s+='<div class="p15brk">トレーダー '+p15markFor(sg.traders,r.actual)+'　分析 '+p15markFor(anaDir,r.actual)+'</div>';if(r.start_price!=null&&r.end_price!=null)s+='<div class="p15pxSub">'+p15px(r.start_price)+' → '+p15px(r.end_price)+'</div>';return s}
+function p15rates(rounds){const t={n:0,h:0},a={n:0,h:0},v={n:0,h:0};for(const r of (rounds||[])){if(!r.settled)continue;const act=r.actual;if(act!=="UP"&&act!=="DOWN")continue;const sg=r.signals||{};if(sg.traders==="UP"||sg.traders==="DOWN"){t.n++;if(sg.traders===act)t.h++}if((sg.trend==="UP"||sg.trend==="DOWN")&&sg.trend===sg.technical){a.n++;if(sg.trend===act)a.h++}if(r.verdict==="UP"||r.verdict==="DOWN"){v.n++;if(r.hit===true)v.h++}}return{t,a,v}}
+function p15rateHtml(lab,x){const pct=x.n?Math.round(x.h/x.n*100)+"%":"—";return '<div class="p15rate"><div class="p15rateVal">'+pct+'</div><div class="p15rateLab">'+lab+'（'+x.h+'/'+x.n+'）</div></div>'}
 async function p15fetch(){for(const p of ["./predict15.json","./docs/predict15.json"]){try{const r=await fetch(p+"?t="+Date.now(),{cache:"no-store"});if(r.ok)return await r.json()}catch(e){}}return null}
 function p15render(d){
-const nextBox=document.getElementById("p15Next"),statsBox=document.getElementById("p15Stats"),body=document.getElementById("p15LogBody");
+const nextBox=document.getElementById("p15Next"),statsBox=document.getElementById("p15Stats"),body=document.getElementById("p15LogBody"),rateBar=document.getElementById("p15RateBar");
 if(!nextBox)return;
-if(!d){nextBox.innerHTML='<p class="defNote">予測データがまだありません（初回の予測は次のラウンド開始の約3分前に生成されます）</p>';if(statsBox)statsBox.innerHTML="";if(body)body.innerHTML="";return}
+if(!d){nextBox.innerHTML='<p class="defNote">予測データがまだありません（初回の予測は次のラウンド開始の約3分前に生成されます）</p>';if(statsBox)statsBox.innerHTML="";if(body)body.innerHTML="";if(rateBar)rateBar.innerHTML="";return}
 const nx=d.next_round;
 if(nx){
 const tc=nx.traders_counts||{};
@@ -1224,6 +1234,7 @@ if(statsBox)statsBox.innerHTML=
 +'<div class="kv"><span class="k">全体の的中率</span><span class="v">'+rate(st.all_rate)+'（'+(st.all_hits??0)+' / '+(st.all_rounds??0)+'）</span></div>'
 +'<div class="kv"><span class="k">決着済みラウンド</span><span class="v">'+(st.settled??0)+' 件</span></div>'
 +'<div class="miniNote">全体の的中率は、見送りラウンドも分母に入れた保守的な数字です（見送りは的中に数えません）。</div>';
+if(rateBar){const rr=p15rates(d.rounds);rateBar.innerHTML='<div class="p15rateBar">'+p15rateHtml("トレーダー",rr.t)+p15rateHtml("分析",rr.a)+p15rateHtml("判定",rr.v)+'</div>'}
 if(body){
 const rows=(d.rounds||[]).map(r=>{
 const tc=r.traders_counts||{};
