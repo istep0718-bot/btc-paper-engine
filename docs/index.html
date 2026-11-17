@@ -474,7 +474,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       </style>
       <div class="card">
         <h2><span class="hic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.2" fill="#7fd4ff"/><path d="M12 6.8 V12 L15.6 14.2" stroke="#1d6fb8" stroke-width="2.2" fill="none" stroke-linecap="round"/><path d="M12 1.4 L14.2 4.6 H9.8 Z" fill="#e546b0"/></svg></span>15分UP/DOWN予測（計測専用）</h2>
-        <div class="miniNote">15分ごとのラウンド（:00 / :15 / :30 / :45 開始）について、開始の約3分前に3つのシグナルで予測します。3シグナルが全て一致した時だけ「ベット候補」、1つでも食い違いや中立があれば「見送り」です。これは予測の計測・表示専用で、実ベットや注文は行いません。</div>
+        <div class="miniNote">15分ごとのラウンド（:00 / :15 / :30 / :45 開始）について、開始の約3分前に予測します。判定は「分析」（トレンドとテクニカル）だけで決め、この2つが一致した時だけ「ベット候補」、食い違いや中立があれば「見送り」です。「トレーダー」は参考表示で、判定には使いません。これは予測の計測・表示専用で、実ベットや注文は行いません。</div>
         <div id="p15Next"><p class="defNote">データを読み込み中…</p></div>
       </div>
       <div class="card">
@@ -484,14 +484,14 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
       <div class="card">
         <h2><span class="hic"><svg viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="3" fill="#ffd7ef"/><path d="M8 8.4 H16 M8 12.4 H16 M8 16.4 H13" stroke="#c2187a" stroke-width="1.9" stroke-linecap="round"/></svg></span>予測ログ</h2>
         <div id="p15RateBar"></div>
-        <div class="miniNote" style="margin-bottom:10px">勝率の定義：トレーダー＝シグナルが中立（—）でなかったラウンド、分析＝トレンドとテクニカルが一致したラウンド、判定＝見送りを除くベット候補のみ。実際の方向がFLATのラウンドは除き、決着済みの全ラウンドで集計しています。</div>
+        <div class="miniNote" style="margin-bottom:10px">勝率の定義：トレーダー＝シグナルが中立（—）でなかったラウンド（参考表示で、判定には使いません）、分析＝トレンドとテクニカルが一致したラウンド、判定＝見送りを除くベット候補のみ。実際の方向がFLATのラウンドは除き、決着済みの全ラウンドで集計しています。</div>
         <div class="tableWrap">
           <table class="log">
             <thead><tr><th>時刻</th><th>トレーダー</th><th>分析</th><th>判定</th><th>結果</th></tr></thead>
             <tbody id="p15LogBody"></tbody>
           </table>
         </div>
-        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「トレーダー」欄の数字はベスト10のロング人数／ショート人数です。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。結果欄の内訳（トレーダー／分析の ○×）は、各シグナルが実際の方向と一致したかどうかで、対象外の場合は — です。結果欄の「シミュ」は、ベット候補だった場合の賭け金シミュレーション（毎回4 USDT・等倍モデル）の損益です。</div>
+        <div class="miniNote" style="margin-top:12px">新しい順に最大96ラウンドまで表示しています。「分析」はトレンド（1時間足）／テクニカル（15分足）の併記で、2つが食い違う場合は「不一致」と目立たせています。「判定」はこの分析の一致だけで決まります。「トレーダー」欄の数字はベスト10のロング人数／ショート人数で、参考表示です（判定には使いません）。「結果」は実際の方向（そのラウンドの15分足の終値と始値の比較）で、ベット候補だった場合は的中を ○、不的中を × で示します。結果欄の内訳（トレーダー／分析の ○×）は、各シグナルが実際の方向と一致したかどうかで、対象外の場合は — です。結果欄の「シミュ」は、ベット候補だった場合の賭け金シミュレーション（毎回4 USDT・等倍モデル）の損益です。</div>
       </div>
     </section>
 
@@ -1220,7 +1220,7 @@ const tc=nx.traders_counts||{};
 nextBox.innerHTML=
 '<div class="kv"><span class="k">対象ラウンド</span><span class="v">'+p15time(nx.round_start_iso)+' 開始</span></div>'
 +'<div style="margin:10px 0 4px"><div class="p15verdict">'+p15verdictHtml(nx.verdict)+'</div></div>'
-+'<div class="p15sigRow"><span class="p15sigName">トップトレーダー <span class="p15sigSub">（ベスト10の建玉：ロング '+(tc.long??"--")+' / ショート '+(tc.short??"--")+' / なし '+(tc.flat??"--")+'）</span></span>'+p15chip(nx.signals.traders)+'</div>'
++'<div class="p15sigRow"><span class="p15sigName">トップトレーダー <span class="p15sigSub">（参考表示・判定には使いません／ベスト10の建玉：ロング '+(tc.long??"--")+' / ショート '+(tc.short??"--")+' / なし '+(tc.flat??"--")+'）</span></span>'+p15chip(nx.signals.traders)+'</div>'
 +'<div class="p15sigRow"><span class="p15sigName">トレンド <span class="p15sigSub">（1時間足）</span></span>'+p15chip(nx.signals.trend)+'</div>'
 +'<div class="p15sigRow"><span class="p15sigName">テクニカル <span class="p15sigSub">（15分足 RSI / MACD / EMA）</span></span>'+p15chip(nx.signals.technical)+'</div>'
 +'<div class="kv" style="margin-top:8px"><span class="k">予測時点のBTC価格</span><span class="v">'+p15px(nx.price_at_prediction)+'</span></div>'

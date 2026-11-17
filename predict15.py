@@ -29,8 +29,19 @@ Pages rebuild can take 1-2 minutes) this script:
                    (>=55 UP, <=45 DOWN, otherwise no vote), MACD
                    (12,26,9) histogram sign, EMA9 vs EMA21. Majority
                    of the cast votes decides; a tie is NEUTRAL.
-     The final verdict is UP or DOWN only when all three signals
-     agree; anything else is SKIP (the dashboard shows "見送り").
+     The final verdict comes from the two analysis signals only:
+     UP when trend and technical are both UP, DOWN when both are
+     DOWN, and SKIP (the dashboard shows "見送り") otherwise. The
+     traders signal is still computed, recorded, displayed and
+     graded on its own, but it is reference-only and never affects
+     the verdict (owner's decision, 2026-11-17: the best-10 cohort
+     is mostly flat, so requiring its agreement made bet rounds
+     vanishingly rare). The verdict is always derived from the
+     stored signals by derive_verdict() - at prediction time, at
+     settlement grading, and again on every summary rebuild - so
+     rounds recorded under an older verdict rule are re-graded
+     under the current one in the summary; the JSONL originals
+     themselves are never rewritten.
   3. Rewrites docs/predict15.json, the compact summary the dashboard
      reads (next round, accuracy stats, recent rounds merged from the
      JSONL log).
@@ -84,7 +95,7 @@ This script is fully independent of bot.py: it never reads or writes
 the paper-trading state, places no orders, and uses only read-only
 public APIs. It exists so the user can see a data-driven UP/DOWN call
 before each 15-minute round starts, and to measure whether the
-three-signal agreement rule actually predicts anything.
+trend/technical agreement rule actually predicts anything.
 
 Idempotency: a prediction for a round that already has one is never
 duplicated, and a settled round is never settled twice, so overlapping
@@ -386,6 +397,39 @@ def technical_signal(now_ts):
     return signal, details
 
 
+# ---------------------------------------------------------------- verdict
+
+def derive_verdict(signals):
+    """The bet verdict for a round, derived from its signals.
+
+    Only the two analysis signals decide: trend (1h) and technical
+    (15m). Both UP -> "UP", both DOWN -> "DOWN", anything else (they
+    disagree, or technical is NEUTRAL) -> "SKIP". The traders signal
+    is reference-only and never affects the verdict.
+
+    Every consumer - prediction creation, settlement grading, the
+    summary stats and the bet simulation - derives the verdict
+    through this one function, so records written under older rules
+    are re-graded consistently whenever the summary is rebuilt.
+    """
+    trend = signals.get("trend")
+    technical = signals.get("technical")
+    if trend == "UP" and technical == "UP":
+        return "UP"
+    if trend == "DOWN" and technical == "DOWN":
+        return "DOWN"
+    return "SKIP"
+
+
+def compute_hit(verdict, actual):
+    """Whether a bet-round verdict matched the actual direction.
+    None when there is nothing to grade (SKIP verdict, FLAT or
+    missing actual)."""
+    if verdict in ("UP", "DOWN") and actual in ("UP", "DOWN"):
+        return verdict == actual
+    return None
+
+
 # ---------------------------------------------------------------- settle
 
 def settle_pending(predictions, results, now_ts):
@@ -412,10 +456,8 @@ def settle_pending(predictions, results, now_ts):
             actual = "DOWN"
         else:
             actual = "FLAT"
-        verdict = predictions[start_ts]["verdict"]
-        hit = None
-        if verdict in ("UP", "DOWN") and actual in ("UP", "DOWN"):
-            hit = verdict == actual
+        verdict = derive_verdict(predictions[start_ts]["signals"])
+        hit = compute_hit(verdict, actual)
         result = {
             "type": "result",
             "round_start_ts": start_ts,
@@ -458,6 +500,13 @@ def build_summary(predictions, results, now_ts):
     for start_ts in sorted(predictions, reverse=True):
         pred = predictions[start_ts]
         res = results.get(start_ts)
+        # The verdict and hit shown (and aggregated) here are always
+        # re-derived from the stored signals under the current rule,
+        # never copied from the stored record: rounds logged under an
+        # older verdict rule are re-graded on every summary rebuild.
+        verdict = derive_verdict(pred["signals"])
+        actual = res["actual"] if res else None
+        hit = compute_hit(verdict, actual) if res else None
         rounds.append({
             "round_start_ts": start_ts,
             "round_start_iso": pred["round_start_iso"],
@@ -468,15 +517,13 @@ def build_summary(predictions, results, now_ts):
                 k: pred["signal_details"]["traders"][k]
                 for k in ("long", "short", "flat")
             },
-            "verdict": pred["verdict"],
+            "verdict": verdict,
             "start_price": res["start_price"] if res else None,
             "end_price": res["end_price"] if res else None,
-            "actual": res["actual"] if res else None,
-            "hit": res["hit"] if res else None,
+            "actual": actual,
+            "hit": hit,
             "settled": res is not None,
-            "sim": sim_for_round(pred["verdict"],
-                                 res["actual"] if res else None,
-                                 res["hit"] if res else None),
+            "sim": sim_for_round(verdict, actual, hit),
         })
 
     settled_rounds = [r for r in rounds if r["settled"]]
@@ -619,12 +666,7 @@ def run(settle_only=False):
         technical, technical_details = technical_signal(now_ts)
         signals = {"traders": traders, "trend": trend,
                    "technical": technical}
-        if traders == trend == technical == "UP":
-            verdict = "UP"
-        elif traders == trend == technical == "DOWN":
-            verdict = "DOWN"
-        else:
-            verdict = "SKIP"
+        verdict = derive_verdict(signals)
         record = {
             "type": "prediction",
             "round_start_ts": target,
