@@ -1287,6 +1287,7 @@ nextBox.innerHTML=
 +'<div class="p15sigRow"><span class="p15sigName">トップトレーダー <span class="p15sigSub">（参考表示・判定には使いません／ベスト10の建玉：ロング '+(tc.long??"--")+' / ショート '+(tc.short??"--")+' / なし '+(tc.flat??"--")+'）</span></span>'+p15chip(nx.signals.traders)+'</div>'
 +'<div class="p15sigRow"><span class="p15sigName">トレンド <span class="p15sigSub">（1時間足）</span></span>'+p15chip(nx.signals.trend)+'</div>'
 +'<div class="p15sigRow"><span class="p15sigName">テクニカル <span class="p15sigSub">（15分足 RSI / MACD / EMA）</span></span>'+p15chip(nx.signals.technical)+'</div>'
++'<div class="kv"><span class="k">相場環境（1時間足 ADX）</span><span class="v">'+(nx.regime==="RANGE"?"レンジ相場":nx.regime==="TREND"?"トレンド相場":nx.regime==="WEAK_TREND"?"弱いトレンド":nx.regime?(nx.regime):"—")+(nx.regime==="RANGE"?"（トレンド中立のため見送り）":"")+'</span></div>'
 +'<div class="kv" style="margin-top:8px"><span class="k">予測時点のBTC価格</span><span class="v">'+p15px(nx.price_at_prediction)+'</span></div>'
 +'<div class="kv"><span class="k">予測確定時刻</span><span class="v">'+p15time(nx.predicted_at_iso)+'</span></div>';
 }else{
@@ -1301,6 +1302,11 @@ const pnlCol=v=>v>0?"#4be07a":(v<0?"#ff6b6b":"inherit");
 if(statsBox)statsBox.innerHTML=
 '<div class="kv"><span class="k">ベット候補の的中率</span><span class="v">'+rate(st.bet_rate)+'（'+(st.bet_hits??0)+' / '+(st.bet_rounds??0)+'）</span></div>'
 +'<div class="kv"><span class="k">全体の的中率</span><span class="v">'+rate(st.all_rate)+'（'+(st.all_hits??0)+' / '+(st.all_rounds??0)+'）</span></div>'
++((st.coverage===null||st.coverage===undefined)?'':'<div class="kv"><span class="k">参加率（ベット候補の割合）</span><span class="v">'+rate(st.coverage)+'</span></div>')
++((st.by_direction&&st.by_direction.UP)?'<div class="kv"><span class="k">UP予測の的中率</span><span class="v">'+rate(st.by_direction.UP.rate)+'（'+(st.by_direction.UP.hits??0)+' / '+(st.by_direction.UP.total??0)+'）</span></div>':'')
++((st.by_direction&&st.by_direction.DOWN)?'<div class="kv"><span class="k">DOWN予測の的中率</span><span class="v">'+rate(st.by_direction.DOWN.rate)+'（'+(st.by_direction.DOWN.hits??0)+' / '+(st.by_direction.DOWN.total??0)+'）</span></div>':'')
++((st.streaks)?'<div class="kv"><span class="k">連続外れ</span><span class="v">最大 '+(st.streaks.max_miss??0)+' 回 / 現在 '+(st.streaks.current_miss??0)+' 回</span></div>':'')
++((st.sample_status==="insufficient")?'<div class="miniNote">標本数（ベット候補 '+(st.bet_rounds??0)+' 件）が判定に必要な '+(st.sample_threshold??100)+' 件に満たないため、的中率はまだ標本次第では未確定です。</div>':'')
 +'<div class="kv"><span class="k">決着済みラウンド</span><span class="v">'+(st.settled??0)+' 件</span></div>'
 +'<div class="miniNote">全体の的中率は、見送りラウンドも分母に入れた保守的な数字です（見送りは的中に数えません）。</div>'
 +'<div style="border-top:1px dashed rgba(0,0,0,.12);margin-top:10px;padding-top:8px">'

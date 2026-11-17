@@ -23,8 +23,11 @@ Pages rebuild can take 1-2 minutes) this script:
        trend     - 1h trend composite: sign of (EMA20 - EMA50),
                    sign of (close - EMA20) and sign of the EMA20 slope
                    over the last 3 bars; majority decides, the last
-                   candle's own direction breaks a 0 tie. Always
-                   UP or DOWN.
+                   candle's own direction breaks a 0 tie. Since
+                   strategy v2.0-regime the 1h ADX(14) also classifies
+                   the market regime: ADX < 20 is RANGE and the trend
+                   signal is NEUTRAL there (no forced direction in a
+                   ranging market); ADX >= 20 keeps the direction.
        technical - 15m composite of three votes: RSI(14) zone
                    (>=55 UP, <=45 DOWN, otherwise no vote), MACD
                    (12,26,9) histogram sign, EMA9 vs EMA21. Majority
@@ -36,11 +39,16 @@ Pages rebuild can take 1-2 minutes) this script:
      graded on its own, but it is reference-only and never affects
      the verdict (owner's decision, 2026-11-17: the best-10 cohort
      is mostly flat, so requiring its agreement made bet rounds
-     vanishingly rare). The verdict is always derived from the
-     stored signals by derive_verdict() - at prediction time, at
-     settlement grading, and again on every summary rebuild - so
-     rounds recorded under an older verdict rule are re-graded
-     under the current one in the summary; the JSONL originals
+     vanishingly rare). Since strategy v2.0-regime the verdict is
+     FROZEN at prediction time: each new prediction record carries
+     strategy_version and its verdict, and settlement grading and
+     summary rebuilds use frozen_verdict(), which returns the
+     stored verdict unchanged for versioned records, so a later
+     rule change never rewrites the published track record of a
+     newer strategy. Records written before versioning (v1, no
+     strategy_version) are interpreted by frozen_verdict() under
+     their frozen v1 rule - the analysis-only derive_verdict()
+     rule - see that function's docstring. The JSONL originals
      themselves are never rewritten.
   3. Rewrites docs/predict15.json, the compact summary the dashboard
      reads (next round, accuracy stats, recent rounds merged from the
@@ -130,6 +138,13 @@ EXCLUDE_ADDRESSES = {
 }
 BET_USDT = 4.0  # simulated stake per bet round
 PAYOUT_MULTIPLE = 2.0  # even-money binary: a hit returns stake * this
+STRATEGY_VERSION = "v2.0-regime"
+SAMPLE_INSUFFICIENT_THRESHOLD = 100  # bet rounds needed before stats are firm
+MACD_REL_THRESHOLD = 0.00005  # |macd_hist| / close below this casts no vote
+EMA_REL_THRESHOLD = 0.0002  # |ema9 - ema21| / close below this casts no vote
+ADX_RANGE_MAX = 20.0  # ADX below this is a ranging market
+ADX_TREND_MIN = 25.0  # ADX at/above this is a trending market
+HIGH_VOL_ATR_PCT = 0.008  # ATR/close at/above this flags HIGH_VOL
 PAUSE_SEC = 0.15  # between info API calls, same as whale_shadow.py
 USER_AGENT = "Mozilla/5.0 (compatible; predict15-logger/1.0)"
 RECENT_ROUNDS_IN_SUMMARY = 96
@@ -244,6 +259,8 @@ def rsi_last(closes, period=14):
     for i in range(period, len(gains)):
         avg_gain = (avg_gain * (period - 1) + gains[i]) / period
         avg_loss = (avg_loss * (period - 1) + losses[i]) / period
+    if avg_loss == 0 and avg_gain == 0:
+        return 50.0  # no movement at all: neutral, not 100
     if avg_loss == 0:
         return 100.0
     rs = avg_gain / avg_loss
@@ -258,6 +275,64 @@ def macd_hist_last(closes):
     macd = [a - b for a, b in zip(ema12, ema26)]
     signal = ema_series(macd, 9)
     return macd[-1] - signal[-1]
+
+
+def adx_atr_last(candles, period=14):
+    """Wilder ADX(period) and ATR(period) from OHLC candles.
+
+    Returns (adx, atr); either may be None when there are not enough
+    candles. A completely flat series yields ADX 0.0 / ATR 0.0."""
+    if len(candles) < 2 * period + 1:
+        return None, None
+    trs, pdms, mdms = [], [], []
+    for i in range(1, len(candles)):
+        h, l, pc = candles[i]["h"], candles[i]["l"], candles[i - 1]["c"]
+        ph, pl = candles[i - 1]["h"], candles[i - 1]["l"]
+        trs.append(max(h - l, abs(h - pc), abs(l - pc)))
+        up, dn = h - ph, pl - l
+        pdms.append(up if (up > dn and up > 0) else 0.0)
+        mdms.append(dn if (dn > up and dn > 0) else 0.0)
+
+    def _wilder(vals):
+        out = [None] * len(vals)
+        s = sum(vals[:period])
+        out[period - 1] = s
+        for i in range(period, len(vals)):
+            s = s - s / period + vals[i]
+            out[i] = s
+        return out
+
+    str_ = _wilder(trs)
+    spdm = _wilder(pdms)
+    smdm = _wilder(mdms)
+    dxs, dx_idx = [], []
+    for i in range(period - 1, len(trs)):
+        if not str_[i]:
+            dxs.append(0.0)
+        else:
+            pdi = 100.0 * spdm[i] / str_[i]
+            mdi = 100.0 * smdm[i] / str_[i]
+            denom = pdi + mdi
+            dxs.append(0.0 if denom == 0 else 100.0 * abs(pdi - mdi) / denom)
+        dx_idx.append(i)
+    if len(dxs) < period:
+        return None, (str_[-1] / period if str_[-1] is not None else None)
+    adx = sum(dxs[:period]) / period
+    for v in dxs[period:]:
+        adx = (adx * (period - 1) + v) / period
+    atr = str_[-1] / period if str_[-1] is not None else None
+    return adx, atr
+
+
+def check_candle_fresh(candles, now_ts, interval_sec, label):
+    """Guard: refuse to predict from stale data. The newest candle
+    must not be older than two bars of its interval."""
+    if not candles:
+        raise RuntimeError(f"no {label} candles")
+    last_ts = candles[-1]["t"] // 1000
+    if now_ts - last_ts > 2 * interval_sec:
+        raise RuntimeError(
+            f"stale {label} candles: last={iso(last_ts)} now={iso(now_ts)}")
 
 
 def sign_dir(value):
@@ -336,11 +411,16 @@ def traders_signal():
 
 
 def trend_signal(now_ts):
-    """1h trend composite; always UP or DOWN."""
+    """1h trend composite plus ADX/ATR market-regime classification.
+
+    Direction comes from the 3-vote EMA composite, except in a RANGE
+    regime (ADX(14) < 20), where the signal is NEUTRAL so the round
+    is skipped instead of forcing a direction."""
     candles = fetch_candles("1h", now_ts - 80 * 3600, now_ts)
     closes = [c["c"] for c in candles]
     if len(closes) < 55:
         raise RuntimeError(f"not enough 1h candles: {len(closes)}")
+    check_candle_fresh(candles, now_ts, 3600, "1h")
     ema20 = ema_series(closes, 20)
     ema50 = ema_series(closes, 50)
     score = 0
@@ -353,12 +433,32 @@ def trend_signal(now_ts):
         signal = "DOWN"
     else:  # unreachable with 3 odd votes, kept as a safety net
         signal = "UP" if closes[-1] >= candles[-1]["o"] else "DOWN"
+    adx, atr = adx_atr_last(candles)
+    atr_pct = (atr / closes[-1]) if (atr is not None and closes[-1]) else None
+    if adx is None:
+        regime = "UNKNOWN"
+    elif adx < ADX_RANGE_MAX:
+        regime = "RANGE"
+    elif adx < ADX_TREND_MIN:
+        regime = "WEAK_TREND"
+    else:
+        regime = "TREND"
+    high_vol = atr_pct is not None and atr_pct >= HIGH_VOL_ATR_PCT
+    if regime == "RANGE":
+        signal = "NEUTRAL"
     details = {
         "ema20": ema20[-1], "ema50": ema50[-1],
         "close": closes[-1], "score": score,
+        "adx": adx, "atr": atr, "atr_pct": atr_pct,
+        "regime": regime,
+        "regime_detail": {
+            "high_vol": high_vol,
+            "flags": ["HIGH_VOL"] if high_vol else [],
+        },
         "last_candle_t": candles[-1]["t"],
         "last_candle_iso": iso(candles[-1]["t"] // 1000),
-        "rule": "sign(EMA20-EMA50)+sign(close-EMA20)+sign(EMA20 slope 3 bars)",
+        "last_candle_closed": False,
+        "rule": "sign(EMA20-EMA50)+sign(close-EMA20)+sign(EMA20 slope 3 bars); ADX<20 RANGE -> NEUTRAL",
     }
     return signal, details
 
@@ -369,16 +469,26 @@ def technical_signal(now_ts):
     closes = [c["c"] for c in candles]
     if len(closes) < 40:
         raise RuntimeError(f"not enough 15m candles: {len(closes)}")
+    check_candle_fresh(candles, now_ts, ROUND_SEC, "15m")
     rsi = rsi_last(closes)
     hist = macd_hist_last(closes)
     ema9 = ema_series(closes, 9)[-1]
     ema21 = ema_series(closes, 21)[-1]
+    close = closes[-1]
+    macd_rel = (abs(hist) / close) if (hist is not None and close) else None
+    ema_rel = (abs(ema9 - ema21) / close) if close else None
 
     votes = {}
     votes["rsi"] = ("UP" if rsi >= 55 else "DOWN" if rsi <= 45 else None) \
         if rsi is not None else None
-    votes["macd"] = sign_dir(hist) if hist is not None else None
-    votes["ema"] = sign_dir(ema9 - ema21)
+    # Micro-move suppression: a MACD/EMA gap that is tiny relative to
+    # price is noise, so that vote is withheld (None) instead of
+    # casting a direction on a negligible difference.
+    votes["macd"] = sign_dir(hist) if (
+        hist is not None and macd_rel is not None
+        and macd_rel >= MACD_REL_THRESHOLD) else None
+    votes["ema"] = sign_dir(ema9 - ema21) if (
+        ema_rel is not None and ema_rel >= EMA_REL_THRESHOLD) else None
     up = sum(1 for v in votes.values() if v == "UP")
     down = sum(1 for v in votes.values() if v == "DOWN")
     if up > down:
@@ -389,10 +499,14 @@ def technical_signal(now_ts):
         signal = "NEUTRAL"
     details = {
         "rsi": rsi, "macd_hist": hist, "ema9": ema9, "ema21": ema21,
+        "macd_hist_rel": macd_rel, "ema_diff_rel": ema_rel,
+        "macd_rel_threshold": MACD_REL_THRESHOLD,
+        "ema_rel_threshold": EMA_REL_THRESHOLD,
         "votes": votes,
         "last_candle_t": candles[-1]["t"],
         "last_candle_iso": iso(candles[-1]["t"] // 1000),
-        "rule": "majority of RSI(>=55 UP / <=45 DOWN), MACD hist sign, EMA9 vs EMA21",
+        "last_candle_closed": False,
+        "rule": "majority of RSI(>=55 UP / <=45 DOWN), MACD hist sign, EMA9 vs EMA21; MACD/EMA votes withheld below relative thresholds",
     }
     return signal, details
 
@@ -400,17 +514,19 @@ def technical_signal(now_ts):
 # ---------------------------------------------------------------- verdict
 
 def derive_verdict(signals):
-    """The bet verdict for a round, derived from its signals.
+    """Derive a verdict from signals under the analysis-only rule.
 
     Only the two analysis signals decide: trend (1h) and technical
     (15m). Both UP -> "UP", both DOWN -> "DOWN", anything else (they
-    disagree, or technical is NEUTRAL) -> "SKIP". The traders signal
+    disagree, or either is NEUTRAL) -> "SKIP". The traders signal
     is reference-only and never affects the verdict.
 
-    Every consumer - prediction creation, settlement grading, the
-    summary stats and the bet simulation - derives the verdict
-    through this one function, so records written under older rules
-    are re-graded consistently whenever the summary is rebuilt.
+    Role (since v2.0-regime): used ONLY (a) when creating a new
+    prediction, whose verdict is then frozen onto the record, and
+    (b) as the frozen interpretation of pre-versioning v1 records
+    inside frozen_verdict(). Settlement and summary code must call
+    frozen_verdict(), never this function directly, so a future
+    rule change cannot re-grade versioned records.
     """
     trend = signals.get("trend")
     technical = signals.get("technical")
@@ -419,6 +535,26 @@ def derive_verdict(signals):
     if trend == "DOWN" and technical == "DOWN":
         return "DOWN"
     return "SKIP"
+
+
+def frozen_verdict(pred):
+    """The immutable verdict for a stored prediction record.
+
+    Records carrying a strategy_version return their stored verdict
+    exactly as recorded at prediction time; it is never recomputed.
+
+    Records without a strategy_version are v1 records. The frozen
+    rule for v1 is the analysis-only rule (derive_verdict over the
+    stored signals): that is the rule under which the v1 track
+    record was published, so interpreting v1 records this way keeps
+    their published results from being retroactively changed by the
+    v2 regime logic (which lives in trend_signal, not here).
+    """
+    if pred.get("strategy_version"):
+        stored = pred.get("verdict")
+        if stored in ("UP", "DOWN", "SKIP"):
+            return stored
+    return derive_verdict(pred.get("signals") or {})
 
 
 def compute_hit(verdict, actual):
@@ -456,7 +592,7 @@ def settle_pending(predictions, results, now_ts):
             actual = "DOWN"
         else:
             actual = "FLAT"
-        verdict = derive_verdict(predictions[start_ts]["signals"])
+        verdict = frozen_verdict(predictions[start_ts])
         hit = compute_hit(verdict, actual)
         result = {
             "type": "result",
@@ -500,18 +636,20 @@ def build_summary(predictions, results, now_ts):
     for start_ts in sorted(predictions, reverse=True):
         pred = predictions[start_ts]
         res = results.get(start_ts)
-        # The verdict and hit shown (and aggregated) here are always
-        # re-derived from the stored signals under the current rule,
-        # never copied from the stored record: rounds logged under an
-        # older verdict rule are re-graded on every summary rebuild.
-        verdict = derive_verdict(pred["signals"])
+        # The verdict is the frozen one (frozen_verdict): versioned
+        # records keep the verdict recorded at prediction time; v1
+        # records are interpreted under their frozen v1 rule.
+        verdict = frozen_verdict(pred)
         actual = res["actual"] if res else None
         hit = compute_hit(verdict, actual) if res else None
+        trend_details = (pred.get("signal_details") or {}).get("trend") or {}
         rounds.append({
             "round_start_ts": start_ts,
             "round_start_iso": pred["round_start_iso"],
             "predicted_at_iso": pred["predicted_at_iso"],
             "price_at_prediction": pred["price_at_prediction"],
+            "strategy_version": pred.get("strategy_version"),
+            "regime": trend_details.get("regime"),
             "signals": pred["signals"],
             "traders_counts": {
                 k: pred["signal_details"]["traders"][k]
@@ -559,11 +697,39 @@ def build_summary(predictions, results, now_ts):
         "rounds": len(sim_rounds),
         "stake_per_round": BET_USDT,
         "payout_multiple": PAYOUT_MULTIPLE,
+        "model_note": "virtual_fixed_multiple",
         "invested": sim_invested,
         "returned": sim_returned,
         "pnl": sim_returned - sim_invested,
         "return_rate": (sim_returned / sim_invested) if sim_invested else None,
     }
+
+    # --- separated statistics (v2.0-regime; existing keys unchanged) ---
+    # Coverage: how often we actually bet, out of all settled rounds
+    # whose actual direction was not FLAT.
+    coverage = (len(bet) / len(directional)) if directional else None
+    by_direction = {}
+    for _dir in ("UP", "DOWN"):
+        _pairs = [r for r in bet if r["verdict"] == _dir]
+        _hits = sum(1 for r in _pairs if r["hit"])
+        by_direction[_dir] = {
+            "hits": _hits, "total": len(_pairs),
+            "rate": (_hits / len(_pairs)) if _pairs else None,
+        }
+    # Miss streaks over bet rounds in chronological (round_start
+    # ascending) order; FLAT/SKIP rounds neither extend nor break a
+    # streak because they were never graded.
+    _max_miss = _cur_miss = 0
+    for r in sorted(bet, key=lambda x: x["round_start_ts"]):
+        if r["hit"]:
+            _cur_miss = 0
+        else:
+            _cur_miss += 1
+            _max_miss = max(_max_miss, _cur_miss)
+    streaks = {"max_miss": _max_miss, "current_miss": _cur_miss}
+    sample_status = ("insufficient"
+                     if len(bet) < SAMPLE_INSUFFICIENT_THRESHOLD
+                     else "sufficient")
 
     stats = {
         "settled": len(settled_rounds),
@@ -575,6 +741,12 @@ def build_summary(predictions, results, now_ts):
         "all_rate": (all_hits / len(settled_rounds)) if settled_rounds else None,
         "signal_rates": signal_rates,
         "sim": sim,
+        "coverage": coverage,
+        "by_direction": by_direction,
+        "streaks": streaks,
+        "sample_status": sample_status,
+        "sample_threshold": SAMPLE_INSUFFICIENT_THRESHOLD,
+        "strategy_version": STRATEGY_VERSION,
     }
 
     next_round = None
@@ -667,8 +839,14 @@ def run(settle_only=False):
         signals = {"traders": traders, "trend": trend,
                    "technical": technical}
         verdict = derive_verdict(signals)
+        # The newest Hyperliquid candle for each interval is still
+        # forming at prediction time; record that explicitly so later
+        # verification never mistakes it for a closed candle.
+        trend_details.setdefault("last_candle_closed", False)
+        technical_details.setdefault("last_candle_closed", False)
         record = {
             "type": "prediction",
+            "strategy_version": STRATEGY_VERSION,
             "round_start_ts": target,
             "round_end_ts": target + ROUND_SEC,
             "round_start_iso": iso(target),
