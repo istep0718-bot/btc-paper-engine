@@ -1,0 +1,63 @@
+name: Predict15 Logger
+
+# Display/measurement only: before each 15-minute BTC round, predicts
+# UP/DOWN from three signals (leaderboard top-10 positioning, 1h trend,
+# 15m technicals), logs the prediction, and settles finished rounds
+# against their own 15m candle. Fully independent of the BTC Paper
+# Engine workflow and bot.py; a failure here never affects the paper
+# engine, and nothing here places an order.
+#
+# Trigger: cron-job.org dispatches this workflow at :12/:27/:42/:57
+# (three minutes before each round starts; one minute would be too
+# tight because Actions startup plus the Pages rebuild can take
+# 1-2 minutes). GitHub's own schedule is intentionally not used (it
+# was too unreliable for the paper engine, which is why the external
+# timer exists).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: predict15
+  cancel-in-progress: false
+
+jobs:
+  predict15:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Settle finished rounds and predict the next round
+        run: python predict15.py
+
+      - name: Commit prediction log
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/predict15.jsonl docs/predict15.json
+          if git diff --cached --quiet; then
+            echo "No changes; nothing to commit."
+            exit 0
+          fi
+          git commit -m "Predict15: append round prediction/results"
+          # The paper engine pushes to the same branch every 15 minutes;
+          # rebase-and-retry so a race never loses a record.
+          for i in 1 2 3; do
+            if git push; then
+              exit 0
+            fi
+            git pull --rebase
+            sleep 5
+          done
+          git push
