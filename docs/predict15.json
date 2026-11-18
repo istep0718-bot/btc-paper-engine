@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-18T10:17:10+00:00",
- "updated_ts": 1794997030,
+ "updated_at": "2026-11-18T10:27:11+00:00",
+ "updated_ts": 1794997631,
  "next_round": {
-  "round_start_ts": 1794996900,
-  "round_start_iso": "2026-11-18T10:15:00+00:00",
-  "predicted_at_iso": "2026-11-18T10:12:11+00:00",
-  "price_at_prediction": 64563.5,
+  "round_start_ts": 1794997800,
+  "round_start_iso": "2026-11-18T10:30:00+00:00",
+  "predicted_at_iso": "2026-11-18T10:27:11+00:00",
+  "price_at_prediction": 64338.5,
   "strategy_version": "v2.0-regime",
   "regime": "RANGE",
   "signals": {
@@ -83,6 +83,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1794997800,
+   "round_start_iso": "2026-11-18T10:30:00+00:00",
+   "predicted_at_iso": "2026-11-18T10:27:11+00:00",
+   "price_at_prediction": 64338.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "RANGE",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "NEUTRAL",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 2,
+    "flat": 7
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1794996900,
    "round_start_iso": "2026-11-18T10:15:00+00:00",
@@ -2592,35 +2617,6 @@
     "stake": 4.0,
     "payout": 8.0,
     "pnl": 4.0
-   }
-  },
-  {
-   "round_start_ts": 1794911400,
-   "round_start_iso": "2026-11-17T10:30:00+00:00",
-   "predicted_at_iso": "2026-11-17T10:27:19+00:00",
-   "price_at_prediction": 64117.5,
-   "strategy_version": null,
-   "regime": null,
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 2,
-    "flat": 7
-   },
-   "verdict": "DOWN",
-   "start_price": 64233.0,
-   "end_price": 64240.0,
-   "actual": "UP",
-   "hit": false,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 0.0,
-    "pnl": -4.0
    }
   }
  ]
