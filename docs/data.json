@@ -1,47 +1,207 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
-  "generated_at": "2026-11-18T13:45:33.608011+00:00",
+  "generated_at": "2026-11-18T14:00:53.150827+00:00",
   "market_status": "OK",
-  "price": 63982.5,
-  "funding_rate": 1.25e-05,
-  "funding_rate_pct": 0.00125,
+  "price": 63925.5,
+  "funding_rate": 9.1874e-06,
+  "funding_rate_pct": 0.0009187399999999999,
   "initial_equity": 100.0,
-  "equity": 74.51808460246033,
-  "marked_equity": 74.51808460246033,
+  "equity": 74.14549417944804,
+  "marked_equity": 73.29380693685088,
   "realized_pnl": -25.46485857880006,
-  "unrealized_pnl": 0.0,
-  "unrealized_pnl_gross": 0.0,
-  "net_pnl": -25.481915397539666,
-  "net_pnl_pct": -25.481915397539666,
-  "position": null,
-  "open_position": null,
-  "has_position": false,
+  "unrealized_pnl": -0.8516872425971553,
+  "unrealized_pnl_gross": -0.32982976954125404,
+  "net_pnl": -26.706193063149115,
+  "net_pnl_pct": -26.706193063149115,
+  "position": {
+    "side": "SHORT",
+    "entry_price": 63897.218,
+    "quantity": 0.011662179815474962,
+    "leverage": 40.0,
+    "margin_used": 18.629521150615084,
+    "notional": 745.1808460246034,
+    "planned_risk": 6.817934681625804,
+    "effective_risk_pct": 9.149369200776128,
+    "stop_price": 64360.43252418448,
+    "initial_stop_price": 64360.43252418448,
+    "risk_distance": 463.2145241844779,
+    "entry_fee": 0.3725904230123017,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-11-18T14:00:51+00:00",
+    "opened_timestamp": 1795010451,
+    "last_funding_ts": 1795010451,
+    "last_checked_candle_ts": 1795009500000,
+    "entry_signal_score": 9,
+    "score": 9,
+    "score_breakdown": {
+      "htf_bias": 4,
+      "structure": 0,
+      "macd_momentum": 2,
+      "rsi": 0,
+      "volume": 1,
+      "vwap": 1,
+      "crowding": 0,
+      "volatility_fit": 0,
+      "trend_continuation": 1
+    },
+    "setup": "F",
+    "regime": "TREND_DOWN",
+    "origin_build": "BTC_PAPER_V20_14_PRO_2026-11-15",
+    "targets": {
+      "tp1_price": 63202.39621372328,
+      "tp2_price": 62507.57442744657,
+      "be_price": 63775.8132858
+    },
+    "zone_room_r": 0.5660832860576948,
+    "source_trader": null,
+    "source_trader_label": null,
+    "source_entry_price": null,
+    "copy_source_event_ts": null,
+    "copy_detection_lag_seconds": null,
+    "consensus_ratio": null,
+    "consensus_long_count": null,
+    "consensus_short_count": null,
+    "consensus_flat_count": null,
+    "consensus_members": null,
+    "qty_initial": 0.011662179815474962,
+    "risk_usd_initial": 6.817934681625804,
+    "entry_equity": 74.51808460246033,
+    "risk_multiplier": 0.25,
+    "tp1_taken": false,
+    "tp2_taken": false,
+    "hold_extensions": 0,
+    "trend_flip_exit": false,
+    "runner_floor_active": false,
+    "partial_taken": false,
+    "be_moved": false,
+    "trail_active": false,
+    "best_price": 63910.0,
+    "worst_price": 63910.0,
+    "mfe_r": 0.0,
+    "mae_r": 0.0,
+    "acc_net_pnl": 0.0,
+    "acc_fees": 0.3725904230123017,
+    "acc_funding": 0.0,
+    "acc_r": 0.0,
+    "saw_stop_loss": false,
+    "entry_event_within_24h": false,
+    "entry_event_upcoming_24h": true,
+    "entry_event_name": "FOMC Meeting Minutes",
+    "unrealized_pnl": -0.8516872425971553,
+    "unrealized_pnl_gross": -0.32982976954125404
+  },
+  "open_position": {
+    "side": "SHORT",
+    "entry_price": 63897.218,
+    "quantity": 0.011662179815474962,
+    "leverage": 40.0,
+    "margin_used": 18.629521150615084,
+    "notional": 745.1808460246034,
+    "planned_risk": 6.817934681625804,
+    "effective_risk_pct": 9.149369200776128,
+    "stop_price": 64360.43252418448,
+    "initial_stop_price": 64360.43252418448,
+    "risk_distance": 463.2145241844779,
+    "entry_fee": 0.3725904230123017,
+    "funding_pnl": 0.0,
+    "entry_time": "2026-11-18T14:00:51+00:00",
+    "opened_timestamp": 1795010451,
+    "last_funding_ts": 1795010451,
+    "last_checked_candle_ts": 1795009500000,
+    "entry_signal_score": 9,
+    "score": 9,
+    "score_breakdown": {
+      "htf_bias": 4,
+      "structure": 0,
+      "macd_momentum": 2,
+      "rsi": 0,
+      "volume": 1,
+      "vwap": 1,
+      "crowding": 0,
+      "volatility_fit": 0,
+      "trend_continuation": 1
+    },
+    "setup": "F",
+    "regime": "TREND_DOWN",
+    "origin_build": "BTC_PAPER_V20_14_PRO_2026-11-15",
+    "targets": {
+      "tp1_price": 63202.39621372328,
+      "tp2_price": 62507.57442744657,
+      "be_price": 63775.8132858
+    },
+    "zone_room_r": 0.5660832860576948,
+    "source_trader": null,
+    "source_trader_label": null,
+    "source_entry_price": null,
+    "copy_source_event_ts": null,
+    "copy_detection_lag_seconds": null,
+    "consensus_ratio": null,
+    "consensus_long_count": null,
+    "consensus_short_count": null,
+    "consensus_flat_count": null,
+    "consensus_members": null,
+    "qty_initial": 0.011662179815474962,
+    "risk_usd_initial": 6.817934681625804,
+    "entry_equity": 74.51808460246033,
+    "risk_multiplier": 0.25,
+    "tp1_taken": false,
+    "tp2_taken": false,
+    "hold_extensions": 0,
+    "trend_flip_exit": false,
+    "runner_floor_active": false,
+    "partial_taken": false,
+    "be_moved": false,
+    "trail_active": false,
+    "best_price": 63910.0,
+    "worst_price": 63910.0,
+    "mfe_r": 0.0,
+    "mae_r": 0.0,
+    "acc_net_pnl": 0.0,
+    "acc_fees": 0.3725904230123017,
+    "acc_funding": 0.0,
+    "acc_r": 0.0,
+    "saw_stop_loss": false,
+    "entry_event_within_24h": false,
+    "entry_event_upcoming_24h": true,
+    "entry_event_name": "FOMC Meeting Minutes",
+    "unrealized_pnl": -0.8516872425971553,
+    "unrealized_pnl_gross": -0.32982976954125404
+  },
+  "has_position": true,
   "signal": {
-    "direction": "WAIT",
-    "score": 0,
+    "direction": "SHORT",
+    "score": 9,
     "long_score": 0,
-    "short_score": 0,
-    "score_edge": 0,
-    "rsi": 32.905,
-    "atr": 181.78708,
-    "ema9": 64114.492762245,
-    "ema21": 64262.37068488946,
+    "short_score": 9,
+    "score_edge": 9,
+    "rsi": 29.843,
+    "atr": 178.15943,
+    "ema9": 64073.594209796,
+    "ema21": 64230.336986263144,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-18T13:45:33.607934+00:00",
-    "reference_price": 64002.0,
-    "previous_close": 64046.0,
+    "timestamp": "2026-11-18T14:00:53.150740+00:00",
+    "reference_price": 63910.0,
+    "previous_close": 64002.0,
     "reasons": [
-      "明確な方向優位性なし"
+      "htf_bias:+4",
+      "macd_momentum:+2",
+      "volume:+1",
+      "vwap:+1",
+      "trend_continuation:+1",
+      "setup F / regime TREND_DOWN"
     ],
-    "flags": [],
+    "flags": [
+      "コストフィルター通過",
+      "対向ゾーンまで 0.57R"
+    ],
     "bollinger": {
-      "middle": 64306.35,
-      "upper": 64783.63619297021,
-      "lower": 63829.06380702979,
-      "width_pct": 1.48441388127366,
-      "position": 0.18116613838545156,
+      "middle": 64268.6,
+      "upper": 64745.87828360402,
+      "lower": 63791.32171639598,
+      "width_pct": 1.4852611807446265,
+      "position": 0.12432818303386795,
       "state": "NEAR_LOWER"
     },
     "fibonacci": {
@@ -56,46 +216,55 @@
       },
       "trend": "DOWN"
     },
-    "regime": "NEUTRAL",
-    "adx": 24.68,
-    "atr_percentile": 10.0,
+    "regime": "TREND_DOWN",
+    "adx": 25.14,
+    "atr_percentile": 4.0,
     "macd": {
-      "line": -144.1878,
-      "signal": -117.0987,
-      "hist": -27.0891,
-      "hist_prev": -29.5407
+      "line": -153.2688,
+      "signal": -124.3327,
+      "hist": -28.936,
+      "hist_prev": -27.0891
     },
-    "vwap": 64437.8915730945,
-    "relative_volume": 1.657,
+    "vwap": 64395.54500948659,
+    "relative_volume": 4.716,
     "htf_bias": "DOWN",
     "structure_bias": "MIXED",
-    "support": 64000.0,
-    "resistance": 64077.0,
-    "premium": -0.0004218486,
-    "setup": null,
-    "score_breakdown": {},
-    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム NEUTRAL）",
+    "support": 63635.0,
+    "resistance": 64000.0,
+    "premium": -0.0004847234,
+    "setup": "F",
+    "score_breakdown": {
+      "htf_bias": 4,
+      "structure": 0,
+      "macd_momentum": 2,
+      "rsi": 0,
+      "volume": 1,
+      "vwap": 1,
+      "crowding": 0,
+      "volatility_fit": 0,
+      "trend_continuation": 1
+    },
+    "entry_status": "SHORT opened (F)",
     "evaluation_notes": [
-      "A/LONG: 上位足バイアス不一致",
+      "A/LONG: レジーム不一致",
       "B/LONG: 上位足が逆行",
       "C/LONG: レンジレジーム限定",
       "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: 押し目/戻りが未形成",
-      "B/SHORT: ブレイク足の実体が弱い",
+      "A/SHORT: 対向ゾーンまでの距離が1.5R未満",
+      "B/SHORT: 対向ゾーンまでの距離が1.5R未満",
       "C/SHORT: レンジレジーム限定",
-      "F/SHORT: レジーム不一致（確立したトレンド限定）",
       "CONSENSUS: LONG 4 / SHORT 2 / FLAT 3（建玉 6名、参入条件: 未達）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 0.0,
+    "daily_loss_pct": 1.6429269111528235,
     "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "daily_stop_count": 0,
-    "drawdown_pct": 27.262226869694896,
-    "current_drawdown_pct": 27.262226869694896,
+    "drawdown_pct": 28.457255319025965,
+    "current_drawdown_pct": 28.457255319025965,
     "max_drawdown_pct": 33.192501460560145,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
@@ -19912,15 +20081,15 @@
       "equity": 74.51808460246033,
       "marked_equity": 74.51808460246033,
       "price": 63982.5
+    },
+    {
+      "timestamp": "2026-11-18T14:00:53.150813+00:00",
+      "equity": 74.14549417944804,
+      "marked_equity": 73.29380693685088,
+      "price": 63925.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-06T16:59:12.963172+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00063457,
-      "hours": 0.7681
-    },
     {
       "timestamp": "2026-11-06T17:42:21.200633+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -20845,6 +21014,19 @@
       "timestamp": "2026-11-18T10:30:52.728219+00:00",
       "type": "ECON_CALENDAR_UPDATED",
       "events": 4
+    },
+    {
+      "timestamp": "2026-11-18T14:00:53.150705+00:00",
+      "type": "POSITION_OPENED",
+      "side": "SHORT",
+      "setup": "F",
+      "regime": "TREND_DOWN",
+      "score": 9,
+      "entry_price": 63897.218,
+      "stop_price": 64360.43252418448,
+      "quantity": 0.011662179815474962,
+      "leverage": 40.0,
+      "effective_risk_pct": 9.149369200776128
     }
   ],
   "stats_by_setup": {
@@ -20973,26 +21155,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 32.905,
-    "atr": 181.78708,
+    "rsi_15m": 29.843,
+    "atr": 178.15943,
     "bollinger": {
-      "middle": 64306.35,
-      "upper": 64783.63619297021,
-      "lower": 63829.06380702979,
-      "width_pct": 1.48441388127366,
-      "position": 0.18116613838545156,
+      "middle": 64268.6,
+      "upper": 64745.87828360402,
+      "lower": 63791.32171639598,
+      "width_pct": 1.4852611807446265,
+      "position": 0.12432818303386795,
       "state": "NEAR_LOWER"
     },
-    "adx": 24.68,
-    "atr_percentile": 10.0,
+    "adx": 25.14,
+    "atr_percentile": 4.0,
     "macd": {
-      "line": -144.1878,
-      "signal": -117.0987,
-      "hist": -27.0891,
-      "hist_prev": -29.5407
+      "line": -153.2688,
+      "signal": -124.3327,
+      "hist": -28.936,
+      "hist_prev": -27.0891
     },
-    "vwap": 64437.8915730945,
-    "relative_volume": 1.657
+    "vwap": 64395.54500948659,
+    "relative_volume": 4.716
   },
   "fibonacci": {
     "swing_high": 66134.0,
@@ -21116,7 +21298,7 @@
     "short_ratio": 0.3333333333333333,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1795009531,
+    "updated_ts": 1795010451,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -22315,21 +22497,14 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-18T13:45:33.607860+00:00"
+    "updated_at": "2026-11-18T14:00:53.150405+00:00"
   },
   "chart": {
-    "generated_at": "2026-11-18T13:45:34Z",
+    "generated_at": "2026-11-18T14:00:54Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
         "candles": [
-          [
-            1794470400,
-            73623.0,
-            73661.0,
-            73474.0,
-            73569.0
-          ],
           [
             1794474000,
             73569.0,
@@ -23370,8 +23545,15 @@
             1795006800,
             64058.0,
             64175.0,
-            63933.0,
-            63968.0
+            63891.0,
+            63910.0
+          ],
+          [
+            1795010400,
+            63910.0,
+            63928.0,
+            63892.0,
+            63927.0
           ]
         ],
         "lines": {
@@ -23389,8 +23571,8 @@
               65243.0
             ],
             [
-              1795071168,
-              64019.6
+              1795074768,
+              63981.2
             ]
           ],
           "trend_low": [
@@ -23399,8 +23581,8 @@
               63320.0
             ],
             [
-              1795071168,
-              66187.7
+              1795074768,
+              66259.6
             ]
           ],
           "channel": null
@@ -24455,8 +24637,8 @@
             1795003200,
             64208.0,
             64374.0,
-            63933.0,
-            63968.0
+            63891.0,
+            63927.0
           ]
         ],
         "lines": {
@@ -25540,8 +25722,8 @@
             1794960000,
             64921.0,
             64970.0,
-            63933.0,
-            63968.0
+            63891.0,
+            63928.0
           ]
         ],
         "lines": {
@@ -26626,7 +26808,7 @@
             73980.0,
             74180.0,
             61970.0,
-            63968.0
+            63928.0
           ]
         ],
         "lines": {
@@ -27277,7 +27459,7 @@
             76805.0,
             81177.0,
             61970.0,
-            63968.0
+            63927.0
           ]
         ],
         "lines": {
