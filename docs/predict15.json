@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-18T22:32:10+00:00",
- "updated_ts": 1795041130,
+ "updated_at": "2026-11-18T22:42:12+00:00",
+ "updated_ts": 1795041732,
  "next_round": {
-  "round_start_ts": 1795041000,
-  "round_start_iso": "2026-11-18T22:30:00+00:00",
-  "predicted_at_iso": "2026-11-18T22:27:10+00:00",
-  "price_at_prediction": 62516.5,
+  "round_start_ts": 1795041900,
+  "round_start_iso": "2026-11-18T22:45:00+00:00",
+  "predicted_at_iso": "2026-11-18T22:42:12+00:00",
+  "price_at_prediction": 62483.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -83,6 +83,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795041900,
+   "round_start_iso": "2026-11-18T22:45:00+00:00",
+   "predicted_at_iso": "2026-11-18T22:42:12+00:00",
+   "price_at_prediction": 62483.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 2,
+    "short": 1,
+    "flat": 7
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795041000,
    "round_start_iso": "2026-11-18T22:30:00+00:00",
@@ -2526,31 +2551,6 @@
    "start_price": 64702.0,
    "end_price": 65130.0,
    "actual": "UP",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1794955500,
-   "round_start_iso": "2026-11-17T22:45:00+00:00",
-   "predicted_at_iso": "2026-11-17T22:42:12+00:00",
-   "price_at_prediction": 64794.5,
-   "strategy_version": null,
-   "regime": null,
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "UP"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 2,
-    "flat": 7
-   },
-   "verdict": "SKIP",
-   "start_price": 64790.0,
-   "end_price": 64703.0,
-   "actual": "DOWN",
    "hit": null,
    "settled": true,
    "sim": null
