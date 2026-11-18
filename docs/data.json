@@ -1,18 +1,18 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
-  "generated_at": "2026-11-18T22:45:35.009111+00:00",
+  "generated_at": "2026-11-18T23:00:53.304142+00:00",
   "market_status": "OK",
-  "price": 62482.5,
-  "funding_rate": 5.7668e-06,
-  "funding_rate_pct": 0.00057668,
+  "price": 62290.5,
+  "funding_rate": 3.7065e-06,
+  "funding_rate_pct": 0.00037065,
   "initial_equity": 100.0,
-  "equity": 81.69072392021211,
-  "marked_equity": 81.7071917552071,
+  "equity": 81.6914998592309,
+  "marked_equity": 84.2306207506876,
   "realized_pnl": -17.88667681423579,
-  "unrealized_pnl": 0.016467834994998265,
-  "unrealized_pnl_gross": 0.5907281898312885,
-  "net_pnl": -18.292808244792894,
-  "net_pnl_pct": -18.292808244792894,
+  "unrealized_pnl": 2.5391208914566987,
+  "unrealized_pnl_gross": 3.1116166243887986,
+  "net_pnl": -15.769379249312394,
+  "net_pnl_pct": -15.769379249312394,
   "position": {
     "side": "SHORT",
     "entry_price": 62527.492,
@@ -26,11 +26,11 @@
     "initial_stop_price": 63244.09977914649,
     "risk_distance": 716.6077791464947,
     "entry_fee": 0.41048133183512303,
-    "funding_pnl": 0.00493888502261689,
+    "funding_pnl": 0.0057148240414048,
     "entry_time": "2026-11-18T20:30:46+00:00",
     "opened_timestamp": 1795033846,
-    "last_funding_ts": 1795041933,
-    "last_checked_candle_ts": 1795041000000,
+    "last_funding_ts": 1795042851,
+    "last_checked_candle_ts": 1795041900000,
     "entry_signal_score": 10,
     "score": 10,
     "score_breakdown": {
@@ -75,9 +75,9 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 62283.0,
+    "best_price": 62035.0,
     "worst_price": 62627.0,
-    "mfe_r": 0.34117966217335377,
+    "mfe_r": 0.6872546103065945,
     "mae_r": 0.13885978201146404,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.41048133183512303,
@@ -89,8 +89,8 @@
     "entry_event_name": "FOMC Meeting Minutes",
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": 0.016467834994998265,
-    "unrealized_pnl_gross": 0.5907281898312885
+    "unrealized_pnl": 2.5391208914566987,
+    "unrealized_pnl_gross": 3.1116166243887986
   },
   "open_position": {
     "side": "SHORT",
@@ -105,11 +105,11 @@
     "initial_stop_price": 63244.09977914649,
     "risk_distance": 716.6077791464947,
     "entry_fee": 0.41048133183512303,
-    "funding_pnl": 0.00493888502261689,
+    "funding_pnl": 0.0057148240414048,
     "entry_time": "2026-11-18T20:30:46+00:00",
     "opened_timestamp": 1795033846,
-    "last_funding_ts": 1795041933,
-    "last_checked_candle_ts": 1795041000000,
+    "last_funding_ts": 1795042851,
+    "last_checked_candle_ts": 1795041900000,
     "entry_signal_score": 10,
     "score": 10,
     "score_breakdown": {
@@ -154,9 +154,9 @@
     "partial_taken": false,
     "be_moved": false,
     "trail_active": false,
-    "best_price": 62283.0,
+    "best_price": 62035.0,
     "worst_price": 62627.0,
-    "mfe_r": 0.34117966217335377,
+    "mfe_r": 0.6872546103065945,
     "mae_r": 0.13885978201146404,
     "acc_net_pnl": 0.0,
     "acc_fees": 0.41048133183512303,
@@ -168,79 +168,98 @@
     "entry_event_name": "FOMC Meeting Minutes",
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": 0.016467834994998265,
-    "unrealized_pnl_gross": 0.5907281898312885
+    "unrealized_pnl": 2.5391208914566987,
+    "unrealized_pnl_gross": 3.1116166243887986
   },
   "has_position": true,
   "signal": {
-    "direction": "WAIT",
-    "score": 0,
+    "direction": "SHORT",
+    "score": 9,
     "long_score": 0,
-    "short_score": 0,
-    "score_edge": 0,
-    "rsi": 38.594,
-    "atr": 224.49356,
-    "ema9": 62480.24657217206,
-    "ema21": 62685.435210021235,
+    "short_score": 9,
+    "score_edge": 9,
+    "rsi": 32.363,
+    "atr": 240.45831,
+    "ema9": 62427.79725773765,
+    "ema21": 62642.9411000193,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-18T22:45:35.009028+00:00",
-    "reference_price": 62483.0,
-    "previous_close": 62499.0,
+    "timestamp": "2026-11-18T23:00:53.304078+00:00",
+    "reference_price": 62218.0,
+    "previous_close": 62483.0,
     "reasons": [
-      "明確な方向優位性なし"
+      "htf_bias:+4",
+      "rsi:+1",
+      "volume:+1",
+      "vwap:+1",
+      "volatility_fit:+1",
+      "trend_continuation:+1",
+      "setup F / regime TREND_DOWN"
     ],
-    "flags": [],
+    "flags": [
+      "コストフィルター通過",
+      "対向ゾーンまで 0.33R"
+    ],
     "bollinger": {
-      "middle": 62701.35,
-      "upper": 63294.926372508206,
-      "lower": 62107.77362749179,
-      "width_pct": 1.8933447924429283,
-      "position": 0.3160725307534208,
-      "state": "INSIDE"
+      "middle": 62658.4,
+      "upper": 63261.27391716676,
+      "lower": 62055.52608283324,
+      "width_pct": 1.9243195394927484,
+      "position": 0.13474949947272177,
+      "state": "NEAR_LOWER"
     },
     "fibonacci": {
       "swing_high": 65679.0,
-      "swing_low": 62256.0,
+      "swing_low": 62035.0,
       "levels": {
-        "0.236": 64871.172,
-        "0.382": 64371.414,
-        "0.500": 63967.5,
-        "0.618": 63563.586,
-        "0.786": 62988.522
+        "0.236": 64819.016,
+        "0.382": 64286.992,
+        "0.500": 63857.0,
+        "0.618": 63427.008,
+        "0.786": 62814.816
       },
       "trend": "DOWN"
     },
     "regime": "TREND_DOWN",
-    "adx": 38.03,
-    "atr_percentile": 43.0,
+    "adx": 38.62,
+    "atr_percentile": 52.0,
     "macd": {
-      "line": -252.8149,
-      "signal": -271.9266,
-      "hist": 19.1116,
-      "hist_prev": 8.0139
+      "line": -258.6353,
+      "signal": -269.2683,
+      "hist": 10.6331,
+      "hist_prev": 19.1116
     },
-    "vwap": 63509.800945144794,
-    "relative_volume": 0.955,
+    "vwap": 63476.14482790598,
+    "relative_volume": 2.508,
     "htf_bias": "DOWN",
     "structure_bias": "MIXED",
-    "support": 62283.0,
+    "support": 62000.0,
     "resistance": 63000.0,
-    "premium": -0.0006398157,
-    "setup": null,
-    "score_breakdown": {},
+    "premium": -0.0004365046,
+    "setup": "F",
+    "score_breakdown": {
+      "htf_bias": 4,
+      "structure": 0,
+      "macd_momentum": 0,
+      "rsi": 1,
+      "volume": 1,
+      "vwap": 1,
+      "crowding": 0,
+      "volatility_fit": 1,
+      "trend_continuation": 1
+    },
     "entry_status": "保有中",
     "evaluation_notes": [
       "A/LONG: レジーム不一致",
       "B/LONG: 上位足が逆行",
       "C/LONG: レンジレジーム限定",
       "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: 反転トリガー未発生",
-      "B/SHORT: 出来高不足",
+      "A/SHORT: 対向ゾーンまでの距離が1.5R未満",
+      "B/SHORT: 対向ゾーンまでの距離が1.5R未満",
       "C/SHORT: レンジレジーム限定",
-      "F/SHORT: 継続トリガー未発生",
-      "CONSENSUS: LONG 3 / SHORT 2 / FLAT 3（建玉 5名、参入条件: 未達）"
+      "COPY OPEN: HL-684B LONG（ラグ 232秒、新鮮）",
+      "CONSENSUS: LONG 4 / SHORT 2 / FLAT 2（建玉 6名、参入条件: 未達）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -250,8 +269,8 @@
     "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "daily_stop_count": 0,
-    "drawdown_pct": 20.244874667533175,
-    "current_drawdown_pct": 20.244874667533175,
+    "drawdown_pct": 17.78173291123481,
+    "current_drawdown_pct": 17.78173291123481,
     "max_drawdown_pct": 33.192501460560145,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
@@ -14769,11 +14788,6 @@
   ],
   "equity_history": [
     {
-      "time": "2026-10-21T12:48:00.547427+00:00",
-      "equity_usd": 100.62399355,
-      "price": 83521.0
-    },
-    {
       "time": "2026-10-21T13:31:57.164713+00:00",
       "equity_usd": 100.90438906,
       "price": 83508.0
@@ -20851,19 +20865,15 @@
       "equity": 81.69072392021211,
       "marked_equity": 81.7071917552071,
       "price": 62482.5
+    },
+    {
+      "timestamp": "2026-11-18T23:00:53.304130+00:00",
+      "equity": 81.6914998592309,
+      "marked_equity": 84.2306207506876,
+      "price": 62290.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-11T01:28:23.573729+00:00",
-      "type": "DAILY_RESET"
-    },
-    {
-      "timestamp": "2026-11-11T01:28:23.575515+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00523713,
-      "hours": 3.8881
-    },
     {
       "timestamp": "2026-11-11T08:02:12.631884+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -21634,6 +21644,23 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.0011586,
       "hours": 0.2447
+    },
+    {
+      "timestamp": "2026-11-18T23:00:52.016962+00:00",
+      "type": "COPY_SIGNAL_OPEN",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "side": "LONG",
+      "source_entry_price": 62100.0,
+      "source_event_ts": 1795042618,
+      "age_seconds": 232,
+      "fresh": true
+    },
+    {
+      "timestamp": "2026-11-18T23:00:53.303970+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00077594,
+      "hours": 0.255
     }
   ],
   "stats_by_setup": {
@@ -21762,36 +21789,36 @@
     }
   },
   "indicators": {
-    "rsi_15m": 38.594,
-    "atr": 224.49356,
+    "rsi_15m": 32.363,
+    "atr": 240.45831,
     "bollinger": {
-      "middle": 62701.35,
-      "upper": 63294.926372508206,
-      "lower": 62107.77362749179,
-      "width_pct": 1.8933447924429283,
-      "position": 0.3160725307534208,
-      "state": "INSIDE"
+      "middle": 62658.4,
+      "upper": 63261.27391716676,
+      "lower": 62055.52608283324,
+      "width_pct": 1.9243195394927484,
+      "position": 0.13474949947272177,
+      "state": "NEAR_LOWER"
     },
-    "adx": 38.03,
-    "atr_percentile": 43.0,
+    "adx": 38.62,
+    "atr_percentile": 52.0,
     "macd": {
-      "line": -252.8149,
-      "signal": -271.9266,
-      "hist": 19.1116,
-      "hist_prev": 8.0139
+      "line": -258.6353,
+      "signal": -269.2683,
+      "hist": 10.6331,
+      "hist_prev": 19.1116
     },
-    "vwap": 63509.800945144794,
-    "relative_volume": 0.955
+    "vwap": 63476.14482790598,
+    "relative_volume": 2.508
   },
   "fibonacci": {
     "swing_high": 65679.0,
-    "swing_low": 62256.0,
+    "swing_low": 62035.0,
     "levels": {
-      "0.236": 64871.172,
-      "0.382": 64371.414,
-      "0.500": 63967.5,
-      "0.618": 63563.586,
-      "0.786": 62988.522
+      "0.236": 64819.016,
+      "0.382": 64286.992,
+      "0.500": 63857.0,
+      "0.618": 63427.008,
+      "0.786": 62814.816
     },
     "trend": "DOWN"
   },
@@ -21847,8 +21874,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": null,
-        "source_entry_price": null,
+        "side": "LONG",
+        "source_entry_price": 62100.0,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -21897,15 +21924,15 @@
     "entry_ratio": 0.8,
     "exit_ratio": 0.5,
     "min_pool": 7,
-    "long_count": 3,
+    "long_count": 4,
     "short_count": 2,
-    "flat_count": 3,
-    "positioned": 5,
-    "long_ratio": 0.6,
-    "short_ratio": 0.4,
+    "flat_count": 2,
+    "positioned": 6,
+    "long_ratio": 0.6666666666666666,
+    "short_ratio": 0.3333333333333333,
     "enabled_pool": 8,
     "valid": true,
-    "updated_ts": 1795041933,
+    "updated_ts": 1795042851,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -21925,8 +21952,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": null,
-        "source_entry_price": null,
+        "side": "LONG",
+        "source_entry_price": 62100.0,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -22119,8 +22146,8 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "is_copy_target": true,
-        "side": null,
-        "source_entry_price": null,
+        "side": "LONG",
+        "source_entry_price": 62100.0,
         "closes_30d": 967,
         "win_rate_30d": 0.6701,
         "realized_pnl_30d": -23402.97,
@@ -23107,21 +23134,14 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-18T22:45:35.008746+00:00"
+    "updated_at": "2026-11-18T23:00:53.303834+00:00"
   },
   "chart": {
-    "generated_at": "2026-11-18T22:45:36Z",
+    "generated_at": "2026-11-18T23:00:54Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
         "candles": [
-          [
-            1794502800,
-            71743.0,
-            72039.0,
-            71636.0,
-            71896.0
-          ],
           [
             1794506400,
             71896.0,
@@ -24162,8 +24182,15 @@
             1795039200,
             62317.0,
             62616.0,
-            62301.0,
-            62483.0
+            62035.0,
+            62218.0
+          ],
+          [
+            1795042800,
+            62218.0,
+            62291.0,
+            62214.0,
+            62285.0
           ]
         ],
         "lines": {
@@ -24181,8 +24208,8 @@
               65243.0
             ],
             [
-              1795103568,
-              63674.2
+              1795107168,
+              63635.9
             ]
           ],
           "trend_low": [
@@ -24191,8 +24218,8 @@
               64111.0
             ],
             [
-              1795103568,
-              59091.9
+              1795107168,
+              58959.4
             ]
           ],
           "channel": null
@@ -25247,8 +25274,8 @@
             1795032000,
             62724.0,
             62785.0,
-            62283.0,
-            62483.0
+            62035.0,
+            62285.0
           ]
         ],
         "lines": {
@@ -26331,8 +26358,8 @@
             1794960000,
             64921.0,
             64970.0,
-            62256.0,
-            62483.0
+            62035.0,
+            62285.0
           ]
         ],
         "lines": {
@@ -27417,7 +27444,7 @@
             73980.0,
             74180.0,
             61970.0,
-            62483.0
+            62285.0
           ]
         ],
         "lines": {
@@ -28068,7 +28095,7 @@
             76805.0,
             81177.0,
             61970.0,
-            62483.0
+            62285.0
           ]
         ],
         "lines": {
