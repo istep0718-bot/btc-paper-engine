@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
   "initial_equity": 100.0,
-  "equity": 81.68858133545645,
+  "equity": 81.6895653250683,
   "peak_equity": 102.44757489202469,
   "max_drawdown_pct": 33.192501460560145,
   "realized_pnl": -17.88667681423579,
@@ -4835,11 +4835,6 @@
     }
   ],
   "equity_history": [
-    {
-      "time": "2026-10-21T11:08:06.630883+00:00",
-      "equity_usd": 100.36725175,
-      "price": 83405.0
-    },
     {
       "time": "2026-10-21T12:06:50.661520+00:00",
       "equity_usd": 100.67489925,
@@ -10916,6 +10911,12 @@
       "equity": 81.68858133545645,
       "marked_equity": 83.33426260274963,
       "price": 62358.5
+    },
+    {
+      "timestamp": "2026-11-18T22:30:54.142064+00:00",
+      "equity": 81.6895653250683,
+      "marked_equity": 80.95712053392623,
+      "price": 62539.5
     }
   ],
   "position": {
@@ -10931,11 +10932,11 @@
     "initial_stop_price": 63244.09977914649,
     "risk_distance": 716.6077791464947,
     "entry_fee": 0.41048133183512303,
-    "funding_pnl": 0.0027963002669588585,
+    "funding_pnl": 0.0037802898788168895,
     "entry_time": "2026-11-18T20:30:46+00:00",
     "opened_timestamp": 1795033846,
-    "last_funding_ts": 1795040133,
-    "last_checked_candle_ts": 1795039200000,
+    "last_funding_ts": 1795041052,
+    "last_checked_candle_ts": 1795040100000,
     "entry_signal_score": 10,
     "score": 10,
     "score_breakdown": {
@@ -11121,19 +11122,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-04T16:22:34.482730+00:00",
-      "type": "POSITION_OPENED",
-      "side": "SHORT",
-      "setup": "E",
-      "regime": "HIGH_VOLATILITY",
-      "score": 0,
-      "entry_price": 80483.90000000001,
-      "stop_price": 81274.98850524248,
-      "quantity": 0.0009196599298672306,
-      "leverage": 40.0,
-      "effective_risk_pct": 1.2500000000000082
-    },
     {
       "timestamp": "2026-11-04T17:18:57.203343+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -12801,6 +12789,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": 0.00027124,
       "hours": 0.2453
+    },
+    {
+      "timestamp": "2026-11-18T22:30:54.141932+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00098399,
+      "hours": 0.2553
     }
   ],
   "econ_calendar": {
@@ -12850,7 +12844,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1794790195.12,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12917,7 +12911,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12937,7 +12931,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12957,7 +12951,7 @@
           "side": "LONG",
           "szi": 5.00009,
           "entry_px": 64049.0,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12977,7 +12971,7 @@
           "side": "LONG",
           "szi": 28.3242,
           "entry_px": 68666.4,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12997,7 +12991,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13037,7 +13031,7 @@
           "side": "LONG",
           "szi": 5.07564,
           "entry_px": 64035.0,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13077,7 +13071,7 @@
           "side": "SHORT",
           "szi": -30.59863,
           "entry_px": 81670.3,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13097,7 +13091,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795040133
+          "updated_ts": 1795041052
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13163,7 +13157,7 @@
           "side": null
         }
       ],
-      "ts": 1795040133,
+      "ts": 1795041052,
       "enabled_pool": 8
     }
   },
@@ -14138,9 +14132,9 @@
     "last_bar_t": {
       "G": 1795035600000,
       "H": 1795017600000,
-      "I": 1795039200000,
-      "J": 1795039200000,
-      "K": 1795039200000
+      "I": 1795040100000,
+      "J": 1795040100000,
+      "K": 1795040100000
     },
     "next_id": 24,
     "events": [
@@ -14560,7 +14554,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-18T22:15:35.422343+00:00"
+    "updated_at": "2026-11-18T22:30:54.141777+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
