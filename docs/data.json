@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
-  "generated_at": "2026-11-18T19:15:43.611738+00:00",
+  "generated_at": "2026-11-18T19:30:49.232514+00:00",
   "market_status": "OK",
-  "price": 62837.5,
-  "funding_rate": 6.6112e-06,
-  "funding_rate_pct": 0.0006611200000000001,
+  "price": 62851.5,
+  "funding_rate": 1.25e-05,
+  "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
   "equity": 82.0962663670246,
   "marked_equity": 82.0962663670246,
@@ -17,40 +17,31 @@
   "open_position": null,
   "has_position": false,
   "signal": {
-    "direction": "SHORT",
-    "score": 10,
+    "direction": "WAIT",
+    "score": 0,
     "long_score": 0,
-    "short_score": 10,
-    "score_edge": 10,
-    "rsi": 38.252,
-    "atr": 306.23708,
-    "ema9": 63055.77736528863,
-    "ema21": 63232.3674420178,
+    "short_score": 0,
+    "score_edge": 0,
+    "rsi": 38.587,
+    "atr": 293.22014,
+    "ema9": 63011.8218922309,
+    "ema21": 63196.334038198,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-18T19:15:43.611673+00:00",
-    "reference_price": 62824.0,
-    "previous_close": 63150.0,
+    "timestamp": "2026-11-18T19:30:49.232443+00:00",
+    "reference_price": 62836.0,
+    "previous_close": 62824.0,
     "reasons": [
-      "htf_bias:+4",
-      "structure:+2",
-      "rsi:+1",
-      "vwap:+1",
-      "volatility_fit:+1",
-      "trend_continuation:+1",
-      "setup F / regime TREND_DOWN"
+      "明確な方向優位性なし"
     ],
-    "flags": [
-      "コストフィルター通過",
-      "対向ゾーンまで 0.75R"
-    ],
+    "flags": [],
     "bollinger": {
-      "middle": 63126.0,
-      "upper": 63899.533192565126,
-      "lower": 62352.466807434874,
-      "width_pct": 2.450759409958262,
-      "position": 0.30479182864892146,
+      "middle": 63069.75,
+      "upper": 63750.24419541977,
+      "lower": 62389.25580458023,
+      "width_pct": 2.1579099185259847,
+      "position": 0.3282498208116173,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -66,44 +57,34 @@
       "trend": "DOWN"
     },
     "regime": "TREND_DOWN",
-    "adx": 32.46,
-    "atr_percentile": 83.0,
+    "adx": 32.32,
+    "atr_percentile": 80.0,
     "macd": {
-      "line": -238.3371,
-      "signal": -287.2444,
-      "hist": 48.9073,
-      "hist_prev": 68.5989
+      "line": -240.5121,
+      "signal": -277.8979,
+      "hist": 37.3858,
+      "hist_prev": 48.9073
     },
-    "vwap": 63657.810162561465,
-    "relative_volume": 1.289,
+    "vwap": 63652.754188569044,
+    "relative_volume": 0.216,
     "htf_bias": "DOWN",
     "structure_bias": "DOWN",
     "support": 62256.0,
     "resistance": 63000.0,
-    "premium": -0.0003388035,
-    "setup": "F",
-    "score_breakdown": {
-      "htf_bias": 4,
-      "structure": 2,
-      "macd_momentum": 0,
-      "rsi": 1,
-      "volume": 0,
-      "vwap": 1,
-      "crowding": 0,
-      "volatility_fit": 1,
-      "trend_continuation": 1
-    },
-    "entry_status": "イベント回避（EVENT_RISK）: FOMC Meeting Minutes の発表窓のため新規エントリー見送り",
+    "premium": -0.0006360109,
+    "setup": null,
+    "score_breakdown": {},
+    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム TREND_DOWN）",
     "evaluation_notes": [
       "A/LONG: レジーム不一致",
       "B/LONG: 上位足が逆行",
       "C/LONG: レンジレジーム限定",
       "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: 対向ゾーンまでの距離が1.5R未満",
+      "A/SHORT: 反転トリガー未発生",
       "B/SHORT: 出来高不足",
       "C/SHORT: レンジレジーム限定",
-      "CONSENSUS: LONG 3 / SHORT 2 / FLAT 4（建玉 5名、参入条件: 未達）",
-      "EVENT_RISK: FOMC Meeting Minutes（FOMC）"
+      "F/SHORT: 継続トリガー未発生",
+      "CONSENSUS: LONG 3 / SHORT 2 / FLAT 4（建玉 5名、参入条件: 未達）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -14632,11 +14613,6 @@
   ],
   "equity_history": [
     {
-      "time": "2026-10-21T04:10:30.979179+00:00",
-      "equity_usd": 100.0,
-      "price": 82795.0
-    },
-    {
       "time": "2026-10-21T05:07:35.981709+00:00",
       "equity_usd": 100.0,
       "price": 82896.0
@@ -20700,6 +20676,12 @@
       "equity": 82.0962663670246,
       "marked_equity": 82.0962663670246,
       "price": 62837.5
+    },
+    {
+      "timestamp": "2026-11-18T19:30:49.232504+00:00",
+      "equity": 82.0962663670246,
+      "marked_equity": 82.0962663670246,
+      "price": 62851.5
     }
   ],
   "events": [
@@ -21724,26 +21706,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 38.252,
-    "atr": 306.23708,
+    "rsi_15m": 38.587,
+    "atr": 293.22014,
     "bollinger": {
-      "middle": 63126.0,
-      "upper": 63899.533192565126,
-      "lower": 62352.466807434874,
-      "width_pct": 2.450759409958262,
-      "position": 0.30479182864892146,
+      "middle": 63069.75,
+      "upper": 63750.24419541977,
+      "lower": 62389.25580458023,
+      "width_pct": 2.1579099185259847,
+      "position": 0.3282498208116173,
       "state": "INSIDE"
     },
-    "adx": 32.46,
-    "atr_percentile": 83.0,
+    "adx": 32.32,
+    "atr_percentile": 80.0,
     "macd": {
-      "line": -238.3371,
-      "signal": -287.2444,
-      "hist": 48.9073,
-      "hist_prev": 68.5989
+      "line": -240.5121,
+      "signal": -277.8979,
+      "hist": 37.3858,
+      "hist_prev": 48.9073
     },
-    "vwap": 63657.810162561465,
-    "relative_volume": 1.289
+    "vwap": 63652.754188569044,
+    "relative_volume": 0.216
   },
   "fibonacci": {
     "swing_high": 65792.0,
@@ -21867,7 +21849,7 @@
     "short_ratio": 0.4,
     "enabled_pool": 9,
     "valid": true,
-    "updated_ts": 1795029342,
+    "updated_ts": 1795030246,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -23069,10 +23051,10 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-18T19:15:43.611561+00:00"
+    "updated_at": "2026-11-18T19:30:49.232374+00:00"
   },
   "chart": {
-    "generated_at": "2026-11-18T19:15:44Z",
+    "generated_at": "2026-11-18T19:30:50Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
@@ -24125,7 +24107,7 @@
             63148.0,
             63148.0,
             62712.0,
-            62854.0
+            62845.0
           ]
         ],
         "lines": {
@@ -25210,7 +25192,7 @@
             63106.0,
             63506.0,
             62256.0,
-            62854.0
+            62845.0
           ]
         ],
         "lines": {
@@ -26294,7 +26276,7 @@
             64921.0,
             64970.0,
             62256.0,
-            62854.0
+            62845.0
           ]
         ],
         "lines": {
@@ -27379,7 +27361,7 @@
             73980.0,
             74180.0,
             61970.0,
-            62854.0
+            62845.0
           ]
         ],
         "lines": {
@@ -28030,7 +28012,7 @@
             76805.0,
             81177.0,
             61970.0,
-            62851.0
+            62845.0
           ]
         ],
         "lines": {
