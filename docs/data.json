@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V20_14_PRO_2026-11-15",
-  "generated_at": "2026-11-19T15:45:35.232191+00:00",
+  "generated_at": "2026-11-19T16:00:53.482192+00:00",
   "market_status": "OK",
-  "price": 62850.5,
-  "funding_rate": 9.8324e-06,
-  "funding_rate_pct": 0.00098324,
+  "price": 63123.5,
+  "funding_rate": 1.25e-05,
+  "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
   "equity": 66.50242580071618,
   "marked_equity": 66.50242580071618,
@@ -22,26 +22,26 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 27.642,
-    "atr": 261.67691,
-    "ema9": 63499.832930763485,
-    "ema21": 63631.73192256609,
+    "rsi": 36.107,
+    "atr": 268.69999,
+    "ema9": 63417.66634461079,
+    "ema21": 63582.39265687826,
     "trend_15m": "DOWN",
     "trend_1h": "UP",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-19T15:45:35.232110+00:00",
-    "reference_price": 62860.0,
-    "previous_close": 63355.0,
+    "timestamp": "2026-11-19T16:00:53.482108+00:00",
+    "reference_price": 63089.0,
+    "previous_close": 62860.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 63721.65,
-      "upper": 64227.56986519606,
-      "lower": 63215.73013480394,
-      "width_pct": 1.5879057281035927,
-      "position": -0.3515676683955495,
+      "middle": 63688.1,
+      "upper": 64263.60635096409,
+      "lower": 63112.59364903591,
+      "width_pct": 1.807264939491332,
+      "position": -0.020498165655674264,
       "state": "BELOW_LOWER"
     },
     "fibonacci": {
@@ -56,35 +56,35 @@
       },
       "trend": "UP"
     },
-    "regime": "NEUTRAL",
-    "adx": 24.9,
-    "atr_percentile": 53.0,
+    "regime": "TREND_UP",
+    "adx": 26.04,
+    "atr_percentile": 59.0,
     "macd": {
-      "line": -71.9698,
-      "signal": 30.8513,
-      "hist": -102.8212,
-      "hist_prev": -62.8
+      "line": -104.3769,
+      "signal": 3.8057,
+      "hist": -108.1826,
+      "hist_prev": -102.8212
     },
-    "vwap": 63325.34271705807,
-    "relative_volume": 4.448,
+    "vwap": 63320.07428944321,
+    "relative_volume": 1.318,
     "htf_bias": "NEUTRAL",
     "structure_bias": "UP",
-    "support": 62611.0,
-    "resistance": 63000.0,
-    "premium": -0.0002862823,
+    "support": 63037.0,
+    "resistance": 63260.0,
+    "premium": -0.000402294,
     "setup": null,
     "score_breakdown": {},
-    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム NEUTRAL）",
+    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム TREND_UP）",
     "evaluation_notes": [
       "A/LONG: 上位足バイアス不一致",
       "B/LONG: 上位足が逆行",
       "C/LONG: レンジレジーム限定",
-      "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: 上位足バイアス不一致",
+      "F/LONG: 上位足バイアス不一致",
+      "A/SHORT: レジーム不一致",
       "B/SHORT: 上位足が逆行",
       "C/SHORT: レンジレジーム限定",
       "F/SHORT: レジーム不一致（確立したトレンド限定）",
-      "CONSENSUS: LONG 4 / SHORT 2 / FLAT 2（建玉 6名、参入条件: 未達）"
+      "CONSENSUS: LONG 3 / SHORT 2 / FLAT 3（建玉 5名、参入条件: 未達）"
     ],
     "paper_only": true,
     "live_trading_enabled": false
@@ -15147,12 +15147,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-23T02:13:32.508321+00:00",
-      "equity": 99.98294318126045,
-      "marked_equity": 99.98294318126045,
-      "price": 81439.5
-    },
-    {
       "timestamp": "2026-10-23T02:43:04.712063+00:00",
       "equity": 99.98294318126045,
       "marked_equity": 99.98294318126045,
@@ -21145,15 +21139,15 @@
       "equity": 66.50242580071618,
       "marked_equity": 66.50242580071618,
       "price": 62850.5
+    },
+    {
+      "timestamp": "2026-11-19T16:00:53.482179+00:00",
+      "equity": 66.50242580071618,
+      "marked_equity": 66.50242580071618,
+      "price": 63123.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-15T18:00:53.859579+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": -0.00127156,
-      "hours": 0.2567
-    },
     {
       "timestamp": "2026-11-15T18:15:31.177154+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -21880,6 +21874,13 @@
       "timestamp": "2026-11-19T15:15:36.445974+00:00",
       "type": "DAILY_STOP_LIMIT_CROSSED",
       "stops": 2
+    },
+    {
+      "timestamp": "2026-11-19T16:00:52.013137+00:00",
+      "type": "COPY_SOURCE_FLAT",
+      "trader": "0x24e370916722584204322fad3c179a7fbde6684b",
+      "label": "HL-684B",
+      "previous_side": "LONG"
     }
   ],
   "stats_by_setup": {
@@ -22008,26 +22009,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 27.642,
-    "atr": 261.67691,
+    "rsi_15m": 36.107,
+    "atr": 268.69999,
     "bollinger": {
-      "middle": 63721.65,
-      "upper": 64227.56986519606,
-      "lower": 63215.73013480394,
-      "width_pct": 1.5879057281035927,
-      "position": -0.3515676683955495,
+      "middle": 63688.1,
+      "upper": 64263.60635096409,
+      "lower": 63112.59364903591,
+      "width_pct": 1.807264939491332,
+      "position": -0.020498165655674264,
       "state": "BELOW_LOWER"
     },
-    "adx": 24.9,
-    "atr_percentile": 53.0,
+    "adx": 26.04,
+    "atr_percentile": 59.0,
     "macd": {
-      "line": -71.9698,
-      "signal": 30.8513,
-      "hist": -102.8212,
-      "hist_prev": -62.8
+      "line": -104.3769,
+      "signal": 3.8057,
+      "hist": -108.1826,
+      "hist_prev": -102.8212
     },
-    "vwap": 63325.34271705807,
-    "relative_volume": 4.448
+    "vwap": 63320.07428944321,
+    "relative_volume": 1.318
   },
   "fibonacci": {
     "swing_high": 65679.0,
@@ -22093,8 +22094,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": "LONG",
-        "source_entry_price": 62627.2,
+        "side": null,
+        "source_entry_price": null,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -22143,15 +22144,15 @@
     "entry_ratio": 0.8,
     "exit_ratio": 0.5,
     "min_pool": 7,
-    "long_count": 4,
+    "long_count": 3,
     "short_count": 2,
-    "flat_count": 2,
-    "positioned": 6,
-    "long_ratio": 0.6666666666666666,
-    "short_ratio": 0.3333333333333333,
+    "flat_count": 3,
+    "positioned": 5,
+    "long_ratio": 0.6,
+    "short_ratio": 0.4,
     "enabled_pool": 8,
     "valid": true,
-    "updated_ts": 1795103133,
+    "updated_ts": 1795104051,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -22171,8 +22172,8 @@
       {
         "address": "0x24e370916722584204322fad3c179a7fbde6684b",
         "label": "HL-684B",
-        "side": "LONG",
-        "source_entry_price": 62627.2,
+        "side": null,
+        "source_entry_price": null,
         "auto_disabled": false,
         "disabled_reason": null,
         "reeval": {
@@ -22365,8 +22366,8 @@
         "auto_disabled": false,
         "disabled_reason": null,
         "is_copy_target": true,
-        "side": "LONG",
-        "source_entry_price": 62627.2,
+        "side": null,
+        "source_entry_price": null,
         "closes_30d": 967,
         "win_rate_30d": 0.6701,
         "realized_pnl_30d": -23402.97,
@@ -23353,21 +23354,14 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-19T15:45:35.232049+00:00"
+    "updated_at": "2026-11-19T16:00:53.482053+00:00"
   },
   "chart": {
-    "generated_at": "2026-11-19T15:45:36Z",
+    "generated_at": "2026-11-19T16:00:54Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
         "candles": [
-          [
-            1794564000,
-            69081.0,
-            69462.0,
-            69075.0,
-            69323.0
-          ],
           [
             1794567600,
             69316.0,
@@ -24409,7 +24403,14 @@
             63525.0,
             63903.0,
             62750.0,
-            62857.0
+            63089.0
+          ],
+          [
+            1795104000,
+            63088.0,
+            63126.0,
+            63078.0,
+            63094.0
           ]
         ],
         "lines": {
@@ -24427,8 +24428,8 @@
               63300.0
             ],
             [
-              1795164768,
-              65541.8
+              1795168368,
+              65610.0
             ]
           ],
           "trend_low": [
@@ -24437,8 +24438,8 @@
               62035.0
             ],
             [
-              1795164768,
-              64420.8
+              1795168368,
+              64489.2
             ]
           ],
           "channel": {
@@ -24449,8 +24450,8 @@
                 63160.8
               ],
               [
-                1795164768,
-                65546.6
+                1795168368,
+                65615.0
               ]
             ]
           }
@@ -24458,13 +24459,6 @@
       },
       "4h": {
         "candles": [
-          [
-            1792944000,
-            80605.0,
-            80927.0,
-            80492.0,
-            80533.0
-          ],
           [
             1792958400,
             80533.0,
@@ -25506,13 +25500,20 @@
             63922.0,
             64045.0,
             62750.0,
-            62857.0
+            63089.0
+          ],
+          [
+            1795104000,
+            63088.0,
+            63126.0,
+            63078.0,
+            63094.0
           ]
         ],
         "lines": {
           "resistance": [
-            65444.0,
-            65679.0
+            64050.0,
+            65444.0
           ],
           "support": [
             62035.0,
@@ -25520,12 +25521,12 @@
           ],
           "trend_high": [
             [
-              1794830400,
-              65679.0
+              1794916800,
+              65444.0
             ],
             [
-              1795347072,
-              64273.7
+              1795361472,
+              61530.7
             ]
           ],
           "trend_low": [
@@ -25534,11 +25535,23 @@
               63320.0
             ],
             [
-              1795347072,
-              58520.5
+              1795361472,
+              58359.9
             ]
           ],
-          "channel": null
+          "channel": {
+            "kind": "down",
+            "points": [
+              [
+                1794916800,
+                63048.8
+              ],
+              [
+                1795361472,
+                59135.5
+              ]
+            ]
+          }
         }
       },
       "1d": {
@@ -26591,7 +26604,7 @@
             63037.0,
             64050.0,
             62377.0,
-            62856.0
+            63094.0
           ]
         ],
         "lines": {
@@ -27676,7 +27689,7 @@
             63037.0,
             64050.0,
             62377.0,
-            62856.0
+            63094.0
           ]
         ],
         "lines": {
@@ -28327,7 +28340,7 @@
             76805.0,
             81177.0,
             61970.0,
-            62856.0
+            63084.0
           ]
         ],
         "lines": {
