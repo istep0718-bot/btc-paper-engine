@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-19T20:27:09+00:00",
- "updated_ts": 1795120029,
+ "updated_at": "2026-11-19T20:32:10+00:00",
+ "updated_ts": 1795120330,
  "next_round": {
   "round_start_ts": 1795120200,
   "round_start_iso": "2026-11-19T20:30:00+00:00",
@@ -27,13 +27,13 @@
   "sim": null
  },
  "stats": {
-  "settled": 249,
-  "bet_rounds": 92,
-  "bet_hits": 46,
-  "bet_rate": 0.5,
-  "all_rounds": 249,
-  "all_hits": 46,
-  "all_rate": 0.18473895582329317,
+  "settled": 250,
+  "bet_rounds": 93,
+  "bet_hits": 47,
+  "bet_rate": 0.5053763440860215,
+  "all_rounds": 250,
+  "all_hits": 47,
+  "all_rate": 0.188,
   "signal_rates": {
    "traders": {
     "hits": 0,
@@ -41,27 +41,27 @@
     "rate": null
    },
    "analysis": {
-    "hits": 46,
-    "total": 92,
-    "rate": 0.5
+    "hits": 47,
+    "total": 93,
+    "rate": 0.5053763440860215
    },
    "verdict": {
-    "hits": 46,
-    "total": 92,
-    "rate": 0.5
+    "hits": 47,
+    "total": 93,
+    "rate": 0.5053763440860215
    }
   },
   "sim": {
-   "rounds": 92,
+   "rounds": 93,
    "stake_per_round": 4.0,
    "payout_multiple": 2.0,
    "model_note": "virtual_fixed_multiple",
-   "invested": 368.0,
-   "returned": 368.0,
-   "pnl": 0.0,
-   "return_rate": 1.0
+   "invested": 372.0,
+   "returned": 376.0,
+   "pnl": 4.0,
+   "return_rate": 1.010752688172043
   },
-  "coverage": 0.36947791164658633,
+  "coverage": 0.372,
   "by_direction": {
    "UP": {
     "hits": 11,
@@ -69,9 +69,9 @@
     "rate": 0.4583333333333333
    },
    "DOWN": {
-    "hits": 35,
-    "total": 68,
-    "rate": 0.5147058823529411
+    "hits": 36,
+    "total": 69,
+    "rate": 0.5217391304347826
    }
   },
   "streaks": {
@@ -126,12 +126,16 @@
     "flat": 7
    },
    "verdict": "DOWN",
-   "start_price": null,
-   "end_price": null,
-   "actual": null,
-   "hit": null,
-   "settled": false,
-   "sim": null
+   "start_price": 62185.0,
+   "end_price": 61847.0,
+   "actual": "DOWN",
+   "hit": true,
+   "settled": true,
+   "sim": {
+    "stake": 4.0,
+    "payout": 8.0,
+    "pnl": 4.0
+   }
   },
   {
    "round_start_ts": 1795118400,
