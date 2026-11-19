@@ -5014,12 +5014,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-23T01:34:55.461371+00:00",
-      "equity": 99.98294318,
-      "marked_equity": 99.98294318,
-      "price": 81370.5
-    },
-    {
       "timestamp": "2026-10-23T01:40:04.479166+00:00",
       "equity": 99.98294318126045,
       "marked_equity": 99.98294318126045,
@@ -11012,6 +11006,12 @@
       "equity": 66.50242580071618,
       "marked_equity": 66.50242580071618,
       "price": 63656.5
+    },
+    {
+      "timestamp": "2026-11-19T15:15:36.453796+00:00",
+      "equity": 66.50242580071618,
+      "marked_equity": 66.50242580071618,
+      "price": 63422.5
     }
   ],
   "position": null,
@@ -11141,22 +11141,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-05T15:39:12.089813+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00083733,
-      "hours": 0.905
-    },
-    {
-      "timestamp": "2026-11-05T15:39:12.089895+00:00",
-      "type": "POSITION_PARTIALLY_CLOSED",
-      "side": "SHORT",
-      "reason": "PARTIAL_TAKE_PROFIT_1",
-      "net_pnl": 0.20300973909452105,
-      "fraction": 0.2,
-      "setup": "E",
-      "r_multiple": 1.1692
-    },
     {
       "timestamp": "2026-11-05T15:39:12.089942+00:00",
       "type": "POSITION_PARTIALLY_CLOSED",
@@ -12857,6 +12841,16 @@
       "fraction": 1.0,
       "setup": "E",
       "r_multiple": -0.9706
+    },
+    {
+      "timestamp": "2026-11-19T15:15:36.445956+00:00",
+      "type": "DAILY_LOSS_LIMIT_CROSSED",
+      "daily_loss_pct": 12.216091507334223
+    },
+    {
+      "timestamp": "2026-11-19T15:15:36.445974+00:00",
+      "type": "DAILY_STOP_LIMIT_CROSSED",
+      "stops": 2
     }
   ],
   "econ_calendar": {
@@ -12906,7 +12900,7 @@
           "szi": 1.1,
           "entry_px": 62627.2,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12973,7 +12967,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12993,7 +12987,7 @@
           "side": "LONG",
           "szi": 1.1,
           "entry_px": 62627.2,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13013,7 +13007,7 @@
           "side": "LONG",
           "szi": 5.00009,
           "entry_px": 64049.0,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13033,7 +13027,7 @@
           "side": "LONG",
           "szi": 28.3242,
           "entry_px": 68666.4,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13053,7 +13047,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13093,7 +13087,7 @@
           "side": "LONG",
           "szi": 5.07564,
           "entry_px": 64035.0,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13133,7 +13127,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13153,7 +13147,7 @@
           "side": "SHORT",
           "szi": -2.0,
           "entry_px": 63000.0,
-          "updated_ts": 1795100450
+          "updated_ts": 1795101334
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13219,7 +13213,7 @@
           "side": "SHORT"
         }
       ],
-      "ts": 1795100450,
+      "ts": 1795101334,
       "enabled_pool": 8
     }
   },
@@ -14194,9 +14188,9 @@
     "last_bar_t": {
       "G": 1795096800000,
       "H": 1795075200000,
-      "I": 1795099500000,
-      "J": 1795099500000,
-      "K": 1795099500000
+      "I": 1795100400000,
+      "J": 1795100400000,
+      "K": 1795100400000
     },
     "next_id": 24,
     "events": [
@@ -14616,7 +14610,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-19T15:00:52.509578+00:00"
+    "updated_at": "2026-11-19T15:15:36.453671+00:00"
   },
   "open_trade": null,
   "last_exit_timestamp": 1792682978.9771085,
@@ -14714,6 +14708,6 @@
   "last_candle_ts": 1792907100000,
   "consecutive_loss_lock": true,
   "dd_limit_alerted": true,
-  "daily_stop_alerted": false,
-  "daily_loss_alerted": false
+  "daily_stop_alerted": true,
+  "daily_loss_alerted": true
 }
