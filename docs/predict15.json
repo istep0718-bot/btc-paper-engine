@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-19T03:42:09+00:00",
- "updated_ts": 1795059729,
+ "updated_at": "2026-11-19T03:47:09+00:00",
+ "updated_ts": 1795060029,
  "next_round": {
   "round_start_ts": 1795059900,
   "round_start_iso": "2026-11-19T03:45:00+00:00",
@@ -27,13 +27,13 @@
   "sim": null
  },
  "stats": {
-  "settled": 182,
-  "bet_rounds": 75,
+  "settled": 183,
+  "bet_rounds": 76,
   "bet_hits": 35,
-  "bet_rate": 0.4666666666666667,
-  "all_rounds": 182,
+  "bet_rate": 0.4605263157894737,
+  "all_rounds": 183,
   "all_hits": 35,
-  "all_rate": 0.19230769230769232,
+  "all_rate": 0.1912568306010929,
   "signal_rates": {
    "traders": {
     "hits": 0,
@@ -42,26 +42,26 @@
    },
    "analysis": {
     "hits": 35,
-    "total": 75,
-    "rate": 0.4666666666666667
+    "total": 76,
+    "rate": 0.4605263157894737
    },
    "verdict": {
     "hits": 35,
-    "total": 75,
-    "rate": 0.4666666666666667
+    "total": 76,
+    "rate": 0.4605263157894737
    }
   },
   "sim": {
-   "rounds": 75,
+   "rounds": 76,
    "stake_per_round": 4.0,
    "payout_multiple": 2.0,
    "model_note": "virtual_fixed_multiple",
-   "invested": 300.0,
+   "invested": 304.0,
    "returned": 280.0,
-   "pnl": -20.0,
-   "return_rate": 0.9333333333333333
+   "pnl": -24.0,
+   "return_rate": 0.9210526315789473
   },
-  "coverage": 0.41208791208791207,
+  "coverage": 0.41530054644808745,
   "by_direction": {
    "UP": {
     "hits": 3,
@@ -70,13 +70,13 @@
    },
    "DOWN": {
     "hits": 32,
-    "total": 63,
-    "rate": 0.5079365079365079
+    "total": 64,
+    "rate": 0.5
    }
   },
   "streaks": {
    "max_miss": 5,
-   "current_miss": 1
+   "current_miss": 2
   },
   "sample_status": "insufficient",
   "sample_threshold": 100,
@@ -126,12 +126,16 @@
     "flat": 7
    },
    "verdict": "DOWN",
-   "start_price": null,
-   "end_price": null,
-   "actual": null,
-   "hit": null,
-   "settled": false,
-   "sim": null
+   "start_price": 62919.0,
+   "end_price": 62998.0,
+   "actual": "UP",
+   "hit": false,
+   "settled": true,
+   "sim": {
+    "stake": 4.0,
+    "payout": 0.0,
+    "pnl": -4.0
+   }
   },
   {
    "round_start_ts": 1795058100,
