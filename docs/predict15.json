@@ -1,17 +1,17 @@
 {
- "updated_at": "2026-11-19T18:32:11+00:00",
- "updated_ts": 1795113131,
+ "updated_at": "2026-11-19T18:42:11+00:00",
+ "updated_ts": 1795113731,
  "next_round": {
-  "round_start_ts": 1795113000,
-  "round_start_iso": "2026-11-19T18:30:00+00:00",
-  "predicted_at_iso": "2026-11-19T18:27:09+00:00",
-  "price_at_prediction": 63186.5,
+  "round_start_ts": 1795113900,
+  "round_start_iso": "2026-11-19T18:45:00+00:00",
+  "predicted_at_iso": "2026-11-19T18:42:11+00:00",
+  "price_at_prediction": 63146.5,
   "strategy_version": "v2.0-regime",
   "regime": "RANGE",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "NEUTRAL",
-   "technical": "DOWN"
+   "technical": "NEUTRAL"
   },
   "traders_counts": {
    "long": 2,
@@ -83,6 +83,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795113900,
+   "round_start_iso": "2026-11-19T18:45:00+00:00",
+   "predicted_at_iso": "2026-11-19T18:42:11+00:00",
+   "price_at_prediction": 63146.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "RANGE",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "NEUTRAL",
+    "technical": "NEUTRAL"
+   },
+   "traders_counts": {
+    "long": 2,
+    "short": 1,
+    "flat": 7
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795113000,
    "round_start_iso": "2026-11-19T18:30:00+00:00",
@@ -2585,31 +2610,6 @@
     "payout": 8.0,
     "pnl": 4.0
    }
-  },
-  {
-   "round_start_ts": 1795027500,
-   "round_start_iso": "2026-11-18T18:45:00+00:00",
-   "predicted_at_iso": "2026-11-18T18:42:10+00:00",
-   "price_at_prediction": 63228.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "NEUTRAL"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 2,
-    "flat": 7
-   },
-   "verdict": "SKIP",
-   "start_price": 63241.0,
-   "end_price": 63150.0,
-   "actual": "DOWN",
-   "hit": null,
-   "settled": true,
-   "sim": null
   }
  ]
 }
