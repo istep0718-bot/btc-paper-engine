@@ -5088,12 +5088,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-25T01:35:36.623878+00:00",
-      "equity": 98.15266165691833,
-      "marked_equity": 98.15266165691833,
-      "price": 80756.5
-    },
-    {
       "timestamp": "2026-10-25T02:07:51.373936+00:00",
       "equity": 98.15266165691833,
       "marked_equity": 98.15266165691833,
@@ -11086,6 +11080,12 @@
       "equity": 59.31901049207623,
       "marked_equity": 59.31901049207623,
       "price": 59791.5
+    },
+    {
+      "timestamp": "2026-11-20T16:00:52.101791+00:00",
+      "equity": 59.31901049207623,
+      "marked_equity": 59.31901049207623,
+      "price": 59300.5
     }
   ],
   "position": null,
@@ -12883,7 +12883,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12950,7 +12950,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12970,7 +12970,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -12990,7 +12990,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13010,7 +13010,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13030,7 +13030,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13070,7 +13070,7 @@
           "side": "LONG",
           "szi": 5.07564,
           "entry_px": 64035.0,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13110,7 +13110,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795189533
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13127,10 +13127,10 @@
       "0x6bbeaa7c0668557ac6c81b63d4451647db962b76": {
         "label": "HL-2B76",
         "snapshot": {
-          "side": "SHORT",
-          "szi": -2.0,
-          "entry_px": 63000.0,
-          "updated_ts": 1795189533
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1795190450
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13148,11 +13148,11 @@
     "current": {
       "fetched": 8,
       "long_count": 2,
-      "short_count": 2,
-      "flat_count": 4,
-      "positioned": 4,
-      "long_ratio": 0.5,
-      "short_ratio": 0.5,
+      "short_count": 1,
+      "flat_count": 5,
+      "positioned": 3,
+      "long_ratio": 0.6666666666666666,
+      "short_ratio": 0.3333333333333333,
       "valid": true,
       "members": [
         {
@@ -13193,16 +13193,43 @@
         {
           "address": "0x6bbeaa7c0668557ac6c81b63d4451647db962b76",
           "label": "HL-2B76",
-          "side": "SHORT"
+          "side": null
         }
       ],
-      "ts": 1795189533,
+      "ts": 1795190450,
       "enabled_pool": 8
     }
   },
   "shadow": {
     "positions": {
-      "G": null,
+      "G": {
+        "id": 25,
+        "setup": "G",
+        "side": "SHORT",
+        "entry_bar_t": 1795186800000,
+        "entry_time": "2026-11-20T16:00:00+00:00",
+        "entry_price": 59455.0,
+        "atr": 766.5470597049241,
+        "risk_distance": 1149.820589557386,
+        "stop_price": 60604.820589557385,
+        "tp_price": 57730.26911566392,
+        "mfe_r": 0.0,
+        "mae_r": 0.0,
+        "bars_held": 0,
+        "first_hit": {
+          "1.0": null,
+          "1.5": null,
+          "2.0": null
+        },
+        "context": {
+          "bb_width_prev": 0.01633657824203766,
+          "bb_width_min_lookback": 0.01749896548690103,
+          "bb_upper": 62887.34050539237,
+          "bb_lower": 60595.259494607635,
+          "bb_mid": 61741.3
+        },
+        "origin_build": "BTC_PAPER_V20_15_PRO_2026-11-20"
+      },
       "H": null,
       "I": null,
       "J": null,
@@ -14061,8 +14088,8 @@
     ],
     "stats": {
       "G": {
-        "signals": 3,
-        "opened": 3,
+        "signals": 4,
+        "opened": 4,
         "closed": 3,
         "exits": {
           "TP_1_5R": 2,
@@ -14265,15 +14292,15 @@
       }
     },
     "last_bar_t": {
-      "G": 1795183200000,
-      "H": 1795161600000,
-      "I": 1795188600000,
-      "J": 1795188600000,
-      "K": 1795188600000,
-      "L": 1795188600000,
-      "M": 1795188600000
+      "G": 1795186800000,
+      "H": 1795176000000,
+      "I": 1795189500000,
+      "J": 1795189500000,
+      "K": 1795189500000,
+      "L": 1795189500000,
+      "M": 1795189500000
     },
-    "next_id": 25,
+    "next_id": 26,
     "events": [
       {
         "timestamp": "2026-11-04T01:31:55.084641+00:00",
@@ -14706,10 +14733,19 @@
         "reason": "TP_1_5R",
         "gross_r": 1.5,
         "exit_time": "2026-11-20T12:15:00+00:00"
+      },
+      {
+        "timestamp": "2026-11-20T16:00:52.092703+00:00",
+        "type": "SHADOW_OPEN",
+        "setup": "G",
+        "side": "SHORT",
+        "entry_price": 59455.0,
+        "risk_distance": 1149.820589557386,
+        "entry_time": "2026-11-20T16:00:00+00:00"
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-20T15:45:34.816756+00:00"
+    "updated_at": "2026-11-20T16:00:52.101568+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -14757,14 +14793,14 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 49,
+    "cycles_evaluated": 50,
     "context_cycles": {
-      "flat": 49,
+      "flat": 50,
       "position_open": 0,
       "event_blocked": 0,
       "dd_band_10": 0,
       "dd_band_20": 0,
-      "dd_band_30": 49
+      "dd_band_30": 50
     },
     "by_setup": {
       "A": {
@@ -14772,7 +14808,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 98
+          "other": 100
         },
         "selected": 0,
         "blocked": {
@@ -14790,7 +14826,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 98
+          "other": 100
         },
         "selected": 0,
         "blocked": {
@@ -14808,7 +14844,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 98
+          "other": 100
         },
         "selected": 0,
         "blocked": {
@@ -14826,7 +14862,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 98
+          "other": 100
         },
         "selected": 0,
         "blocked": {
@@ -14877,16 +14913,16 @@
       }
     },
     "top_reasons": {
-      "A/LONG|上位足バイアス不一致": 6,
-      "B/LONG|上位足が逆行": 6,
-      "C/LONG|レンジレジーム限定": 6,
-      "F/LONG|高ボラティリティで方向が揃っていない": 6,
+      "A/LONG|上位足バイアス不一致": 7,
+      "B/LONG|上位足が逆行": 7,
+      "C/LONG|レンジレジーム限定": 7,
+      "F/LONG|高ボラティリティで方向が揃っていない": 7,
       "A/SHORT|反転トリガー未発生": 1,
       "B/SHORT|出来高不足": 3,
-      "C/SHORT|レンジレジーム限定": 6,
+      "C/SHORT|レンジレジーム限定": 7,
       "F/SHORT|高ボラティリティで方向が揃っていない": 1,
-      "A/SHORT|押し目/戻りが未形成": 5,
-      "F/SHORT|ADX不足（高ボラティリティ時）": 5,
+      "A/SHORT|押し目/戻りが未形成": 6,
+      "F/SHORT|ADX不足（高ボラティリティ時）": 6,
       "A/LONG|レジーム不一致": 43,
       "B/LONG|レンジレジームではブレイクアウト禁止": 43,
       "C/LONG|RSI/BB極値でない": 36,
@@ -14901,17 +14937,17 @@
       "C/SHORT|対向ゾーンまでの距離が1.5R未満": 2,
       "C/LONG|反転トリガー未発生": 2,
       "C/LONG|対向ゾーンまでの距離が1.5R未満": 1,
-      "B/SHORT|対向ゾーンまでの距離が1.5R未満": 3
+      "B/SHORT|対向ゾーンまでの距離が1.5R未満": 4
     },
     "daily": {
       "2026-11-20": {
         "context_cycles": {
-          "flat": 49,
+          "flat": 50,
           "position_open": 0,
           "event_blocked": 0,
           "dd_band_10": 0,
           "dd_band_20": 0,
-          "dd_band_30": 49
+          "dd_band_30": 50
         },
         "by_setup": {
           "A": {
@@ -14919,7 +14955,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 98
+              "other": 100
             },
             "selected": 0,
             "blocked": {
@@ -14937,7 +14973,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 98
+              "other": 100
             },
             "selected": 0,
             "blocked": {
@@ -14955,7 +14991,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 98
+              "other": 100
             },
             "selected": 0,
             "blocked": {
@@ -14973,7 +15009,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 98
+              "other": 100
             },
             "selected": 0,
             "blocked": {
