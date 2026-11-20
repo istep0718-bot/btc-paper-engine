@@ -1,24 +1,24 @@
 {
- "updated_at": "2026-11-20T02:47:11+00:00",
- "updated_ts": 1795142831,
+ "updated_at": "2026-11-20T02:57:09+00:00",
+ "updated_ts": 1795143429,
  "next_round": {
-  "round_start_ts": 1795142700,
-  "round_start_iso": "2026-11-20T02:45:00+00:00",
-  "predicted_at_iso": "2026-11-20T02:42:11+00:00",
-  "price_at_prediction": 61678.5,
+  "round_start_ts": 1795143600,
+  "round_start_iso": "2026-11-20T03:00:00+00:00",
+  "predicted_at_iso": "2026-11-20T02:57:09+00:00",
+  "price_at_prediction": 62069.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
-   "technical": "DOWN"
+   "technical": "NEUTRAL"
   },
   "traders_counts": {
-   "long": 1,
-   "short": 1,
-   "flat": 8
+   "long": 0,
+   "short": 3,
+   "flat": 7
   },
-  "verdict": "DOWN",
+  "verdict": "SKIP",
   "start_price": null,
   "end_price": null,
   "actual": null,
@@ -83,6 +83,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795143600,
+   "round_start_iso": "2026-11-20T03:00:00+00:00",
+   "predicted_at_iso": "2026-11-20T02:57:09+00:00",
+   "price_at_prediction": 62069.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "NEUTRAL"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 3,
+    "flat": 7
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795142700,
    "round_start_iso": "2026-11-20T02:45:00+00:00",
@@ -2612,35 +2637,6 @@
     "stake": 4.0,
     "payout": 0.0,
     "pnl": -4.0
-   }
-  },
-  {
-   "round_start_ts": 1795057200,
-   "round_start_iso": "2026-11-19T03:00:00+00:00",
-   "predicted_at_iso": "2026-11-19T02:57:09+00:00",
-   "price_at_prediction": 62599.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 2,
-    "flat": 7
-   },
-   "verdict": "DOWN",
-   "start_price": 62574.0,
-   "end_price": 62452.0,
-   "actual": "DOWN",
-   "hit": true,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 8.0,
-    "pnl": 4.0
    }
   }
  ]
