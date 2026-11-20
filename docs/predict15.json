@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-20T03:42:11+00:00",
- "updated_ts": 1795146131,
+ "updated_at": "2026-11-20T03:47:09+00:00",
+ "updated_ts": 1795146429,
  "next_round": {
   "round_start_ts": 1795146300,
   "round_start_iso": "2026-11-20T03:45:00+00:00",
@@ -27,13 +27,13 @@
   "sim": null
  },
  "stats": {
-  "settled": 278,
+  "settled": 279,
   "bet_rounds": 114,
   "bet_hits": 55,
   "bet_rate": 0.4824561403508772,
-  "all_rounds": 278,
+  "all_rounds": 279,
   "all_hits": 55,
-  "all_rate": 0.19784172661870503,
+  "all_rate": 0.1971326164874552,
   "signal_rates": {
    "traders": {
     "hits": 0,
@@ -61,7 +61,7 @@
    "pnl": -16.0,
    "return_rate": 0.9649122807017544
   },
-  "coverage": 0.41007194244604317,
+  "coverage": 0.40860215053763443,
   "by_direction": {
    "UP": {
     "hits": 11,
@@ -74,6 +74,61 @@
     "rate": 0.4888888888888889
    }
   },
+  "by_regime": {
+   "scope": "v2.0-regime",
+   "TREND": {
+    "rounds": 54,
+    "directional_rounds": 54,
+    "bets": 29,
+    "hits": 12,
+    "hit_rate": 0.41379310344827586,
+    "wilson95": [
+     0.2551293527964552,
+     0.5926247152148476
+    ],
+    "coverage": 0.5370370370370371,
+    "sim_pnl": -20.0,
+    "ev_per_bet": -0.6896551724137931,
+    "max_miss_streak": 4,
+    "current_miss_streak": 2
+   },
+   "WEAK_TREND": {
+    "rounds": 37,
+    "directional_rounds": 37,
+    "bets": 32,
+    "hits": 19,
+    "hit_rate": 0.59375,
+    "wilson95": [
+     0.4225972657298823,
+     0.744805975196862
+    ],
+    "coverage": 0.8648648648648649,
+    "sim_pnl": 24.0,
+    "ev_per_bet": 0.75,
+    "max_miss_streak": 2,
+    "current_miss_streak": 0
+   },
+   "RANGE": {
+    "rounds": 118,
+    "directional_rounds": 118,
+    "bets": 0,
+    "hits": 0,
+    "hit_rate": null,
+    "wilson95": [
+     null,
+     null
+    ],
+    "coverage": 0.0,
+    "sim_pnl": 0,
+    "ev_per_bet": null,
+    "max_miss_streak": 0,
+    "current_miss_streak": 0
+   }
+  },
+  "bet_rate_wilson95": [
+   0.3928049157542809,
+   0.5732512138298388
+  ],
   "streaks": {
    "max_miss": 5,
    "current_miss": 2
@@ -126,11 +181,11 @@
     "flat": 7
    },
    "verdict": "SKIP",
-   "start_price": null,
-   "end_price": null,
-   "actual": null,
+   "start_price": 62091.0,
+   "end_price": 62142.0,
+   "actual": "UP",
    "hit": null,
-   "settled": false,
+   "settled": true,
    "sim": null
   },
   {
