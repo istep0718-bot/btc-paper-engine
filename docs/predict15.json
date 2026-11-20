@@ -1,17 +1,17 @@
 {
- "updated_at": "2026-11-20T07:02:18+00:00",
- "updated_ts": 1795158138,
+ "updated_at": "2026-11-20T07:12:10+00:00",
+ "updated_ts": 1795158730,
  "next_round": {
-  "round_start_ts": 1795158000,
-  "round_start_iso": "2026-11-20T07:00:00+00:00",
-  "predicted_at_iso": "2026-11-20T06:57:11+00:00",
-  "price_at_prediction": 61969.5,
+  "round_start_ts": 1795158900,
+  "round_start_iso": "2026-11-20T07:15:00+00:00",
+  "predicted_at_iso": "2026-11-20T07:12:10+00:00",
+  "price_at_prediction": 61923.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
-   "technical": "NEUTRAL"
+   "technical": "UP"
   },
   "traders_counts": {
    "long": 0,
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795158900,
+   "round_start_iso": "2026-11-20T07:15:00+00:00",
+   "predicted_at_iso": "2026-11-20T07:12:10+00:00",
+   "price_at_prediction": 61923.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "UP"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 3,
+    "flat": 7
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795158000,
    "round_start_iso": "2026-11-20T07:00:00+00:00",
@@ -2655,35 +2680,6 @@
     "stake": 4.0,
     "payout": 8.0,
     "pnl": 4.0
-   }
-  },
-  {
-   "round_start_ts": 1795072500,
-   "round_start_iso": "2026-11-19T07:15:00+00:00",
-   "predicted_at_iso": "2026-11-19T07:12:13+00:00",
-   "price_at_prediction": 63649.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "UP",
-    "technical": "UP"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 2,
-    "flat": 7
-   },
-   "verdict": "UP",
-   "start_price": 63609.0,
-   "end_price": 63553.0,
-   "actual": "DOWN",
-   "hit": false,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 0.0,
-    "pnl": -4.0
    }
   }
  ]
