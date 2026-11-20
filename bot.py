@@ -256,7 +256,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_14_PRO_2026-11-15"
+BUILD = "BTC_PAPER_V20_15_PRO_2026-11-20"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -530,6 +530,32 @@ SHADOW_K_RECLAIM_BARS = 8    # rejection within 8 bars (2h) of breakout
 SHADOW_K_MIN_RELVOL = 1.5    # rejection-bar relative volume threshold
 SHADOW_K_VOL_PERIOD = 20     # relative volume baseline window
 
+# V20.15 (2026-11-20, measurement only -- no trading-logic change):
+# shadow setups L (live-F replica, TREND_DOWN shorts) and M (L plus
+# the pre-registered exhaustion filter below), the real-risk monitor
+# (sizing provenance + risk-cap shadow ledger), the A/B/C entry
+# funnel and the Stage 0 window split. The filter thresholds are
+# pre-registered general levels; they must NOT be tuned on the
+# forward sample (change them only by restarting M as a new setup).
+SHADOW_HORIZON_BARS_L = 672  # 7 days of 15m bars (as I / J / K)
+SHADOW_HORIZON_BARS_M = 672  # 7 days of 15m bars
+SHADOW_M_EMA21_DIST_ATR = 3.0    # |price - EMA21| >= 3.0 ATR -> skip
+SHADOW_M_RSI_MAX = 25.0          # RSI <= 25 -> skip
+SHADOW_M_BEAR_RUN = 5            # >= 5 consecutive bearish bars -> skip
+SHADOW_M_LOW_DIST_ATR = 0.3      # price within 0.3 ATR of 12-bar low
+SHADOW_M_LOWER_WICK_RATIO = 0.4  # last-bar lower wick >= 40% of range
+
+RISK_SHADOW_CAPS_PCT = (2.5, 3.0)  # candidate real-risk caps (shadow)
+RISK_SHADOW_ENTRIES_LIMIT = 200    # detail rows kept in risk_shadow
+
+ENTRY_FUNNEL_TOP_REASONS_LIMIT = 200  # distinct raw reason keys kept
+ENTRY_FUNNEL_DAILY_DAYS = 35          # daily funnel snapshots kept
+
+# Stage 0 window W2 starts only when the owner approves a main-bot
+# change (or names a start date): set this to an ISO date string in
+# that change. None = W2 not started (W1 stays the live window).
+STAGE0_W2_STARTED_AT = None
+
 # ============================================================
 # UTILITIES
 # ============================================================
@@ -663,6 +689,9 @@ def default_state():
             "current": None,
         },
         "shadow": _new_shadow_state(),
+        "risk_shadow": None,
+        "entry_funnel": None,
+        "stage0": None,
     }
 
 
@@ -2328,10 +2357,13 @@ def _finalize_candidate_no_zone_e(ctx, side, stop_anchor):
 
 
 def evaluate_entry(ctx, allowed_setups=("A", "B", "C", "F")):
-    """Return (best_candidate, per_side_scores, rejection_notes)."""
+    """Return (best_candidate, per_side_scores, rejection_notes,
+    all_candidates). all_candidates (V20.15) lists every formed
+    candidate, not just the best, for the entry funnel."""
     best = None
     side_scores = {"LONG": 0, "SHORT": 0}
     notes = []
+    candidates = []
 
     for side in ("LONG", "SHORT"):
         for setup in ("A", "B", "C", "F"):
@@ -2339,6 +2371,7 @@ def evaluate_entry(ctx, allowed_setups=("A", "B", "C", "F")):
                 continue
             candidate, reason = _SETUP_FUNCS[setup](ctx, side)
             if candidate is not None:
+                candidates.append(candidate)
                 side_scores[side] = max(
                     side_scores[side], candidate["score"]
                 )
@@ -2347,7 +2380,7 @@ def evaluate_entry(ctx, allowed_setups=("A", "B", "C", "F")):
             elif reason:
                 notes.append(f"{setup}/{side}: {reason}")
 
-    return best, side_scores, notes
+    return best, side_scores, notes, candidates
 
 
 
@@ -3932,12 +3965,27 @@ def size_position(equity, entry, stop, risk_fraction):
 
     planned_risk = quantity * estimated_cost_per_unit
 
+    # V20.15: sizing provenance for the real-risk monitor. The
+    # calculation above is unchanged; only the returned record grows.
+    if quantity > risk_quantity:
+        clamp_action = "raised_min"
+    elif quantity < risk_quantity:
+        clamp_action = "capped_max"
+    else:
+        clamp_action = "none"
+
     return {
         "quantity": quantity,
         "margin_used": notional / LEVERAGE,
         "notional": notional,
         "planned_risk": planned_risk,
         "effective_risk_pct": planned_risk / equity * 100,
+        "risk_budget_usd": risk_budget,
+        "risk_quantity_pre_clamp": risk_quantity,
+        "clamp_action": clamp_action,
+        "cost_per_unit": estimated_cost_per_unit,
+        "distance": distance,
+        "cost_rate_part": entry * ROUND_TRIP_COST_RATE,
     }
 
 
@@ -4138,6 +4186,7 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
         "consensus_flat_count": pos.get("consensus_flat_count"),
         "consensus_members": pos.get("consensus_members"),
         "consensus_at_exit": _consensus_exit_snapshot(s, pos),
+        "sizing": pos.get("sizing"),
     }
 
     s["trades"].append(trade)
@@ -4165,6 +4214,11 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
         _update_stats(
             s["stats_by_regime"], pos.get("regime"), pos, total_net, total_r
         )
+
+        # V20.15 measurement: risk-cap shadow attribution and the
+        # Stage 0 W2 window counters (inert while W2 is not started).
+        _risk_shadow_record_close(s, total_net, total_r)
+        _stage0_record_close(s, total_net)
 
         if total_net < 0:
             s["consecutive_losses"] = i(s.get("consecutive_losses")) + 1
@@ -4214,6 +4268,552 @@ def close_position(s, price, reason, fraction=1.0, extra_slippage=0.0,
 
     s["peak_equity"] = max(s["peak_equity"], s["equity"])
     return True
+
+
+# ============================================================
+# MEASUREMENT ADDITIONS (V20.15, 2026-11-20)
+#
+# Everything in this section is accounting only: the real-risk
+# monitor + risk-cap shadow ledger, the Stage 0 window split and
+# the A/B/C entry funnel. None of it changes a quantity, a price,
+# a timing or a veto in the trading path. The risk caps are
+# evaluated as counterfactuals on real entries (shadow); the main
+# bot never skips or resizes an entry because of them.
+# ============================================================
+
+def _new_risk_shadow():
+    return {
+        "version": 1,
+        "started_at": iso_now(),
+        "caps_pct": [c for c in RISK_SHADOW_CAPS_PCT],
+        "entries": [],
+        "totals": {
+            f"{c:g}": {
+                "entries": 0, "over_entries": 0, "over_closed": 0,
+                "over_net_pnl": 0.0, "over_r": 0.0,
+                "taken_closed": 0, "taken_net_pnl": 0.0,
+            } for c in RISK_SHADOW_CAPS_PCT
+        },
+        # "If every over-cap entry had been skipped" equity path.
+        # Settlement-basis approximation: no mark-to-market while a
+        # trade is open, and the knock-on effect a skip would have
+        # had on later trade sizes is NOT reproduced.
+        "variant_equity": {
+            f"{c:g}": {"equity": None, "peak": None, "max_dd_pct": 0.0}
+            for c in RISK_SHADOW_CAPS_PCT
+        },
+        "open_key": None,
+        "last_error": None,
+    }
+
+
+def _risk_shadow_ensure(s):
+    rs = s.get("risk_shadow")
+    if not isinstance(rs, dict) or "totals" not in rs:
+        rs = _new_risk_shadow()
+        s["risk_shadow"] = rs
+    return rs
+
+
+def _risk_shadow_record_entry(s):
+    """Attach a counterfactual row to the position just opened."""
+    try:
+        pos = s.get("position") or {}
+        sz = pos.get("sizing") or {}
+        if not sz:
+            return
+        rs = _risk_shadow_ensure(s)
+        eff = f(sz.get("effective_risk_pct"))
+        entry_equity = f(pos.get("entry_equity"))
+        row = {
+            "key": i(pos.get("opened_timestamp")),
+            "entry_time": pos.get("entry_time"),
+            "setup": pos.get("setup"),
+            "side": pos.get("side"),
+            "entry_equity": entry_equity,
+            "effective_risk_pct": eff,
+            "planned_risk_usd": f(sz.get("planned_risk_usd")),
+            "clamp_action": sz.get("clamp_action"),
+            "over": {},
+            "closed": False,
+            "net_pnl": None,
+            "r_sum": None,
+        }
+        for cap in RISK_SHADOW_CAPS_PCT:
+            ck = f"{cap:g}"
+            over = eff > cap
+            row["over"][ck] = over
+            rs["totals"][ck]["entries"] += 1
+            if over:
+                rs["totals"][ck]["over_entries"] += 1
+            ve = rs["variant_equity"][ck]
+            if ve.get("equity") is None:
+                ve["equity"] = entry_equity
+                ve["peak"] = entry_equity
+        rs["entries"].append(row)
+        rs["entries"] = rs["entries"][-RISK_SHADOW_ENTRIES_LIMIT:]
+        rs["open_key"] = row["key"]
+    except Exception as exc:  # measurement must never break trading
+        try:
+            _risk_shadow_ensure(s)["last_error"] = (
+                f"{type(exc).__name__}: {exc}"
+            )
+        except Exception:
+            pass
+
+
+def _risk_shadow_record_close(s, total_net, total_r):
+    """Write the round-trip result back to the open shadow row."""
+    try:
+        rs = s.get("risk_shadow")
+        if not isinstance(rs, dict) or "totals" not in rs:
+            return
+        key = rs.get("open_key")
+        if key is None:
+            return
+        row = next(
+            (r for r in rs.get("entries", []) if r.get("key") == key),
+            None,
+        )
+        if row is not None:
+            row["closed"] = True
+            row["net_pnl"] = total_net
+            row["r_sum"] = total_r
+        for cap in RISK_SHADOW_CAPS_PCT:
+            ck = f"{cap:g}"
+            over = (row or {}).get("over", {}).get(ck)
+            if over is None:
+                continue
+            tot = rs["totals"][ck]
+            if over:
+                tot["over_closed"] += 1
+                tot["over_net_pnl"] += total_net
+                tot["over_r"] += total_r
+            else:
+                tot["taken_closed"] += 1
+                tot["taken_net_pnl"] += total_net
+                ve = rs["variant_equity"][ck]
+                if ve.get("equity") is not None:
+                    ve["equity"] = f(ve["equity"]) + total_net
+                    ve["peak"] = max(
+                        f(ve.get("peak"), ve["equity"]), ve["equity"]
+                    )
+                    peak = max(f(ve.get("peak")), 0.01)
+                    dd = max(
+                        0.0, (peak - ve["equity"]) / peak * 100.0
+                    )
+                    ve["max_dd_pct"] = max(f(ve.get("max_dd_pct")), dd)
+        rs["open_key"] = None
+    except Exception:
+        pass
+
+
+def _risk_monitor_payload(s):
+    rs = _risk_shadow_ensure(s)
+    pos = s.get("position") or {}
+    effs = []
+    for t in s.get("trades") or []:
+        sz = t.get("sizing")
+        if isinstance(sz, dict) and sz.get("effective_risk_pct") is not None:
+            effs.append(f(sz["effective_risk_pct"]))
+    if isinstance(pos.get("sizing"), dict):
+        effs.append(f(pos["sizing"].get("effective_risk_pct")))
+    dist = {"count": 0, "max": None, "median": None}
+    if effs:
+        ordered = sorted(effs)
+        dist = {
+            "count": len(ordered),
+            "max": ordered[-1],
+            "median": ordered[len(ordered) // 2],
+        }
+    return {
+        "note": (
+            "リスク上限はShadow測定のみ（本隊の見送り・サイズ変更は"
+            "行わない）。variant_equityは決済ベース近似で、見送りに"
+            "よる後続トレードのサイズ変化は再現しない。"
+        ),
+        "caps_pct": rs.get("caps_pct"),
+        "totals": rs.get("totals"),
+        "variant_equity": rs.get("variant_equity"),
+        "entries": (rs.get("entries") or [])[-20:],
+        "effective_risk_distribution": dist,
+        "current_position_sizing": pos.get("sizing"),
+    }
+
+
+# ------------------------------------------------------------
+# Stage 0 windows. W1 is the live all-time window and is NEVER
+# reset or hidden: the all-time max_drawdown_pct keeps updating
+# exactly as before. W2 exists only as a separated evaluation
+# window and starts solely via STAGE0_W2_STARTED_AT (owner
+# approval); until then it stays "not_started".
+# ------------------------------------------------------------
+
+def _stage0_start_date(s):
+    dates = []
+    hist = s.get("equity_history") or []
+    if hist and hist[0].get("timestamp"):
+        dates.append(str(hist[0]["timestamp"])[:10])
+    trades = s.get("trades") or []
+    if trades and trades[0].get("entry_time"):
+        dates.append(str(trades[0]["entry_time"])[:10])
+    return min(dates) if dates else utc_date()
+
+
+def _stage0_period_ok(started_iso):
+    """True once 3 calendar months have passed since `started_iso`."""
+    try:
+        y, m, d = (int(x) for x in str(started_iso)[:10].split("-"))
+    except Exception:
+        return False
+    m += 3
+    y += (m - 1) // 12
+    m = (m - 1) % 12 + 1
+    ty, tm, td = (int(x) for x in utc_date().split("-"))
+    return (ty, tm, td) >= (y, m, d)
+
+
+def _stage0_w1_snapshot(s):
+    trades = s.get("trades") or []
+    pnls = [f(t.get("net_pnl", t.get("pnl"))) for t in trades]
+    gross_win = sum(x for x in pnls if x > 0)
+    gross_loss = abs(sum(x for x in pnls if x < 0))
+    pf = (
+        gross_win / gross_loss if gross_loss > 0
+        else (999.0 if gross_win > 0 else 0.0)
+    )
+    # Round trips: group the close records by their entry
+    # (setup, entry_time, side), the same grouping the analysis
+    # uses (82 records -> 61 round trips). stats_by_setup only
+    # covers trades recorded under the current stats system.
+    round_trips = len({
+        (t.get("setup"), t.get("entry_time"), t.get("side"))
+        for t in trades
+    })
+    started = _stage0_start_date(s)
+    expectancy = (sum(pnls) / len(pnls)) if pnls else 0.0
+    max_dd = f(s.get("max_drawdown_pct"))
+    return {
+        "id": "W1",
+        "label": "現行ウィンドウ（V20系・全期間）",
+        "started_at": started,
+        "ended_at": None,
+        "status": "active",
+        "basis": "all-time counters (records = official count, "
+                 "round trips shown alongside)",
+        "start_equity": f(s.get("initial_equity"), INITIAL_EQUITY),
+        "end_equity": f(s.get("equity")),
+        "peak_equity": f(s.get("peak_equity")),
+        "max_dd_pct": max_dd,
+        "closed_records": len(trades),
+        "round_trips": round_trips,
+        "pf": pf,
+        "expectancy_per_record": expectancy,
+        "verdict": {
+            "trades": len(trades) >= 100,
+            "period": _stage0_period_ok(started),
+            "expectancy": expectancy > 0,
+            "pf": pf >= 1.2,
+            "dd": max_dd <= 15.0,
+        },
+        "verdict_note": (
+            "DD 42.1% のため本ウィンドウでの合格は不可能（確定）"
+            if max_dd > 15.0 else ""
+        ),
+    }
+
+
+def _stage0_w2_blank():
+    return {
+        "id": "W2",
+        "label": "新測定ウィンドウ",
+        "started_at": None,
+        "ended_at": None,
+        "status": "not_started",
+        "basis": "window counters from activation",
+        "start_equity": None,
+        "end_equity": None,
+        "peak_equity": None,
+        "max_dd_pct": 0.0,
+        "closed_records": 0,
+        "round_trips": 0,
+        "gross_win": 0.0,
+        "gross_loss": 0.0,
+        "net_pnl": 0.0,
+        "pf": None,
+        "expectancy_per_record": None,
+        "trades_len_at_start": None,
+        "verdict": None,
+        "verdict_note": "未開始（開始は本隊変更の採用時に別途承認）",
+    }
+
+
+def _stage0_ensure(s, marked_equity=None):
+    st = s.get("stage0")
+    if not isinstance(st, dict) or len(st.get("windows") or []) != 2:
+        st = {
+            "version": 1,
+            "current_window_id": "W1",
+            "windows": [_stage0_w1_snapshot(s), _stage0_w2_blank()],
+        }
+        s["stage0"] = st
+    w2 = st["windows"][1]
+    if STAGE0_W2_STARTED_AT and w2.get("status") == "not_started":
+        # Activation (owner-approved code change only): freeze W1
+        # at the activation-time counters and open W2.
+        snap = _stage0_w1_snapshot(s)
+        snap["status"] = "closed"
+        snap["ended_at"] = STAGE0_W2_STARTED_AT
+        st["windows"][0] = snap
+        eq = f(s.get("equity"))
+        w2.update({
+            "started_at": STAGE0_W2_STARTED_AT,
+            "status": "active",
+            "start_equity": eq,
+            "end_equity": eq,
+            "peak_equity": eq,
+            "trades_len_at_start": len(s.get("trades") or []),
+            "verdict_note": "",
+        })
+        st["current_window_id"] = "W2"
+    if w2.get("status") != "active":
+        snap = _stage0_w1_snapshot(s)
+        snap["status"] = "active"
+        snap["ended_at"] = None
+        st["windows"][0] = snap
+    else:
+        if marked_equity is not None:
+            w2["peak_equity"] = max(
+                f(w2.get("peak_equity"), f(w2.get("start_equity"))),
+                marked_equity,
+            )
+            peak = max(f(w2.get("peak_equity")), 0.01)
+            dd = max(0.0, (peak - marked_equity) / peak * 100.0)
+            w2["max_dd_pct"] = max(f(w2.get("max_dd_pct")), dd)
+            w2["end_equity"] = marked_equity
+        recs = len(s.get("trades") or []) - i(
+            w2.get("trades_len_at_start")
+        )
+        w2["closed_records"] = recs
+        gw, gl = f(w2.get("gross_win")), f(w2.get("gross_loss"))
+        w2["pf"] = (
+            gw / gl if gl > 0 else (999.0 if gw > 0 else 0.0)
+        )
+        w2["expectancy_per_record"] = (
+            f(w2.get("net_pnl")) / recs if recs else None
+        )
+        w2["verdict"] = {
+            "trades": recs >= 100,
+            "period": _stage0_period_ok(w2.get("started_at")),
+            "expectancy": f(w2.get("net_pnl")) > 0 and recs > 0,
+            "pf": (w2["pf"] or 0.0) >= 1.2,
+            "dd": f(w2.get("max_dd_pct")) <= 15.0,
+        }
+    return st
+
+
+def _stage0_record_close(s, total_net):
+    try:
+        st = _stage0_ensure(s)
+        w2 = st["windows"][1]
+        if w2.get("status") != "active":
+            return
+        w2["round_trips"] = i(w2.get("round_trips")) + 1
+        w2["net_pnl"] = f(w2.get("net_pnl")) + total_net
+        if total_net > 0:
+            w2["gross_win"] = f(w2.get("gross_win")) + total_net
+        elif total_net < 0:
+            w2["gross_loss"] = f(w2.get("gross_loss")) + abs(total_net)
+    except Exception:
+        pass
+
+
+# ------------------------------------------------------------
+# Entry funnel (A/B/C zero-trade diagnosis). Two stages per
+# cycle: candidate formation vs gate rejection, then selection
+# vs the reason a formed candidate was not taken.
+# ------------------------------------------------------------
+
+def _empty_funnel_bucket():
+    return {
+        "candidates": 0,
+        "gate_rejected": {"score": 0, "cost": 0, "other": 0},
+        "selected": 0,
+        "blocked": {
+            "event": 0, "dd": 0, "priority": 0, "position_open": 0,
+            "open_failed": 0, "risk_lock": 0,
+        },
+        "opened": 0,
+    }
+
+
+def _empty_funnel_context():
+    return {
+        "flat": 0, "position_open": 0, "event_blocked": 0,
+        "dd_band_10": 0, "dd_band_20": 0, "dd_band_30": 0,
+    }
+
+
+def _funnel_ensure(s):
+    fn = s.get("entry_funnel")
+    if not isinstance(fn, dict) or "by_setup" not in fn:
+        fn = {
+            "version": 1,
+            "started_at": iso_now(),
+            "cycles_evaluated": 0,
+            "context_cycles": _empty_funnel_context(),
+            "by_setup": {
+                k: _empty_funnel_bucket()
+                for k in ("A", "B", "C", "F", "E", "D")
+            },
+            "top_reasons": {},
+            "daily": {},
+        }
+        s["entry_funnel"] = fn
+    for k in ("A", "B", "C", "F", "E", "D"):
+        fn["by_setup"].setdefault(k, _empty_funnel_bucket())
+    return fn
+
+
+def _funnel_classify(reason):
+    r = reason or ""
+    if "スコア不足" in r:
+        return "score"
+    if "コストフィルター" in r:
+        return "cost"
+    return "other"
+
+
+def _funnel_top(top, key):
+    if top is None:
+        return
+    if key in top:
+        top[key] += 1
+    elif len(top) < ENTRY_FUNNEL_TOP_REASONS_LIMIT:
+        top[key] = 1
+
+
+def _funnel_apply(t, top, notes, candidates, best, finfo, dd_pct,
+                  ev_blocked, has_position, cons_side, fresh_copy):
+    cc = t["context_cycles"]
+    bs = t["by_setup"]
+    cc["position_open" if has_position else "flat"] += 1
+    if ev_blocked:
+        cc["event_blocked"] += 1
+    if dd_pct >= 30.0:
+        cc["dd_band_30"] += 1
+    elif dd_pct >= 20.0:
+        cc["dd_band_20"] += 1
+    elif dd_pct >= 10.0:
+        cc["dd_band_10"] += 1
+
+    # Stage 1 (house): gate rejections from evaluate_entry notes.
+    for note in notes:
+        head, _, reason = note.partition(": ")
+        setup = head.split("/")[0].strip()
+        if setup not in ("A", "B", "C", "F"):
+            continue
+        bs[setup]["gate_rejected"][_funnel_classify(reason)] += 1
+        _funnel_top(top, f"{head}|{reason}")
+
+    # Stage 1 + 2 (house): formed candidates and their fate.
+    house_marker = finfo.get("house")
+    for cand in candidates:
+        bs[cand["setup"]]["candidates"] += 1
+    for cand in candidates:
+        b = bs[cand["setup"]]
+        if best is not None and cand is best:
+            if house_marker == "opened":
+                b["selected"] += 1
+                b["opened"] += 1
+            elif house_marker == "open_failed":
+                b["selected"] += 1
+                b["blocked"]["open_failed"] += 1
+            elif house_marker == "event":
+                b["selected"] += 1
+                b["blocked"]["event"] += 1
+            elif house_marker == "dd":
+                b["selected"] += 1
+                b["blocked"]["dd"] += 1
+            elif house_marker == "risk_lock":
+                b["blocked"]["risk_lock"] += 1
+            elif house_marker == "position_open":
+                b["blocked"]["position_open"] += 1
+            else:
+                b["blocked"]["priority"] += 1
+        else:
+            if house_marker == "position_open":
+                b["blocked"]["position_open"] += 1
+            elif house_marker == "risk_lock":
+                b["blocked"]["risk_lock"] += 1
+            else:
+                b["blocked"]["priority"] += 1
+
+    # Stage 1 + 2 (E / D): the signal itself is the candidate.
+    for setup, present, marker, gate_reason in (
+        ("E", bool(cons_side), finfo.get("E"), finfo.get("E_reason")),
+        ("D", bool(fresh_copy), finfo.get("D"), finfo.get("D_reason")),
+    ):
+        b = bs[setup]
+        if present:
+            b["candidates"] += 1
+        if marker == "gate":
+            b["gate_rejected"][_funnel_classify(gate_reason)] += 1
+            if gate_reason:
+                _funnel_top(top, f"{setup}|{gate_reason}")
+        elif marker == "opened":
+            b["selected"] += 1
+            b["opened"] += 1
+        elif marker == "open_failed":
+            b["selected"] += 1
+            b["blocked"]["open_failed"] += 1
+        elif marker in ("event", "dd", "priority", "position_open",
+                        "risk_lock"):
+            b["blocked"][marker] += 1
+
+
+def _entry_funnel_update(s, notes, candidates, best, finfo, dd_pct,
+                         ev_blocked, has_position, cons_side,
+                         fresh_copy):
+    try:
+        fn = _funnel_ensure(s)
+        fn["cycles_evaluated"] += 1
+        _funnel_apply(
+            fn, fn["top_reasons"], notes, candidates, best, finfo,
+            dd_pct, ev_blocked, has_position, cons_side, fresh_copy,
+        )
+        day = utc_date()
+        daily = fn["daily"].setdefault(day, {
+            "context_cycles": _empty_funnel_context(),
+            "by_setup": {
+                k: _empty_funnel_bucket()
+                for k in ("A", "B", "C", "F", "E", "D")
+            },
+        })
+        _funnel_apply(
+            daily, None, notes, candidates, best, finfo,
+            dd_pct, ev_blocked, has_position, cons_side, fresh_copy,
+        )
+        days = sorted(fn["daily"].keys())
+        for old in days[:-ENTRY_FUNNEL_DAILY_DAYS]:
+            del fn["daily"][old]
+    except Exception:
+        pass
+
+
+def _entry_funnel_payload(s):
+    fn = s.get("entry_funnel") or {}
+    top = sorted(
+        (fn.get("top_reasons") or {}).items(),
+        key=lambda kv: -kv[1],
+    )[:20]
+    return {
+        "started_at": fn.get("started_at"),
+        "cycles_evaluated": fn.get("cycles_evaluated", 0),
+        "context_cycles": fn.get("context_cycles"),
+        "by_setup": fn.get("by_setup"),
+        "top_reasons": dict(top),
+    }
 
 
 def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
@@ -4309,6 +4909,38 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
 
     s["position"].update(entry_event_fields(s, ts_now))
 
+    # V20.15: sizing provenance block (measurement only; the
+    # quantity / prices above are unchanged). planned_risk_usd is
+    # the same value as the position's planned_risk, decomposed
+    # into pure price risk and round-trip cost.
+    s["position"]["sizing"] = {
+        "entry_price": entry,
+        "stop_price": stop,
+        "quantity": quantity,
+        "risk_distance": distance,
+        "stop_loss_usd": quantity * distance,
+        "cost_usd": quantity * entry * ROUND_TRIP_COST_RATE,
+        "planned_risk_usd": risk_usd,
+        "effective_risk_pct": (
+            risk_usd / entry_equity * 100 if entry_equity > 0 else 0.0
+        ),
+        "r_unit_usd": risk_usd,
+        "margin_usd": sizing["margin_used"],
+        "margin_pct": (
+            sizing["margin_used"] / entry_equity * 100
+            if entry_equity > 0 else 0.0
+        ),
+        "risk_budget_usd": sizing.get("risk_budget_usd"),
+        "nominal_risk_pct": RISK_PER_TRADE * risk_multiplier * 100,
+        "risk_multiplier": risk_multiplier,
+        "risk_quantity_pre_clamp": sizing.get(
+            "risk_quantity_pre_clamp"
+        ),
+        "clamp_action": sizing.get("clamp_action"),
+        "dd_pct_at_entry": current_drawdown_pct(s, entry_equity),
+    }
+    _risk_shadow_record_entry(s)
+
     if candidate.get("source_trader"):
         event(
             s,
@@ -4353,6 +4985,8 @@ def open_position(s, candidate, candle_ts, risk_multiplier=1.0,
         quantity=quantity,
         leverage=LEVERAGE,
         effective_risk_pct=s["position"]["effective_risk_pct"],
+        clamp_action=s["position"]["sizing"]["clamp_action"],
+        margin_pct=round(s["position"]["sizing"]["margin_pct"], 2),
     )
 
     return True, side + " opened (" + candidate["setup"] + ")"
@@ -4941,6 +5575,9 @@ def make_dashboard(s, price, funding, sig, status):
         "consensus": _consensus_dashboard_payload(s),
         "trader_board": _trader_board_payload(s),
         "shadow": _shadow_dashboard_payload(s),
+        "risk_monitor": _risk_monitor_payload(s),
+        "entry_funnel": _entry_funnel_payload(s),
+        "stage0": _stage0_ensure(s, marked_equity),
     }
 
 
@@ -5054,9 +5691,10 @@ def main():
         dd = current_drawdown_pct(s, marked)
 
         risk_mult, allowed_setups = risk_controls(s, dd)
-        candidate, side_scores, notes = evaluate_entry(
+        candidate, side_scores, notes, all_candidates = evaluate_entry(
             ctx, allowed_setups
         )
+        funnel_notes = list(notes)
         for _cs in copy_signals:
             notes.append(
                 f"COPY {_cs['kind']}: {_cs['label']} {_cs['side']}"
@@ -5079,20 +5717,40 @@ def main():
 
         status = "WAIT: シグナル条件未達"
 
+        # V20.15 entry funnel markers: each branch of the chain
+        # below records how far every setup got this cycle. The
+        # markers change nothing about the chain itself.
+        finfo = {"house": None, "E": None, "E_reason": None,
+                 "D": None, "D_reason": None}
+        _fresh_copy = next(
+            (x for x in copy_signals if x["fresh"]), None
+        )
+
         if s.get("position"):
             status = "保有中"
+            finfo.update({"house": "position_open",
+                          "E": "position_open", "D": "position_open"})
         elif s["daily_loss_lock"]:
             status = "日次停止中（損失/ストップ回数上限、UTC日付更新で解除）"
+            finfo.update({"house": "risk_lock", "E": "risk_lock",
+                          "D": "risk_lock"})
         elif s["drawdown_pause_until"] > now:
             remaining = (s["drawdown_pause_until"] - now) // 60
             status = f"DD休止中（残り{remaining}分）"
+            finfo.update({"house": "dd", "E": "dd", "D": "dd"})
         elif s["consecutive_lock_until"] > now:
             remaining = (s["consecutive_lock_until"] - now) // 60
             status = f"連敗クールダウン中（残り{remaining}分）"
+            finfo.update({"house": "risk_lock", "E": "risk_lock",
+                          "D": "risk_lock"})
         elif now - s["last_close_ts"] < COOLDOWN_SECONDS:
             status = "クールダウン中"
+            finfo.update({"house": "risk_lock", "E": "risk_lock",
+                          "D": "risk_lock"})
         elif latest_candle == s["last_entry_candle"]:
             status = "同じ15分足での再エントリー防止"
+            finfo.update({"house": "risk_lock", "E": "risk_lock",
+                          "D": "risk_lock"})
         elif candidate is not None and ev_status["blocked"]:
             ev = ev_status["active_event"]
             status = (
@@ -5117,6 +5775,7 @@ def main():
                     event_ts=i(ev.get("ts")),
                     reason="EVENT_RISK",
                 )
+            finfo.update({"house": "event", "E": "event", "D": "event"})
         elif candidate is not None:
             mult = risk_mult
             if candidate["setup"] == "C":
@@ -5126,6 +5785,10 @@ def main():
                 risk_multiplier=mult, now_s=now,
             )
             status = message if ok else "エントリー見送り: " + message
+            finfo.update({
+                "house": "opened" if ok else "open_failed",
+                "E": "priority", "D": "priority",
+            })
         # Setup E entries: priority house A/B/C/F > E > D.
         # DD treatment matches Setup D under V20.4: risk_mult is
         # already throttled to x0.25 in the DD >= 20% band, and
@@ -5135,14 +5798,18 @@ def main():
                 "イベント回避（EVENT_RISK）: "
                 "合意信号も新規エントリー見送り"
             )
+            finfo.update({"E": "event", "D": "event"})
         elif _cons_side and dd >= DD_HARD_PAUSE and not PAPER_NEVER_STOP:
             status = "合意見送り: DDハードポーズ帯（30%以上）"
+            finfo.update({"E": "dd", "D": "priority"})
         elif _cons_side:
             cand_e, reason_e = _candidate_consensus(
                 ctx, _cons_side, consensus_now
             )
             if cand_e is None:
                 status = "合意見送り: " + str(reason_e)
+                finfo.update({"E": "gate", "E_reason": str(reason_e),
+                              "D": "priority"})
             else:
                 ok, message = open_position(
                     s, cand_e, latest_candle,
@@ -5154,25 +5821,35 @@ def main():
                     f"{_cons_side}（セットアップE）"
                     if ok else "エントリー見送り: " + message
                 )
+                finfo.update({
+                    "E": "opened" if ok else "open_failed",
+                    "D": "priority",
+                })
         elif copy_signals and ev_status["blocked"]:
             status = (
                 "イベント回避（EVENT_RISK）: "
                 "コピー信号も新規エントリー見送り"
             )
+            finfo.update({"D": "event"})
         elif copy_signals and dd >= DD_HARD_PAUSE and not PAPER_NEVER_STOP:
             status = "コピー見送り: DDハードポーズ帯（30%以上）"
+            finfo.update({"D": "dd"})
         elif copy_signals:
             fresh = next(
                 (x for x in copy_signals if x["fresh"]), None
             )
             if fresh is None:
                 status = "コピー見送り: 信号の鮮度切れ（30分超）"
+                finfo.update({"D": "gate",
+                              "D_reason": "信号の鮮度切れ（30分超）"})
             else:
                 cand_d, reason_d = _candidate_copy(
                     ctx, fresh["side"], fresh
                 )
                 if cand_d is None:
                     status = "コピー見送り: " + str(reason_d)
+                    finfo.update({"D": "gate",
+                                  "D_reason": str(reason_d)})
                 else:
                     ok, message = open_position(
                         s, cand_d, latest_candle,
@@ -5183,12 +5860,23 @@ def main():
                         f"{fresh['side']}に追随（セットアップD）"
                         if ok else "エントリー見送り: " + message
                     )
+                    finfo.update({
+                        "D": "opened" if ok else "open_failed",
+                    })
         else:
             status = (
                 f"WAIT（LONG {side_scores.get('LONG', 0)} / "
                 f"SHORT {side_scores.get('SHORT', 0)}、"
                 f"必要スコア {MIN_SCORE}、レジーム {ctx['regime']}）"
             )
+
+        # V20.15: entry funnel accounting for this cycle
+        # (measurement only; the chain above is untouched).
+        _entry_funnel_update(
+            s, funnel_notes, all_candidates, candidate, finfo, dd,
+            bool(ev_status["blocked"]), bool(s.get("position")),
+            _cons_side, _fresh_copy,
+        )
 
         sig = make_signal(ctx, candidate, side_scores, status, notes)
         sig["entry_status"] = status
