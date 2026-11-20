@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V20_15_PRO_2026-11-20",
-  "generated_at": "2026-11-20T10:45:32.904069+00:00",
+  "generated_at": "2026-11-20T11:00:50.392413+00:00",
   "market_status": "OK",
-  "price": 62250.5,
-  "funding_rate": -2.4378e-06,
-  "funding_rate_pct": -0.00024378000000000003,
+  "price": 62060.5,
+  "funding_rate": 9.9825e-06,
+  "funding_rate_pct": 0.00099825,
   "initial_equity": 100.0,
   "equity": 59.31901049207623,
   "marked_equity": 59.31901049207623,
@@ -22,27 +22,27 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 62.363,
-    "atr": 258.94633,
-    "ema9": 61865.073012820925,
-    "ema21": 61831.84272221601,
+    "rsi": 54.967,
+    "atr": 259.5216,
+    "ema9": 61897.058410256745,
+    "ema21": 61849.40247474183,
     "trend_15m": "UP",
     "trend_1h": "DOWN",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-20T10:45:32.903978+00:00",
-    "reference_price": 62242.0,
-    "previous_close": 61926.0,
+    "timestamp": "2026-11-20T11:00:50.392349+00:00",
+    "reference_price": 62025.0,
+    "previous_close": 62242.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 61824.45,
-      "upper": 62125.68178783123,
-      "lower": 61523.218212168766,
-      "width_pct": 0.9744746223580849,
-      "position": 1.1930709454772748,
-      "state": "ABOVE_UPPER"
+      "middle": 61830.0,
+      "upper": 62141.5406875514,
+      "lower": 61518.4593124486,
+      "width_pct": 1.0077330989856115,
+      "position": 0.812960726787615,
+      "state": "NEAR_UPPER"
     },
     "fibonacci": {
       "swing_high": 65444.0,
@@ -57,21 +57,21 @@
       "trend": "DOWN"
     },
     "regime": "RANGE",
-    "adx": 10.24,
-    "atr_percentile": 28.0,
+    "adx": 11.28,
+    "atr_percentile": 29.0,
     "macd": {
-      "line": 4.7259,
-      "signal": -36.7233,
-      "hist": 41.4492,
-      "hist_prev": 11.7867
+      "line": 18.72,
+      "signal": -25.6346,
+      "hist": 44.3546,
+      "hist_prev": 41.4492
     },
-    "vwap": 61863.48827984531,
-    "relative_volume": 2.47,
+    "vwap": 61865.41243786107,
+    "relative_volume": 0.509,
     "htf_bias": "DOWN",
     "structure_bias": "MIXED",
-    "support": 62209.0,
-    "resistance": 62318.0,
-    "premium": -0.000521883,
+    "support": 62000.0,
+    "resistance": 62045.0,
+    "premium": -0.0006554716,
     "setup": null,
     "score_breakdown": {},
     "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム RANGE）",
@@ -82,7 +82,7 @@
       "F/LONG: レジーム不一致（確立したトレンド限定）",
       "A/SHORT: レジーム不一致",
       "B/SHORT: レンジレジームではブレイクアウト禁止",
-      "C/SHORT: 反転トリガー未発生",
+      "C/SHORT: 対向ゾーンまでの距離が1.5R未満",
       "F/SHORT: レジーム不一致（確立したトレンド限定）",
       "CONSENSUS: LONG 2 / SHORT 2 / FLAT 4（建玉 4名、参入条件: 未達）"
     ],
@@ -15369,12 +15369,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-24T16:36:37.254859+00:00",
-      "equity": 98.15266165691833,
-      "marked_equity": 98.15266165691833,
-      "price": 79678.5
-    },
-    {
       "timestamp": "2026-10-24T17:05:55.414266+00:00",
       "equity": 98.15266165691833,
       "marked_equity": 98.15266165691833,
@@ -21367,22 +21361,15 @@
       "equity": 59.31901049207623,
       "marked_equity": 59.31901049207623,
       "price": 62250.5
+    },
+    {
+      "timestamp": "2026-11-20T11:00:50.392404+00:00",
+      "equity": 59.31901049207623,
+      "marked_equity": 59.31901049207623,
+      "price": 62060.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-15T23:00:47.749427+00:00",
-      "type": "POSITION_OPENED",
-      "side": "SHORT",
-      "setup": "D",
-      "regime": "RANGE",
-      "score": 0,
-      "entry_price": 65193.9586,
-      "stop_price": 65586.97546727011,
-      "quantity": 0.012715195066497266,
-      "leverage": 40.0,
-      "effective_risk_pct": 7.928424653294748
-    },
     {
       "timestamp": "2026-11-15T23:15:29.907866+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -22096,6 +22083,11 @@
       "timestamp": "2026-11-20T01:30:44.342142+00:00",
       "type": "DAILY_LOSS_LIMIT_CROSSED",
       "daily_loss_pct": 10.80173425577897
+    },
+    {
+      "timestamp": "2026-11-20T11:00:49.053635+00:00",
+      "type": "ECON_CALENDAR_UPDATED",
+      "events": 4
     }
   ],
   "stats_by_setup": {
@@ -22224,26 +22216,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 62.363,
-    "atr": 258.94633,
+    "rsi_15m": 54.967,
+    "atr": 259.5216,
     "bollinger": {
-      "middle": 61824.45,
-      "upper": 62125.68178783123,
-      "lower": 61523.218212168766,
-      "width_pct": 0.9744746223580849,
-      "position": 1.1930709454772748,
-      "state": "ABOVE_UPPER"
+      "middle": 61830.0,
+      "upper": 62141.5406875514,
+      "lower": 61518.4593124486,
+      "width_pct": 1.0077330989856115,
+      "position": 0.812960726787615,
+      "state": "NEAR_UPPER"
     },
-    "adx": 10.24,
-    "atr_percentile": 28.0,
+    "adx": 11.28,
+    "atr_percentile": 29.0,
     "macd": {
-      "line": 4.7259,
-      "signal": -36.7233,
-      "hist": 41.4492,
-      "hist_prev": 11.7867
+      "line": 18.72,
+      "signal": -25.6346,
+      "hist": 44.3546,
+      "hist_prev": 41.4492
     },
-    "vwap": 61863.48827984531,
-    "relative_volume": 2.47
+    "vwap": 61865.41243786107,
+    "relative_volume": 0.509
   },
   "fibonacci": {
     "swing_high": 65444.0,
@@ -22297,7 +22289,7 @@
     "blocked": false,
     "active_event": null,
     "active_category": null,
-    "calendar_updated_ts": 1795085135,
+    "calendar_updated_ts": 1795172448,
     "calendar_stale": false,
     "calendar_last_error": null
   },
@@ -22367,7 +22359,7 @@
     "short_ratio": 0.5,
     "enabled_pool": 8,
     "valid": true,
-    "updated_ts": 1795171531,
+    "updated_ts": 1795172448,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -23635,7 +23627,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-20T10:45:32.902415+00:00"
+    "updated_at": "2026-11-20T11:00:50.391304+00:00"
   },
   "risk_monitor": {
     "note": "リスク上限はShadow測定のみ（本隊の見送り・サイズ変更は行わない）。variant_equityは決済ベース近似で、見送りによる後続トレードのサイズ変化は再現しない。",
@@ -23685,14 +23677,14 @@
   },
   "entry_funnel": {
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 29,
+    "cycles_evaluated": 30,
     "context_cycles": {
-      "flat": 29,
+      "flat": 30,
       "position_open": 0,
       "event_blocked": 0,
       "dd_band_10": 0,
       "dd_band_20": 0,
-      "dd_band_30": 29
+      "dd_band_30": 30
     },
     "by_setup": {
       "A": {
@@ -23700,7 +23692,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 58
+          "other": 60
         },
         "selected": 0,
         "blocked": {
@@ -23718,7 +23710,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 58
+          "other": 60
         },
         "selected": 0,
         "blocked": {
@@ -23736,7 +23728,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 58
+          "other": 60
         },
         "selected": 0,
         "blocked": {
@@ -23754,7 +23746,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 58
+          "other": 60
         },
         "selected": 0,
         "blocked": {
@@ -23805,13 +23797,13 @@
       }
     },
     "top_reasons": {
-      "A/LONG|レジーム不一致": 26,
-      "B/LONG|レンジレジームではブレイクアウト禁止": 26,
-      "F/LONG|レジーム不一致（確立したトレンド限定）": 26,
-      "A/SHORT|レジーム不一致": 26,
-      "B/SHORT|レンジレジームではブレイクアウト禁止": 26,
-      "F/SHORT|レジーム不一致（確立したトレンド限定）": 26,
-      "C/LONG|RSI/BB極値でない": 22,
+      "A/LONG|レジーム不一致": 27,
+      "B/LONG|レンジレジームではブレイクアウト禁止": 27,
+      "F/LONG|レジーム不一致（確立したトレンド限定）": 27,
+      "A/SHORT|レジーム不一致": 27,
+      "B/SHORT|レンジレジームではブレイクアウト禁止": 27,
+      "F/SHORT|レジーム不一致（確立したトレンド限定）": 27,
+      "C/LONG|RSI/BB極値でない": 23,
       "C/SHORT|RSI/BB極値でない": 16,
       "C/SHORT|ゾーン端に未到達": 9,
       "C/LONG|ゾーン端に未到達": 4,
@@ -23880,18 +23872,11 @@
     ]
   },
   "chart": {
-    "generated_at": "2026-11-20T10:45:33Z",
+    "generated_at": "2026-11-20T11:00:51Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
         "candles": [
-          [
-            1794632400,
-            67059.0,
-            67245.0,
-            66772.0,
-            67208.0
-          ],
           [
             1794636000,
             67209.0,
@@ -24933,7 +24918,14 @@
             61613.0,
             62320.0,
             61592.0,
-            62231.0
+            62025.0
+          ],
+          [
+            1795172400,
+            62025.0,
+            62064.0,
+            62024.0,
+            62051.0
           ]
         ],
         "lines": {
@@ -24951,8 +24943,8 @@
               64050.0
             ],
             [
-              1795233168,
-              59874.4
+              1795236768,
+              59772.3
             ]
           ],
           "trend_low": [
@@ -24961,8 +24953,8 @@
               62209.0
             ],
             [
-              1795233168,
-              57840.3
+              1795236768,
+              57715.0
             ]
           ],
           "channel": {
@@ -24973,8 +24965,8 @@
                 62637.0
               ],
               [
-                1795233168,
-                58461.4
+                1795236768,
+                58359.3
               ]
             ]
           }
@@ -26030,7 +26022,7 @@
             61818.0,
             62320.0,
             61515.0,
-            62231.0
+            62051.0
           ]
         ],
         "lines": {
@@ -27127,7 +27119,7 @@
             61962.0,
             62620.0,
             61207.0,
-            62231.0
+            62051.0
           ]
         ],
         "lines": {
@@ -28212,7 +28204,7 @@
             63037.0,
             64050.0,
             61207.0,
-            62231.0
+            62052.0
           ]
         ],
         "lines": {
@@ -28863,7 +28855,7 @@
             76805.0,
             81177.0,
             61207.0,
-            62231.0
+            62052.0
           ]
         ],
         "lines": {
