@@ -731,6 +731,59 @@ def build_summary(predictions, results, now_ts):
                      if len(bet) < SAMPLE_INSUFFICIENT_THRESHOLD
                      else "sufficient")
 
+    # --- by-regime statistics (v2.0-regime only) ---
+    # Aggregation only: the prediction / verdict logic above is
+    # untouched. v1 rounds are excluded because their regime
+    # labels carry a different meaning. 95% intervals are Wilson
+    # score intervals, which stay sane at small n.
+    def _wilson95(hits, n, z=1.96):
+        if not n:
+            return [None, None]
+        p = hits / n
+        z2 = z * z
+        denom = 1.0 + z2 / n
+        centre = (p + z2 / (2.0 * n)) / denom
+        margin = (z * ((p * (1.0 - p) / n
+                        + z2 / (4.0 * n * n)) ** 0.5)) / denom
+        return [max(0.0, centre - margin), min(1.0, centre + margin)]
+
+    def _regime_block(regime_rounds):
+        r_bet = [r for r in regime_rounds
+                 if r["verdict"] in ("UP", "DOWN")
+                 and r["actual"] in ("UP", "DOWN")]
+        r_hits = sum(1 for r in r_bet if r["hit"])
+        r_dir = [r for r in regime_rounds
+                 if r["actual"] in ("UP", "DOWN")]
+        r_sim = sum(r["sim"]["pnl"] for r in regime_rounds
+                    if r["sim"])
+        _mx = _cur = 0
+        for r in sorted(r_bet, key=lambda x: x["round_start_ts"]):
+            if r["hit"]:
+                _cur = 0
+            else:
+                _cur += 1
+                _mx = max(_mx, _cur)
+        return {
+            "rounds": len(regime_rounds),
+            "directional_rounds": len(r_dir),
+            "bets": len(r_bet),
+            "hits": r_hits,
+            "hit_rate": (r_hits / len(r_bet)) if r_bet else None,
+            "wilson95": _wilson95(r_hits, len(r_bet)),
+            "coverage": (len(r_bet) / len(r_dir)) if r_dir else None,
+            "sim_pnl": r_sim,
+            "ev_per_bet": (r_sim / len(r_bet)) if r_bet else None,
+            "max_miss_streak": _mx,
+            "current_miss_streak": _cur,
+        }
+
+    v2_rounds = [r for r in settled_rounds
+                 if r["strategy_version"] == STRATEGY_VERSION]
+    by_regime = {"scope": STRATEGY_VERSION}
+    for _regime in ("TREND", "WEAK_TREND", "RANGE"):
+        by_regime[_regime] = _regime_block(
+            [r for r in v2_rounds if r["regime"] == _regime])
+
     stats = {
         "settled": len(settled_rounds),
         "bet_rounds": len(bet),
@@ -743,6 +796,8 @@ def build_summary(predictions, results, now_ts):
         "sim": sim,
         "coverage": coverage,
         "by_direction": by_direction,
+        "by_regime": by_regime,
+        "bet_rate_wilson95": _wilson95(bet_hits, len(bet)),
         "streaks": streaks,
         "sample_status": sample_status,
         "sample_threshold": SAMPLE_INSUFFICIENT_THRESHOLD,
