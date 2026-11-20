@@ -1,7 +1,7 @@
 {
   "build": "BTC_PAPER_V20_15_PRO_2026-11-20",
   "initial_equity": 100.0,
-  "equity": 59.02241543961585,
+  "equity": 59.02287063063386,
   "peak_equity": 102.44757489202469,
   "max_drawdown_pct": 42.37096471611769,
   "realized_pnl": -40.66393268918415,
@@ -5087,12 +5087,6 @@
     }
   ],
   "equity_history": [
-    {
-      "timestamp": "2026-10-25T07:21:06.218490+00:00",
-      "equity": 98.08664745001771,
-      "marked_equity": 98.06023648506448,
-      "price": 80596.5
-    },
     {
       "timestamp": "2026-10-25T07:56:07.271430+00:00",
       "equity": 98.08664745001771,
@@ -11086,6 +11080,12 @@
       "equity": 59.02241543961585,
       "marked_equity": 59.039549082006666,
       "price": 58659.5
+    },
+    {
+      "timestamp": "2026-11-20T18:49:13.854899+00:00",
+      "equity": 59.02287063063386,
+      "marked_equity": 64.00506413370675,
+      "price": 58168.5
     }
   ],
   "position": {
@@ -11101,10 +11101,10 @@
     "initial_stop_price": 59858.82664840852,
     "risk_distance": 1156.5694484085147,
     "entry_fee": 0.29659505246038115,
-    "funding_pnl": 0.0,
+    "funding_pnl": 0.0004551910180121128,
     "entry_time": "2026-11-20T18:45:30+00:00",
     "opened_timestamp": 1795200330,
-    "last_funding_ts": 1795200330,
+    "last_funding_ts": 1795200551,
     "last_checked_candle_ts": 1795199400000,
     "entry_signal_score": 9,
     "score": 9,
@@ -11180,7 +11180,9 @@
       "risk_quantity_pre_clamp": 0.0002923607940992901,
       "clamp_action": "raised_min",
       "dd_pct_at_entry": 42.098179918269516
-    }
+    },
+    "event_spanned": false,
+    "event_spanned_names": []
   },
   "last_close_ts": 1795136400,
   "last_entry_candle": 1795199400000,
@@ -11308,12 +11310,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-05T23:48:12.941442+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": 0.00067272,
-      "hours": 0.6514
-    },
     {
       "timestamp": "2026-11-06T00:32:57.685778+00:00",
       "type": "COPY_SIGNAL_OPEN",
@@ -12956,6 +12952,12 @@
       "effective_risk_pct": 21.602299427227386,
       "clamp_action": "raised_min",
       "margin_pct": 25.0
+    },
+    {
+      "timestamp": "2026-11-20T18:49:13.854692+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": 0.00045519,
+      "hours": 0.0614
     }
   ],
   "econ_calendar": {
@@ -12984,7 +12986,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13051,7 +13053,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13071,7 +13073,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13091,7 +13093,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13111,7 +13113,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13131,7 +13133,7 @@
           "side": "SHORT",
           "szi": -1.0,
           "entry_px": 72505.0,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13171,7 +13173,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13211,7 +13213,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13231,7 +13233,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795200330
+          "updated_ts": 1795200551
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13297,7 +13299,7 @@
           "side": null
         }
       ],
-      "ts": 1795200330,
+      "ts": 1795200551,
       "enabled_pool": 8
     }
   },
@@ -14846,7 +14848,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-20T18:45:32.985154+00:00"
+    "updated_at": "2026-11-20T18:49:13.854540+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -14912,14 +14914,14 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 61,
+    "cycles_evaluated": 62,
     "context_cycles": {
       "flat": 60,
-      "position_open": 1,
+      "position_open": 2,
       "event_blocked": 0,
       "dd_band_10": 0,
       "dd_band_20": 0,
-      "dd_band_30": 61
+      "dd_band_30": 62
     },
     "by_setup": {
       "A": {
@@ -14927,7 +14929,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 122
+          "other": 124
         },
         "selected": 0,
         "blocked": {
@@ -14945,7 +14947,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 122
+          "other": 124
         },
         "selected": 0,
         "blocked": {
@@ -14963,7 +14965,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 122
+          "other": 124
         },
         "selected": 0,
         "blocked": {
@@ -14977,18 +14979,18 @@
         "opened": 0
       },
       "F": {
-        "candidates": 1,
+        "candidates": 2,
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 121
+          "other": 122
         },
         "selected": 1,
         "blocked": {
           "event": 0,
           "dd": 0,
           "priority": 0,
-          "position_open": 0,
+          "position_open": 1,
           "open_failed": 0,
           "risk_lock": 0
         },
@@ -15006,7 +15008,7 @@
           "event": 0,
           "dd": 0,
           "priority": 1,
-          "position_open": 0,
+          "position_open": 1,
           "open_failed": 0,
           "risk_lock": 0
         },
@@ -15024,7 +15026,7 @@
           "event": 0,
           "dd": 0,
           "priority": 1,
-          "position_open": 0,
+          "position_open": 1,
           "open_failed": 0,
           "risk_lock": 0
         },
@@ -15032,15 +15034,15 @@
       }
     },
     "top_reasons": {
-      "A/LONG|上位足バイアス不一致": 18,
-      "B/LONG|上位足が逆行": 18,
-      "C/LONG|レンジレジーム限定": 18,
-      "F/LONG|高ボラティリティで方向が揃っていない": 18,
+      "A/LONG|上位足バイアス不一致": 19,
+      "B/LONG|上位足が逆行": 19,
+      "C/LONG|レンジレジーム限定": 19,
+      "F/LONG|高ボラティリティで方向が揃っていない": 19,
       "A/SHORT|反転トリガー未発生": 2,
-      "B/SHORT|出来高不足": 13,
-      "C/SHORT|レンジレジーム限定": 18,
+      "B/SHORT|出来高不足": 14,
+      "C/SHORT|レンジレジーム限定": 19,
       "F/SHORT|高ボラティリティで方向が揃っていない": 1,
-      "A/SHORT|押し目/戻りが未形成": 16,
+      "A/SHORT|押し目/戻りが未形成": 17,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
       "A/LONG|レジーム不一致": 43,
       "B/LONG|レンジレジームではブレイクアウト禁止": 43,
@@ -15064,11 +15066,11 @@
       "2026-11-20": {
         "context_cycles": {
           "flat": 60,
-          "position_open": 1,
+          "position_open": 2,
           "event_blocked": 0,
           "dd_band_10": 0,
           "dd_band_20": 0,
-          "dd_band_30": 61
+          "dd_band_30": 62
         },
         "by_setup": {
           "A": {
@@ -15076,7 +15078,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 122
+              "other": 124
             },
             "selected": 0,
             "blocked": {
@@ -15094,7 +15096,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 122
+              "other": 124
             },
             "selected": 0,
             "blocked": {
@@ -15112,7 +15114,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 122
+              "other": 124
             },
             "selected": 0,
             "blocked": {
@@ -15126,18 +15128,18 @@
             "opened": 0
           },
           "F": {
-            "candidates": 1,
+            "candidates": 2,
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 121
+              "other": 122
             },
             "selected": 1,
             "blocked": {
               "event": 0,
               "dd": 0,
               "priority": 0,
-              "position_open": 0,
+              "position_open": 1,
               "open_failed": 0,
               "risk_lock": 0
             },
@@ -15155,7 +15157,7 @@
               "event": 0,
               "dd": 0,
               "priority": 1,
-              "position_open": 0,
+              "position_open": 1,
               "open_failed": 0,
               "risk_lock": 0
             },
@@ -15173,7 +15175,7 @@
               "event": 0,
               "dd": 0,
               "priority": 1,
-              "position_open": 0,
+              "position_open": 1,
               "open_failed": 0,
               "risk_lock": 0
             },
@@ -15195,7 +15197,7 @@
         "status": "active",
         "basis": "all-time counters (records = official count, round trips shown alongside)",
         "start_equity": 100.0,
-        "end_equity": 59.02241543961585,
+        "end_equity": 59.02287063063386,
         "peak_equity": 102.44757489202469,
         "max_dd_pct": 42.37096471611769,
         "closed_records": 82,
