@@ -3169,15 +3169,18 @@ def _empty_shadow_stats():
 def _new_shadow_state():
     return {
         "positions": {"G": None, "H": None, "I": None, "J": None,
-                      "K": None},
+                      "K": None, "L": None, "M": None},
         "ghosts": [],
         "ledger": [],
         "stats": {"G": _empty_shadow_stats(),
                   "H": _empty_shadow_stats(),
                   "I": _empty_shadow_stats(),
                   "J": _empty_shadow_stats(),
-                  "K": _empty_shadow_stats()},
-        "last_bar_t": {"G": 0, "H": 0, "I": 0, "J": 0, "K": 0},
+                  "K": _empty_shadow_stats(),
+                  "L": _empty_shadow_stats(),
+                  "M": _empty_shadow_stats()},
+        "last_bar_t": {"G": 0, "H": 0, "I": 0, "J": 0, "K": 0,
+                       "L": 0, "M": 0},
         "next_id": 1,
         "events": [],
         "last_error": None,
@@ -3355,6 +3358,137 @@ def _shadow_signal_i(ctx):
             "vwap": vwap,
         },
     }
+
+
+def _f_exhaustion_features(ctx):
+    """Exhaustion features for a TREND_DOWN F short (V20.15).
+
+    All values come from the already-built context and its 15m
+    candles; no new market data is fetched. Raw values are
+    recorded on every L / M signal so threshold sensitivity can
+    be reviewed later -- the pre-registered filter itself is
+    fixed (see _f_filter_blocked).
+    """
+    candles = ctx.get("candles") or []
+    price = f(ctx.get("price"))
+    av = f(ctx.get("atr"))
+    if len(candles) < 12 or av <= 0 or price <= 0:
+        return None
+    structure = ctx.get("structure") or {}
+    anchor = f(structure.get("last_swing_high"))
+    if not anchor:
+        # Same fallback the live F uses for its stop anchor.
+        anchor = max(f(c["h"]) for c in candles[-10:])
+    ema9 = f(ctx.get("ema9"))
+    ema21 = f(ctx.get("ema21"))
+    rv = f(ctx.get("rsi"))
+
+    bear_run = 0
+    for c in reversed(candles):
+        if f(c["c"]) < f(c["o"]):
+            bear_run += 1
+        else:
+            break
+
+    low12 = min(f(c["l"]) for c in candles[-12:])
+    last = candles[-1]
+    bar_range = f(last["h"]) - f(last["l"])
+    lower_wick = (
+        (min(f(last["o"]), f(last["c"])) - f(last["l"])) / bar_range
+        if bar_range > 0 else 0.0
+    )
+    closes = [f(c["c"]) for c in candles]
+    rsi_3ago = rsi(closes[:-3]) if len(closes) >= 18 else None
+    rebound = bool(
+        f(last["c"]) > f(last["o"])
+        or lower_wick >= SHADOW_M_LOWER_WICK_RATIO
+        or (rsi_3ago is not None and rv > rsi_3ago)
+    )
+    return {
+        "anchor_atr": (anchor - price) / av,
+        "ema21_dist_atr": abs(price - ema21) / av,
+        "ema_gap_atr": (ema9 - ema21) / av,
+        "rsi": rv,
+        "bear_run": bear_run,
+        "low_dist_atr": (price - low12) / av,
+        "lower_wick_ratio": lower_wick,
+        "rebound": rebound,
+    }
+
+
+def _f_filter_blocked(feat):
+    """Pre-registered exhaustion filter (V20.15). Returns the
+    list of tripped condition names; non-empty means setup M
+    skips the entry. Thresholds are general levels fixed before
+    measurement started -- never tuned on the forward sample."""
+    blocked = []
+    if feat["ema21_dist_atr"] >= SHADOW_M_EMA21_DIST_ATR:
+        blocked.append("ema21_dist")
+    if feat["rsi"] <= SHADOW_M_RSI_MAX:
+        blocked.append("rsi")
+    if feat["bear_run"] >= SHADOW_M_BEAR_RUN:
+        blocked.append("bear_run")
+    if feat["low_dist_atr"] <= SHADOW_M_LOW_DIST_ATR:
+        blocked.append("near_low")
+    if feat["rebound"]:
+        blocked.append("rebound")
+    return blocked
+
+
+def _shadow_signal_l(ctx):
+    """Setup L (V20.15): exact replica of the live F short in
+    TREND_DOWN, as a shadow signal.
+
+    The signal decision reuses the live _candidate_f itself, so
+    the replica cannot drift from the main bot. The stop distance
+    is the candidate's structural risk_distance (not an ATR
+    multiple). HIGH_VOLATILITY down-moves are out of scope.
+    """
+    if not isinstance(ctx, dict):
+        return None
+    if ctx.get("regime") != "TREND_DOWN":
+        return None
+    candidate, _reason = _candidate_f(ctx, "SHORT")
+    if candidate is None:
+        return None
+    feat = _f_exhaustion_features(ctx)
+    if feat is None:
+        return None
+    blocked = _f_filter_blocked(feat)
+    context = dict(feat)
+    context.update({
+        "score": candidate.get("score"),
+        "filter_would_block": bool(blocked),
+        "filter_blocked_by": blocked,
+        "rule": "F_TREND_DOWN_SHORT_REPLICA_V20_15",
+    })
+    return {
+        "side": "SHORT",
+        "atr": f(ctx.get("atr")),
+        "dist": f(candidate["risk_distance"]),
+        "context": context,
+    }
+
+
+def _shadow_signal_m(ctx):
+    """Setup M (V20.15): setup L plus the exhaustion filter.
+
+    Fires only when L fires and the pre-registered filter does
+    not block. The live F is never filtered; this is a shadow
+    comparison only (judged at L closed >= 40 and M closed
+    >= 20, per the pre-registered plan).
+    """
+    sig = _shadow_signal_l(ctx)
+    if sig is None:
+        return None
+    if sig["context"]["filter_would_block"]:
+        return None
+    sig = dict(sig)
+    sig["context"] = dict(sig["context"])
+    sig["context"]["rule"] = (
+        "F_TREND_DOWN_SHORT_EXHAUSTION_FILTER_V20_15"
+    )
+    return sig
 
 
 def _shadow_signals_j(candles):
@@ -3779,6 +3913,12 @@ def update_shadow(s, c1, c4, c15=None, ctx=None):
     for key, value in _new_shadow_state().items():
         if key not in book:
             book[key] = value
+    # Sub-key backfill for setups added after the book was created
+    # (V20.15: L / M). Existing setups' stats / ledger are untouched.
+    for _setup in ("G", "H", "I", "J", "K", "L", "M"):
+        book["positions"].setdefault(_setup, None)
+        book["stats"].setdefault(_setup, _empty_shadow_stats())
+        book["last_bar_t"].setdefault(_setup, 0)
     summary = {}
     plan = (
         ("G", c1, 3_600_000, SHADOW_HORIZON_BARS_G,
@@ -3860,6 +4000,31 @@ def update_shadow(s, c1, c4, c15=None, ctx=None):
     except Exception as exc:  # shadow must never break the cycle
         book["last_error"] = f"{type(exc).__name__}: {exc}"
         summary["K"] = {"error": book["last_error"]}
+    # Setups L / M ride the same walk/open machinery as setup I
+    # (ctx snapshot on the 15m bars): at most the latest closed
+    # bar can carry a signal.
+    for setup, sigfn, horizon in (
+        ("L", _shadow_signal_l, SHADOW_HORIZON_BARS_L),
+        ("M", _shadow_signal_m, SHADOW_HORIZON_BARS_M),
+    ):
+        try:
+            if c15 and len(c15) >= 35:
+                signals_x = [None] * len(c15)
+                sig_x = sigfn(ctx)
+                if sig_x:
+                    signals_x[-1] = sig_x
+                _shadow_process_setup(
+                    book, setup, c15, 900_000, horizon,
+                    signals_x)
+            stats = book["stats"][setup]
+            summary[setup] = {
+                "open": book["positions"].get(setup) is not None,
+                "closed": stats["closed"],
+                "signals": stats["signals"],
+            }
+        except Exception as exc:  # shadow must never break the cycle
+            book["last_error"] = f"{type(exc).__name__}: {exc}"
+            summary[setup] = {"error": book["last_error"]}
     book["updated_at"] = iso_now()
     return summary
 
@@ -3873,6 +4038,8 @@ def _shadow_dashboard_payload(s):
         ("I", "EARLY_LONG_15M_V20_10"),
         ("J", "FAILED_BREAKDOWN_RECLAIM_LONG_15M_V20_13"),
         ("K", "FAILED_BREAKOUT_RECLAIM_SHORT_15M_V20_14"),
+        ("L", "F_TREND_DOWN_SHORT_REPLICA_V20_15"),
+        ("M", "F_TREND_DOWN_SHORT_EXHAUSTION_FILTER_V20_15"),
     ):
         stats = (book.get("stats") or {}).get(setup) \
             or _empty_shadow_stats()
@@ -3896,7 +4063,7 @@ def _shadow_dashboard_payload(s):
     return {
         "enabled": SHADOW_ENABLED,
         "measurement_only": True,
-        "note": "シャドー測定専用（V20.9 G/H、V20.10 I、V20.13 J、V20.14 K）: "
+        "note": "シャドー測定専用（V20.9 G/H、V20.10 I、V20.13 J、V20.14 K、V20.15 L/M）: "
                 "実ポジション・資産・リスク管理には一切影響しません",
         "setups": setups,
         "recent_ledger": (book.get("ledger") or [])[-20:],
