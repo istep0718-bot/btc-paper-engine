@@ -5367,12 +5367,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-27T02:59:48.726180+00:00",
-      "equity": 79.11233365058288,
-      "marked_equity": 79.30270637305006,
-      "price": 79788.5
-    },
-    {
       "timestamp": "2026-10-27T03:17:40.997382+00:00",
       "equity": 79.11292318396025,
       "marked_equity": 79.60069163762559,
@@ -11365,6 +11359,12 @@
       "equity": 78.21394105837564,
       "marked_equity": 78.21394105837564,
       "price": 60429.5
+    },
+    {
+      "timestamp": "2026-11-21T14:00:48.645385+00:00",
+      "equity": 78.21394105837564,
+      "marked_equity": 78.21394105837564,
+      "price": 60599.5
     }
   ],
   "position": null,
@@ -12976,7 +12976,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13040,10 +13040,10 @@
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
         "label": "HL-F79D",
         "snapshot": {
-          "side": "LONG",
-          "szi": 3.5894,
-          "entry_px": 58058.0,
-          "updated_ts": 1795268735
+          "side": null,
+          "szi": 0.0,
+          "entry_px": null,
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13063,7 +13063,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13083,7 +13083,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13103,7 +13103,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13123,7 +13123,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13163,7 +13163,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13203,7 +13203,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13223,7 +13223,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795268735
+          "updated_ts": 1795269646
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13240,10 +13240,10 @@
     },
     "current": {
       "fetched": 8,
-      "long_count": 2,
+      "long_count": 1,
       "short_count": 0,
-      "flat_count": 6,
-      "positioned": 2,
+      "flat_count": 7,
+      "positioned": 1,
       "long_ratio": 1.0,
       "short_ratio": 0.0,
       "valid": true,
@@ -13251,7 +13251,7 @@
         {
           "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
           "label": "HL-F79D",
-          "side": "LONG"
+          "side": null
         },
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
@@ -13289,7 +13289,7 @@
           "side": null
         }
       ],
-      "ts": 1795268735,
+      "ts": 1795269646,
       "enabled_pool": 8
     }
   },
@@ -14436,13 +14436,13 @@
       }
     },
     "last_bar_t": {
-      "G": 1795262400000,
+      "G": 1795266000000,
       "H": 1795248000000,
-      "I": 1795267800000,
-      "J": 1795267800000,
-      "K": 1795267800000,
-      "L": 1795267800000,
-      "M": 1795267800000
+      "I": 1795268700000,
+      "J": 1795268700000,
+      "K": 1795268700000,
+      "L": 1795268700000,
+      "M": 1795268700000
     },
     "next_id": 27,
     "events": [
@@ -14916,7 +14916,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-21T13:45:37.358442+00:00"
+    "updated_at": "2026-11-21T14:00:48.645179+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -14982,13 +14982,13 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 140,
+    "cycles_evaluated": 141,
     "context_cycles": {
-      "flat": 90,
+      "flat": 91,
       "position_open": 50,
       "event_blocked": 0,
       "dd_band_10": 8,
-      "dd_band_20": 34,
+      "dd_band_20": 35,
       "dd_band_30": 98
     },
     "by_setup": {
@@ -14997,7 +14997,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 280
+          "other": 282
         },
         "selected": 0,
         "blocked": {
@@ -15015,7 +15015,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 280
+          "other": 282
         },
         "selected": 0,
         "blocked": {
@@ -15033,7 +15033,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 280
+          "other": 282
         },
         "selected": 0,
         "blocked": {
@@ -15051,7 +15051,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 275
+          "other": 277
         },
         "selected": 1,
         "blocked": {
@@ -15102,13 +15102,13 @@
       }
     },
     "top_reasons": {
-      "A/LONG|上位足バイアス不一致": 66,
-      "B/LONG|上位足が逆行": 82,
-      "C/LONG|レンジレジーム限定": 82,
+      "A/LONG|上位足バイアス不一致": 67,
+      "B/LONG|上位足が逆行": 83,
+      "C/LONG|レンジレジーム限定": 83,
       "F/LONG|高ボラティリティで方向が揃っていない": 40,
       "A/SHORT|反転トリガー未発生": 22,
-      "B/SHORT|出来高不足": 61,
-      "C/SHORT|レンジレジーム限定": 82,
+      "B/SHORT|出来高不足": 62,
+      "C/SHORT|レンジレジーム限定": 83,
       "F/SHORT|高ボラティリティで方向が揃っていない": 6,
       "A/SHORT|押し目/戻りが未形成": 43,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
@@ -15116,10 +15116,10 @@
       "B/LONG|レンジレジームではブレイクアウト禁止": 58,
       "C/LONG|RSI/BB極値でない": 49,
       "F/LONG|レジーム不一致（確立したトレンド限定）": 90,
-      "A/SHORT|レジーム不一致": 68,
+      "A/SHORT|レジーム不一致": 69,
       "B/SHORT|レンジレジームではブレイクアウト禁止": 58,
       "C/SHORT|RSI/BB極値でない": 33,
-      "F/SHORT|レジーム不一致（確立したトレンド限定）": 84,
+      "F/SHORT|レジーム不一致（確立したトレンド限定）": 85,
       "C/SHORT|ゾーン端に未到達": 19,
       "C/LONG|ゾーン端に未到達": 6,
       "C/SHORT|反転トリガー未発生": 4,
@@ -15132,7 +15132,7 @@
       "A/SHORT|対向ゾーンまでの距離が1.5R未満": 7,
       "F/SHORT|スコア不足 6<8": 1,
       "B/SHORT|ブレイク未成立": 7,
-      "F/LONG|上位足バイアス不一致": 10,
+      "F/LONG|上位足バイアス不一致": 11,
       "F/SHORT|EMA21から乖離しすぎ（追いかけ防止）": 3,
       "F/SHORT|RSIが継続エントリー帯域外": 2
     },
@@ -15259,11 +15259,11 @@
       },
       "2026-11-21": {
         "context_cycles": {
-          "flat": 30,
+          "flat": 31,
           "position_open": 28,
           "event_blocked": 0,
           "dd_band_10": 8,
-          "dd_band_20": 34,
+          "dd_band_20": 35,
           "dd_band_30": 16
         },
         "by_setup": {
@@ -15272,7 +15272,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 116
+              "other": 118
             },
             "selected": 0,
             "blocked": {
@@ -15290,7 +15290,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 116
+              "other": 118
             },
             "selected": 0,
             "blocked": {
@@ -15308,7 +15308,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 116
+              "other": 118
             },
             "selected": 0,
             "blocked": {
@@ -15326,7 +15326,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 116
+              "other": 118
             },
             "selected": 0,
             "blocked": {
