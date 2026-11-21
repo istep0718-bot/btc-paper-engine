@@ -262,6 +262,23 @@ Design pillars (fixing V19.x fatal flaws):
     positions, equity or risk state. MEASUREMENT ONLY.
     Entry logic, risk and exits for setups A-F and shadow
     G-M are unchanged from V20.15.
+  * V20.17: REV ENGINE V2 (reversal shadow, second engine),
+    added at the owner's request (2026-11-22) in a separate
+    module (rev_engine_v2.py). V2 generalises the reversal
+    detector into three independent systems per side (L =
+    the V1 pressure-peak definitions copied verbatim, A =
+    bullish absorption candidate, F = fake-break recovery),
+    keeps a full candidate ledger including unfired candidates
+    for missed-move analysis, and separates RSI dynamics from
+    the RSI level. REV V1 (rev_engine.py) is byte-identical
+    and keeps running in parallel; V1 and V2 statistics are
+    never mixed (state["rev"] vs state["rev2"],
+    dashboard["rev"] vs dashboard["rev2"]). bot.py only calls
+    rev_engine_v2.update_rev2() right after the REV V1 hook
+    and adds dashboard["rev2"] right after dashboard["rev"];
+    both calls are wrapped so any REV2 failure is swallowed.
+    MEASUREMENT ONLY. Entry logic, risk and exits for setups
+    A-F, shadow G-M and REV V1 are unchanged from V20.16.
 """
 
 import json
@@ -271,7 +288,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_16_PRO_2026-11-21"
+BUILD = "BTC_PAPER_V20_17_PRO_2026-11-22"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -5872,6 +5889,23 @@ def main():
         except Exception as rev_exc:
             print("REV shadow skipped:", rev_exc)
 
+        # REV ENGINE V2 (V20.17, shadow measurement only):
+        # second, fully independent reversal engine in
+        # rev_engine_v2.py. Reads only the candles / market
+        # data already fetched above and writes only
+        # state["rev2"]; REV V1 above is untouched and keeps
+        # its own state["rev"]. The call is wrapped so a REV2
+        # failure can never affect the house cycle.
+        rev2_summary = None
+        try:
+            import rev_engine_v2
+
+            rev2_summary = rev_engine_v2.update_rev2(
+                s, c15, c1, c4, market, ctx
+            )
+        except Exception as rev2_exc:
+            print("REV2 shadow skipped:", rev2_exc)
+
         had_position = bool(s.get("position"))
 
         if had_position:
@@ -6089,6 +6123,16 @@ def main():
             import rev_engine
 
             dashboard["rev"] = rev_engine.dashboard_payload(s)
+        except Exception:
+            pass
+
+        # REV ENGINE V2: fully separated shadow statistics in
+        # data.json (no effect on any house section or on the
+        # REV V1 section above).
+        try:
+            import rev_engine_v2
+
+            dashboard["rev2"] = rev_engine_v2.dashboard_payload(s)
         except Exception:
             pass
 
