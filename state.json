@@ -1,5 +1,5 @@
 {
-  "build": "BTC_PAPER_V20_15_PRO_2026-11-20",
+  "build": "BTC_PAPER_V20_16_PRO_2026-11-21",
   "initial_equity": 100.0,
   "equity": 78.21394105837564,
   "peak_equity": 102.44757489202469,
@@ -5366,12 +5366,6 @@
     }
   ],
   "equity_history": [
-    {
-      "timestamp": "2026-10-27T03:28:12.600523+00:00",
-      "equity": 79.11327074468272,
-      "marked_equity": 79.35717469876556,
-      "price": 79761.5
-    },
     {
       "timestamp": "2026-10-27T03:28:33.264845+00:00",
       "equity": 79.11327074468272,
@@ -11365,6 +11359,12 @@
       "equity": 78.21394105837564,
       "marked_equity": 78.21394105837564,
       "price": 60295.5
+    },
+    {
+      "timestamp": "2026-11-21T14:30:44.627316+00:00",
+      "equity": 78.21394105837564,
+      "marked_equity": 78.21394105837564,
+      "price": 60351.5
     }
   ],
   "position": null,
@@ -12976,7 +12976,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13040,10 +13040,10 @@
       "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d": {
         "label": "HL-F79D",
         "snapshot": {
-          "side": null,
-          "szi": 0.0,
-          "entry_px": null,
-          "updated_ts": 1795270531
+          "side": "LONG",
+          "szi": 5.91753,
+          "entry_px": 60415.0,
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13063,7 +13063,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13083,7 +13083,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13103,7 +13103,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13123,7 +13123,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13163,7 +13163,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13203,7 +13203,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13223,7 +13223,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795270531
+          "updated_ts": 1795271443
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13240,10 +13240,10 @@
     },
     "current": {
       "fetched": 8,
-      "long_count": 1,
+      "long_count": 2,
       "short_count": 0,
-      "flat_count": 7,
-      "positioned": 1,
+      "flat_count": 6,
+      "positioned": 2,
       "long_ratio": 1.0,
       "short_ratio": 0.0,
       "valid": true,
@@ -13251,7 +13251,7 @@
         {
           "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
           "label": "HL-F79D",
-          "side": null
+          "side": "LONG"
         },
         {
           "address": "0x24e370916722584204322fad3c179a7fbde6684b",
@@ -13289,7 +13289,7 @@
           "side": null
         }
       ],
-      "ts": 1795270531,
+      "ts": 1795271443,
       "enabled_pool": 8
     }
   },
@@ -14438,11 +14438,11 @@
     "last_bar_t": {
       "G": 1795266000000,
       "H": 1795248000000,
-      "I": 1795269600000,
-      "J": 1795269600000,
-      "K": 1795269600000,
-      "L": 1795269600000,
-      "M": 1795269600000
+      "I": 1795270500000,
+      "J": 1795270500000,
+      "K": 1795270500000,
+      "L": 1795270500000,
+      "M": 1795270500000
     },
     "next_id": 27,
     "events": [
@@ -14916,7 +14916,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-21T14:15:33.289214+00:00"
+    "updated_at": "2026-11-21T14:30:44.589891+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -14982,13 +14982,13 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 142,
+    "cycles_evaluated": 143,
     "context_cycles": {
-      "flat": 92,
+      "flat": 93,
       "position_open": 50,
       "event_blocked": 0,
       "dd_band_10": 8,
-      "dd_band_20": 36,
+      "dd_band_20": 37,
       "dd_band_30": 98
     },
     "by_setup": {
@@ -14997,7 +14997,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 284
+          "other": 286
         },
         "selected": 0,
         "blocked": {
@@ -15015,7 +15015,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 284
+          "other": 286
         },
         "selected": 0,
         "blocked": {
@@ -15033,7 +15033,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 284
+          "other": 286
         },
         "selected": 0,
         "blocked": {
@@ -15051,7 +15051,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 279
+          "other": 281
         },
         "selected": 1,
         "blocked": {
@@ -15102,13 +15102,13 @@
       }
     },
     "top_reasons": {
-      "A/LONG|上位足バイアス不一致": 68,
-      "B/LONG|上位足が逆行": 84,
-      "C/LONG|レンジレジーム限定": 84,
+      "A/LONG|上位足バイアス不一致": 69,
+      "B/LONG|上位足が逆行": 85,
+      "C/LONG|レンジレジーム限定": 85,
       "F/LONG|高ボラティリティで方向が揃っていない": 40,
       "A/SHORT|反転トリガー未発生": 22,
-      "B/SHORT|出来高不足": 62,
-      "C/SHORT|レンジレジーム限定": 84,
+      "B/SHORT|出来高不足": 63,
+      "C/SHORT|レンジレジーム限定": 85,
       "F/SHORT|高ボラティリティで方向が揃っていない": 6,
       "A/SHORT|押し目/戻りが未形成": 43,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
@@ -15116,10 +15116,10 @@
       "B/LONG|レンジレジームではブレイクアウト禁止": 58,
       "C/LONG|RSI/BB極値でない": 49,
       "F/LONG|レジーム不一致（確立したトレンド限定）": 90,
-      "A/SHORT|レジーム不一致": 70,
+      "A/SHORT|レジーム不一致": 71,
       "B/SHORT|レンジレジームではブレイクアウト禁止": 58,
       "C/SHORT|RSI/BB極値でない": 33,
-      "F/SHORT|レジーム不一致（確立したトレンド限定）": 86,
+      "F/SHORT|レジーム不一致（確立したトレンド限定）": 87,
       "C/SHORT|ゾーン端に未到達": 19,
       "C/LONG|ゾーン端に未到達": 6,
       "C/SHORT|反転トリガー未発生": 4,
@@ -15132,7 +15132,7 @@
       "A/SHORT|対向ゾーンまでの距離が1.5R未満": 7,
       "F/SHORT|スコア不足 6<8": 1,
       "B/SHORT|ブレイク未成立": 7,
-      "F/LONG|上位足バイアス不一致": 12,
+      "F/LONG|上位足バイアス不一致": 13,
       "F/SHORT|EMA21から乖離しすぎ（追いかけ防止）": 3,
       "F/SHORT|RSIが継続エントリー帯域外": 2
     },
@@ -15259,11 +15259,11 @@
       },
       "2026-11-21": {
         "context_cycles": {
-          "flat": 32,
+          "flat": 33,
           "position_open": 28,
           "event_blocked": 0,
           "dd_band_10": 8,
-          "dd_band_20": 36,
+          "dd_band_20": 37,
           "dd_band_30": 16
         },
         "by_setup": {
@@ -15272,7 +15272,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 120
+              "other": 122
             },
             "selected": 0,
             "blocked": {
@@ -15290,7 +15290,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 120
+              "other": 122
             },
             "selected": 0,
             "blocked": {
@@ -15308,7 +15308,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 120
+              "other": 122
             },
             "selected": 0,
             "blocked": {
@@ -15326,7 +15326,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 120
+              "other": 122
             },
             "selected": 0,
             "blocked": {
@@ -15528,5 +15528,2259 @@
   "consecutive_loss_lock": true,
   "dd_limit_alerted": false,
   "daily_stop_alerted": false,
-  "daily_loss_alerted": false
+  "daily_loss_alerted": false,
+  "rev": {
+    "version": "REV_ENGINE_V1_2026-11-21",
+    "enabled": true,
+    "start_equity": 78.21394105837564,
+    "virtual_equity": 94.97027581664354,
+    "peak_equity": 101.9443757953335,
+    "last_bar_t": 1795270500000,
+    "oi_history": [
+      {
+        "ts": 1795270500,
+        "oi": 37862.80986
+      }
+    ],
+    "active_events": {
+      "LONG": {
+        "event_id": "REV-L-1795268700000",
+        "side": "LONG",
+        "started_bar_t": 1795268700000,
+        "start_time": "2026-11-21T13:45:00+00:00",
+        "ref_price": 60548.0,
+        "extreme": 59515.0,
+        "bars_active": 3,
+        "alpha_fired": false,
+        "alpha_attempted": false,
+        "beta_fired": false,
+        "beta_pending": false,
+        "beta_resolved": false,
+        "beta_pending_info": null,
+        "beta_cancel_reason": null,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "track_high": 60980.0,
+        "track_low": 60177.0,
+        "fire_failures": []
+      },
+      "SHORT": {
+        "event_id": "REV-S-1795260600000",
+        "side": "SHORT",
+        "started_bar_t": 1795260600000,
+        "start_time": "2026-11-21T11:30:00+00:00",
+        "ref_price": 58141.0,
+        "extreme": 60980.0,
+        "bars_active": 12,
+        "alpha_fired": false,
+        "alpha_attempted": false,
+        "beta_fired": false,
+        "beta_pending": false,
+        "beta_resolved": false,
+        "beta_pending_info": null,
+        "beta_cancel_reason": null,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "track_high": 60980.0,
+        "track_low": 57927.0,
+        "fire_failures": []
+      }
+    },
+    "open_positions": [
+      {
+        "event_id": "REV-L-1795260600000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 59284.8546,
+        "entry_bar_t": 1795266000000,
+        "initial_stop": 57869.44681669868,
+        "trail_stop": null,
+        "trail_active": false,
+        "atr_at_entry": 383.6878886754957,
+        "r_distance": 1415.4077833013216,
+        "risk_usd": 23.24856078601782,
+        "quantity": 0.015214538721524873,
+        "qty_remaining": 0.011410904041143654,
+        "margin_used": 22.549792897791797,
+        "leverage": 40.0,
+        "tp1_done": true,
+        "tp2_done": false,
+        "hit_1r_t": 1795267800000,
+        "hit_15r_t": null,
+        "bars_held": 5,
+        "mfe_r": 1.1976374723941496,
+        "mae_r": -0.1588620626880714,
+        "realized_pnl": 4.77110422547634,
+        "fees_paid": 0.5664135813482072,
+        "score": 68.98875260379363,
+        "score_raw": 62.08987734341426,
+        "score_breakdown": {
+          "pressure": 14.664001332632584,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 7.425876010781671,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 85.1553835800021,
+        "vol_ratio": 2.320918015253073,
+        "oi_change_1h": null,
+        "funding": 8.889e-06,
+        "status": "OPEN"
+      }
+    ],
+    "ledger": [
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1794834000000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 64334.130600000004,
+        "entry_time": "2026-11-16T15:00:00+00:00",
+        "exit_time": "2026-11-16T17:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 65734.76021764257,
+        "r_distance": 1400.6296176425676,
+        "quantity": 0.012157456754125412,
+        "margin_used": 19.55348526459391,
+        "net_pnl": -8.212305608576163,
+        "net_r": -0.44356892794978636,
+        "mfe_r": 0.19214972795804794,
+        "mae_r": -0.43542517759011934,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7858526370695098,
+        "score": 77.8899545683998,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.100959111559818,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 45.31046824873493,
+        "vol_ratio": 3.3339505417714834,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1794837600000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 64439.8854,
+        "entry_time": "2026-11-16T15:30:00+00:00",
+        "exit_time": "2026-11-16T17:30:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 63913.96491437962,
+        "r_distance": 525.9204856203796,
+        "quantity": 0.012076817156022403,
+        "margin_used": 19.45571783827094,
+        "net_pnl": 5.45116560944674,
+        "net_r": 0.6961826112145144,
+        "mfe_r": 1.298893309307383,
+        "mae_r": -0.46373055750492437,
+        "hit_1r_time": "2026-11-16T17:15:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.781344968819971,
+        "score": 73.72053387179419,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 6.348480484614764,
+          "wick": 15.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 47.99466657947711,
+        "vol_ratio": 1.0962624226153557,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794846600000",
+        "side": "SHORT",
+        "start_time": "2026-11-16T16:30:00+00:00",
+        "ref_price": 64596.0,
+        "extreme": 65206.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 0.08359650752368664,
+        "track_mae_pct": -0.9443309183231108,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794865500000",
+        "side": "SHORT",
+        "start_time": "2026-11-16T21:45:00+00:00",
+        "ref_price": 65288.0,
+        "extreme": 65524.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.3279622595270157,
+        "track_mae_pct": -0.3614753093983625,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1794871800000",
+        "side": "LONG",
+        "start_time": "2026-11-16T23:30:00+00:00",
+        "ref_price": 64859.0,
+        "extreme": 64359.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.542715737214583,
+        "track_mae_pct": -0.7709030358161506,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794885300000",
+        "side": "SHORT",
+        "start_time": "2026-11-17T03:15:00+00:00",
+        "ref_price": 64984.0,
+        "extreme": 65175.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 1.121814600517046,
+        "track_mae_pct": -0.29391850301612177,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1794895200000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 64601.917799999996,
+        "entry_time": "2026-11-17T07:00:00+00:00",
+        "exit_time": "2026-11-17T09:00:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 64223.604619902755,
+        "r_distance": 378.31318009724055,
+        "quantity": 0.011679653426518898,
+        "margin_used": 18.863200264811553,
+        "net_pnl": -5.695699629725665,
+        "net_r": -0.9732628376698029,
+        "mfe_r": 0.32798804410702964,
+        "mae_r": -1.1892733948215868,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7520561888720353,
+        "score": 65.5491358071686,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 8.823135827820433,
+          "wick": 5.171086398631309,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 41.07571153724204,
+        "vol_ratio": 1.2117463386316203,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1794904200000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 64371.8718,
+        "entry_time": "2026-11-17T09:15:00+00:00",
+        "exit_time": "2026-11-17T10:15:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 64122.96263177051,
+        "r_distance": 248.9091682294893,
+        "quantity": 0.010836581177296224,
+        "margin_used": 17.43927535738014,
+        "net_pnl": -3.8797151365138376,
+        "net_r": -0.964453261210174,
+        "mfe_r": 0.5348465102629633,
+        "mae_r": -1.0480602295833563,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 4,
+        "fees_paid": 0.6959791463000988,
+        "score": 82.08020050125313,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 13.872180451127821,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 39.12494952085345,
+        "vol_ratio": 2.258495458686196,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1794904200000",
+        "mode": "beta",
+        "side": "LONG",
+        "entry": 64424.882399999995,
+        "entry_time": "2026-11-17T09:30:00+00:00",
+        "exit_time": "2026-11-17T10:15:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 64123.01172950119,
+        "r_distance": 301.87067049880716,
+        "quantity": 0.01077352621172545,
+        "margin_used": 17.35207898059324,
+        "net_pnl": -4.428008507121313,
+        "net_r": -0.9687241242900068,
+        "mfe_r": 0.17264877013022364,
+        "mae_r": -1.0397909789690392,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 3,
+        "fees_paid": 0.6922152626014697,
+        "score": 82.08020050125313,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 13.872180451127821,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 39.12494952085345,
+        "vol_ratio": 2.258495458686196,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794899700000",
+        "side": "SHORT",
+        "start_time": "2026-11-17T07:15:00+00:00",
+        "ref_price": 64674.0,
+        "extreme": 64726.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.9803012029563685,
+        "track_mae_pct": -0.08040325323932507,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1794911400000",
+        "side": "LONG",
+        "start_time": "2026-11-17T10:30:00+00:00",
+        "ref_price": 64240.0,
+        "extreme": 64040.0,
+        "best_score": 64.39819765474599,
+        "best_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 5.7682335388483015,
+          "wick": 7.190144350423096,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "stages_seen": [
+          "no_shift",
+          "candidate",
+          "no_pressure"
+        ],
+        "reasons": [
+          "score_below_alpha"
+        ],
+        "track_mfe_pct": 1.4243462017434538,
+        "track_mae_pct": -0.3113325031133263,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1794914100000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 64605.0764,
+        "entry_time": "2026-11-17T15:00:00+00:00",
+        "exit_time": "2026-11-17T17:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 65484.297338445045,
+        "r_distance": 879.2209384450471,
+        "quantity": 0.009511540146694326,
+        "margin_used": 15.36234444647135,
+        "net_pnl": 6.773476293861144,
+        "net_r": 0.7107318835118722,
+        "mfe_r": 1.4616080484533613,
+        "mae_r": -0.620917423742773,
+        "hit_1r_time": "2026-11-17T15:45:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6108016388924773,
+        "score": 78.54274239816408,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.688468158347677,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 35.73564212258779,
+        "vol_ratio": 2.1117721516352392,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1794928500000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 64156.1662,
+        "entry_time": "2026-11-17T15:30:00+00:00",
+        "exit_time": "2026-11-17T17:30:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 65200.9344397817,
+        "r_distance": 1044.768239781697,
+        "quantity": 0.009530203333277726,
+        "margin_used": 15.285532724238994,
+        "net_pnl": 2.710630345537803,
+        "net_r": 0.24379341819096936,
+        "mfe_r": 0.800336541791044,
+        "mae_r": -0.29368599495722886,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6097611132401708,
+        "score": 73.1716335740783,
+        "score_breakdown": {
+          "pressure": 15.218060904997373,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.636409311673087,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 31.2029605885555,
+        "vol_ratio": 3.406615394996848,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1794925800000",
+        "side": "LONG",
+        "start_time": "2026-11-17T14:30:00+00:00",
+        "ref_price": 65102.0,
+        "extreme": 63320.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.5253294829651978,
+        "track_mae_pct": -2.7372430954502147,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1794928500000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 63824.2326,
+        "entry_time": "2026-11-17T16:30:00+00:00",
+        "exit_time": "2026-11-17T18:30:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 65207.68171945557,
+        "r_distance": 1383.4491194555667,
+        "quantity": 0.009842816108054243,
+        "margin_used": 15.70525461798702,
+        "net_pnl": 0.4007917256237313,
+        "net_r": 0.027061077102618198,
+        "mfe_r": 0.27773525935757676,
+        "mae_r": -0.214512695715752,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6276959408862259,
+        "score": 76.59859902642665,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 8.538875829183848,
+          "wick": 10.399863294600138,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 27.549064969112223,
+        "vol_ratio": 1.1984808720285796,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1794952800000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 64439.8854,
+        "entry_time": "2026-11-17T22:00:00+00:00",
+        "exit_time": "2026-11-18T00:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 64097.183443524526,
+        "r_distance": 342.7019564754737,
+        "quantity": 0.011069894942877734,
+        "margin_used": 17.83356903772702,
+        "net_pnl": 3.671199734316847,
+        "net_r": 0.7129891758857302,
+        "mfe_r": 2.3434783047626913,
+        "mae_r": -0.21559666819493922,
+        "hit_1r_time": "2026-11-17T22:30:00+00:00",
+        "hit_15r_time": "2026-11-17T23:00:00+00:00",
+        "bars_held": 8,
+        "fees_paid": 0.7155361294409598,
+        "score": 66.66666666666666,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.0,
+          "wick": 15.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 74.66967289240607,
+        "vol_ratio": 0.6547624517295214,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794950100000",
+        "side": "SHORT",
+        "start_time": "2026-11-17T21:15:00+00:00",
+        "ref_price": 64399.0,
+        "extreme": 65243.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.6335502104069968,
+        "track_mae_pct": -1.3105793568223056,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1794965400000",
+        "side": "LONG",
+        "start_time": "2026-11-18T01:30:00+00:00",
+        "ref_price": 64436.0,
+        "extreme": 64111.0,
+        "best_score": 59.476631368699785,
+        "best_breakdown": {
+          "pressure": 14.40808911095069,
+          "structure": 25.0,
+          "volume": 0.0,
+          "wick": 14.12087912087912,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "stages_seen": [
+          "no_pressure",
+          "no_shift",
+          "candidate"
+        ],
+        "reasons": [
+          "score_below_alpha"
+        ],
+        "track_mfe_pct": 0.5447265503755627,
+        "track_mae_pct": -0.5043764355329272,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794968100000",
+        "side": "SHORT",
+        "start_time": "2026-11-18T02:15:00+00:00",
+        "ref_price": 64564.0,
+        "extreme": 64856.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 0.6164425995911049,
+        "track_mae_pct": -0.4522644198005077,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1794987900000",
+        "side": "SHORT",
+        "start_time": "2026-11-18T07:45:00+00:00",
+        "ref_price": 64867.0,
+        "extreme": 64936.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 1.2055436508548234,
+        "track_mae_pct": -0.1063714986048403,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1794988800000",
+        "side": "LONG",
+        "start_time": "2026-11-18T08:00:00+00:00",
+        "ref_price": 64599.0,
+        "extreme": 64085.0,
+        "best_score": 64.1498617034472,
+        "best_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.6323735153462177,
+          "wick": 12.102502017756256,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "stages_seen": [
+          "no_shift",
+          "no_pressure",
+          "candidate"
+        ],
+        "reasons": [
+          "score_below_alpha"
+        ],
+        "track_mfe_pct": 0.41641511478505144,
+        "track_mae_pct": -0.795677951671081,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795005000000",
+        "side": "LONG",
+        "start_time": "2026-11-18T12:30:00+00:00",
+        "ref_price": 64032.0,
+        "extreme": 62273.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.3435782108945462,
+        "track_mae_pct": -2.7470639680159947,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795012200000",
+        "side": "SHORT",
+        "start_time": "2026-11-18T14:30:00+00:00",
+        "ref_price": 63277.0,
+        "extreme": 64064.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.6135404649398666,
+        "track_mae_pct": -1.243737851035931,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1795019400000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 62752.547999999995,
+        "entry_time": "2026-11-18T16:45:00+00:00",
+        "exit_time": "2026-11-18T18:45:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 62207.70275516294,
+        "r_distance": 544.8452448370517,
+        "quantity": 0.011952578544734938,
+        "margin_used": 18.75136897130623,
+        "net_pnl": 4.287384689678445,
+        "net_r": 0.5401491030432062,
+        "mfe_r": 1.382873406971445,
+        "mae_r": -0.34422251414910615,
+        "hit_1r_time": "2026-11-18T17:15:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7525747385663717,
+        "score": 67.98601233394311,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 5.433442846580542,
+          "wick": 10.753968253968255,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 32.55893763838162,
+        "vol_ratio": 1.0535606661737587,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795029300000",
+        "side": "LONG",
+        "start_time": "2026-11-18T19:15:00+00:00",
+        "ref_price": 62836.0,
+        "extreme": 62035.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.07638933095677203,
+        "track_mae_pct": -1.274746960341211,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1795046400000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 63169.6314,
+        "entry_time": "2026-11-19T00:30:00+00:00",
+        "exit_time": "2026-11-19T01:15:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 62568.3962241349,
+        "r_distance": 601.2351758650984,
+        "quantity": 0.012489608459553056,
+        "margin_used": 19.72409906800721,
+        "net_pnl": -8.84114613579396,
+        "net_r": -0.9814527989190346,
+        "mfe_r": 0.21683461852081146,
+        "mae_r": -1.0039855022312227,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 3,
+        "fees_paid": 0.784935857581182,
+        "score": 77.96674225245654,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 10.170068027210885,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 68.34658095297374,
+        "vol_ratio": 4.464684148656991,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795041900000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 62767.444,
+        "entry_time": "2026-11-19T00:00:00+00:00",
+        "exit_time": "2026-11-19T02:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 63316.925976742954,
+        "r_distance": 549.4819767429508,
+        "quantity": 0.012632800624301882,
+        "margin_used": 19.82321514372584,
+        "net_pnl": -2.387128242120964,
+        "net_r": -0.28256523625812485,
+        "mfe_r": 0.6796292067914382,
+        "mae_r": -0.9691964842172213,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7937253072164858,
+        "score": 71.54945894286757,
+        "score_breakdown": {
+          "pressure": 14.317292971360747,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.077220077220077,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 54.61645942630871,
+        "vol_ratio": 1.9042767171195807,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795049100000",
+        "side": "SHORT",
+        "start_time": "2026-11-19T00:45:00+00:00",
+        "ref_price": 63179.0,
+        "extreme": 63547.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.269409139112676,
+        "track_mae_pct": -0.5824720239320014,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795053600000",
+        "side": "LONG",
+        "start_time": "2026-11-19T02:00:00+00:00",
+        "ref_price": 62881.0,
+        "extreme": 62377.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.3787948664938598,
+        "track_mae_pct": -0.8015139708338004,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795063500000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 63540.2894,
+        "entry_time": "2026-11-19T07:15:00+00:00",
+        "exit_time": "2026-11-19T09:00:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 63905.06922530775,
+        "r_distance": 364.779825307749,
+        "quantity": 0.010712035912916133,
+        "margin_used": 17.016146549247107,
+        "net_pnl": -5.069561189548252,
+        "net_r": -0.9747728228879117,
+        "mfe_r": 0.06932784722583248,
+        "mae_r": -1.0189998848933115,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 7,
+        "fees_paid": 0.6828392229531819,
+        "score": 72.22222222222221,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.0,
+          "wick": 15.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 59.76424566347211,
+        "vol_ratio": 0.2728777108333195,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795073400000",
+        "side": "SHORT",
+        "start_time": "2026-11-19T07:30:00+00:00",
+        "ref_price": 63591.0,
+        "extreme": 63948.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.11951376767153077,
+        "track_mae_pct": -0.5614001981412375,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795087800000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 63511.2952,
+        "entry_time": "2026-11-19T14:45:00+00:00",
+        "exit_time": "2026-11-19T15:45:00+00:00",
+        "exit_reason": "TRAIL_STOP",
+        "initial_stop": 64081.56297926271,
+        "r_distance": 570.2677792627073,
+        "quantity": 0.00991871206673804,
+        "margin_used": 15.748756251860044,
+        "net_pnl": 2.9227414195435433,
+        "net_r": 0.4264766449565051,
+        "mfe_r": 1.3349784569352143,
+        "mae_r": -0.6868787160067682,
+        "hit_1r_time": "2026-11-19T15:30:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 4,
+        "fees_paid": 0.6281747919686457,
+        "score": 82.74304730211553,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 9.46874257190397,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 32.493241448160106,
+        "vol_ratio": 4.268119703517118,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795090500000",
+        "side": "LONG",
+        "start_time": "2026-11-19T12:15:00+00:00",
+        "ref_price": 63707.0,
+        "extreme": 62750.0,
+        "best_score": 55.55555555555556,
+        "best_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.0,
+          "wick": 5.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "stages_seen": [
+          "no_shift",
+          "candidate",
+          "no_pressure"
+        ],
+        "reasons": [
+          "score_below_alpha"
+        ],
+        "track_mfe_pct": 0.5305539422669314,
+        "track_mae_pct": -1.5021897122765138,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795087800000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 63342.329,
+        "entry_time": "2026-11-19T15:15:00+00:00",
+        "exit_time": "2026-11-19T17:15:00+00:00",
+        "exit_reason": "TRAIL_STOP",
+        "initial_stop": 64085.2208851806,
+        "r_distance": 742.8918851806011,
+        "quantity": 0.00989544446374919,
+        "margin_used": 15.670012470600744,
+        "net_pnl": 5.2811729090513975,
+        "net_r": 0.6182474911820434,
+        "mfe_r": 1.5255638439562162,
+        "mae_r": -0.025132863034926102,
+        "hit_1r_time": "2026-11-19T16:45:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6238479883753164,
+        "score": 82.74304730211553,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 9.46874257190397,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 32.493241448160106,
+        "vol_ratio": 4.268119703517118,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795102200000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 62701.457200000004,
+        "entry_time": "2026-11-19T17:45:00+00:00",
+        "exit_time": "2026-11-19T19:45:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 63439.37454625328,
+        "r_distance": 737.9173462532781,
+        "quantity": 0.011355228812135982,
+        "margin_used": 17.79973483400878,
+        "net_pnl": 3.309660144752639,
+        "net_r": 0.34008015729943425,
+        "mfe_r": 0.6023129856706901,
+        "mae_r": -0.813834778446676,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7099795735012242,
+        "score": 86.77248677248677,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 13.095238095238095,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 38.19660303415297,
+        "vol_ratio": 1.6181990146783374,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795102200000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 62679.4616,
+        "entry_time": "2026-11-19T18:00:00+00:00",
+        "exit_time": "2026-11-19T20:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 63438.12993580662,
+        "r_distance": 758.6683358066148,
+        "quantity": 0.011302417543317723,
+        "margin_used": 17.71073615983874,
+        "net_pnl": 4.7423378706048815,
+        "net_r": 0.47801959439116243,
+        "mfe_r": 0.8191479341750378,
+        "mae_r": -0.8205672632140578,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7057054247458743,
+        "score": 86.77248677248677,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 13.095238095238095,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 38.19660303415297,
+        "vol_ratio": 1.6181990146783374,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1795106700000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 63273.6522,
+        "entry_time": "2026-11-19T18:15:00+00:00",
+        "exit_time": "2026-11-19T20:00:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 62154.68648817957,
+        "r_distance": 1118.9657118204268,
+        "quantity": 0.011140297337879633,
+        "margin_used": 17.622182479039544,
+        "net_pnl": -13.648718068666746,
+        "net_r": -0.9886867287212879,
+        "mfe_r": 0.005672917349429822,
+        "mae_r": -1.0864070160132722,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 7,
+        "fees_paid": 0.6984121462003485,
+        "score": 73.5159476538787,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 6.16435288849082,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 57.609600290957545,
+        "vol_ratio": 2.47467391010454,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795113000000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 62855.426400000004,
+        "entry_time": "2026-11-19T18:45:00+00:00",
+        "exit_time": "2026-11-19T20:45:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 63353.56802804925,
+        "r_distance": 498.14162804924854,
+        "quantity": 0.011158350246523405,
+        "margin_used": 17.534071566644347,
+        "net_pnl": 6.841191513633874,
+        "net_r": 0.9927678886006934,
+        "mfe_r": 2.307428922375398,
+        "mae_r": -0.059367855113430304,
+        "hit_1r_time": "2026-11-19T19:45:00+00:00",
+        "hit_15r_time": "2026-11-19T20:00:00+00:00",
+        "bars_held": 8,
+        "fees_paid": 0.69759347017387,
+        "score": 66.27553732816891,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.0,
+          "wick": 9.647983595352017,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 45.1470095987517,
+        "vol_ratio": 0.7487962315785339,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795113900000",
+        "side": "LONG",
+        "start_time": "2026-11-19T18:45:00+00:00",
+        "ref_price": 62868.0,
+        "extreme": 61387.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.3117643316154384,
+        "track_mae_pct": -2.3557294649106053,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795126500000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 61989.5996,
+        "entry_time": "2026-11-20T01:30:00+00:00",
+        "exit_time": "2026-11-20T03:30:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 62667.32208430095,
+        "r_distance": 677.7224843009462,
+        "quantity": 0.011686381467829288,
+        "margin_used": 18.110852699089946,
+        "net_pnl": -0.22466835423678422,
+        "net_r": -0.02416685713074835,
+        "mfe_r": 1.1547493526162604,
+        "mae_r": -0.5908028865428622,
+        "hit_1r_time": "2026-11-20T01:45:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7241843499657334,
+        "score": 82.6436921230005,
+        "score_breakdown": {
+          "pressure": 15.78512826072891,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 13.594194649971543,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 43.11518910060533,
+        "vol_ratio": 1.6035184255521853,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795131900000",
+        "side": "LONG",
+        "start_time": "2026-11-19T23:45:00+00:00",
+        "ref_price": 61962.0,
+        "extreme": 61207.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.0619411897614617,
+        "track_mae_pct": -1.218488751170077,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795126500000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 61534.6906,
+        "entry_time": "2026-11-20T01:45:00+00:00",
+        "exit_time": "2026-11-20T03:45:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 62673.509792565164,
+        "r_distance": 1138.8191925651627,
+        "quantity": 0.012015306493222272,
+        "margin_used": 18.48395418811509,
+        "net_pnl": -8.16537351294749,
+        "net_r": -0.5411817801012728,
+        "mfe_r": 0.2526218401289722,
+        "mae_r": -0.7510493374048558,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.7430693196212668,
+        "score": 82.6436921230005,
+        "score_breakdown": {
+          "pressure": 15.78512826072891,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 13.594194649971543,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 43.11518910060533,
+        "vol_ratio": 1.6035184255521853,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795140000000",
+        "side": "SHORT",
+        "start_time": "2026-11-20T02:00:00+00:00",
+        "ref_price": 61510.0,
+        "extreme": 62390.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 0.42757275239798664,
+        "track_mae_pct": -1.4306616810274786,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-L-1795147200000",
+        "mode": "alpha",
+        "side": "LONG",
+        "entry": 61830.3636,
+        "entry_time": "2026-11-20T07:45:00+00:00",
+        "exit_time": "2026-11-20T09:45:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 61328.76240950569,
+        "r_distance": 501.60119049430796,
+        "quantity": 0.010359532954319472,
+        "margin_used": 16.013342232293876,
+        "net_pnl": -3.029138008782287,
+        "net_r": -0.472316257937565,
+        "mfe_r": 0.3860365638470318,
+        "mae_r": -0.6287138188193268,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6393387896822051,
+        "score": 72.22222222222221,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 51.27840774819241,
+        "vol_ratio": 2.1484479488051837,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795154400000",
+        "side": "SHORT",
+        "start_time": "2026-11-20T06:00:00+00:00",
+        "ref_price": 61845.0,
+        "extreme": 62045.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.6548629638612691,
+        "track_mae_pct": -0.3233891179561743,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795161600000",
+        "side": "LONG",
+        "start_time": "2026-11-20T08:00:00+00:00",
+        "ref_price": 61830.0,
+        "extreme": 61440.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.7924955523208821,
+        "track_mae_pct": -0.5094614264919972,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795170600000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 61776.6422,
+        "entry_time": "2026-11-20T11:00:00+00:00",
+        "exit_time": "2026-11-20T13:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 62359.4047937703,
+        "r_distance": 582.7625937702978,
+        "quantity": 0.00987820456845633,
+        "margin_used": 15.256057730098302,
+        "net_pnl": 2.7365573405974333,
+        "net_r": 0.3956787750185081,
+        "mfe_r": 1.0512723475204409,
+        "mae_r": -0.16363061222420233,
+        "hit_1r_time": "2026-11-20T12:00:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.608569745660803,
+        "score": 81.85045948203845,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 8.665413533834588,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 46.37984981064185,
+        "vol_ratio": 1.7205988403587997,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795170600000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 61375.7224,
+        "entry_time": "2026-11-20T12:00:00+00:00",
+        "exit_time": "2026-11-20T14:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 62360.384139808244,
+        "r_distance": 984.6617398082453,
+        "quantity": 0.01011026335259659,
+        "margin_used": 15.513117922996539,
+        "net_pnl": -6.028752574829464,
+        "net_r": -0.5414632307326627,
+        "mfe_r": 0.10330694886124887,
+        "mae_r": -0.6096282365118607,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6232274794675425,
+        "score": 81.85045948203845,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 8.665413533834588,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 46.37984981064185,
+        "vol_ratio": 1.7205988403587997,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795176000000",
+        "side": "LONG",
+        "start_time": "2026-11-20T12:00:00+00:00",
+        "ref_price": 61388.0,
+        "extreme": 59355.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift",
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.2412849416824079,
+        "track_mae_pct": -3.311722160682873,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795177800000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 61432.711,
+        "entry_time": "2026-11-20T14:30:00+00:00",
+        "exit_time": "2026-11-20T16:30:00+00:00",
+        "exit_reason": "TRAIL_STOP",
+        "initial_stop": 62195.66306098559,
+        "r_distance": 762.9520609855899,
+        "quantity": 0.00939760507820682,
+        "margin_used": 14.433008921540297,
+        "net_pnl": 12.115469361199818,
+        "net_r": 1.4655518655866688,
+        "mfe_r": 3.5489923134910364,
+        "mae_r": -0.6531065652490692,
+        "hit_1r_time": "2026-11-20T15:15:00+00:00",
+        "hit_15r_time": "2026-11-20T15:15:00+00:00",
+        "bars_held": 8,
+        "fees_paid": 0.5709771336142049,
+        "score": 78.80328161227038,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.922953451043339,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 39.65805208349469,
+        "vol_ratio": 1.7197251541609488,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795177800000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 60868.8238,
+        "entry_time": "2026-11-20T15:00:00+00:00",
+        "exit_time": "2026-11-20T17:00:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 62205.64544544166,
+        "r_distance": 1336.8216454416615,
+        "quantity": 0.009437240925909002,
+        "margin_used": 14.360843876932597,
+        "net_pnl": 14.91115460173122,
+        "net_r": 1.0878232552667295,
+        "mfe_r": 1.6036722679574191,
+        "mae_r": -0.009856363446036605,
+        "hit_1r_time": "2026-11-20T15:45:00+00:00",
+        "hit_15r_time": "2026-11-20T16:00:00+00:00",
+        "bars_held": 8,
+        "fees_paid": 0.5666948303612577,
+        "score": 78.80328161227038,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.922953451043339,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 39.65805208349469,
+        "vol_ratio": 1.7197251541609488,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795187700000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 60337.93,
+        "entry_time": "2026-11-20T15:15:00+00:00",
+        "exit_time": "2026-11-20T17:15:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 60942.702913624395,
+        "r_distance": 604.7729136243943,
+        "quantity": 0.010182385487877236,
+        "margin_used": 15.359601570013812,
+        "net_pnl": 8.697638682043248,
+        "net_r": 1.187332486078345,
+        "mfe_r": 2.6670010571963894,
+        "mae_r": -0.10924761759590598,
+        "hit_1r_time": "2026-11-20T15:45:00+00:00",
+        "hit_15r_time": "2026-11-20T15:45:00+00:00",
+        "bars_held": 8,
+        "fees_paid": 0.6097303782703958,
+        "score": 77.77777777777779,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 24.043361283704712,
+        "vol_ratio": 7.83828443204235,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795187700000",
+        "mode": "beta",
+        "side": "SHORT",
+        "entry": 59870.0236,
+        "entry_time": "2026-11-20T15:30:00+00:00",
+        "exit_time": "2026-11-20T17:30:00+00:00",
+        "exit_reason": "TIME_EXPIRE",
+        "initial_stop": 60945.00984836551,
+        "r_distance": 1074.9862483655088,
+        "quantity": 0.010210654777269032,
+        "margin_used": 15.28280356216374,
+        "net_pnl": 8.488077464198051,
+        "net_r": 0.6993090089268157,
+        "mfe_r": 1.0651518582130532,
+        "mae_r": -0.027885379971676814,
+        "hit_1r_time": "2026-11-20T16:00:00+00:00",
+        "hit_15r_time": null,
+        "bars_held": 8,
+        "fees_paid": 0.6067647213937537,
+        "score": 77.77777777777779,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 15.0,
+          "wick": 5.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 24.043361283704712,
+        "vol_ratio": 7.83828443204235,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795190400000",
+        "side": "LONG",
+        "start_time": "2026-11-20T16:00:00+00:00",
+        "ref_price": 59667.0,
+        "extreme": 57735.0,
+        "best_score": 61.819271533132934,
+        "best_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.35100076748484604,
+          "wick": 10.286343612334802,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 0.0
+        },
+        "stages_seen": [
+          "no_shift",
+          "no_pressure",
+          "candidate"
+        ],
+        "reasons": [
+          "score_below_alpha"
+        ],
+        "track_mfe_pct": 0.23966346556723028,
+        "track_mae_pct": -3.237970737593643,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "trade",
+        "event_id": "REV-S-1795203000000",
+        "mode": "alpha",
+        "side": "SHORT",
+        "entry": 58396.318400000004,
+        "entry_time": "2026-11-20T20:00:00+00:00",
+        "exit_time": "2026-11-20T21:30:00+00:00",
+        "exit_reason": "STOP",
+        "initial_stop": 58969.13166444864,
+        "r_distance": 572.8132644486395,
+        "quantity": 0.017457329261245602,
+        "margin_used": 25.48609394883338,
+        "net_pnl": -11.745204204166312,
+        "net_r": -0.983954680045748,
+        "mfe_r": 0.39335401951084986,
+        "mae_r": -1.7504510845521808,
+        "hit_1r_time": null,
+        "hit_15r_time": null,
+        "bars_held": 6,
+        "fees_paid": 1.02480395807638,
+        "score": 72.22222222222221,
+        "score_breakdown": {
+          "pressure": 20.0,
+          "structure": 25.0,
+          "volume": 0.0,
+          "wick": 15.0,
+          "rsi": 0.0,
+          "oi": 0.0,
+          "funding": 5.0
+        },
+        "trend_1h": "DOWN",
+        "trend_4h": "DOWN",
+        "rsi7": 36.973325607164014,
+        "vol_ratio": 0.20842903767397272,
+        "oi_change_1h": null,
+        "funding": 8.889e-06
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795204800000",
+        "side": "LONG",
+        "start_time": "2026-11-20T20:00:00+00:00",
+        "ref_price": 58408.0,
+        "extreme": 57989.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 1.6966853855636232,
+        "track_mae_pct": -0.4057663333789874,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795210200000",
+        "side": "SHORT",
+        "start_time": "2026-11-20T21:30:00+00:00",
+        "ref_price": 59331.0,
+        "extreme": 59399.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.2253290859752908,
+        "track_mae_pct": -0.11461124875697948,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795228200000",
+        "side": "LONG",
+        "start_time": "2026-11-21T02:30:00+00:00",
+        "ref_price": 58597.0,
+        "extreme": 55170.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 0.4897861665273062,
+        "track_mae_pct": -5.848422274177856,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795231800000",
+        "side": "SHORT",
+        "start_time": "2026-11-21T03:30:00+00:00",
+        "ref_price": 56718.0,
+        "extreme": 58638.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure",
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 2.729292288162488,
+        "track_mae_pct": -3.3851687295038513,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-L-1795242600000",
+        "side": "LONG",
+        "start_time": "2026-11-21T06:30:00+00:00",
+        "ref_price": 57181.0,
+        "extreme": 56021.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_pressure"
+        ],
+        "reasons": [
+          "no_pressure_peak"
+        ],
+        "track_mfe_pct": 2.5480491771742386,
+        "track_mae_pct": -2.0286458788758455,
+        "bars_tracked": 16,
+        "fire_failures": []
+      },
+      {
+        "kind": "unfilled",
+        "event_id": "REV-S-1795246200000",
+        "side": "SHORT",
+        "start_time": "2026-11-21T07:30:00+00:00",
+        "ref_price": 58067.0,
+        "extreme": 58638.0,
+        "best_score": 0.0,
+        "best_breakdown": null,
+        "stages_seen": [
+          "no_shift"
+        ],
+        "reasons": [
+          "no_structure_shift"
+        ],
+        "track_mfe_pct": 1.227891917956847,
+        "track_mae_pct": -0.4047049098455213,
+        "bars_tracked": 16,
+        "fire_failures": []
+      }
+    ],
+    "stats": {
+      "ALL": {
+        "trades": 29,
+        "wins": 16,
+        "losses": 13,
+        "gross_win_usd": 93.34064970582082,
+        "gross_loss_usd": 81.35541917302923,
+        "total_r": 1.48162489240169,
+        "pnl_curve": [
+          -8.212305608576163,
+          -2.7611399991294228,
+          -8.456839628855088,
+          -12.336554765368925,
+          -16.76456327249024,
+          -9.991086978629095,
+          -7.280456633091292,
+          -6.879664907467561,
+          -3.2084651731507137,
+          1.0789195165277317,
+          -7.762226619266228,
+          -10.149354861387192,
+          -15.218916050935444,
+          -12.296174631391901,
+          -7.015001722340504,
+          -3.705341577587865,
+          1.0369962930170167,
+          -12.611721775649729,
+          -5.770530262015854,
+          -5.9951986162526385,
+          -14.160572129200128,
+          -17.189710137982416,
+          -14.453152797384984,
+          -20.48190537221445,
+          -8.366436011014631,
+          6.544718590716588,
+          15.242357272759836,
+          23.73043473695789,
+          11.985230532791578
+        ]
+      },
+      "LONG": {
+        "trades": 9,
+        "wins": 3,
+        "losses": 6,
+        "gross_win_usd": 13.409750033442032,
+        "gross_loss_usd": 39.522425486603815,
+        "total_r": -3.39957511860442,
+        "pnl_curve": [
+          5.45116560944674,
+          -0.244534020278925,
+          -4.124249156792763,
+          -8.552257663914077,
+          -4.88105792959723,
+          -0.5936732399187843,
+          -9.434819375712744,
+          -23.083537444379488,
+          -26.112675453161774
+        ]
+      },
+      "SHORT": {
+        "trades": 20,
+        "wins": 13,
+        "losses": 7,
+        "gross_win_usd": 79.93089967237879,
+        "gross_loss_usd": 41.832993686425425,
+        "total_r": 4.881200011006111,
+        "pnl_curve": [
+          -8.212305608576163,
+          -1.4388293147150186,
+          1.2718010308227843,
+          1.6725927564465155,
+          -0.7145354856744484,
+          -5.784096675222701,
+          -2.8613552556791575,
+          2.41981765337224,
+          5.729477798124879,
+          10.47181566872976,
+          17.313007182363634,
+          17.08833882812685,
+          8.922965315179361,
+          11.659522655776794,
+          5.63077008094733,
+          17.746239442147147,
+          32.65739404387837,
+          41.35503272592162,
+          49.84311019011967,
+          38.09790598595335
+        ]
+      },
+      "ALPHA": {
+        "trades": 21,
+        "wins": 11,
+        "losses": 10,
+        "gross_win_usd": 59.517115134611544,
+        "gross_loss_usd": 62.73328457813097,
+        "total_r": 0.6225336006562631,
+        "pnl_curve": [
+          -8.212305608576163,
+          -2.7611399991294228,
+          -8.456839628855088,
+          -12.336554765368925,
+          -5.563078471507781,
+          -2.8524481259699783,
+          0.8187516083468687,
+          5.106136298025314,
+          -3.7350098377686454,
+          -6.122138079889609,
+          -11.191699269437862,
+          -8.268957849894319,
+          -4.95929770514168,
+          -18.608015773808425,
+          -11.766824260174552,
+          -11.991492614411335,
+          -15.020630623193622,
+          -12.28407328259619,
+          -0.1686039213963717,
+          8.529034760646876,
+          -3.2161694435194352
+        ]
+      },
+      "BETA": {
+        "trades": 8,
+        "wins": 5,
+        "losses": 3,
+        "gross_win_usd": 33.82353457120928,
+        "gross_loss_usd": 18.622134594898267,
+        "total_r": 0.859091291745427,
+        "pnl_curve": [
+          -4.428008507121313,
+          -4.027216781497581,
+          1.253956127553816,
+          5.996293998158698,
+          -2.169079514788792,
+          -8.197832089618256,
+          6.713322512112963,
+          15.201399976311015
+        ]
+      },
+      "LONG_ALPHA": {
+        "trades": 8,
+        "wins": 3,
+        "losses": 5,
+        "gross_win_usd": 13.409750033442032,
+        "gross_loss_usd": 35.094416979482496,
+        "total_r": -2.430850994314414,
+        "pnl_curve": [
+          5.45116560944674,
+          -0.244534020278925,
+          -4.124249156792763,
+          -0.4530494224759156,
+          3.8343352672025297,
+          -5.00681086859143,
+          -18.655528937258175,
+          -21.684666946040462
+        ]
+      },
+      "LONG_BETA": {
+        "trades": 1,
+        "wins": 0,
+        "losses": 1,
+        "gross_win_usd": 0.0,
+        "gross_loss_usd": 4.428008507121313,
+        "total_r": -0.9687241242900068,
+        "pnl_curve": [
+          -4.428008507121313
+        ]
+      },
+      "SHORT_ALPHA": {
+        "trades": 13,
+        "wins": 8,
+        "losses": 5,
+        "gross_win_usd": 46.107365101169506,
+        "gross_loss_usd": 27.638867598648474,
+        "total_r": 3.053384594970677,
+        "pnl_curve": [
+          -8.212305608576163,
+          -1.4388293147150186,
+          1.2718010308227843,
+          -1.1153272112981796,
+          -6.1848884008464315,
+          -3.2621469813028883,
+          0.04751316344975054,
+          6.888704677083625,
+          6.664036322846841,
+          9.400593663444274,
+          21.51606302464409,
+          30.21370170668734,
+          18.468497502521025
+        ]
+      },
+      "SHORT_BETA": {
+        "trades": 7,
+        "wins": 5,
+        "losses": 2,
+        "gross_win_usd": 33.82353457120928,
+        "gross_loss_usd": 14.194126087776954,
+        "total_r": 1.8278154160354338,
+        "pnl_curve": [
+          0.4007917256237313,
+          5.681964634675129,
+          10.42430250528001,
+          2.258928992332521,
+          -3.769823582496943,
+          11.141331019234276,
+          19.62940848343233
+        ]
+      }
+    },
+    "equity_curve": [
+      {
+        "t": 1794848400000,
+        "equity": 69.61252109303405
+      },
+      {
+        "t": 1794850200000,
+        "equity": 75.45280105924621
+      },
+      {
+        "t": 1794906000000,
+        "equity": 69.75710142952056
+      },
+      {
+        "t": 1794910500000,
+        "equity": 65.53034471339485
+      },
+      {
+        "t": 1794910500000,
+        "equity": 61.4493777858854
+      },
+      {
+        "t": 1794934800000,
+        "equity": 67.60303833290203
+      },
+      {
+        "t": 1794936600000,
+        "equity": 70.61937933292461
+      },
+      {
+        "t": 1794940200000,
+        "equity": 71.33427615090808
+      },
+      {
+        "t": 1794960000000,
+        "equity": 75.00547588522493
+      },
+      {
+        "t": 1795027500000,
+        "equity": 79.29286057490336
+      },
+      {
+        "t": 1795050900000,
+        "equity": 70.05525013623487
+      },
+      {
+        "t": 1795053600000,
+        "equity": 68.06458619698843
+      },
+      {
+        "t": 1795078800000,
+        "equity": 62.99502500744018
+      },
+      {
+        "t": 1795103100000,
+        "equity": 65.6043661775717
+      },
+      {
+        "t": 1795108500000,
+        "equity": 71.19893933603512
+      },
+      {
+        "t": 1795117500000,
+        "equity": 73.45125967667731
+      },
+      {
+        "t": 1795118400000,
+        "equity": 79.81563879072128
+      },
+      {
+        "t": 1795118400000,
+        "equity": 66.51936437163532
+      },
+      {
+        "t": 1795121100000,
+        "equity": 72.44341079635979
+      },
+      {
+        "t": 1795145400000,
+        "equity": 71.8490633583607
+      },
+      {
+        "t": 1795146300000,
+        "equity": 64.0533689291755
+      },
+      {
+        "t": 1795167900000,
+        "equity": 61.024230920393215
+      },
+      {
+        "t": 1795179600000,
+        "equity": 63.45052590253072
+      },
+      {
+        "t": 1795183200000,
+        "equity": 57.73203568616119
+      },
+      {
+        "t": 1795192200000,
+        "equity": 82.91222555262834
+      },
+      {
+        "t": 1795194000000,
+        "equity": 90.4212148552668
+      },
+      {
+        "t": 1795194900000,
+        "equity": 95.78964684951193
+      },
+      {
+        "t": 1795195800000,
+        "equity": 101.9443757953335
+      },
+      {
+        "t": 1795210200000,
+        "equity": 90.19917159116719
+      }
+    ],
+    "events_total": 56,
+    "unfilled_total": 32,
+    "last_error": null,
+    "updated_at": "2026-11-21T14:15:00+00:00"
+  }
 }
