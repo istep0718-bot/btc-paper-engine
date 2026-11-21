@@ -5367,12 +5367,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-26T14:15:49.456739+00:00",
-      "equity": 91.6958069245343,
-      "marked_equity": 91.6958069245343,
-      "price": 79959.5
-    },
-    {
       "timestamp": "2026-10-26T15:48:51.924069+00:00",
       "equity": 91.1244829301303,
       "marked_equity": 90.89599902914902,
@@ -11365,6 +11359,12 @@
       "equity": 78.21394105837564,
       "marked_equity": 78.21394105837564,
       "price": 58076.5
+    },
+    {
+      "timestamp": "2026-11-21T08:00:49.830336+00:00",
+      "equity": 78.21394105837564,
+      "marked_equity": 78.21394105837564,
+      "price": 57844.0
     }
   ],
   "position": null,
@@ -12984,7 +12984,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13051,7 +13051,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13071,7 +13071,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13091,7 +13091,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13111,7 +13111,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13131,7 +13131,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13171,7 +13171,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13211,7 +13211,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13231,7 +13231,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795247130
+          "updated_ts": 1795248048
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13297,46 +13297,31 @@
           "side": null
         }
       ],
-      "ts": 1795247130,
+      "ts": 1795248048,
       "enabled_pool": 8
     }
   },
   "shadow": {
     "positions": {
       "G": null,
-      "H": {
-        "id": 26,
-        "setup": "H",
-        "side": "SHORT",
-        "entry_bar_t": 1795190400000,
-        "entry_time": "2026-11-20T20:00:00+00:00",
-        "entry_price": 58536.0,
-        "atr": 1271.9959180080618,
-        "risk_distance": 1907.9938770120928,
-        "stop_price": 60443.99387701209,
-        "tp_price": 55674.00918448186,
-        "mfe_r": 1.148326536262838,
-        "mae_r": 0.4523075311706204,
-        "bars_held": 2,
-        "first_hit": {
-          "1.0": "hit",
-          "1.5": null,
-          "2.0": null
-        },
-        "context": {
-          "channel_high": 74778.0,
-          "channel_low": 59355.0,
-          "atr_sma50": 1230.1822280530514
-        },
-        "origin_build": "BTC_PAPER_V20_15_PRO_2026-11-20"
-      },
+      "H": null,
       "I": null,
       "J": null,
       "K": null,
       "L": null,
       "M": null
     },
-    "ghosts": [],
+    "ghosts": [
+      {
+        "setup": "H",
+        "ledger_id": 26,
+        "side": "SHORT",
+        "entry_price": 58536.0,
+        "risk_distance": 1907.9938770120928,
+        "stop_price": 60443.99387701209,
+        "bars_done": 3
+      }
+    ],
     "ledger": [
       {
         "id": 1,
@@ -14218,6 +14203,39 @@
           "bb_mid": 61741.3
         },
         "origin_build": "BTC_PAPER_V20_15_PRO_2026-11-20"
+      },
+      {
+        "id": 26,
+        "setup": "H",
+        "side": "SHORT",
+        "entry_time": "2026-11-20T20:00:00+00:00",
+        "entry_bar_t": 1795190400000,
+        "entry_price": 58536.0,
+        "atr": 1271.9959180080618,
+        "risk_distance": 1907.9938770120928,
+        "stop_price": 60443.99387701209,
+        "tp_price": 55674.00918448186,
+        "exit_time": "2026-11-21T08:00:00+00:00",
+        "exit_bar_t": 1795233600000,
+        "exit_price": 55674.00918448186,
+        "exit_reason": "TP_1_5R",
+        "gross_r": 1.5000000000000004,
+        "cost_r": 0.05829075309935867,
+        "net_r": 1.4417092469006418,
+        "mfe_r": 1.7641566047744013,
+        "mae_r": 0.4523075311706204,
+        "bars_held": 3,
+        "first_hit": {
+          "1.0": "hit",
+          "1.5": "hit",
+          "2.0": null
+        },
+        "context": {
+          "channel_high": 74778.0,
+          "channel_low": 59355.0,
+          "atr_sma50": 1230.1822280530514
+        },
+        "origin_build": "BTC_PAPER_V20_15_PRO_2026-11-20"
       }
     ],
     "stats": {
@@ -14253,20 +14271,20 @@
       "H": {
         "signals": 6,
         "opened": 6,
-        "closed": 5,
+        "closed": 6,
         "exits": {
-          "TP_1_5R": 3,
+          "TP_1_5R": 4,
           "STOP": 2,
           "HORIZON": 0
         },
         "first_hit": {
           "1.0": {
-            "hit": 4,
+            "hit": 5,
             "stop": 1,
             "censored": 0
           },
           "1.5": {
-            "hit": 3,
+            "hit": 4,
             "stop": 2,
             "censored": 0
           },
@@ -14276,8 +14294,8 @@
             "censored": 0
           }
         },
-        "total_r_gross": 2.5000000000000133,
-        "total_r_net": 2.0645713003370942
+        "total_r_gross": 4.000000000000014,
+        "total_r_net": 3.5062805472377363
       },
       "I": {
         "signals": 0,
@@ -14426,13 +14444,13 @@
       }
     },
     "last_bar_t": {
-      "G": 1795240800000,
-      "H": 1795219200000,
-      "I": 1795246200000,
-      "J": 1795246200000,
-      "K": 1795246200000,
-      "L": 1795246200000,
-      "M": 1795246200000
+      "G": 1795244400000,
+      "H": 1795233600000,
+      "I": 1795247100000,
+      "J": 1795247100000,
+      "K": 1795247100000,
+      "L": 1795247100000,
+      "M": 1795247100000
     },
     "next_id": 27,
     "events": [
@@ -14894,10 +14912,19 @@
         "reason": "TP_1_5R",
         "gross_r": 1.5,
         "exit_time": "2026-11-21T04:00:00+00:00"
+      },
+      {
+        "timestamp": "2026-11-21T08:00:49.822160+00:00",
+        "type": "SHADOW_CLOSE",
+        "setup": "H",
+        "side": "SHORT",
+        "reason": "TP_1_5R",
+        "gross_r": 1.5,
+        "exit_time": "2026-11-21T08:00:00+00:00"
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-21T07:45:31.733005+00:00"
+    "updated_at": "2026-11-21T08:00:49.830123+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -14963,13 +14990,13 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 116,
+    "cycles_evaluated": 117,
     "context_cycles": {
-      "flat": 66,
+      "flat": 67,
       "position_open": 50,
       "event_blocked": 0,
       "dd_band_10": 8,
-      "dd_band_20": 10,
+      "dd_band_20": 11,
       "dd_band_30": 98
     },
     "by_setup": {
@@ -14978,7 +15005,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 232
+          "other": 234
         },
         "selected": 0,
         "blocked": {
@@ -14996,7 +15023,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 232
+          "other": 234
         },
         "selected": 0,
         "blocked": {
@@ -15014,7 +15041,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 232
+          "other": 234
         },
         "selected": 0,
         "blocked": {
@@ -15032,7 +15059,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 227
+          "other": 229
         },
         "selected": 1,
         "blocked": {
@@ -15083,15 +15110,15 @@
       }
     },
     "top_reasons": {
-      "A/LONG|上位足バイアス不一致": 53,
-      "B/LONG|上位足が逆行": 68,
-      "C/LONG|レンジレジーム限定": 68,
-      "F/LONG|高ボラティリティで方向が揃っていない": 36,
+      "A/LONG|上位足バイアス不一致": 54,
+      "B/LONG|上位足が逆行": 69,
+      "C/LONG|レンジレジーム限定": 69,
+      "F/LONG|高ボラティリティで方向が揃っていない": 37,
       "A/SHORT|反転トリガー未発生": 17,
-      "B/SHORT|出来高不足": 52,
-      "C/SHORT|レンジレジーム限定": 68,
-      "F/SHORT|高ボラティリティで方向が揃っていない": 2,
-      "A/SHORT|押し目/戻りが未形成": 38,
+      "B/SHORT|出来高不足": 53,
+      "C/SHORT|レンジレジーム限定": 69,
+      "F/SHORT|高ボラティリティで方向が揃っていない": 3,
+      "A/SHORT|押し目/戻りが未形成": 39,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
       "A/LONG|レジーム不一致": 63,
       "B/LONG|レンジレジームではブレイクアウト禁止": 48,
@@ -15240,11 +15267,11 @@
       },
       "2026-11-21": {
         "context_cycles": {
-          "flat": 6,
+          "flat": 7,
           "position_open": 28,
           "event_blocked": 0,
           "dd_band_10": 8,
-          "dd_band_20": 10,
+          "dd_band_20": 11,
           "dd_band_30": 16
         },
         "by_setup": {
@@ -15253,7 +15280,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 68
+              "other": 70
             },
             "selected": 0,
             "blocked": {
@@ -15271,7 +15298,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 68
+              "other": 70
             },
             "selected": 0,
             "blocked": {
@@ -15289,7 +15316,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 68
+              "other": 70
             },
             "selected": 0,
             "blocked": {
@@ -15307,7 +15334,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 68
+              "other": 70
             },
             "selected": 0,
             "blocked": {
