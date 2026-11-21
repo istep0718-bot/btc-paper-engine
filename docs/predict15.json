@@ -1,24 +1,24 @@
 {
- "updated_at": "2026-11-21T06:32:12+00:00",
- "updated_ts": 1795242732,
+ "updated_at": "2026-11-21T06:42:12+00:00",
+ "updated_ts": 1795243332,
  "next_round": {
-  "round_start_ts": 1795242600,
-  "round_start_iso": "2026-11-21T06:30:00+00:00",
-  "predicted_at_iso": "2026-11-21T06:27:14+00:00",
-  "price_at_prediction": 55981.5,
+  "round_start_ts": 1795243500,
+  "round_start_iso": "2026-11-21T06:45:00+00:00",
+  "predicted_at_iso": "2026-11-21T06:42:12+00:00",
+  "price_at_prediction": 56879.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
-   "technical": "DOWN"
+   "technical": "NEUTRAL"
   },
   "traders_counts": {
    "long": 2,
    "short": 2,
    "flat": 6
   },
-  "verdict": "DOWN",
+  "verdict": "SKIP",
   "start_price": null,
   "end_price": null,
   "actual": null,
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795243500,
+   "round_start_iso": "2026-11-21T06:45:00+00:00",
+   "predicted_at_iso": "2026-11-21T06:42:12+00:00",
+   "price_at_prediction": 56879.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "NEUTRAL"
+   },
+   "traders_counts": {
+    "long": 2,
+    "short": 2,
+    "flat": 6
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795242600,
    "round_start_iso": "2026-11-21T06:30:00+00:00",
@@ -2729,31 +2754,6 @@
    "start_price": 62035.0,
    "end_price": 61950.0,
    "actual": "DOWN",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1795157100,
-   "round_start_iso": "2026-11-20T06:45:00+00:00",
-   "predicted_at_iso": "2026-11-20T06:42:10+00:00",
-   "price_at_prediction": 61711.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "NEUTRAL"
-   },
-   "traders_counts": {
-    "long": 0,
-    "short": 3,
-    "flat": 7
-   },
-   "verdict": "SKIP",
-   "start_price": 61775.0,
-   "end_price": 62034.0,
-   "actual": "UP",
    "hit": null,
    "settled": true,
    "sim": null
