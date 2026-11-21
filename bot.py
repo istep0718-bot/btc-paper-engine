@@ -279,6 +279,25 @@ Design pillars (fixing V19.x fatal flaws):
     both calls are wrapped so any REV2 failure is swallowed.
     MEASUREMENT ONLY. Entry logic, risk and exits for setups
     A-F, shadow G-M and REV V1 are unchanged from V20.16.
+  * V20.18: REV evaluation layer, added at the owner's
+    request (2026-11-22) in a separate module
+    (rev_evaluation.py). It is a pure observer of REV V1 and
+    REV V2: it reads their ledgers plus the confirmed 15m
+    candles and aggregates detection quality (fixed-definition
+    reversal success by horizon, MFE / MAE and time-to-extreme)
+    separately from virtual-trade profitability (expectancy R,
+    R-based PF, max consecutive losses, 95% CIs), split by
+    system category (A only / F only / A+F / L only / V1 /
+    none), by regime at detection and by era (retro vs
+    forward, never pooled). Detection logic, thresholds and
+    success definitions of V1 / V2 are untouched; the layer
+    writes only state["rev_eval"] and adds
+    dashboard["rev_eval"] right after dashboard["rev2"].
+    bot.py only calls rev_evaluation.update_eval() right
+    after the REV V2 hook; the call is wrapped so any failure
+    is swallowed. MEASUREMENT ONLY. Entry logic, risk and
+    exits for setups A-F, shadow G-M, REV V1 and REV V2 are
+    unchanged from V20.17.
 """
 
 import json
@@ -288,7 +307,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_17_PRO_2026-11-22"
+BUILD = "BTC_PAPER_V20_18_PRO_2026-11-22"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -5906,6 +5925,22 @@ def main():
         except Exception as rev2_exc:
             print("REV2 shadow skipped:", rev2_exc)
 
+        # REV evaluation layer (V20.18, measurement only):
+        # pure observer in rev_evaluation.py. Reads only the
+        # REV V1 / V2 ledgers inside the state plus the
+        # confirmed 15m candles already fetched above, and
+        # writes only state["rev_eval"]; it never touches
+        # detection logic, thresholds or any house state.
+        # The call is wrapped so an evaluation failure can
+        # never affect the house cycle.
+        rev_eval_summary = None
+        try:
+            import rev_evaluation
+
+            rev_eval_summary = rev_evaluation.update_eval(s, c15)
+        except Exception as rev_eval_exc:
+            print("REV evaluation skipped:", rev_eval_exc)
+
         had_position = bool(s.get("position"))
 
         if had_position:
@@ -6133,6 +6168,18 @@ def main():
             import rev_engine_v2
 
             dashboard["rev2"] = rev_engine_v2.dashboard_payload(s)
+        except Exception:
+            pass
+
+        # REV evaluation layer: separated detection-quality /
+        # profitability aggregates in data.json (no effect on
+        # any house, REV V1 or REV V2 section).
+        try:
+            import rev_evaluation
+
+            dashboard["rev_eval"] = (
+                rev_evaluation.dashboard_payload(s)
+            )
         except Exception:
             pass
 
