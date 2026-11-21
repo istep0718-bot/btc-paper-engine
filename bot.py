@@ -247,6 +247,21 @@ Design pillars (fixing V19.x fatal flaws):
     records live in state["shadow"] alongside G / H / I / J.
     Entry logic, risk and exits for setups A-J are unchanged
     from V20.13.
+  * V20.16: REV ENGINE V1 (reversal shadow), added at the
+    owner's request (2026-11-21) in a separate module
+    (rev_engine.py) rather than inside bot.py. REV-L catches
+    the initial move of a crash-reversal long inside a
+    downtrend and REV-S is its mirror; upper-timeframe
+    counter-trend is allowed by design. bot.py only calls
+    rev_engine.update_rev() after update_shadow() and adds
+    dashboard["rev"] after make_dashboard(); both calls are
+    wrapped so any REV failure is swallowed. REV reads only
+    the candles / market data already fetched by the house
+    cycle, writes only state["rev"], keeps its own virtual
+    equity, and never touches house entries, exits, sizing,
+    positions, equity or risk state. MEASUREMENT ONLY.
+    Entry logic, risk and exits for setups A-F and shadow
+    G-M are unchanged from V20.15.
 """
 
 import json
@@ -256,7 +271,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-BUILD = "BTC_PAPER_V20_15_PRO_2026-11-20"
+BUILD = "BTC_PAPER_V20_16_PRO_2026-11-21"
 API = "https://api.hyperliquid.xyz/info"
 COIN = "BTC"
 
@@ -5841,6 +5856,22 @@ def main():
         # update_shadow guards its own errors.
         shadow_summary = update_shadow(s, c1, c4, c15, ctx)
 
+        # REV ENGINE V1 (V20.16, shadow measurement only):
+        # fully independent reversal engine in rev_engine.py.
+        # Reads only the candles / market data already fetched
+        # above and writes only state["rev"]; the call is
+        # wrapped so a REV failure can never affect the house
+        # cycle, and REV itself also guards its own errors.
+        rev_summary = None
+        try:
+            import rev_engine
+
+            rev_summary = rev_engine.update_rev(
+                s, c15, c1, c4, market, ctx
+            )
+        except Exception as rev_exc:
+            print("REV shadow skipped:", rev_exc)
+
         had_position = bool(s.get("position"))
 
         if had_position:
@@ -6051,6 +6082,15 @@ def main():
         dashboard = make_dashboard(
             s, price, funding, sig, status
         )
+
+        # REV ENGINE V1: fully separated shadow statistics in
+        # data.json (no effect on any house section).
+        try:
+            import rev_engine
+
+            dashboard["rev"] = rev_engine.dashboard_payload(s)
+        except Exception:
+            pass
 
         write_json(STATE_FILE, s)
         write_json(DATA_FILE, dashboard)
