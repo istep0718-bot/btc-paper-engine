@@ -5367,12 +5367,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-26T22:59:10.939708+00:00",
-      "equity": 82.22162556601903,
-      "marked_equity": 83.3606887122928,
-      "price": 79961.5
-    },
-    {
       "timestamp": "2026-10-26T23:22:42.916923+00:00",
       "equity": 82.2272845019251,
       "marked_equity": 84.54883549765641,
@@ -11365,6 +11359,12 @@
       "equity": 78.21394105837564,
       "marked_equity": 78.21394105837564,
       "price": 57891.0
+    },
+    {
+      "timestamp": "2026-11-21T11:15:32.103958+00:00",
+      "equity": 78.21394105837564,
+      "marked_equity": 78.21394105837564,
+      "price": 57913.5
     }
   ],
   "position": null,
@@ -11494,19 +11494,6 @@
   },
   "last_error": null,
   "events": [
-    {
-      "timestamp": "2026-11-10T21:35:06.840121+00:00",
-      "type": "POSITION_OPENED",
-      "side": "SHORT",
-      "setup": "E",
-      "regime": "NEUTRAL",
-      "score": 0,
-      "entry_price": 73948.2074,
-      "stop_price": 74432.57121783771,
-      "quantity": 0.0014572140546968053,
-      "leverage": 40.0,
-      "effective_risk_pct": 1.2500000000000044
-    },
     {
       "timestamp": "2026-11-11T01:28:21.596524+00:00",
       "type": "ECON_CALENDAR_UPDATED",
@@ -12956,10 +12943,15 @@
       "fraction": 1.0,
       "setup": "F",
       "r_multiple": 1.1243
+    },
+    {
+      "timestamp": "2026-11-21T11:15:29.978611+00:00",
+      "type": "ECON_CALENDAR_UPDATED",
+      "events": 4
     }
   ],
   "econ_calendar": {
-    "fetched_ts": 1795172448,
+    "fetched_ts": 1795259729,
     "events": [
       {
         "title": "FOMC Meeting Minutes",
@@ -12984,7 +12976,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13051,7 +13043,7 @@
           "side": "LONG",
           "szi": 3.5894,
           "entry_px": 58058.0,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13071,7 +13063,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13091,7 +13083,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13111,7 +13103,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13131,7 +13123,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13171,7 +13163,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13211,7 +13203,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13231,7 +13223,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795258847
+          "updated_ts": 1795259729
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13297,7 +13289,7 @@
           "side": null
         }
       ],
-      "ts": 1795258847,
+      "ts": 1795259729,
       "enabled_pool": 8
     }
   },
@@ -14446,11 +14438,11 @@
     "last_bar_t": {
       "G": 1795255200000,
       "H": 1795233600000,
-      "I": 1795257900000,
-      "J": 1795257900000,
-      "K": 1795257900000,
-      "L": 1795257900000,
-      "M": 1795257900000
+      "I": 1795258800000,
+      "J": 1795258800000,
+      "K": 1795258800000,
+      "L": 1795258800000,
+      "M": 1795258800000
     },
     "next_id": 27,
     "events": [
@@ -14924,7 +14916,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-21T11:00:49.167013+00:00"
+    "updated_at": "2026-11-21T11:15:32.102063+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -14990,13 +14982,13 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 129,
+    "cycles_evaluated": 130,
     "context_cycles": {
-      "flat": 79,
+      "flat": 80,
       "position_open": 50,
       "event_blocked": 0,
       "dd_band_10": 8,
-      "dd_band_20": 23,
+      "dd_band_20": 24,
       "dd_band_30": 98
     },
     "by_setup": {
@@ -15005,7 +14997,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 258
+          "other": 260
         },
         "selected": 0,
         "blocked": {
@@ -15023,7 +15015,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 258
+          "other": 260
         },
         "selected": 0,
         "blocked": {
@@ -15041,7 +15033,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 258
+          "other": 260
         },
         "selected": 0,
         "blocked": {
@@ -15059,7 +15051,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 253
+          "other": 255
         },
         "selected": 1,
         "blocked": {
@@ -15120,14 +15112,14 @@
       "F/SHORT|高ボラティリティで方向が揃っていない": 6,
       "A/SHORT|押し目/戻りが未形成": 41,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
-      "A/LONG|レジーム不一致": 68,
-      "B/LONG|レンジレジームではブレイクアウト禁止": 52,
-      "C/LONG|RSI/BB極値でない": 43,
-      "F/LONG|レジーム不一致（確立したトレンド限定）": 82,
-      "A/SHORT|レジーム不一致": 59,
-      "B/SHORT|レンジレジームではブレイクアウト禁止": 52,
-      "C/SHORT|RSI/BB極値でない": 30,
-      "F/SHORT|レジーム不一致（確立したトレンド限定）": 73,
+      "A/LONG|レジーム不一致": 69,
+      "B/LONG|レンジレジームではブレイクアウト禁止": 53,
+      "C/LONG|RSI/BB極値でない": 44,
+      "F/LONG|レジーム不一致（確立したトレンド限定）": 83,
+      "A/SHORT|レジーム不一致": 60,
+      "B/SHORT|レンジレジームではブレイクアウト禁止": 53,
+      "C/SHORT|RSI/BB極値でない": 31,
+      "F/SHORT|レジーム不一致（確立したトレンド限定）": 74,
       "C/SHORT|ゾーン端に未到達": 19,
       "C/LONG|ゾーン端に未到達": 6,
       "C/SHORT|反転トリガー未発生": 1,
@@ -15267,11 +15259,11 @@
       },
       "2026-11-21": {
         "context_cycles": {
-          "flat": 19,
+          "flat": 20,
           "position_open": 28,
           "event_blocked": 0,
           "dd_band_10": 8,
-          "dd_band_20": 23,
+          "dd_band_20": 24,
           "dd_band_30": 16
         },
         "by_setup": {
@@ -15280,7 +15272,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 94
+              "other": 96
             },
             "selected": 0,
             "blocked": {
@@ -15298,7 +15290,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 94
+              "other": 96
             },
             "selected": 0,
             "blocked": {
@@ -15316,7 +15308,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 94
+              "other": 96
             },
             "selected": 0,
             "blocked": {
@@ -15334,7 +15326,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 94
+              "other": 96
             },
             "selected": 0,
             "blocked": {
