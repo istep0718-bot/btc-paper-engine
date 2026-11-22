@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V20_18_PRO_2026-11-22",
-  "generated_at": "2026-11-22T15:45:32.689306+00:00",
+  "generated_at": "2026-11-22T15:58:48.983871+00:00",
   "market_status": "OK",
-  "price": 60754.5,
-  "funding_rate": -3.0212e-06,
-  "funding_rate_pct": -0.00030212,
+  "price": 60863.5,
+  "funding_rate": -1.5925e-06,
+  "funding_rate_pct": -0.00015925,
   "initial_equity": 100.0,
   "equity": 67.72456430185674,
   "marked_equity": 67.72456430185674,
@@ -29,7 +29,7 @@
     "trend_15m": "UP",
     "trend_1h": "UP",
     "trend_4h": "DOWN",
-    "timestamp": "2026-11-22T15:45:32.689217+00:00",
+    "timestamp": "2026-11-22T15:58:48.983804+00:00",
     "reference_price": 60729.0,
     "previous_close": 60900.0,
     "reasons": [
@@ -71,7 +71,7 @@
     "structure_bias": "UP",
     "support": 60492.0,
     "resistance": 60980.0,
-    "premium": -0.0003553391,
+    "premium": -0.000510773,
     "setup": null,
     "score_breakdown": {},
     "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム TREND_UP）",
@@ -16485,12 +16485,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-10-30T06:11:24.648901+00:00",
-      "equity": 75.65238381897542,
-      "marked_equity": 75.65238381897542,
-      "price": 78600.5
-    },
-    {
       "timestamp": "2026-10-30T07:00:08.990146+00:00",
       "equity": 75.65238381897542,
       "marked_equity": 75.65238381897542,
@@ -22483,6 +22477,12 @@
       "equity": 67.72456430185674,
       "marked_equity": 67.72456430185674,
       "price": 60754.5
+    },
+    {
+      "timestamp": "2026-11-22T15:58:48.983859+00:00",
+      "equity": 67.72456430185674,
+      "marked_equity": 67.72456430185674,
+      "price": 60863.5
     }
   ],
   "events": [
@@ -23433,7 +23433,7 @@
     "short_ratio": 0.25,
     "enabled_pool": 8,
     "valid": true,
-    "updated_ts": 1795362330,
+    "updated_ts": 1795363127,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -24722,7 +24722,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-22T15:45:32.644284+00:00"
+    "updated_at": "2026-11-22T15:58:48.955397+00:00"
   },
   "risk_monitor": {
     "note": "リスク上限はShadow測定のみ（本隊の見送り・サイズ変更は行わない）。variant_equityは決済ベース近似で、見送りによる後続トレードのサイズ変化は再現しない。",
@@ -24807,14 +24807,14 @@
   },
   "entry_funnel": {
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 247,
+    "cycles_evaluated": 248,
     "context_cycles": {
-      "flat": 192,
+      "flat": 193,
       "position_open": 55,
       "event_blocked": 0,
       "dd_band_10": 8,
       "dd_band_20": 111,
-      "dd_band_30": 128
+      "dd_band_30": 129
     },
     "by_setup": {
       "A": {
@@ -24822,7 +24822,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 494
+          "other": 496
         },
         "selected": 0,
         "blocked": {
@@ -24840,7 +24840,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 494
+          "other": 496
         },
         "selected": 0,
         "blocked": {
@@ -24858,7 +24858,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 494
+          "other": 496
         },
         "selected": 0,
         "blocked": {
@@ -24876,7 +24876,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 488
+          "other": 490
         },
         "selected": 2,
         "blocked": {
@@ -24927,22 +24927,22 @@
       }
     },
     "top_reasons": {
-      "B/LONG|上位足が逆行": 189,
-      "C/LONG|レンジレジーム限定": 189,
-      "C/SHORT|レンジレジーム限定": 189,
-      "F/SHORT|レジーム不一致（確立したトレンド限定）": 169,
+      "B/LONG|上位足が逆行": 190,
+      "C/LONG|レンジレジーム限定": 190,
+      "C/SHORT|レンジレジーム限定": 190,
+      "F/SHORT|レジーム不一致（確立したトレンド限定）": 170,
       "F/LONG|レジーム不一致（確立したトレンド限定）": 160,
-      "A/LONG|上位足バイアス不一致": 151,
-      "A/SHORT|レジーム不一致": 105,
+      "A/LONG|上位足バイアス不一致": 152,
+      "A/SHORT|レジーム不一致": 106,
       "A/LONG|レジーム不一致": 96,
-      "B/SHORT|上位足が逆行": 86,
+      "B/SHORT|上位足が逆行": 87,
       "B/SHORT|出来高不足": 77,
       "B/LONG|レンジレジームではブレイクアウト禁止": 58,
       "B/SHORT|レンジレジームではブレイクアウト禁止": 58,
       "A/SHORT|上位足バイアス不一致": 57,
       "C/LONG|RSI/BB極値でない": 49,
+      "F/LONG|上位足バイアス不一致": 48,
       "A/SHORT|押し目/戻りが未形成": 47,
-      "F/LONG|上位足バイアス不一致": 47,
       "F/LONG|高ボラティリティで方向が揃っていない": 40,
       "F/SHORT|継続トリガー未発生": 40,
       "C/SHORT|RSI/BB極値でない": 33,
@@ -28263,7 +28263,7 @@
     "last_error": null
   },
   "chart": {
-    "generated_at": "2026-11-22T15:45:33Z",
+    "generated_at": "2026-11-22T15:58:50Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
@@ -29316,7 +29316,7 @@
             60907.0,
             61048.0,
             60723.0,
-            60761.0
+            60856.0
           ]
         ],
         "lines": {
@@ -30401,7 +30401,7 @@
             61054.0,
             61646.0,
             60425.0,
-            60761.0
+            60856.0
           ]
         ],
         "lines": {
@@ -31486,7 +31486,7 @@
             60183.0,
             61646.0,
             58739.0,
-            60761.0
+            60856.0
           ]
         ],
         "lines": {
@@ -32570,7 +32570,7 @@
             63037.0,
             64050.0,
             55170.0,
-            60761.0
+            60857.0
           ]
         ],
         "lines": {
@@ -33221,7 +33221,7 @@
             76805.0,
             81177.0,
             55170.0,
-            60761.0
+            60857.0
           ]
         ],
         "lines": {
