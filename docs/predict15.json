@@ -1,24 +1,24 @@
 {
- "updated_at": "2026-11-23T23:02:13+00:00",
- "updated_ts": 1795474933,
+ "updated_at": "2026-11-23T23:12:15+00:00",
+ "updated_ts": 1795475535,
  "next_round": {
-  "round_start_ts": 1795474800,
-  "round_start_iso": "2026-11-23T23:00:00+00:00",
-  "predicted_at_iso": "2026-11-23T22:57:11+00:00",
-  "price_at_prediction": 61186.5,
+  "round_start_ts": 1795475700,
+  "round_start_iso": "2026-11-23T23:15:00+00:00",
+  "predicted_at_iso": "2026-11-23T23:12:15+00:00",
+  "price_at_prediction": 61398.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
-   "technical": "DOWN"
+   "technical": "NEUTRAL"
   },
   "traders_counts": {
    "long": 0,
    "short": 2,
    "flat": 8
   },
-  "verdict": "DOWN",
+  "verdict": "SKIP",
   "start_price": null,
   "end_price": null,
   "actual": null,
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795475700,
+   "round_start_iso": "2026-11-23T23:15:00+00:00",
+   "predicted_at_iso": "2026-11-23T23:12:15+00:00",
+   "price_at_prediction": 61398.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "NEUTRAL"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 2,
+    "flat": 8
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795474800,
    "round_start_iso": "2026-11-23T23:00:00+00:00",
@@ -2724,35 +2749,6 @@
    "verdict": "UP",
    "start_price": 61013.0,
    "end_price": 61275.0,
-   "actual": "UP",
-   "hit": true,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 8.0,
-    "pnl": 4.0
-   }
-  },
-  {
-   "round_start_ts": 1795389300,
-   "round_start_iso": "2026-11-22T23:15:00+00:00",
-   "predicted_at_iso": "2026-11-22T23:12:12+00:00",
-   "price_at_prediction": 60890.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "UP",
-    "technical": "UP"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 1,
-    "flat": 8
-   },
-   "verdict": "UP",
-   "start_price": 60963.0,
-   "end_price": 61012.0,
    "actual": "UP",
    "hit": true,
    "settled": true,
