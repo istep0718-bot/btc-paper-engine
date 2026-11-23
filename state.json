@@ -5460,12 +5460,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-11-02T03:30:04.989573+00:00",
-      "equity": 74.16614854740135,
-      "marked_equity": 73.97734018222192,
-      "price": 78655.5
-    },
-    {
       "timestamp": "2026-11-02T04:28:58.253941+00:00",
       "equity": 73.75746997614783,
       "marked_equity": 73.75746997614783,
@@ -11458,6 +11452,12 @@
       "equity": 67.72456430185674,
       "marked_equity": 67.72456430185674,
       "price": 62719.5
+    },
+    {
+      "timestamp": "2026-11-23T16:45:32.806709+00:00",
+      "equity": 67.72456430185674,
+      "marked_equity": 67.72456430185674,
+      "price": 62068.5
     }
   ],
   "position": null,
@@ -13011,7 +13011,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13076,9 +13076,9 @@
         "label": "HL-F79D",
         "snapshot": {
           "side": "LONG",
-          "szi": 4.35617,
+          "szi": 2.78796,
           "entry_px": 63895.5,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13098,7 +13098,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13118,7 +13118,7 @@
           "side": "SHORT",
           "szi": -4.0,
           "entry_px": 63356.8,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13138,7 +13138,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13158,7 +13158,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13198,7 +13198,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13238,7 +13238,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13258,7 +13258,7 @@
           "side": "LONG",
           "szi": 2.0,
           "entry_px": 62823.0,
-          "updated_ts": 1795451444
+          "updated_ts": 1795452331
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13324,7 +13324,7 @@
           "side": "LONG"
         }
       ],
-      "ts": 1795451444,
+      "ts": 1795452331,
       "enabled_pool": 8
     }
   },
@@ -13334,39 +13334,21 @@
       "H": null,
       "I": null,
       "J": null,
-      "K": {
-        "id": 31,
-        "setup": "K",
-        "side": "SHORT",
-        "entry_bar_t": 1795444200000,
-        "entry_time": "2026-11-23T14:45:00+00:00",
-        "entry_price": 63291.0,
-        "atr": 553.3373921689092,
-        "risk_distance": 830.0060882533638,
-        "stop_price": 64121.006088253365,
-        "tp_price": 62045.990867619956,
-        "mfe_r": 1.0228840631598333,
-        "mae_r": 0.433731758230318,
-        "bars_held": 7,
-        "first_hit": {
-          "1.0": "hit",
-          "1.5": null,
-          "2.0": null
-        },
-        "context": {
-          "swing_high": 64175.0,
-          "swing_high_t": 1795008600000,
-          "breakout_bar_t": 1795443300000,
-          "breakout_high": 64575.0,
-          "bars_to_reclaim": 1,
-          "relative_volume": 4.240359677842656
-        },
-        "origin_build": "BTC_PAPER_V20_18_PRO_2026-11-22"
-      },
+      "K": null,
       "L": null,
       "M": null
     },
-    "ghosts": [],
+    "ghosts": [
+      {
+        "setup": "K",
+        "ledger_id": 31,
+        "side": "SHORT",
+        "entry_price": 63291.0,
+        "risk_distance": 830.0060882533638,
+        "stop_price": 64121.006088253365,
+        "bars_done": 8
+      }
+    ],
     "ledger": [
       {
         "id": 1,
@@ -14436,6 +14418,42 @@
           "bb_mid": 60987.35
         },
         "origin_build": "BTC_PAPER_V20_18_PRO_2026-11-22"
+      },
+      {
+        "id": 31,
+        "setup": "K",
+        "side": "SHORT",
+        "entry_time": "2026-11-23T14:45:00+00:00",
+        "entry_bar_t": 1795444200000,
+        "entry_price": 63291.0,
+        "atr": 553.3373921689092,
+        "risk_distance": 830.0060882533638,
+        "stop_price": 64121.006088253365,
+        "tp_price": 62045.990867619956,
+        "exit_time": "2026-11-23T16:45:00+00:00",
+        "exit_bar_t": 1795451400000,
+        "exit_price": 62045.990867619956,
+        "exit_reason": "TP_1_5R",
+        "gross_r": 1.4999999999999982,
+        "cost_r": 0.14488194930359613,
+        "net_r": 1.355118050696402,
+        "mfe_r": 1.5120371016084697,
+        "mae_r": 0.433731758230318,
+        "bars_held": 8,
+        "first_hit": {
+          "1.0": "hit",
+          "1.5": "hit",
+          "2.0": null
+        },
+        "context": {
+          "swing_high": 64175.0,
+          "swing_high_t": 1795008600000,
+          "breakout_bar_t": 1795443300000,
+          "breakout_high": 64575.0,
+          "bars_to_reclaim": 1,
+          "relative_volume": 4.240359677842656
+        },
+        "origin_build": "BTC_PAPER_V20_18_PRO_2026-11-22"
       }
     ],
     "stats": {
@@ -14558,20 +14576,20 @@
       "K": {
         "signals": 8,
         "opened": 8,
-        "closed": 7,
+        "closed": 8,
         "exits": {
-          "TP_1_5R": 4,
+          "TP_1_5R": 5,
           "STOP": 3,
           "HORIZON": 0
         },
         "first_hit": {
           "1.0": {
-            "hit": 4,
+            "hit": 5,
             "stop": 3,
             "censored": 0
           },
           "1.5": {
-            "hit": 4,
+            "hit": 5,
             "stop": 3,
             "censored": 0
           },
@@ -14581,8 +14599,8 @@
             "censored": 0
           }
         },
-        "total_r_gross": 3.0000000000000244,
-        "total_r_net": 0.6763372421852611
+        "total_r_gross": 4.500000000000023,
+        "total_r_net": 2.031455292881663
       },
       "L": {
         "signals": 1,
@@ -14646,11 +14664,11 @@
     "last_bar_t": {
       "G": 1795446000000,
       "H": 1795435200000,
-      "I": 1795450500000,
-      "J": 1795450500000,
-      "K": 1795450500000,
-      "L": 1795450500000,
-      "M": 1795450500000
+      "I": 1795451400000,
+      "J": 1795451400000,
+      "K": 1795451400000,
+      "L": 1795451400000,
+      "M": 1795451400000
     },
     "next_id": 32,
     "events": [
@@ -15202,10 +15220,19 @@
         "entry_price": 63291.0,
         "risk_distance": 830.0060882533638,
         "entry_time": "2026-11-23T14:45:00+00:00"
+      },
+      {
+        "timestamp": "2026-11-23T16:45:32.753590+00:00",
+        "type": "SHADOW_CLOSE",
+        "setup": "K",
+        "side": "SHORT",
+        "reason": "TP_1_5R",
+        "gross_r": 1.5,
+        "exit_time": "2026-11-23T16:45:00+00:00"
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-23T16:30:46.201536+00:00"
+    "updated_at": "2026-11-23T16:45:32.753853+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -15288,14 +15315,14 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 350,
+    "cycles_evaluated": 351,
     "context_cycles": {
-      "flat": 295,
+      "flat": 296,
       "position_open": 55,
       "event_blocked": 0,
       "dd_band_10": 8,
       "dd_band_20": 111,
-      "dd_band_30": 231
+      "dd_band_30": 232
     },
     "by_setup": {
       "A": {
@@ -15303,7 +15330,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 700
+          "other": 702
         },
         "selected": 0,
         "blocked": {
@@ -15321,7 +15348,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 700
+          "other": 702
         },
         "selected": 0,
         "blocked": {
@@ -15339,7 +15366,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 700
+          "other": 702
         },
         "selected": 0,
         "blocked": {
@@ -15357,7 +15384,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 694
+          "other": 696
         },
         "selected": 2,
         "blocked": {
@@ -15410,12 +15437,12 @@
     "top_reasons": {
       "A/LONG|上位足バイアス不一致": 209,
       "B/LONG|上位足が逆行": 250,
-      "C/LONG|レンジレジーム限定": 261,
+      "C/LONG|レンジレジーム限定": 262,
       "F/LONG|高ボラティリティで方向が揃っていない": 49,
       "A/SHORT|反転トリガー未発生": 28,
       "B/SHORT|出来高不足": 77,
-      "C/SHORT|レンジレジーム限定": 261,
-      "F/SHORT|高ボラティリティで方向が揃っていない": 18,
+      "C/SHORT|レンジレジーム限定": 262,
+      "F/SHORT|高ボラティリティで方向が揃っていない": 19,
       "A/SHORT|押し目/戻りが未形成": 47,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
       "A/LONG|レジーム不一致": 130,
@@ -15441,17 +15468,17 @@
       "F/LONG|上位足バイアス不一致": 62,
       "F/SHORT|EMA21から乖離しすぎ（追いかけ防止）": 3,
       "F/SHORT|RSIが継続エントリー帯域外": 4,
-      "B/SHORT|上位足が逆行": 158,
-      "A/SHORT|上位足バイアス不一致": 114,
+      "B/SHORT|上位足が逆行": 159,
+      "A/SHORT|上位足バイアス不一致": 115,
       "F/SHORT|上位足バイアス不一致": 12,
       "F/SHORT|単一足の急変（ブローオフ）": 2,
       "A/LONG|押し目/戻りが未形成": 7,
       "B/LONG|対向ゾーンまでの距離が1.5R未満": 2,
       "B/LONG|ブレイク足の実体が弱い": 3,
-      "A/LONG|反転トリガー未発生": 4,
+      "A/LONG|反転トリガー未発生": 5,
       "B/LONG|ブレイク未成立": 1,
-      "B/LONG|出来高不足": 5,
-      "F/LONG|継続トリガー未発生": 3
+      "B/LONG|出来高不足": 6,
+      "F/LONG|継続トリガー未発生": 4
     },
     "daily": {
       "2026-11-20": {
@@ -15816,12 +15843,12 @@
       },
       "2026-11-23": {
         "context_cycles": {
-          "flat": 69,
+          "flat": 70,
           "position_open": 0,
           "event_blocked": 0,
           "dd_band_10": 0,
           "dd_band_20": 0,
-          "dd_band_30": 69
+          "dd_band_30": 70
         },
         "by_setup": {
           "A": {
@@ -15829,7 +15856,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 138
+              "other": 140
             },
             "selected": 0,
             "blocked": {
@@ -15847,7 +15874,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 138
+              "other": 140
             },
             "selected": 0,
             "blocked": {
@@ -15865,7 +15892,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 138
+              "other": 140
             },
             "selected": 0,
             "blocked": {
@@ -15883,7 +15910,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 138
+              "other": 140
             },
             "selected": 0,
             "blocked": {
@@ -16092,12 +16119,8 @@
     "start_equity": 78.21394105837564,
     "virtual_equity": 96.83799659641473,
     "peak_equity": 106.04961127692782,
-    "last_bar_t": 1795450500000,
+    "last_bar_t": 1795451400000,
     "oi_history": [
-      {
-        "ts": 1795393800,
-        "oi": 38469.2696
-      },
       {
         "ts": 1795394700,
         "oi": 38618.57096
@@ -16349,6 +16372,10 @@
       {
         "ts": 1795450500,
         "oi": 37439.30218
+      },
+      {
+        "ts": 1795451400,
+        "oi": 37650.19514
       }
     ],
     "active_events": {
@@ -16358,8 +16385,8 @@
         "started_bar_t": 1795448700000,
         "start_time": "2026-11-23T15:45:00+00:00",
         "ref_price": 62863.0,
-        "extreme": 62442.0,
-        "bars_active": 3,
+        "extreme": 62036.0,
+        "bars_active": 4,
         "alpha_fired": false,
         "alpha_attempted": false,
         "beta_fired": false,
@@ -16373,7 +16400,7 @@
           "no_pressure"
         ],
         "track_high": 62974.0,
-        "track_low": 62442.0,
+        "track_low": 62036.0,
         "fire_failures": []
       },
       "SHORT": null
@@ -16399,8 +16426,8 @@
         "tp2_done": false,
         "hit_1r_t": null,
         "hit_15r_t": null,
-        "bars_held": 6,
-        "mfe_r": 0.23239029261563524,
+        "bars_held": 7,
+        "mfe_r": 0.45787961234132085,
         "mae_r": -0.4390791348433645,
         "realized_pnl": -0.48662309847444585,
         "fees_paid": 0.48662309847444585,
@@ -19125,7 +19152,7 @@
     "events_total": 76,
     "unfilled_total": 49,
     "last_error": null,
-    "updated_at": "2026-11-23T16:15:00+00:00"
+    "updated_at": "2026-11-23T16:30:00+00:00"
   },
   "rev2": {
     "version": "REV_ENGINE_V2_2026-11-22",
@@ -19134,12 +19161,8 @@
     "start_equity": 78.21394105837564,
     "virtual_equity": 6.742038903277039,
     "peak_equity": 78.21394105837564,
-    "last_bar_t": 1795450500000,
+    "last_bar_t": 1795451400000,
     "oi_history": [
-      {
-        "ts": 1795393800,
-        "oi": 38469.2696
-      },
       {
         "ts": 1795394700,
         "oi": 38618.57096
@@ -19391,6 +19414,10 @@
       {
         "ts": 1795450500,
         "oi": 37439.30218
+      },
+      {
+        "ts": 1795451400,
+        "oi": 37650.19514
       }
     ],
     "initialized": true,
@@ -19409,12 +19436,12 @@
           "peak": 64575.0,
           "trough": 63256.0
         },
-        "extreme": 62442.0,
-        "bars_active": 9,
+        "extreme": 62036.0,
+        "bars_active": 10,
         "track_high": 64575.0,
-        "track_low": 62442.0,
+        "track_low": 62036.0,
         "fav16": 0.5418282030921651,
-        "adv16": -2.779205007239949,
+        "adv16": -3.4113379108474673,
         "outcome": "failed",
         "returns": {
           "ret_15m_pct": 0.0,
@@ -19502,9 +19529,17 @@
           "F": {
             "detected": false,
             "first_detected_t": null,
-            "best_score": null,
-            "best_breakdown": null,
-            "best_stage": null,
+            "best_score": 15.0,
+            "best_breakdown": {
+              "break": 15.0,
+              "recovery": 0.0,
+              "close_pos": 0.0,
+              "volume": 0.0,
+              "structure": 0.0,
+              "rsi_dyn": 0.0,
+              "reclaim": 0.0
+            },
+            "best_stage": "unrecovered_break",
             "alpha_attempted": false,
             "alpha_fired": false,
             "beta_pending": false,
@@ -19548,10 +19583,10 @@
           "trough": 61048.0
         },
         "extreme": 64575.0,
-        "bars_active": 7,
+        "bars_active": 8,
         "track_high": 63651.0,
-        "track_low": 62442.0,
-        "fav16": 0.6855088829863409,
+        "track_low": 62036.0,
+        "fav16": 1.3312550697437642,
         "adv16": -1.2374151066435468,
         "outcome": "failed",
         "returns": {
@@ -19695,8 +19730,8 @@
         "tp2_done": false,
         "hit_1r_t": null,
         "hit_15r_t": null,
-        "bars_held": 6,
-        "mfe_r": 0.23239029261563524,
+        "bars_held": 7,
+        "mfe_r": 0.45787961234132085,
         "mae_r": -0.4390791348433645,
         "realized_pnl": -0.034049841687215164,
         "fees_paid": 0.034049841687215164,
@@ -19734,8 +19769,8 @@
         "tp2_done": false,
         "hit_1r_t": null,
         "hit_15r_t": null,
-        "bars_held": 6,
-        "mfe_r": 0.23239029261563524,
+        "bars_held": 7,
+        "mfe_r": 0.45787961234132085,
         "mae_r": -0.4390791348433645,
         "realized_pnl": -0.033879592478779086,
         "fees_paid": 0.033879592478779086,
@@ -31501,7 +31536,7 @@
     ],
     "candidates_total": 56,
     "last_error": null,
-    "updated_at": "2026-11-23T16:15:00+00:00"
+    "updated_at": "2026-11-23T16:30:00+00:00"
   },
   "rev_eval": {
     "version": "REV_EVAL_V1",
@@ -43071,15 +43106,15 @@
         "horizons": {
           "15m": {
             "ret_pct": 0.12250298090585865,
-            "success": null
+            "success": false
           },
           "30m": {
             "ret_pct": 0.07840190777974598,
-            "success": null
+            "success": false
           },
           "60m": {
             "ret_pct": 0.08330202701598566,
-            "success": null
+            "success": false
           },
           "120m": {
             "ret_pct": 3.3778155268444854,
@@ -43091,9 +43126,9 @@
         "t_mfe_min": 105,
         "t_mae_min": 15,
         "outcome": "reversal",
-        "bars_observed": 15,
-        "tracking_complete": false,
-        "finalized": false,
+        "bars_observed": 16,
+        "tracking_complete": true,
+        "finalized": true,
         "tracking_lost": false,
         "trades": [],
         "link_id": "REV-L-1795437000000",
@@ -43395,8 +43430,8 @@
         }
       ]
     },
-    "last_bar_t": 1795450500000,
+    "last_bar_t": 1795451400000,
     "last_error": null,
-    "updated_at": "2026-11-23T16:15:00+00:00"
+    "updated_at": "2026-11-23T16:30:00+00:00"
   }
 }
