@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-23T20:02:14+00:00",
- "updated_ts": 1795464134,
+ "updated_at": "2026-11-23T20:12:14+00:00",
+ "updated_ts": 1795464734,
  "next_round": {
-  "round_start_ts": 1795464000,
-  "round_start_iso": "2026-11-23T20:00:00+00:00",
-  "predicted_at_iso": "2026-11-23T19:57:19+00:00",
-  "price_at_prediction": 61215.5,
+  "round_start_ts": 1795464900,
+  "round_start_iso": "2026-11-23T20:15:00+00:00",
+  "predicted_at_iso": "2026-11-23T20:12:14+00:00",
+  "price_at_prediction": 61187.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795464900,
+   "round_start_iso": "2026-11-23T20:15:00+00:00",
+   "predicted_at_iso": "2026-11-23T20:12:14+00:00",
+   "price_at_prediction": 61187.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 2,
+    "flat": 8
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795464000,
    "round_start_iso": "2026-11-23T20:00:00+00:00",
@@ -2713,31 +2738,6 @@
    "start_price": 60595.0,
    "end_price": 60597.0,
    "actual": "UP",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1795378500,
-   "round_start_iso": "2026-11-22T20:15:00+00:00",
-   "predicted_at_iso": "2026-11-22T20:12:13+00:00",
-   "price_at_prediction": 60692.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "UP",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 1,
-    "flat": 8
-   },
-   "verdict": "SKIP",
-   "start_price": 60677.0,
-   "end_price": 60595.0,
-   "actual": "DOWN",
    "hit": null,
    "settled": true,
    "sim": null
