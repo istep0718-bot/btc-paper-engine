@@ -5460,12 +5460,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-11-04T12:24:26.628605+00:00",
-      "equity": 71.33004516854716,
-      "marked_equity": 71.08135890119966,
-      "price": 78185.5
-    },
-    {
       "timestamp": "2026-11-04T13:37:39.920408+00:00",
       "equity": 71.33155718161633,
       "marked_equity": 70.86811906849555,
@@ -11458,6 +11452,12 @@
       "equity": 67.72456430185674,
       "marked_equity": 67.72456430185674,
       "price": 60365.5
+    },
+    {
+      "timestamp": "2026-11-24T08:15:32.407515+00:00",
+      "equity": 67.72456430185674,
+      "marked_equity": 67.72456430185674,
+      "price": 60222.5
     }
   ],
   "position": null,
@@ -13009,7 +13009,7 @@
           "szi": 0.0,
           "entry_px": null,
           "event_ts": 1795042618.357,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13076,7 +13076,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13096,7 +13096,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13116,7 +13116,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13136,7 +13136,7 @@
           "side": "LONG",
           "szi": 28.6539,
           "entry_px": 68593.8,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13156,7 +13156,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13196,7 +13196,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13236,7 +13236,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13256,7 +13256,7 @@
           "side": null,
           "szi": 0.0,
           "entry_px": null,
-          "updated_ts": 1795507247
+          "updated_ts": 1795508131
         },
         "auto_disabled": false,
         "disabled_reason": null,
@@ -13322,7 +13322,7 @@
           "side": null
         }
       ],
-      "ts": 1795507247,
+      "ts": 1795508131,
       "enabled_pool": 8
     }
   },
@@ -14688,11 +14688,11 @@
     "last_bar_t": {
       "G": 1795503600000,
       "H": 1795492800000,
-      "I": 1795506300000,
-      "J": 1795506300000,
-      "K": 1795506300000,
-      "L": 1795506300000,
-      "M": 1795506300000
+      "I": 1795507200000,
+      "J": 1795507200000,
+      "K": 1795507200000,
+      "L": 1795507200000,
+      "M": 1795507200000
     },
     "next_id": 33,
     "events": [
@@ -15274,7 +15274,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-24T08:00:48.945060+00:00"
+    "updated_at": "2026-11-24T08:15:32.360206+00:00"
   },
   "risk_shadow": {
     "version": 1,
@@ -15357,14 +15357,14 @@
   "entry_funnel": {
     "version": 1,
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 413,
+    "cycles_evaluated": 414,
     "context_cycles": {
-      "flat": 358,
+      "flat": 359,
       "position_open": 55,
       "event_blocked": 0,
       "dd_band_10": 8,
       "dd_band_20": 111,
-      "dd_band_30": 294
+      "dd_band_30": 295
     },
     "by_setup": {
       "A": {
@@ -15372,7 +15372,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 826
+          "other": 828
         },
         "selected": 0,
         "blocked": {
@@ -15390,7 +15390,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 826
+          "other": 828
         },
         "selected": 0,
         "blocked": {
@@ -15408,7 +15408,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 826
+          "other": 828
         },
         "selected": 0,
         "blocked": {
@@ -15424,9 +15424,9 @@
       "F": {
         "candidates": 5,
         "gate_rejected": {
-          "score": 1,
+          "score": 2,
           "cost": 0,
-          "other": 820
+          "other": 821
         },
         "selected": 2,
         "blocked": {
@@ -15478,19 +15478,19 @@
     },
     "top_reasons": {
       "A/LONG|上位足バイアス不一致": 230,
-      "B/LONG|上位足が逆行": 272,
-      "C/LONG|レンジレジーム限定": 301,
+      "B/LONG|上位足が逆行": 273,
+      "C/LONG|レンジレジーム限定": 302,
       "F/LONG|高ボラティリティで方向が揃っていない": 49,
       "A/SHORT|反転トリガー未発生": 29,
-      "B/SHORT|出来高不足": 78,
-      "C/SHORT|レンジレジーム限定": 301,
+      "B/SHORT|出来高不足": 79,
+      "C/SHORT|レンジレジーム限定": 302,
       "F/SHORT|高ボラティリティで方向が揃っていない": 21,
       "A/SHORT|押し目/戻りが未形成": 47,
       "F/SHORT|ADX不足（高ボラティリティ時）": 8,
-      "A/LONG|レジーム不一致": 154,
+      "A/LONG|レジーム不一致": 155,
       "B/LONG|レンジレジームではブレイクアウト禁止": 112,
       "C/LONG|RSI/BB極値でない": 94,
-      "F/LONG|レジーム不一致（確立したトレンド限定）": 293,
+      "F/LONG|レジーム不一致（確立したトレンド限定）": 294,
       "A/SHORT|レジーム不一致": 177,
       "B/SHORT|レンジレジームではブレイクアウト禁止": 112,
       "C/SHORT|RSI/BB極値でない": 67,
@@ -15504,7 +15504,7 @@
       "B/SHORT|対向ゾーンまでの距離が1.5R未満": 6,
       "B/SHORT|ブレイク足の実体が弱い": 11,
       "F/SHORT|継続トリガー未発生": 41,
-      "A/SHORT|対向ゾーンまでの距離が1.5R未満": 10,
+      "A/SHORT|対向ゾーンまでの距離が1.5R未満": 11,
       "F/SHORT|スコア不足 6<8": 1,
       "B/SHORT|ブレイク未成立": 9,
       "F/LONG|上位足バイアス不一致": 64,
@@ -15522,7 +15522,8 @@
       "B/LONG|出来高不足": 22,
       "F/LONG|継続トリガー未発生": 5,
       "F/LONG|ADX不足（高ボラティリティ時）": 2,
-      "A/LONG|対向ゾーンまでの距離が1.5R未満": 1
+      "A/LONG|対向ゾーンまでの距離が1.5R未満": 1,
+      "F/SHORT|スコア不足 7<8": 1
     },
     "daily": {
       "2026-11-20": {
@@ -16007,12 +16008,12 @@
       },
       "2026-11-24": {
         "context_cycles": {
-          "flat": 33,
+          "flat": 34,
           "position_open": 0,
           "event_blocked": 0,
           "dd_band_10": 0,
           "dd_band_20": 0,
-          "dd_band_30": 33
+          "dd_band_30": 34
         },
         "by_setup": {
           "A": {
@@ -16020,7 +16021,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 66
+              "other": 68
             },
             "selected": 0,
             "blocked": {
@@ -16038,7 +16039,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 66
+              "other": 68
             },
             "selected": 0,
             "blocked": {
@@ -16056,7 +16057,7 @@
             "gate_rejected": {
               "score": 0,
               "cost": 0,
-              "other": 66
+              "other": 68
             },
             "selected": 0,
             "blocked": {
@@ -16072,9 +16073,9 @@
           "F": {
             "candidates": 0,
             "gate_rejected": {
-              "score": 0,
+              "score": 1,
               "cost": 0,
-              "other": 66
+              "other": 67
             },
             "selected": 0,
             "blocked": {
@@ -16283,12 +16284,8 @@
     "start_equity": 78.21394105837564,
     "virtual_equity": 113.13919561661069,
     "peak_equity": 113.13919561661069,
-    "last_bar_t": 1795506300000,
+    "last_bar_t": 1795507200000,
     "oi_history": [
-      {
-        "ts": 1795448700,
-        "oi": 37466.11972
-      },
       {
         "ts": 1795449600,
         "oi": 37442.47636
@@ -16540,6 +16537,10 @@
       {
         "ts": 1795506300,
         "oi": 37408.25918
+      },
+      {
+        "ts": 1795507200,
+        "oi": 37496.94794
       }
     ],
     "active_events": {
@@ -19431,7 +19432,7 @@
     "events_total": 80,
     "unfilled_total": 53,
     "last_error": null,
-    "updated_at": "2026-11-24T07:45:00+00:00"
+    "updated_at": "2026-11-24T08:00:00+00:00"
   },
   "rev2": {
     "version": "REV_ENGINE_V2_2026-11-22",
@@ -19440,12 +19441,8 @@
     "start_equity": 78.21394105837564,
     "virtual_equity": 5.446315623354637,
     "peak_equity": 78.21394105837564,
-    "last_bar_t": 1795506300000,
+    "last_bar_t": 1795507200000,
     "oi_history": [
-      {
-        "ts": 1795448700,
-        "oi": 37466.11972
-      },
       {
         "ts": 1795449600,
         "oi": 37442.47636
@@ -19697,6 +19694,10 @@
       {
         "ts": 1795506300,
         "oi": 37408.25918
+      },
+      {
+        "ts": 1795507200,
+        "oi": 37496.94794
       }
     ],
     "initialized": true,
@@ -19715,12 +19716,12 @@
           "peak": 60745.0,
           "trough": 60375.0
         },
-        "extreme": 60264.0,
-        "bars_active": 8,
+        "extreme": 60142.0,
+        "bars_active": 9,
         "track_high": 60619.0,
-        "track_low": 60264.0,
+        "track_low": 60142.0,
         "fav16": 0.2563508864779074,
-        "adv16": -0.33077533739084286,
+        "adv16": -0.5325482931992642,
         "outcome": null,
         "returns": {
           "ret_15m_pct": 0.0,
@@ -19831,7 +19832,7 @@
           "trough": 59546.0
         },
         "extreme": 60745.0,
-        "bars_active": 20,
+        "bars_active": 21,
         "track_high": 60745.0,
         "track_low": 59413.0,
         "fav16": 0.3221206274641397,
@@ -32564,7 +32565,7 @@
     ],
     "candidates_total": 60,
     "last_error": null,
-    "updated_at": "2026-11-24T07:45:00+00:00"
+    "updated_at": "2026-11-24T08:00:00+00:00"
   },
   "rev_eval": {
     "version": "REV_EVAL_V1",
@@ -45342,8 +45343,8 @@
         }
       ]
     },
-    "last_bar_t": 1795506300000,
+    "last_bar_t": 1795507200000,
     "last_error": null,
-    "updated_at": "2026-11-24T07:45:00+00:00"
+    "updated_at": "2026-11-24T08:00:00+00:00"
   }
 }
