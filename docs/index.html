@@ -315,6 +315,7 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
     <button class="nav-btn" data-page="settings" type="button"><span class="ic"><svg viewBox="0 0 24 24" fill="none" stroke="#8a5cf6" stroke-width="2.3" stroke-linecap="round"><path d="M12 2.6 V5.4 M12 18.6 V21.4 M2.6 12 H5.4 M18.6 12 H21.4 M5.2 5.2 L7.2 7.2 M16.8 16.8 L18.8 18.8 M18.8 5.2 L16.8 7.2 M7.2 16.8 L5.2 18.8"/><circle cx="12" cy="12" r="3.4" fill="#e546b0" stroke="none"/></svg></span>設定</button>
     <button class="nav-btn" data-page="tax" type="button"><span class="ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.6" fill="#ffb52e"/><text x="12" y="16.8" font-size="12.5" font-weight="800" text-anchor="middle" fill="#a86a00" font-family="sans-serif">¥</text></svg></span>税金</button>
     <button class="nav-btn" data-page="traders" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M3 8 L7.2 11.4 L12 4.6 L16.8 11.4 L21 8 L19.4 18.4 H4.6 Z" fill="#ffb52e"/><rect x="4.6" y="19.4" width="14.8" height="1.8" rx=".9" fill="#e546b0"/></svg></span>トレーダー監視</button>
+    <button class="nav-btn" data-page="ura" type="button"><span class="ic"><svg viewBox="0 0 24 24"><path d="M20 13.5 A8.5 8.5 0 1 1 10.5 4 A6.8 6.8 0 0 0 20 13.5 Z" fill="#8a5cf6"/><path d="M17.5 3.5 L18.3 5.7 L20.5 6.5 L18.3 7.3 L17.5 9.5 L16.7 7.3 L14.5 6.5 L16.7 5.7 Z" fill="#ffb52e"/></svg></span>裏モード</button>
   </nav>
 
   <main class="pages">
@@ -667,6 +668,44 @@ nav.sidebar{position:sticky;top:8px;z-index:30;flex:0 0 auto;flex-direction:row;
         <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M3 8 L7.2 11.4 L12 4.6 L16.8 11.4 L21 8 L19.4 18.4 H4.6 Z" fill="#ffb52e"/><rect x="4.6" y="19.4" width="14.8" height="1.8" rx=".9" fill="#e546b0"/></svg></span>トレーダー監視</h2>
         <p class="defNote">BOTが追跡している凄腕トレーダー10人。順位は日次再評価の直近30日成績（BTC決済の勝率 → 決済回数 → 実現PnL）で決まります。👸 神7＝上位7人（王女様クラス）／⚔️ 中級＝兵士クラス／🧑‍🌾 下級＝最下位（村人クラス）。「コピー対象」バッジはセットアップDが実際に追随している3人です。<br>統計更新: <span id="traderStatsUpdated">集計待ち</span></p>
         <div id="traderBoard"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+    </section>
+    <section class="page" id="page-ura">
+      <div class="card">
+        <h2><span class="hic"><svg viewBox="0 0 24 24"><path d="M20 13.5 A8.5 8.5 0 1 1 10.5 4 A6.8 6.8 0 0 0 20 13.5 Z" fill="#8a5cf6"/><path d="M17.5 3.5 L18.3 5.7 L20.5 6.5 L18.3 7.3 L17.5 9.5 L16.7 7.3 L14.5 6.5 L16.7 5.7 Z" fill="#ffb52e"/></svg></span>裏モード（シャドウ測定）</h2>
+        <p class="defNote">ここは測定・研究専用の裏モードです。表示しているのは全てシャドウ（仮想）測定で、<b>本隊の売買・資産・リスク管理には一切影響しません</b>。数値は data.json / predict15.json の公表値をそのまま表示しています（表示側での再計算はしていません）。</p>
+      </div>
+      <div class="card">
+        <h2>シャドウ測定 G〜M</h2>
+        <div id="uraShadow"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>REV ENGINE V1（反転シャドウ）</h2>
+        <div id="uraRev1"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>REV ENGINE V2（反転シャドウ）</h2>
+        <div id="uraRev2"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>REV 評価レイヤー（前方／遡及）</h2>
+        <div id="uraRevEval"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>predict15 レジーム別（参考）</h2>
+        <div id="uraP15"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>リスクモニター（シャドウ）</h2>
+        <div id="uraRisk"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>エントリーファネル</h2>
+        <div id="uraFunnel"><p class="defNote">データを読み込み中…</p></div>
+      </div>
+      <div class="card">
+        <h2>本隊の内訳（セットアップ別・レジーム別）</h2>
+        <div id="uraMainStats"><p class="defNote">データを読み込み中…</p></div>
       </div>
     </section>
   </main>
@@ -1221,6 +1260,107 @@ function renderStage0(d){
   const sum=document.getElementById("s0Summary");
   if(sum)sum.textContent="到達 "+okCount+" / 5 条件"+(okCount===5?"（全条件に到達しています）":"（あと "+(5-okCount)+" 条件）");
 }
+/* ===== 裏モード（シャドウ測定表示） ===== */
+function uraRate(v){const x=n(v);return x===null?"--":(x*100).toFixed(1)+"%"}
+function uraUsd(v){const x=n(v);return x===null?"--":"$"+signed(x)}
+function uraSetHtml(id,html){const el=$(id);if(el)el.innerHTML=html}
+function uraRevTable(st,rows){
+let h='<div class="tableWrap"><table class="log"><tr><th>区分</th><th>トレード</th><th>勝</th><th>負</th><th>勝率</th><th>期待値(R)</th><th>PF</th><th>純損益</th><th>最大DD</th></tr>';
+for(const k of rows){const s=st?st[k]:null;if(!s)continue;
+h+='<tr><td>'+esc(k)+'</td><td>'+s.trades+'</td><td>'+s.wins+'</td><td>'+s.losses+'</td><td>'+uraRate(s.win_rate)+'</td><td>'+signed(s.expectancy_r)+'</td><td>'+fmt(s.profit_factor)+'</td><td>'+uraUsd(s.net_usd)+'</td><td>'+pctText(s.max_dd_pct!=null?s.max_dd_pct:s.max_dd_pct_of_start)+'</td></tr>';}
+return h+'</table></div>';
+}
+function uraRevBlock(rv,rows){
+if(!rv)return '<p class="defNote">データがありません。</p>';
+let h='';
+if(rv.note)h+='<p class="defNote">'+esc(rv.note)+'</p>';
+h+='<p class="miniNote">仮想資金 '+usd(rv.virtual_equity)+'（開始 '+usd(rv.start_equity)+'）／イベント総数 '+(rv.events_total!=null?rv.events_total:(rv.candidates_total!=null?rv.candidates_total:"--"))+'／更新 '+fmtTime(rv.updated_at)+'</p>';
+h+=uraRevTable(rv.stats,rows);
+return h;
+}
+function uraDetectTable(det){
+if(!det)return "";
+let h='<p class="miniNote" style="margin-top:12px">検出品質（前方＝実測／遡及＝過去データでの参考値）</p><div class="tableWrap"><table class="log"><tr><th>区分</th><th>候補</th><th>発火</th><th>反転発生</th><th>捕捉</th><th>見逃し</th><th>誤発火率</th></tr>';
+const rows=[["前方（forward）",det.forward],["遡及（retro）",det.retro]];
+for(const [lab,x] of rows){if(!x)continue;
+h+='<tr><td>'+lab+'</td><td>'+x.candidates+'</td><td>'+x.fired_candidates+'</td><td>'+x.reversals+'</td><td>'+x.captured+'</td><td>'+x.missed+'</td><td>'+uraRate(x.false_fire_rate)+'</td></tr>';}
+return h+'</table></div>';
+}
+function renderUraMain(d){
+/* シャドウ測定 G〜M */
+const sh=get(d,["shadow"]);
+if(sh&&sh.setups){
+let h='';
+if(sh.note)h+='<p class="defNote">'+esc(sh.note)+'</p>';
+h+='<p class="miniNote">更新 '+fmtTime(sh.updated_at)+'／測定専用（本隊に影響なし）</p>';
+h+='<div class="tableWrap"><table class="log"><tr><th>セットアップ</th><th>ルール</th><th>シグナル</th><th>決済</th><th>TP(1.5R)</th><th>STOP</th><th>時間切れ</th><th>1.5R初到達率</th><th>合計R(net)</th><th>状態</th></tr>';
+for(const k of Object.keys(sh.setups).sort()){const s=sh.setups[k];const ex=s.exits||{};
+h+='<tr><td><b>'+esc(k)+'</b></td><td style="white-space:normal;font-size:12.5px">'+esc(s.rule||"")+'</td><td>'+s.signals+'</td><td>'+s.closed+'</td><td>'+(ex.TP_1_5R||0)+'</td><td>'+(ex.STOP||0)+'</td><td>'+(ex.HORIZON||0)+'</td><td>'+uraRate(s.first_hit_rate_1_5r)+'</td><td>'+signed(s.total_r_net)+'</td><td>'+(s.open_position?"建玉中":"—")+'</td></tr>';}
+h+='</table></div>';
+uraSetHtml("uraShadow",h);
+}
+/* REV V1 / V2 */
+uraSetHtml("uraRev1",uraRevBlock(get(d,["rev"]),["ALL","LONG","SHORT","ALPHA","BETA","LONG_ALPHA","LONG_BETA","SHORT_ALPHA","SHORT_BETA"]));
+const rv2=get(d,["rev2"]);
+let h2=uraRevBlock(rv2,["ALL","LONG","SHORT","ALPHA","BETA","SYS_L","SYS_A","SYS_F","LONG_ALPHA","LONG_BETA","SHORT_ALPHA","SHORT_BETA"]);
+if(rv2)h2+=uraDetectTable(rv2.detection);
+uraSetHtml("uraRev2",h2);
+/* REV 評価レイヤー */
+const ev=get(d,["rev_eval"]);
+if(ev&&ev.eras){
+let h='';
+if(ev.note)h+='<p class="defNote">'+esc(ev.note)+'</p>';
+h+='<div class="tableWrap"><table class="log"><tr><th>区分</th><th>検出数</th><th>反転成功</th><th>失敗</th><th>未確定</th><th>成功率</th><th>成功率CI95</th><th>平均MFE</th><th>平均MAE</th></tr>';
+const er=[["前方（forward）",ev.eras.forward],["遡及（retro）",ev.eras.retro]];
+for(const [lab,era] of er){const det=era&&era.overall?era.overall.detection:null;if(!det)continue;const ci=Array.isArray(det.success_rate_ci95)?det.success_rate_ci95:[];
+h+='<tr><td>'+lab+'</td><td>'+det.n+'</td><td>'+det.reversals+'</td><td>'+det.failed+'</td><td>'+det.no_outcome+'</td><td>'+uraRate(det.success_rate)+'</td><td>'+(ci.length===2?uraRate(ci[0])+" 〜 "+uraRate(ci[1]):"--")+'</td><td>'+pctText(det.avg_mfe_pct)+'</td><td>'+pctText(det.avg_mae_pct)+'</td></tr>';}
+h+='</table></div><p class="defNote">遡及（retro）は過去データでの参考値です。前方（forward）の実測とは分けて評価してください。</p>';
+uraSetHtml("uraRevEval",h);
+}
+/* リスクモニター */
+const rm=get(d,["risk_monitor"]);
+if(rm){
+let h='';
+if(rm.note)h+='<p class="defNote">'+esc(rm.note)+'</p>';
+h+='<div class="tableWrap"><table class="log"><tr><th>リスク上限</th><th>対象エントリー</th><th>上限超過</th><th>超過分・決済済</th><th>超過分 純損益</th><th>超過分 合計R</th><th>仮想資金</th><th>仮想 最大DD</th></tr>';
+const caps=rm.caps_pct||[];
+for(const cap of caps){const key=String(cap);const t=(rm.totals||{})[key];const ve=(rm.variant_equity||{})[key];if(!t)continue;
+h+='<tr><td>'+cap+'%</td><td>'+t.entries+'</td><td>'+t.over_entries+'</td><td>'+t.over_closed+'</td><td>'+uraUsd(t.over_net_pnl)+'</td><td>'+signed(t.over_r)+'</td><td>'+(ve?usd(ve.equity):"--")+'</td><td>'+(ve?pctText(ve.max_dd_pct):"--")+'</td></tr>';}
+h+='</table></div>';
+uraSetHtml("uraRisk",h);
+}
+/* エントリーファネル */
+const ef=get(d,["entry_funnel"]);
+if(ef){
+let h='<p class="miniNote">開始 '+fmtDateTime(ef.started_at)+'／評価サイクル数 '+(ef.cycles_evaluated!=null?ef.cycles_evaluated:"--")+'</p>';
+const cc=ef.context_cycles||{};
+h+='<p class="miniNote">サイクル内訳：フラット '+(cc.flat!=null?cc.flat:"--")+'／ポジション保有中 '+(cc.position_open!=null?cc.position_open:"--")+'／イベント遮断 '+(cc.event_blocked!=null?cc.event_blocked:"--")+'／DDバンド10 '+(cc.dd_band_10!=null?cc.dd_band_10:"--")+'／DDバンド20 '+(cc.dd_band_20!=null?cc.dd_band_20:"--")+'／DDバンド30 '+(cc.dd_band_30!=null?cc.dd_band_30:"--")+'</p>';
+const bs=ef.by_setup||{};
+h+='<div class="tableWrap"><table class="log"><tr><th>セットアップ</th><th>候補</th><th>ゲート却下(スコア)</th><th>ゲート却下(コスト)</th><th>ゲート却下(その他)</th><th>選択</th><th>建玉</th></tr>';
+for(const k of Object.keys(bs).sort()){const s=bs[k];const gr=s.gate_rejected||{};
+h+='<tr><td><b>'+esc(k)+'</b></td><td>'+s.candidates+'</td><td>'+(gr.score||0)+'</td><td>'+(gr.cost||0)+'</td><td>'+(gr.other||0)+'</td><td>'+s.selected+'</td><td>'+s.opened+'</td></tr>';}
+h+='</table></div>';
+const tr=ef.top_reasons||{};
+const items=Object.entries(tr).sort((a,b)=>b[1]-a[1]).slice(0,8);
+if(items.length){h+='<p class="miniNote" style="margin-top:12px">見送り理由トップ</p><div class="tableWrap"><table class="log"><tr><th>理由</th><th>件数</th></tr>';
+for(const [reason,cnt] of items)h+='<tr><td style="white-space:normal">'+esc(reason)+'</td><td>'+cnt+'</td></tr>';
+h+='</table></div>';}
+uraSetHtml("uraFunnel",h);
+}
+/* 本隊の内訳 */
+let hm='<p class="defNote">本隊（実績）の内訳を参考表示しています。シャドウ測定ではありません。</p>';
+const sbs=get(d,["stats_by_setup"])||{};
+hm+='<div class="tableWrap"><table class="log"><tr><th>セットアップ</th><th>往復</th><th>勝</th><th>負</th><th>純損益</th><th>合計R</th><th>手数料</th></tr>';
+for(const k of Object.keys(sbs).sort()){const s=sbs[k];
+hm+='<tr><td><b>'+esc(k)+'</b></td><td>'+s.round_trips+'</td><td>'+s.wins+'</td><td>'+s.losses+'</td><td>'+uraUsd(s.net_pnl)+'</td><td>'+signed(s.total_r)+'</td><td>'+usd(s.fees)+'</td></tr>';}
+hm+='</table></div>';
+const sbr=get(d,["stats_by_regime"])||{};
+hm+='<div class="tableWrap" style="margin-top:14px"><table class="log"><tr><th>レジーム</th><th>往復</th><th>勝</th><th>負</th><th>純損益</th><th>合計R</th><th>手数料</th></tr>';
+for(const k of Object.keys(sbr).sort()){const s=sbr[k];
+hm+='<tr><td><b>'+esc(k)+'</b></td><td>'+s.round_trips+'</td><td>'+s.wins+'</td><td>'+s.losses+'</td><td>'+uraUsd(s.net_pnl)+'</td><td>'+signed(s.total_r)+'</td><td>'+usd(s.fees)+'</td></tr>';}
+hm+='</table></div>';
+uraSetHtml("uraMainStats",hm);
+}
 function render(d){if(!d||typeof d!=="object")throw new Error("JSONデータの形式が正しくありません。");lastData=d;try{renderStage0(d)}catch(e){console.warn("stage0",e)}const fxRate=n(get(d,["usdjpy","fx_rate","usd_jpy","USDJPY"]));if(fxRate!==null&&fxRate>50&&fxRate<300)USDJPY=fxRate;const price=n(get(d,["price","market.price","btc_price"]));const equity=n(get(d,["marked_equity","equity","metrics.equity"]));const initial=n(get(d,["initial_equity","initial_bankroll"],100))??100;const all=tradesOf(d);const closedTrades=closed(all);const pnlValues=closedTrades.map(pnlOf).filter(v=>v!==null);const wins=pnlValues.filter(v=>v>0).length;const losses=pnlValues.filter(v=>v<0).length;let winrate=n(get(d,["metrics.win_rate","win_rate","winrate"]));if(winrate!==null&&winrate>=0&&winrate<=1)winrate*=100;if(winrate===null&&pnlValues.length>0)winrate=wins/pnlValues.length*100;const realized=n(get(d,["realized_pnl","metrics.total_net_pnl"]))??pnlValues.reduce((a,b)=>a+b,0);const position=get(d,["position","open_position","open_trade"],null);const unrealized=n(get(d,["unrealized_pnl","position.unrealized_pnl","position.unrealized_pnl_usd","open_pnl"]))??0;const dd=n(get(d,["max_drawdown_pct","risk.max_drawdown_pct","metrics.max_drawdown_pct","risk.drawdown_pct","current_drawdown_pct"]));
 put("priceUsd",price===null?"--":usd(price));put("priceJpy",price===null?"":jpy(price));put("equityUsd",equity===null?"--":usd(equity));put("equityJpy",equity===null?"":jpy(equity));put("realizedUsd",signed(realized));color("realizedUsd",realized);put("winrateValue",winrate===null?"--":winrate.toFixed(1)+"%");put("winlossText",wins+"勝 "+losses+"敗");put("pnlUsd",signed(unrealized));put("pnlJpy",jpy(unrealized));color("pnlUsd",unrealized);put("maxddValue",dd===null?"--":Math.abs(dd).toFixed(2)+"%");
 const signal=side(get(d,["signal.direction","signal","current_signal"],"WAIT"));const score=n(get(d,["signal.score"]));const rsi=n(get(d,["signal.rsi","indicators.rsi_15m","rsi_15m"]));put("signalValue",signal);put("scoreValue",score===null?"--":score);put("rsiValue",rsi===null?"--":rsi.toFixed(1));$("signalValue").classList.remove("good","bad");if(signal==="LONG")$("signalValue").classList.add("good");if(signal==="SHORT")$("signalValue").classList.add("bad");const reasons=get(d,["signal.reasons","signal.reason"],[]);let reasonText="";if(Array.isArray(reasons))reasonText=reasons.filter(Boolean).slice(0,2).join("・");else if(typeof reasons==="string")reasonText=reasons;put("reasonValue",reasonText||"理由データなし");
@@ -1245,6 +1385,7 @@ renderTax(d,closedTrades);
 renderFib(d,price);
 renderSettings(d);
 renderTraders(d);
+try{renderUraMain(d)}catch(e){console.warn("ura",e)}
 try{renderBtcChart(d)}catch(e){console.warn("btcchart",e)}
 drawChart($("equityChart"),history);
 drawChart($("equityChartBig"),history);
@@ -1418,7 +1559,31 @@ if(nx)lines.push("つぎの たたかいは "+p15time(nx.round_start_iso)+" ス�
 if(!lines.length)lines.push("まほうしょうじょは たたかいの じゅんびを している…");
 return lines.map(s=>'<div class="dqMsgLine">'+s+'</div>').join("")+'<div class="dqMsgLine"><span class="dqMsgCursor">\u{25BC}</span></div>';
 }
-async function loadPredict15(){try{p15render(await p15fetch())}catch(e){console.warn("predict15",e)}}
+/* ===== 裏モード：predict15 レジーム別 ===== */
+function renderUraP15(p){
+const el=document.getElementById("uraP15");if(!el)return;
+if(!p||!p.stats){el.innerHTML='<p class="defNote">predict15 のデータを取得できませんでした。</p>';return}
+const s=p.stats;
+let h='<p class="defNote">predict15 は分析のみで、自動ベットはしません。シミュレーションは $4 固定・2倍払戻の仮想モデルです。RANGE は全ラウンド見送りのためベットはありません。</p>';
+h+='<p class="miniNote">戦略 '+esc(s.strategy_version||"")+'／精算済み '+(s.settled!=null?s.settled:"--")+' ラウンド／ベット '+(s.bet_rounds!=null?s.bet_rounds:"--")+' 件・的中 '+(s.bet_hits!=null?s.bet_hits:"--")+' 件';
+if(Array.isArray(s.bet_rate_wilson95)&&s.bet_rate_wilson95.length===2)h+='／的中率CI95 '+uraRate(s.bet_rate_wilson95[0])+' 〜 '+uraRate(s.bet_rate_wilson95[1]);
+if(s.sim)h+='／シミュ損益 '+uraUsd(s.sim.pnl)+'（投資 $'+fmt(s.sim.invested,0)+'）';
+h+='／更新 '+p15time(p.updated_at)+'</p>';
+const br=s.by_regime||{};
+h+='<div class="tableWrap"><table class="log"><tr><th>レジーム</th><th>ラウンド</th><th>ベット</th><th>的中</th><th>的中率</th><th>的中率CI95</th><th>カバー率</th><th>シミュ損益</th><th>1件あたりEV</th></tr>';
+for(const k of Object.keys(br).sort()){const r=br[k];if(!r||typeof r!=="object")continue;const w=Array.isArray(r.wilson95)?r.wilson95:[];
+h+='<tr><td><b>'+esc(k)+'</b></td><td>'+r.rounds+'</td><td>'+r.bets+'</td><td>'+r.hits+'</td><td>'+uraRate(r.hit_rate)+'</td><td>'+(w.length===2&&w[0]!=null?uraRate(w[0])+" 〜 "+uraRate(w[1]):"--")+'</td><td>'+uraRate(r.coverage)+'</td><td>'+uraUsd(r.sim_pnl)+'</td><td>'+(r.ev_per_bet==null?"--":signed(r.ev_per_bet))+'</td></tr>';}
+h+='</table></div>';
+const bd=s.by_direction||{};
+if(Object.keys(bd).length){
+h+='<div class="tableWrap" style="margin-top:14px"><table class="log"><tr><th>方向</th><th>的中</th><th>件数</th><th>的中率</th></tr>';
+for(const k of Object.keys(bd).sort()){const r=bd[k];
+h+='<tr><td><b>'+esc(k)+'</b></td><td>'+r.hits+'</td><td>'+r.total+'</td><td>'+uraRate(r.rate)+'</td></tr>';}
+h+='</table></div>';
+}
+el.innerHTML=h;
+}
+async function loadPredict15(){try{const p=await p15fetch();p15render(p);try{renderUraP15(p)}catch(e){console.warn("ura15",e)}}catch(e){console.warn("predict15",e)}}
 loadPredict15();
 setInterval(loadPredict15,60000);
 </script>
