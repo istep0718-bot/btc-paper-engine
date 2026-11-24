@@ -1,10 +1,10 @@
 {
   "build": "BTC_PAPER_V20_18_PRO_2026-11-22",
-  "generated_at": "2026-11-24T07:45:32.540435+00:00",
+  "generated_at": "2026-11-24T08:00:48.974686+00:00",
   "market_status": "OK",
-  "price": 60440.5,
-  "funding_rate": 2.2341e-06,
-  "funding_rate_pct": 0.00022341,
+  "price": 60365.5,
+  "funding_rate": -1.3597e-06,
+  "funding_rate_pct": -0.00013597000000000001,
   "initial_equity": 100.0,
   "equity": 67.72456430185674,
   "marked_equity": 67.72456430185674,
@@ -22,26 +22,26 @@
     "long_score": 0,
     "short_score": 0,
     "score_edge": 0,
-    "rsi": 44.211,
-    "atr": 259.24714,
-    "ema9": 60441.35039889893,
-    "ema21": 60536.82262528732,
+    "rsi": 43.508,
+    "atr": 249.0152,
+    "ema9": 60434.880319119155,
+    "ema21": 60525.202386624835,
     "trend_15m": "DOWN",
     "trend_1h": "DOWN",
-    "trend_4h": "UP",
-    "timestamp": "2026-11-24T07:45:32.540318+00:00",
-    "reference_price": 60433.0,
-    "previous_close": 60364.0,
+    "trend_4h": "DOWN",
+    "timestamp": "2026-11-24T08:00:48.974612+00:00",
+    "reference_price": 60409.0,
+    "previous_close": 60433.0,
     "reasons": [
       "明確な方向優位性なし"
     ],
     "flags": [],
     "bollinger": {
-      "middle": 60379.6,
-      "upper": 60845.4967267539,
-      "lower": 59913.703273246094,
-      "width_pct": 1.5432256151213477,
-      "position": 0.5573088379178593,
+      "middle": 60397.3,
+      "upper": 60838.782094767164,
+      "lower": 59955.81790523284,
+      "width_pct": 1.461926591974017,
+      "position": 0.5132508205187435,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -56,34 +56,34 @@
       },
       "trend": "DOWN"
     },
-    "regime": "NEUTRAL",
-    "adx": 32.02,
-    "atr_percentile": 25.0,
+    "regime": "TREND_DOWN",
+    "adx": 32.17,
+    "atr_percentile": 22.0,
     "macd": {
-      "line": -135.779,
-      "signal": -164.1536,
-      "hist": 28.3746,
-      "hist_prev": 27.1031
+      "line": -129.5922,
+      "signal": -157.2413,
+      "hist": 27.6491,
+      "hist_prev": 28.3746
     },
-    "vwap": 60498.072618720646,
-    "relative_volume": 0.179,
-    "htf_bias": "NEUTRAL",
+    "vwap": 60497.70899974407,
+    "relative_volume": 0.121,
+    "htf_bias": "DOWN",
     "structure_bias": "MIXED",
     "support": 60341.0,
     "resistance": 60745.0,
-    "premium": -0.0003687517,
+    "premium": -0.000697088,
     "setup": null,
     "score_breakdown": {},
-    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム NEUTRAL）",
+    "entry_status": "WAIT（LONG 0 / SHORT 0、必要スコア 8、レジーム TREND_DOWN）",
     "evaluation_notes": [
-      "A/LONG: 上位足バイアス不一致",
+      "A/LONG: レジーム不一致",
       "B/LONG: 上位足が逆行",
       "C/LONG: レンジレジーム限定",
       "F/LONG: レジーム不一致（確立したトレンド限定）",
-      "A/SHORT: 上位足バイアス不一致",
-      "B/SHORT: 上位足が逆行",
+      "A/SHORT: 反転トリガー未発生",
+      "B/SHORT: 出来高不足",
       "C/SHORT: レンジレジーム限定",
-      "F/SHORT: レジーム不一致（確立したトレンド限定）",
+      "F/SHORT: 継続トリガー未発生",
       "CONSENSUS: LONG 1 / SHORT 0 / FLAT 7（建玉 1名、参入条件: 未達）"
     ],
     "paper_only": true,
@@ -16485,12 +16485,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-11-04T11:35:00.127523+00:00",
-      "equity": 71.37959680303983,
-      "marked_equity": 71.37959680303983,
-      "price": 78671.5
-    },
-    {
       "timestamp": "2026-11-04T12:24:26.628605+00:00",
       "equity": 71.33004516854716,
       "marked_equity": 71.08135890119966,
@@ -22483,6 +22477,12 @@
       "equity": 67.72456430185674,
       "marked_equity": 67.72456430185674,
       "price": 60440.5
+    },
+    {
+      "timestamp": "2026-11-24T08:00:48.974675+00:00",
+      "equity": 67.72456430185674,
+      "marked_equity": 67.72456430185674,
+      "price": 60365.5
     }
   ],
   "events": [
@@ -23239,30 +23239,30 @@
       "direction": "DOWN"
     },
     "4h": {
-      "direction": "UP"
+      "direction": "DOWN"
     }
   },
   "indicators": {
-    "rsi_15m": 44.211,
-    "atr": 259.24714,
+    "rsi_15m": 43.508,
+    "atr": 249.0152,
     "bollinger": {
-      "middle": 60379.6,
-      "upper": 60845.4967267539,
-      "lower": 59913.703273246094,
-      "width_pct": 1.5432256151213477,
-      "position": 0.5573088379178593,
+      "middle": 60397.3,
+      "upper": 60838.782094767164,
+      "lower": 59955.81790523284,
+      "width_pct": 1.461926591974017,
+      "position": 0.5132508205187435,
       "state": "INSIDE"
     },
-    "adx": 32.02,
-    "atr_percentile": 25.0,
+    "adx": 32.17,
+    "atr_percentile": 22.0,
     "macd": {
-      "line": -135.779,
-      "signal": -164.1536,
-      "hist": 28.3746,
-      "hist_prev": 27.1031
+      "line": -129.5922,
+      "signal": -157.2413,
+      "hist": 27.6491,
+      "hist_prev": 28.3746
     },
-    "vwap": 60498.072618720646,
-    "relative_volume": 0.179
+    "vwap": 60497.70899974407,
+    "relative_volume": 0.121
   },
   "fibonacci": {
     "swing_high": 64575.0,
@@ -23386,7 +23386,7 @@
     "short_ratio": 0.0,
     "enabled_pool": 8,
     "valid": true,
-    "updated_ts": 1795506330,
+    "updated_ts": 1795507247,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -24674,7 +24674,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-24T07:45:32.492229+00:00"
+    "updated_at": "2026-11-24T08:00:48.945060+00:00"
   },
   "risk_monitor": {
     "note": "リスク上限はShadow測定のみ（本隊の見送り・サイズ変更は行わない）。variant_equityは決済ベース近似で、見送りによる後続トレードのサイズ変化は再現しない。",
@@ -24759,14 +24759,14 @@
   },
   "entry_funnel": {
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 412,
+    "cycles_evaluated": 413,
     "context_cycles": {
-      "flat": 357,
+      "flat": 358,
       "position_open": 55,
       "event_blocked": 0,
       "dd_band_10": 8,
       "dd_band_20": 111,
-      "dd_band_30": 293
+      "dd_band_30": 294
     },
     "by_setup": {
       "A": {
@@ -24774,7 +24774,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 824
+          "other": 826
         },
         "selected": 0,
         "blocked": {
@@ -24792,7 +24792,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 824
+          "other": 826
         },
         "selected": 0,
         "blocked": {
@@ -24810,7 +24810,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 824
+          "other": 826
         },
         "selected": 0,
         "blocked": {
@@ -24828,7 +24828,7 @@
         "gate_rejected": {
           "score": 1,
           "cost": 0,
-          "other": 818
+          "other": 820
         },
         "selected": 2,
         "blocked": {
@@ -24880,25 +24880,25 @@
     },
     "top_reasons": {
       "F/SHORT|レジーム不一致（確立したトレンド限定）": 316,
-      "C/LONG|レンジレジーム限定": 300,
-      "C/SHORT|レンジレジーム限定": 300,
-      "F/LONG|レジーム不一致（確立したトレンド限定）": 292,
-      "B/LONG|上位足が逆行": 271,
+      "C/LONG|レンジレジーム限定": 301,
+      "C/SHORT|レンジレジーム限定": 301,
+      "F/LONG|レジーム不一致（確立したトレンド限定）": 293,
+      "B/LONG|上位足が逆行": 272,
       "A/LONG|上位足バイアス不一致": 230,
       "B/SHORT|上位足が逆行": 197,
       "A/SHORT|レジーム不一致": 177,
-      "A/LONG|レジーム不一致": 153,
+      "A/LONG|レジーム不一致": 154,
       "A/SHORT|上位足バイアス不一致": 150,
       "B/LONG|レンジレジームではブレイクアウト禁止": 112,
       "B/SHORT|レンジレジームではブレイクアウト禁止": 112,
       "C/LONG|RSI/BB極値でない": 94,
-      "B/SHORT|出来高不足": 77,
+      "B/SHORT|出来高不足": 78,
       "C/SHORT|RSI/BB極値でない": 67,
       "F/LONG|上位足バイアス不一致": 64,
       "F/LONG|高ボラティリティで方向が揃っていない": 49,
       "A/SHORT|押し目/戻りが未形成": 47,
-      "F/SHORT|継続トリガー未発生": 40,
-      "A/SHORT|反転トリガー未発生": 28
+      "F/SHORT|継続トリガー未発生": 41,
+      "A/SHORT|反転トリガー未発生": 29
     }
   },
   "stage0": {
@@ -25360,8 +25360,8 @@
         "fire_failures": []
       }
     ],
-    "last_bar_time": "2026-11-24T07:30:00+00:00",
-    "updated_at": "2026-11-24T07:30:00+00:00",
+    "last_bar_time": "2026-11-24T07:45:00+00:00",
+    "updated_at": "2026-11-24T07:45:00+00:00",
     "last_error": null
   },
   "rev2": {
@@ -25386,7 +25386,7 @@
       "LONG": {
         "candidate_id": "REV2-L-1795500000000",
         "phase": "forward",
-        "bars_active": 7,
+        "bars_active": 8,
         "fired_any": false,
         "best_scores": {
           "L": null,
@@ -25397,7 +25397,7 @@
       "SHORT": {
         "candidate_id": "REV2-S-1795489200000",
         "phase": "forward",
-        "bars_active": 19,
+        "bars_active": 20,
         "fired_any": true,
         "best_scores": {
           "L": 48.89169978917509,
@@ -26378,8 +26378,8 @@
         }
       }
     ],
-    "last_bar_time": "2026-11-24T07:30:00+00:00",
-    "updated_at": "2026-11-24T07:30:00+00:00",
+    "last_bar_time": "2026-11-24T07:45:00+00:00",
+    "updated_at": "2026-11-24T07:45:00+00:00",
     "last_error": null
   },
   "rev_eval": {
@@ -26408,39 +26408,39 @@
       "forward": {
         "overall": {
           "detection": {
-            "n": 41,
+            "n": 42,
             "reversals": 6,
             "failed": 13,
-            "no_outcome": 22,
-            "success_rate": 0.14634146341463414,
+            "no_outcome": 23,
+            "success_rate": 0.14285714285714285,
             "success_rate_ci95": [
-              0.0688415452945541,
-              0.2844375526858926
+              0.06715875684189933,
+              0.2784138235217878
             ],
-            "avg_mfe_pct": 1.1297511539908636,
-            "avg_mae_pct": -1.0258375185148847,
-            "avg_t_mfe_min": 122.92682926829268,
-            "avg_t_mae_min": 100.97560975609755,
+            "avg_mfe_pct": 1.1203436423992252,
+            "avg_mae_pct": -1.0035449411378872,
+            "avg_t_mfe_min": 122.5,
+            "avg_t_mae_min": 98.92857142857143,
             "horizons": {
               "15m": {
-                "n": 41,
+                "n": 42,
                 "success_rate": 0.0,
-                "avg_ret_pct": -0.11172155483328894
+                "avg_ret_pct": -0.10578436203720501
               },
               "30m": {
-                "n": 41,
+                "n": 42,
                 "success_rate": 0.0,
-                "avg_ret_pct": -0.14378233116841452
+                "avg_ret_pct": -0.13190940816099722
               },
               "60m": {
-                "n": 41,
-                "success_rate": 0.024390243902439025,
-                "avg_ret_pct": 0.042026901883829834
+                "n": 42,
+                "success_rate": 0.023809523809523808,
+                "avg_ret_pct": 0.04303993539397234
               },
               "120m": {
-                "n": 41,
-                "success_rate": 0.12195121951219512,
-                "avg_ret_pct": 0.12077992062854453
+                "n": 42,
+                "success_rate": 0.11904761904761904,
+                "avg_ret_pct": 0.1296308981789446
               }
             }
           },
@@ -26461,8 +26461,8 @@
             "total_r": -7.870305733884491
           },
           "records_total": 42,
-          "records_finalized": 41,
-          "records_pending": 1
+          "records_finalized": 42,
+          "records_pending": 0
         },
         "by_category": {
           "A_ONLY": {
@@ -26751,39 +26751,39 @@
           },
           "NONE": {
             "detection": {
-              "n": 18,
+              "n": 19,
               "reversals": 3,
               "failed": 5,
-              "no_outcome": 10,
-              "success_rate": 0.16666666666666666,
+              "no_outcome": 11,
+              "success_rate": 0.15789473684210525,
               "success_rate_ci95": [
-                0.05836470400465757,
-                0.39222499638359243
+                0.055203710399278266,
+                0.3756592764317668
               ],
-              "avg_mfe_pct": 1.1919263778748517,
-              "avg_mae_pct": -0.8961675999571711,
-              "avg_t_mfe_min": 111.66666666666667,
-              "avg_t_mae_min": 90.0,
+              "avg_mfe_pct": 1.16785844573102,
+              "avg_mae_pct": -0.8537140035742137,
+              "avg_t_mfe_min": 111.3157894736842,
+              "avg_t_mae_min": 86.05263157894737,
               "horizons": {
                 "15m": {
-                  "n": 18,
+                  "n": 19,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.08695260927962245
+                  "avg_ret_pct": -0.07513191707531415
                 },
                 "30m": {
-                  "n": 18,
+                  "n": 19,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.10404170470373465
+                  "avg_ret_pct": -0.07988790786969008
                 },
                 "60m": {
-                  "n": 18,
+                  "n": 19,
                   "success_rate": 0.0,
-                  "avg_ret_pct": 0.015501954070639022
+                  "avg_ret_pct": 0.019137341188490392
                 },
                 "120m": {
-                  "n": 18,
-                  "success_rate": 0.16666666666666666,
-                  "avg_ret_pct": 0.2536175375211182
+                  "n": 19,
+                  "success_rate": 0.15789473684210525,
+                  "avg_ret_pct": 0.2661914027960776
                 }
               }
             },
@@ -26801,8 +26801,8 @@
               "total_r": 0.0
             },
             "records_total": 19,
-            "records_finalized": 18,
-            "records_pending": 1
+            "records_finalized": 19,
+            "records_pending": 0
           }
         },
         "by_regime_trend": {
@@ -26924,39 +26924,39 @@
           },
           "RANGE": {
             "detection": {
-              "n": 33,
+              "n": 34,
               "reversals": 5,
               "failed": 8,
-              "no_outcome": 20,
-              "success_rate": 0.15151515151515152,
+              "no_outcome": 21,
+              "success_rate": 0.14705882352941177,
               "success_rate_ci95": [
-                0.06650359257960956,
-                0.30920213138460484
+                0.06449346382626417,
+                0.30128388174051957
               ],
-              "avg_mfe_pct": 1.2044358008968097,
-              "avg_mae_pct": -0.8538418461030148,
-              "avg_t_mfe_min": 128.63636363636363,
-              "avg_t_mae_min": 95.45454545454545,
+              "avg_mfe_pct": 1.1906181499040227,
+              "avg_mae_pct": -0.8313626526494255,
+              "avg_t_mfe_min": 127.94117647058823,
+              "avg_t_mae_min": 93.08823529411765,
               "horizons": {
                 "15m": {
-                  "n": 33,
+                  "n": 34,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.041816169883918626
+                  "avg_ret_pct": -0.036538031281384685
                 },
                 "30m": {
-                  "n": 33,
+                  "n": 34,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.04430816984328352
+                  "avg_ret_pct": -0.03256732852015423
                 },
                 "60m": {
-                  "n": 33,
-                  "success_rate": 0.030303030303030304,
-                  "avg_ret_pct": 0.1508616910270031
+                  "n": 34,
+                  "success_rate": 0.029411764705882353,
+                  "avg_ret_pct": 0.14891206215296812
                 },
                 "120m": {
-                  "n": 33,
-                  "success_rate": 0.12121212121212122,
-                  "avg_ret_pct": 0.24895583051777598
+                  "n": 34,
+                  "success_rate": 0.11764705882352941,
+                  "avg_ret_pct": 0.2561195113185869
                 }
               }
             },
@@ -26977,46 +26977,46 @@
               "total_r": -3.2411474635066457
             },
             "records_total": 34,
-            "records_finalized": 33,
-            "records_pending": 1
+            "records_finalized": 34,
+            "records_pending": 0
           }
         },
         "by_regime_vol": {
           "HIGH": {
             "detection": {
-              "n": 17,
+              "n": 18,
               "reversals": 2,
               "failed": 7,
-              "no_outcome": 8,
-              "success_rate": 0.11764705882352941,
+              "no_outcome": 9,
+              "success_rate": 0.1111111111111111,
               "success_rate_ci95": [
-                0.03287908001292092,
-                0.3433684249770991
+                0.031018868453582787,
+                0.3280024486660421
               ],
-              "avg_mfe_pct": 1.0702367641623605,
-              "avg_mae_pct": -1.1716279658688566,
-              "avg_t_mfe_min": 120.88235294117646,
-              "avg_t_mae_min": 87.3529411764706,
+              "avg_mfe_pct": 1.051592258772343,
+              "avg_mae_pct": -1.1115124826917522,
+              "avg_t_mfe_min": 120.0,
+              "avg_t_mae_min": 83.33333333333333,
               "horizons": {
                 "15m": {
-                  "n": 17,
+                  "n": 18,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.22494722353074703
+                  "avg_ret_pct": -0.20480345874558134
                 },
                 "30m": {
-                  "n": 17,
+                  "n": 18,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.32013197028888063
+                  "avg_ret_pct": -0.28263128109821434
                 },
                 "60m": {
-                  "n": 17,
-                  "success_rate": 0.058823529411764705,
-                  "avg_ret_pct": -0.08478559484894817
+                  "n": 18,
+                  "success_rate": 0.05555555555555555,
+                  "avg_ret_pct": -0.07537671128457243
                 },
                 "120m": {
-                  "n": 17,
-                  "success_rate": 0.11764705882352941,
-                  "avg_ret_pct": 0.021624641421547727
+                  "n": 18,
+                  "success_rate": 0.1111111111111111,
+                  "avg_ret_pct": 0.047785548995092166
                 }
               }
             },
@@ -27037,8 +27037,8 @@
               "total_r": -5.50515697608931
             },
             "records_total": 18,
-            "records_finalized": 17,
-            "records_pending": 1
+            "records_finalized": 18,
+            "records_pending": 0
           },
           "MID": {
             "detection": {
@@ -27928,10 +27928,10 @@
           "trend": "RANGE",
           "vol": "HIGH"
         },
-        "outcome": null,
+        "outcome": "none",
         "mfe_pct": 0.7346356671420473,
         "mae_pct": -0.08954926868097735,
-        "finalized": false,
+        "finalized": true,
         "n_trades": 0,
         "net_r": null
       },
@@ -28127,23 +28127,16 @@
         "net_r": -2.957252461576568
       }
     ],
-    "last_bar_time": "2026-11-24T07:30:00+00:00",
-    "updated_at": "2026-11-24T07:30:00+00:00",
+    "last_bar_time": "2026-11-24T07:45:00+00:00",
+    "updated_at": "2026-11-24T07:45:00+00:00",
     "last_error": null
   },
   "chart": {
-    "generated_at": "2026-11-24T07:45:33Z",
+    "generated_at": "2026-11-24T08:00:50Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
         "candles": [
-          [
-            1794967200,
-            64280.0,
-            64598.0,
-            64111.0,
-            64311.0
-          ],
           [
             1794970800,
             64311.0,
@@ -29185,7 +29178,14 @@
             60447.0,
             60548.0,
             60264.0,
-            60440.0
+            60409.0
+          ],
+          [
+            1795507200,
+            60409.0,
+            60409.0,
+            60343.0,
+            60345.0
           ]
         ],
         "lines": {
@@ -29203,8 +29203,8 @@
               64575.0
             ],
             [
-              1795567968,
-              55669.0
+              1795571568,
+              55413.6
             ]
           ],
           "trend_low": [
@@ -29213,8 +29213,8 @@
               60740.0
             ],
             [
-              1795567968,
-              55783.7
+              1795571568,
+              55617.8
             ]
           ],
           "channel": {
@@ -29225,8 +29225,8 @@
                 62732.3
               ],
               [
-                1795567968,
-                53826.3
+                1795571568,
+                53571.0
               ]
             ]
           }
@@ -29234,13 +29234,6 @@
       },
       "4h": {
         "candles": [
-          [
-            1793347200,
-            78134.0,
-            78191.0,
-            77174.0,
-            77339.0
-          ],
           [
             1793361600,
             77338.0,
@@ -30282,7 +30275,14 @@
             60303.0,
             60745.0,
             60248.0,
-            60440.0
+            60409.0
+          ],
+          [
+            1795507200,
+            60409.0,
+            60409.0,
+            60343.0,
+            60345.0
           ]
         ],
         "lines": {
@@ -30291,8 +30291,8 @@
             62042.0
           ],
           "support": [
-            60341.0,
-            58739.0
+            59413.0,
+            60341.0
           ],
           "trend_high": [
             [
@@ -30300,33 +30300,21 @@
               61646.0
             ],
             [
-              1795750272,
-              75256.1
+              1795764672,
+              75744.3
             ]
           ],
           "trend_low": [
             [
-              1795320000,
-              58739.0
+              1795392000,
+              60341.0
             ],
             [
-              1795750272,
-              68312.6
+              1795764672,
+              56338.2
             ]
           ],
-          "channel": {
-            "kind": "up",
-            "points": [
-              [
-                1795320000,
-                62011.8
-              ],
-              [
-                1795750272,
-                71585.4
-              ]
-            ]
-          }
+          "channel": null
         }
       },
       "1d": {
@@ -31379,7 +31367,7 @@
             61245.0,
             61650.0,
             59413.0,
-            60445.0
+            60345.0
           ]
         ],
         "lines": {
@@ -32464,7 +32452,7 @@
             63037.0,
             64575.0,
             55170.0,
-            60445.0
+            60345.0
           ]
         ],
         "lines": {
@@ -33115,7 +33103,7 @@
             76805.0,
             81177.0,
             55170.0,
-            60447.0
+            60350.0
           ]
         ],
         "lines": {
