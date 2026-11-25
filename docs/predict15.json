@@ -1,24 +1,24 @@
 {
- "updated_at": "2026-11-25T10:02:14+00:00",
- "updated_ts": 1795600934,
+ "updated_at": "2026-11-25T10:12:13+00:00",
+ "updated_ts": 1795601533,
  "next_round": {
-  "round_start_ts": 1795600800,
-  "round_start_iso": "2026-11-25T10:00:00+00:00",
-  "predicted_at_iso": "2026-11-25T09:57:12+00:00",
-  "price_at_prediction": 58969.5,
+  "round_start_ts": 1795601700,
+  "round_start_iso": "2026-11-25T10:15:00+00:00",
+  "predicted_at_iso": "2026-11-25T10:12:13+00:00",
+  "price_at_prediction": 58918.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
-   "technical": "NEUTRAL"
+   "technical": "DOWN"
   },
   "traders_counts": {
    "long": 1,
    "short": 1,
    "flat": 8
   },
-  "verdict": "SKIP",
+  "verdict": "DOWN",
   "start_price": null,
   "end_price": null,
   "actual": null,
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795601700,
+   "round_start_iso": "2026-11-25T10:15:00+00:00",
+   "predicted_at_iso": "2026-11-25T10:12:13+00:00",
+   "price_at_prediction": 58918.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 1,
+    "flat": 8
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795600800,
    "round_start_iso": "2026-11-25T10:00:00+00:00",
@@ -2724,31 +2749,6 @@
    "verdict": "SKIP",
    "start_price": 59860.0,
    "end_price": 59672.0,
-   "actual": "DOWN",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1795515300,
-   "round_start_iso": "2026-11-24T10:15:00+00:00",
-   "predicted_at_iso": "2026-11-24T10:12:14+00:00",
-   "price_at_prediction": 59973.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "RANGE",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "NEUTRAL",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 0,
-    "short": 2,
-    "flat": 8
-   },
-   "verdict": "SKIP",
-   "start_price": 59970.0,
-   "end_price": 59858.0,
    "actual": "DOWN",
    "hit": null,
    "settled": true,
