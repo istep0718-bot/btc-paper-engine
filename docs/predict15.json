@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-25T12:17:21+00:00",
- "updated_ts": 1795609041,
+ "updated_at": "2026-11-25T12:27:12+00:00",
+ "updated_ts": 1795609632,
  "next_round": {
-  "round_start_ts": 1795608900,
-  "round_start_iso": "2026-11-25T12:15:00+00:00",
-  "predicted_at_iso": "2026-11-25T12:12:13+00:00",
-  "price_at_prediction": 58521.5,
+  "round_start_ts": 1795609800,
+  "round_start_iso": "2026-11-25T12:30:00+00:00",
+  "predicted_at_iso": "2026-11-25T12:27:12+00:00",
+  "price_at_prediction": 58649.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795609800,
+   "round_start_iso": "2026-11-25T12:30:00+00:00",
+   "predicted_at_iso": "2026-11-25T12:27:12+00:00",
+   "price_at_prediction": 58649.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 2,
+    "short": 0,
+    "flat": 8
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795608900,
    "round_start_iso": "2026-11-25T12:15:00+00:00",
@@ -2729,31 +2754,6 @@
    "start_price": 60526.0,
    "end_price": 60430.0,
    "actual": "DOWN",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1795523400,
-   "round_start_iso": "2026-11-24T12:30:00+00:00",
-   "predicted_at_iso": "2026-11-24T12:27:13+00:00",
-   "price_at_prediction": 60226.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "NEUTRAL"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 1,
-    "flat": 8
-   },
-   "verdict": "SKIP",
-   "start_price": 60228.0,
-   "end_price": 60524.0,
-   "actual": "UP",
    "hit": null,
    "settled": true,
    "sim": null
