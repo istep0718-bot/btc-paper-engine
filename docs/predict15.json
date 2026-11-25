@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-25T20:02:14+00:00",
- "updated_ts": 1795636934,
+ "updated_at": "2026-11-25T20:12:14+00:00",
+ "updated_ts": 1795637534,
  "next_round": {
-  "round_start_ts": 1795636800,
-  "round_start_iso": "2026-11-25T20:00:00+00:00",
-  "predicted_at_iso": "2026-11-25T19:57:12+00:00",
-  "price_at_prediction": 59970.5,
+  "round_start_ts": 1795637700,
+  "round_start_iso": "2026-11-25T20:15:00+00:00",
+  "predicted_at_iso": "2026-11-25T20:12:14+00:00",
+  "price_at_prediction": 59964.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795637700,
+   "round_start_iso": "2026-11-25T20:15:00+00:00",
+   "predicted_at_iso": "2026-11-25T20:12:14+00:00",
+   "price_at_prediction": 59964.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "UP",
+    "technical": "UP"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 2,
+    "flat": 8
+   },
+   "verdict": "UP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795636800,
    "round_start_iso": "2026-11-25T20:00:00+00:00",
@@ -2767,35 +2792,6 @@
     "stake": 4.0,
     "payout": 8.0,
     "pnl": 4.0
-   }
-  },
-  {
-   "round_start_ts": 1795550400,
-   "round_start_iso": "2026-11-24T20:00:00+00:00",
-   "predicted_at_iso": "2026-11-24T19:58:36+00:00",
-   "price_at_prediction": 59667.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 1,
-    "flat": 8
-   },
-   "verdict": "DOWN",
-   "start_price": 59636.0,
-   "end_price": 59702.0,
-   "actual": "UP",
-   "hit": false,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 0.0,
-    "pnl": -4.0
    }
   }
  ]
