@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-25T04:02:14+00:00",
- "updated_ts": 1795579334,
+ "updated_at": "2026-11-25T04:12:13+00:00",
+ "updated_ts": 1795579933,
  "next_round": {
-  "round_start_ts": 1795579200,
-  "round_start_iso": "2026-11-25T04:00:00+00:00",
-  "predicted_at_iso": "2026-11-25T03:57:11+00:00",
-  "price_at_prediction": 59341.5,
+  "round_start_ts": 1795580100,
+  "round_start_iso": "2026-11-25T04:15:00+00:00",
+  "predicted_at_iso": "2026-11-25T04:12:13+00:00",
+  "price_at_prediction": 59225.5,
   "strategy_version": "v2.0-regime",
   "regime": "WEAK_TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795580100,
+   "round_start_iso": "2026-11-25T04:15:00+00:00",
+   "predicted_at_iso": "2026-11-25T04:12:13+00:00",
+   "price_at_prediction": 59225.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "WEAK_TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 1,
+    "flat": 8
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795579200,
    "round_start_iso": "2026-11-25T04:00:00+00:00",
@@ -2707,35 +2732,6 @@
     "stake": 4.0,
     "payout": 8.0,
     "pnl": 4.0
-   }
-  },
-  {
-   "round_start_ts": 1795493700,
-   "round_start_iso": "2026-11-24T04:15:00+00:00",
-   "predicted_at_iso": "2026-11-24T04:12:18+00:00",
-   "price_at_prediction": 60439.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 0,
-    "short": 2,
-    "flat": 8
-   },
-   "verdict": "DOWN",
-   "start_price": 60384.0,
-   "end_price": 60516.0,
-   "actual": "UP",
-   "hit": false,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 0.0,
-    "pnl": -4.0
    }
   }
  ]
