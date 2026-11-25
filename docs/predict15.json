@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-25T14:47:13+00:00",
- "updated_ts": 1795618033,
+ "updated_at": "2026-11-25T14:57:12+00:00",
+ "updated_ts": 1795618632,
  "next_round": {
-  "round_start_ts": 1795617900,
-  "round_start_iso": "2026-11-25T14:45:00+00:00",
-  "predicted_at_iso": "2026-11-25T14:42:13+00:00",
-  "price_at_prediction": 57592.5,
+  "round_start_ts": 1795618800,
+  "round_start_iso": "2026-11-25T15:00:00+00:00",
+  "predicted_at_iso": "2026-11-25T14:57:12+00:00",
+  "price_at_prediction": 57813.0,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -15,8 +15,8 @@
   },
   "traders_counts": {
    "long": 2,
-   "short": 0,
-   "flat": 8
+   "short": 1,
+   "flat": 7
   },
   "verdict": "DOWN",
   "start_price": null,
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795618800,
+   "round_start_iso": "2026-11-25T15:00:00+00:00",
+   "predicted_at_iso": "2026-11-25T14:57:12+00:00",
+   "price_at_prediction": 57813.0,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 2,
+    "short": 1,
+    "flat": 7
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795617900,
    "round_start_iso": "2026-11-25T14:45:00+00:00",
@@ -2760,31 +2785,6 @@
    "verdict": "SKIP",
    "start_price": 59939.0,
    "end_price": 59845.0,
-   "actual": "DOWN",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1795532400,
-   "round_start_iso": "2026-11-24T15:00:00+00:00",
-   "predicted_at_iso": "2026-11-24T14:57:18+00:00",
-   "price_at_prediction": 60206.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "UP"
-   },
-   "traders_counts": {
-    "long": 0,
-    "short": 2,
-    "flat": 8
-   },
-   "verdict": "SKIP",
-   "start_price": 60419.0,
-   "end_price": 59939.0,
    "actual": "DOWN",
    "hit": null,
    "settled": true,
