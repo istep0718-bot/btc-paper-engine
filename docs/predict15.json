@@ -1,6 +1,6 @@
 {
- "updated_at": "2026-11-25T12:12:13+00:00",
- "updated_ts": 1795608733,
+ "updated_at": "2026-11-25T12:17:21+00:00",
+ "updated_ts": 1795609041,
  "next_round": {
   "round_start_ts": 1795608900,
   "round_start_iso": "2026-11-25T12:15:00+00:00",
@@ -27,13 +27,13 @@
   "sim": null
  },
  "stats": {
-  "settled": 792,
-  "bet_rounds": 412,
-  "bet_hits": 199,
-  "bet_rate": 0.4830097087378641,
-  "all_rounds": 792,
-  "all_hits": 199,
-  "all_rate": 0.25126262626262624,
+  "settled": 793,
+  "bet_rounds": 413,
+  "bet_hits": 200,
+  "bet_rate": 0.48426150121065376,
+  "all_rounds": 793,
+  "all_hits": 200,
+  "all_rate": 0.25220680958385877,
   "signal_rates": {
    "traders": {
     "hits": 0,
@@ -41,27 +41,27 @@
     "rate": null
    },
    "analysis": {
-    "hits": 199,
-    "total": 412,
-    "rate": 0.4830097087378641
+    "hits": 200,
+    "total": 413,
+    "rate": 0.48426150121065376
    },
    "verdict": {
-    "hits": 199,
-    "total": 412,
-    "rate": 0.4830097087378641
+    "hits": 200,
+    "total": 413,
+    "rate": 0.48426150121065376
    }
   },
   "sim": {
-   "rounds": 412,
+   "rounds": 413,
    "stake_per_round": 4.0,
    "payout_multiple": 2.0,
    "model_note": "virtual_fixed_multiple",
-   "invested": 1648.0,
-   "returned": 1592.0,
-   "pnl": -56.0,
-   "return_rate": 0.9660194174757282
+   "invested": 1652.0,
+   "returned": 1600.0,
+   "pnl": -52.0,
+   "return_rate": 0.9685230024213075
   },
-  "coverage": 0.5208596713021492,
+  "coverage": 0.5214646464646465,
   "by_direction": {
    "UP": {
     "hits": 59,
@@ -69,28 +69,28 @@
     "rate": 0.4306569343065693
    },
    "DOWN": {
-    "hits": 140,
-    "total": 275,
-    "rate": 0.509090909090909
+    "hits": 141,
+    "total": 276,
+    "rate": 0.5108695652173914
    }
   },
   "by_regime": {
    "scope": "v2.0-regime",
    "TREND": {
-    "rounds": 401,
-    "directional_rounds": 401,
-    "bets": 225,
-    "hits": 105,
-    "hit_rate": 0.4666666666666667,
+    "rounds": 402,
+    "directional_rounds": 402,
+    "bets": 226,
+    "hits": 106,
+    "hit_rate": 0.4690265486725664,
     "wilson95": [
-     0.4025853063653213,
-     0.5318671708066613
+     0.40502476382268326,
+     0.5340637214645754
     ],
-    "coverage": 0.5610972568578554,
-    "sim_pnl": -60.0,
-    "ev_per_bet": -0.26666666666666666,
+    "coverage": 0.5621890547263682,
+    "sim_pnl": -56.0,
+    "ev_per_bet": -0.24778761061946902,
     "max_miss_streak": 6,
-    "current_miss_streak": 1
+    "current_miss_streak": 0
    },
    "WEAK_TREND": {
     "rounds": 191,
@@ -126,12 +126,12 @@
    }
   },
   "bet_rate_wilson95": [
-   0.4351365610252911,
-   0.5311967735905819
+   0.43643018871535244,
+   0.532382904795468
   ],
   "streaks": {
    "max_miss": 6,
-   "current_miss": 1
+   "current_miss": 0
   },
   "sample_status": "sufficient",
   "sample_threshold": 100,
@@ -181,12 +181,16 @@
     "flat": 8
    },
    "verdict": "DOWN",
-   "start_price": null,
-   "end_price": null,
-   "actual": null,
-   "hit": null,
-   "settled": false,
-   "sim": null
+   "start_price": 58606.0,
+   "end_price": 58538.0,
+   "actual": "DOWN",
+   "hit": true,
+   "settled": true,
+   "sim": {
+    "stake": 4.0,
+    "payout": 8.0,
+    "pnl": 4.0
+   }
   },
   {
    "round_start_ts": 1795607100,
