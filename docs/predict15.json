@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-26T07:02:13+00:00",
- "updated_ts": 1795676533,
+ "updated_at": "2026-11-26T07:12:14+00:00",
+ "updated_ts": 1795677134,
  "next_round": {
-  "round_start_ts": 1795676400,
-  "round_start_iso": "2026-11-26T07:00:00+00:00",
-  "predicted_at_iso": "2026-11-26T06:57:11+00:00",
-  "price_at_prediction": 60516.5,
+  "round_start_ts": 1795677300,
+  "round_start_iso": "2026-11-26T07:15:00+00:00",
+  "predicted_at_iso": "2026-11-26T07:12:14+00:00",
+  "price_at_prediction": 60470.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795677300,
+   "round_start_iso": "2026-11-26T07:15:00+00:00",
+   "predicted_at_iso": "2026-11-26T07:12:14+00:00",
+   "price_at_prediction": 60470.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "UP",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 2,
+    "flat": 8
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795676400,
    "round_start_iso": "2026-11-26T07:00:00+00:00",
@@ -2804,35 +2829,6 @@
    "hit": null,
    "settled": true,
    "sim": null
-  },
-  {
-   "round_start_ts": 1795590000,
-   "round_start_iso": "2026-11-25T07:00:00+00:00",
-   "predicted_at_iso": "2026-11-25T06:57:12+00:00",
-   "price_at_prediction": 59126.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "DOWN",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 1,
-    "flat": 8
-   },
-   "verdict": "DOWN",
-   "start_price": 59206.0,
-   "end_price": 59220.0,
-   "actual": "UP",
-   "hit": false,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 0.0,
-    "pnl": -4.0
-   }
   }
  ]
 }
