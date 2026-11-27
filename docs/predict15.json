@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-27T02:17:12+00:00",
- "updated_ts": 1795745832,
+ "updated_at": "2026-11-27T02:27:12+00:00",
+ "updated_ts": 1795746432,
  "next_round": {
-  "round_start_ts": 1795745700,
-  "round_start_iso": "2026-11-27T02:15:00+00:00",
-  "predicted_at_iso": "2026-11-27T02:12:18+00:00",
-  "price_at_prediction": 61338.5,
+  "round_start_ts": 1795746600,
+  "round_start_iso": "2026-11-27T02:30:00+00:00",
+  "predicted_at_iso": "2026-11-27T02:27:12+00:00",
+  "price_at_prediction": 61612.5,
   "strategy_version": "v2.0-regime",
   "regime": "RANGE",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795746600,
+   "round_start_iso": "2026-11-27T02:30:00+00:00",
+   "predicted_at_iso": "2026-11-27T02:27:12+00:00",
+   "price_at_prediction": 61612.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "RANGE",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "NEUTRAL",
+    "technical": "UP"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 1,
+    "flat": 8
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795745700,
    "round_start_iso": "2026-11-27T02:15:00+00:00",
@@ -2631,35 +2656,6 @@
     "stake": 4.0,
     "payout": 0.0,
     "pnl": -4.0
-   }
-  },
-  {
-   "round_start_ts": 1795660200,
-   "round_start_iso": "2026-11-26T02:30:00+00:00",
-   "predicted_at_iso": "2026-11-26T02:27:11+00:00",
-   "price_at_prediction": 60950.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "UP",
-    "technical": "UP"
-   },
-   "traders_counts": {
-    "long": 0,
-    "short": 2,
-    "flat": 8
-   },
-   "verdict": "UP",
-   "start_price": 60956.0,
-   "end_price": 61026.0,
-   "actual": "UP",
-   "hit": true,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 8.0,
-    "pnl": 4.0
    }
   }
  ]
