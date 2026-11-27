@@ -1,18 +1,18 @@
 {
   "build": "BTC_PAPER_V20_18_PRO_2026-11-22",
-  "generated_at": "2026-11-27T11:30:42.811327+00:00",
+  "generated_at": "2026-11-27T11:45:31.555449+00:00",
   "market_status": "OK",
-  "price": 61663.5,
+  "price": 61582.5,
   "funding_rate": 1.25e-05,
   "funding_rate_pct": 0.00125,
   "initial_equity": 100.0,
-  "equity": 74.48797627906559,
-  "marked_equity": 71.42520313915216,
+  "equity": 74.48566450993553,
+  "marked_equity": 70.44314805973104,
   "realized_pnl": -25.090984862167666,
-  "unrealized_pnl": -3.0627731399134377,
-  "unrealized_pnl_gross": -2.540307647032712,
-  "net_pnl": -28.57479686084784,
-  "net_pnl_pct": -28.57479686084784,
+  "unrealized_pnl": -4.042516450204486,
+  "unrealized_pnl_gross": -3.5207372580514735,
+  "net_pnl": -29.556851940268956,
+  "net_pnl_pct": -29.556851940268956,
   "position": {
     "side": "LONG",
     "entry_price": 61873.3722,
@@ -26,11 +26,11 @@
     "initial_stop_price": 61354.331579010504,
     "risk_distance": 519.0406209894936,
     "entry_fee": 0.37445979159546317,
-    "funding_pnl": -0.029522248431592887,
+    "funding_pnl": -0.03183401756165099,
     "entry_time": "2026-11-27T08:15:31+00:00",
     "opened_timestamp": 1795767331,
-    "last_funding_ts": 1795779040,
-    "last_checked_candle_ts": 1795778100000,
+    "last_funding_ts": 1795779929,
+    "last_checked_candle_ts": 1795779000000,
     "entry_signal_score": 9,
     "score": 9,
     "score_breakdown": {
@@ -108,8 +108,8 @@
     },
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": -3.0627731399134377,
-    "unrealized_pnl_gross": -2.540307647032712
+    "unrealized_pnl": -4.042516450204486,
+    "unrealized_pnl_gross": -3.5207372580514735
   },
   "open_position": {
     "side": "LONG",
@@ -124,11 +124,11 @@
     "initial_stop_price": 61354.331579010504,
     "risk_distance": 519.0406209894936,
     "entry_fee": 0.37445979159546317,
-    "funding_pnl": -0.029522248431592887,
+    "funding_pnl": -0.03183401756165099,
     "entry_time": "2026-11-27T08:15:31+00:00",
     "opened_timestamp": 1795767331,
-    "last_funding_ts": 1795779040,
-    "last_checked_candle_ts": 1795778100000,
+    "last_funding_ts": 1795779929,
+    "last_checked_candle_ts": 1795779000000,
     "entry_signal_score": 9,
     "score": 9,
     "score_breakdown": {
@@ -206,44 +206,36 @@
     },
     "event_spanned": false,
     "event_spanned_names": [],
-    "unrealized_pnl": -3.0627731399134377,
-    "unrealized_pnl_gross": -2.540307647032712
+    "unrealized_pnl": -4.042516450204486,
+    "unrealized_pnl_gross": -3.5207372580514735
   },
   "has_position": true,
   "signal": {
-    "direction": "LONG",
-    "score": 8,
-    "long_score": 8,
+    "direction": "WAIT",
+    "score": 0,
+    "long_score": 0,
     "short_score": 0,
-    "score_edge": 8,
-    "rsi": 53.382,
-    "atr": 181.80347,
-    "ema9": 61655.80733321001,
-    "ema21": 61638.99982034166,
+    "score_edge": 0,
+    "rsi": 53.272,
+    "atr": 179.31751,
+    "ema9": 61657.84586656801,
+    "ema21": 61641.45438212878,
     "trend_15m": "SIDEWAYS",
     "trend_1h": "UP",
     "trend_4h": "UP",
-    "timestamp": "2026-11-27T11:30:42.811234+00:00",
-    "reference_price": 61668.0,
-    "previous_close": 61616.0,
+    "timestamp": "2026-11-27T11:45:31.555357+00:00",
+    "reference_price": 61666.0,
+    "previous_close": 61668.0,
     "reasons": [
-      "htf_bias:+4",
-      "rsi:+1",
-      "vwap:+1",
-      "volatility_fit:+1",
-      "trend_continuation:+1",
-      "setup F / regime TREND_UP"
+      "明確な方向優位性なし"
     ],
-    "flags": [
-      "コストフィルター通過",
-      "対向ゾーンまで 0.06R"
-    ],
+    "flags": [],
     "bollinger": {
-      "middle": 61691.75,
-      "upper": 61862.41795246911,
-      "lower": 61521.08204753089,
-      "width_pct": 0.5532926281686401,
-      "position": 0.43042044608726954,
+      "middle": 61691.0,
+      "upper": 61861.98187038397,
+      "lower": 61520.01812961603,
+      "width_pct": 0.5543170653222353,
+      "position": 0.4268928338897625,
       "state": "INSIDE"
     },
     "fibonacci": {
@@ -259,38 +251,29 @@
       "trend": "UP"
     },
     "regime": "TREND_UP",
-    "adx": 32.58,
-    "atr_percentile": 32.0,
+    "adx": 32.19,
+    "atr_percentile": 29.0,
     "macd": {
-      "line": 50.9746,
-      "signal": 84.8517,
-      "hist": -33.8771,
-      "hist_prev": -39.0514
+      "line": 47.6525,
+      "signal": 77.4119,
+      "hist": -29.7593,
+      "hist_prev": -33.8771
     },
-    "vwap": 61572.154525317914,
-    "relative_volume": 1.035,
+    "vwap": 61576.86993435138,
+    "relative_volume": 1.685,
     "htf_bias": "UP",
     "structure_bias": "MIXED",
     "support": 61475.0,
     "resistance": 61701.0,
-    "premium": -0.0002626451,
-    "setup": "F",
-    "score_breakdown": {
-      "htf_bias": 4,
-      "structure": 0,
-      "macd_momentum": 0,
-      "rsi": 1,
-      "volume": 0,
-      "vwap": 1,
-      "crowding": 0,
-      "volatility_fit": 1,
-      "trend_continuation": 1
-    },
+    "premium": -0.0002110116,
+    "setup": null,
+    "score_breakdown": {},
     "entry_status": "保有中",
     "evaluation_notes": [
-      "A/LONG: 対向ゾーンまでの距離が1.5R未満",
-      "B/LONG: 出来高不足",
+      "A/LONG: 反転トリガー未発生",
+      "B/LONG: ブレイク足の実体が弱い",
       "C/LONG: レンジレジーム限定",
+      "F/LONG: 継続トリガー未発生",
       "A/SHORT: レジーム不一致",
       "B/SHORT: 上位足が逆行",
       "C/SHORT: レンジレジーム限定",
@@ -301,12 +284,12 @@
     "live_trading_enabled": false
   },
   "risk": {
-    "daily_loss_pct": 4.62900858483317,
+    "daily_loss_pct": 5.940304352046076,
     "daily_loss_limit_pct": 10.0,
     "daily_loss_lock": false,
     "daily_stop_count": 0,
-    "drawdown_pct": 30.28121630557753,
-    "current_drawdown_pct": 30.28121630557753,
+    "drawdown_pct": 31.239809108243826,
+    "current_drawdown_pct": 31.239809108243826,
     "max_drawdown_pct": 47.68875266293154,
     "drawdown_limit_pct": 30.0,
     "drawdown_pause_until": 0,
@@ -17254,12 +17237,6 @@
   ],
   "equity_history": [
     {
-      "timestamp": "2026-11-17T08:00:52.165487+00:00",
-      "equity": 86.57015316485112,
-      "marked_equity": 86.57015316485112,
-      "price": 64700.5
-    },
-    {
       "timestamp": "2026-11-17T08:15:33.838417+00:00",
       "equity": 86.57015316485112,
       "marked_equity": 86.57015316485112,
@@ -23252,15 +23229,15 @@
       "equity": 74.48797627906559,
       "marked_equity": 71.42520313915216,
       "price": 61663.5
+    },
+    {
+      "timestamp": "2026-11-27T11:45:31.555435+00:00",
+      "equity": 74.48566450993553,
+      "marked_equity": 70.44314805973104,
+      "price": 61582.5
     }
   ],
   "events": [
-    {
-      "timestamp": "2026-11-24T13:45:32.921858+00:00",
-      "type": "PAPER_FUNDING_ESTIMATE",
-      "amount": -0.00051186,
-      "hours": 0.2464
-    },
     {
       "timestamp": "2026-11-24T14:00:53.056716+00:00",
       "type": "PAPER_FUNDING_ESTIMATE",
@@ -23860,6 +23837,12 @@
       "type": "PAPER_FUNDING_ESTIMATE",
       "amount": -0.00235338,
       "hours": 0.2514
+    },
+    {
+      "timestamp": "2026-11-27T11:45:31.555200+00:00",
+      "type": "PAPER_FUNDING_ESTIMATE",
+      "amount": -0.00231177,
+      "hours": 0.2469
     }
   ],
   "stats_by_setup": {
@@ -23988,26 +23971,26 @@
     }
   },
   "indicators": {
-    "rsi_15m": 53.382,
-    "atr": 181.80347,
+    "rsi_15m": 53.272,
+    "atr": 179.31751,
     "bollinger": {
-      "middle": 61691.75,
-      "upper": 61862.41795246911,
-      "lower": 61521.08204753089,
-      "width_pct": 0.5532926281686401,
-      "position": 0.43042044608726954,
+      "middle": 61691.0,
+      "upper": 61861.98187038397,
+      "lower": 61520.01812961603,
+      "width_pct": 0.5543170653222353,
+      "position": 0.4268928338897625,
       "state": "INSIDE"
     },
-    "adx": 32.58,
-    "atr_percentile": 32.0,
+    "adx": 32.19,
+    "atr_percentile": 29.0,
     "macd": {
-      "line": 50.9746,
-      "signal": 84.8517,
-      "hist": -33.8771,
-      "hist_prev": -39.0514
+      "line": 47.6525,
+      "signal": 77.4119,
+      "hist": -29.7593,
+      "hist_prev": -33.8771
     },
-    "vwap": 61572.154525317914,
-    "relative_volume": 1.035
+    "vwap": 61576.86993435138,
+    "relative_volume": 1.685
   },
   "fibonacci": {
     "swing_high": 62207.0,
@@ -24131,7 +24114,7 @@
     "short_ratio": 0.0,
     "enabled_pool": 8,
     "valid": true,
-    "updated_ts": 1795779040,
+    "updated_ts": 1795779929,
     "traders": [
       {
         "address": "0xe6ccc91418221ea04c4dac609b0eaee7f34ef79d",
@@ -24564,9 +24547,9 @@
           "risk_distance": 288.4347280438768,
           "stop_price": 61317.565271956126,
           "tp_price": 62038.652092065815,
-          "mfe_r": 0.3675008232152795,
+          "mfe_r": 0.7072657352445002,
           "mae_r": 0.4195056566891398,
-          "bars_held": 3,
+          "bars_held": 4,
           "first_hit": {
             "1.0": null,
             "1.5": null,
@@ -25493,7 +25476,7 @@
       }
     ],
     "last_error": null,
-    "updated_at": "2026-11-27T11:30:42.758035+00:00"
+    "updated_at": "2026-11-27T11:45:31.503137+00:00"
   },
   "risk_monitor": {
     "note": "リスク上限はShadow測定のみ（本隊の見送り・サイズ変更は行わない）。variant_equityは決済ベース近似で、見送りによる後続トレードのサイズ変化は再現しない。",
@@ -25630,14 +25613,14 @@
   },
   "entry_funnel": {
     "started_at": "2026-11-20T04:00:51.583397+00:00",
-    "cycles_evaluated": 718,
+    "cycles_evaluated": 719,
     "context_cycles": {
       "flat": 552,
-      "position_open": 166,
+      "position_open": 167,
       "event_blocked": 10,
       "dd_band_10": 8,
       "dd_band_20": 352,
-      "dd_band_30": 358
+      "dd_band_30": 359
     },
     "by_setup": {
       "A": {
@@ -25645,7 +25628,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 1436
+          "other": 1438
         },
         "selected": 0,
         "blocked": {
@@ -25663,7 +25646,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 1436
+          "other": 1438
         },
         "selected": 0,
         "blocked": {
@@ -25681,7 +25664,7 @@
         "gate_rejected": {
           "score": 0,
           "cost": 0,
-          "other": 1436
+          "other": 1438
         },
         "selected": 0,
         "blocked": {
@@ -25699,7 +25682,7 @@
         "gate_rejected": {
           "score": 2,
           "cost": 2,
-          "other": 1421
+          "other": 1423
         },
         "selected": 4,
         "blocked": {
@@ -25724,7 +25707,7 @@
           "event": 0,
           "dd": 0,
           "priority": 4,
-          "position_open": 162,
+          "position_open": 163,
           "open_failed": 0,
           "risk_lock": 3
         },
@@ -25742,7 +25725,7 @@
           "event": 0,
           "dd": 0,
           "priority": 4,
-          "position_open": 162,
+          "position_open": 163,
           "open_failed": 0,
           "risk_lock": 3
         },
@@ -25750,14 +25733,14 @@
       }
     },
     "top_reasons": {
-      "F/SHORT|レジーム不一致（確立したトレンド限定）": 562,
+      "F/SHORT|レジーム不一致（確立したトレンド限定）": 563,
       "F/LONG|レジーム不一致（確立したトレンド限定）": 517,
-      "C/LONG|レンジレジーム限定": 503,
-      "C/SHORT|レンジレジーム限定": 503,
+      "C/LONG|レンジレジーム限定": 504,
+      "C/SHORT|レンジレジーム限定": 504,
       "B/LONG|上位足が逆行": 433,
       "A/LONG|上位足バイアス不一致": 348,
-      "A/SHORT|レジーム不一致": 345,
-      "B/SHORT|上位足が逆行": 302,
+      "A/SHORT|レジーム不一致": 346,
+      "B/SHORT|上位足が逆行": 303,
       "A/LONG|レジーム不一致": 300,
       "B/LONG|レンジレジームではブレイクアウト禁止": 215,
       "B/SHORT|レンジレジームではブレイクアウト禁止": 215,
@@ -25784,7 +25767,7 @@
         "status": "active",
         "basis": "all-time counters (records = official count, round trips shown alongside)",
         "start_equity": 100.0,
-        "end_equity": 74.48797627906559,
+        "end_equity": 74.48566450993553,
         "peak_equity": 102.44757489202469,
         "max_dd_pct": 47.68875266293154,
         "closed_records": 88,
@@ -25832,12 +25815,19 @@
     "initialized": true,
     "virtual_equity": 119.93309028291966,
     "start_equity": 78.21394105837564,
-    "events_total": 112,
+    "events_total": 113,
     "unfilled_total": 77,
     "open_positions": [],
     "active_events": {
       "LONG": null,
-      "SHORT": null
+      "SHORT": {
+        "event_id": "REV-S-1795779000000",
+        "best_score": 0.0,
+        "bars_active": 1,
+        "alpha_fired": false,
+        "beta_fired": false,
+        "beta_pending": false
+      }
     },
     "stats": {
       "ALL": {
@@ -26183,8 +26173,8 @@
         "fire_failures": []
       }
     ],
-    "last_bar_time": "2026-11-27T11:15:00+00:00",
-    "updated_at": "2026-11-27T11:15:00+00:00",
+    "last_bar_time": "2026-11-27T11:30:00+00:00",
+    "updated_at": "2026-11-27T11:30:00+00:00",
     "last_error": null
   },
   "rev2": {
@@ -26201,7 +26191,7 @@
     "reversal_definition": "within 16 bars after detection: +2.0% favourable before -1.0% adverse (same-bar ties resolve adverse)",
     "initialized": true,
     "forward_start_time": "2026-11-21T15:15:00+00:00",
-    "virtual_equity": 3.5849949991942647,
+    "virtual_equity": 3.604982160762528,
     "start_equity": 78.21394105837564,
     "candidates_total": 85,
     "open_positions": [
@@ -26211,8 +26201,8 @@
         "mode": "alpha",
         "side": "LONG",
         "entry": 61628.3232,
-        "bars_held": 1,
-        "mfe_r": 0.4890214798062883,
+        "bars_held": 2,
+        "mfe_r": 1.0617501814418149,
         "mae_r": -0.3116298683984784,
         "score": 66.0
       }
@@ -26221,7 +26211,7 @@
       "LONG": {
         "candidate_id": "REV2-L-1795774500000",
         "phase": "forward",
-        "bars_active": 5,
+        "bars_active": 6,
         "fired_any": true,
         "best_scores": {
           "L": null,
@@ -26232,10 +26222,10 @@
       "SHORT": {
         "candidate_id": "REV2-S-1795778100000",
         "phase": "forward",
-        "bars_active": 1,
+        "bars_active": 2,
         "fired_any": false,
         "best_scores": {
-          "L": null,
+          "L": 51.215275540894964,
           "A": null,
           "F": null
         }
@@ -26746,6 +26736,17 @@
     },
     "pre_alerts_recent": [
       {
+        "candidate_id": "REV2-S-1795778100000",
+        "side": "SHORT",
+        "phase": "forward",
+        "bar_t": 1795779000000,
+        "time": "2026-11-27T11:30:00+00:00",
+        "price": 61666.0,
+        "vol_ratio": 1.6846062950745808,
+        "best_score_so_far": 51.215275540894964,
+        "note": "closed-bar conditions substantially formed; awaiting confirmation"
+      },
+      {
         "candidate_id": "REV2-L-1795774500000",
         "side": "LONG",
         "phase": "forward",
@@ -26787,17 +26788,6 @@
         "price": 60537.0,
         "vol_ratio": 4.635993484036857,
         "best_score_so_far": 44.285714285714285,
-        "note": "closed-bar conditions substantially formed; awaiting confirmation"
-      },
-      {
-        "candidate_id": "REV2-L-1795704300000",
-        "side": "LONG",
-        "phase": "forward",
-        "bar_t": 1795705200000,
-        "time": "2026-11-26T15:00:00+00:00",
-        "price": 60201.0,
-        "vol_ratio": 7.174588531056223,
-        "best_score_so_far": 60.0,
         "note": "closed-bar conditions substantially formed; awaiting confirmation"
       }
     ],
@@ -27366,8 +27356,8 @@
         "trend_4h": "UP"
       }
     ],
-    "last_bar_time": "2026-11-27T11:15:00+00:00",
-    "updated_at": "2026-11-27T11:15:00+00:00",
+    "last_bar_time": "2026-11-27T11:30:00+00:00",
+    "updated_at": "2026-11-27T11:30:00+00:00",
     "last_error": null
   },
   "rev_eval": {
@@ -27396,39 +27386,39 @@
       "forward": {
         "overall": {
           "detection": {
-            "n": 99,
+            "n": 100,
             "reversals": 8,
             "failed": 33,
-            "no_outcome": 58,
-            "success_rate": 0.08080808080808081,
+            "no_outcome": 59,
+            "success_rate": 0.08,
             "success_rate_ci95": [
-              0.041513905489623,
-              0.15141969336531508
+              0.04109296948581091,
+              0.14998266879403072
             ],
-            "avg_mfe_pct": 0.9350420983460074,
-            "avg_mae_pct": -0.9426276250595823,
-            "avg_t_mfe_min": 121.81818181818181,
-            "avg_t_mae_min": 102.42424242424242,
+            "avg_mfe_pct": 0.9371876123218967,
+            "avg_mae_pct": -0.9334452512480109,
+            "avg_t_mfe_min": 121.05,
+            "avg_t_mae_min": 103.5,
             "horizons": {
               "15m": {
-                "n": 99,
+                "n": 100,
                 "success_rate": 0.0,
-                "avg_ret_pct": -0.04146372493771553
+                "avg_ret_pct": -0.038626323460696166
               },
               "30m": {
-                "n": 99,
+                "n": 100,
                 "success_rate": 0.0,
-                "avg_ret_pct": -0.07705883834182099
+                "avg_ret_pct": -0.0704183312592157
               },
               "60m": {
-                "n": 99,
-                "success_rate": 0.010101010101010102,
-                "avg_ret_pct": -0.046243384396928794
+                "n": 100,
+                "success_rate": 0.01,
+                "avg_ret_pct": -0.04143948713832534
               },
               "120m": {
-                "n": 99,
-                "success_rate": 0.06060606060606061,
-                "avg_ret_pct": 0.035542847738045495
+                "n": 100,
+                "success_rate": 0.06,
+                "avg_ret_pct": 0.03811424852895773
               }
             }
           },
@@ -27449,8 +27439,8 @@
             "total_r": -11.131741625933861
           },
           "records_total": 100,
-          "records_finalized": 99,
-          "records_pending": 1
+          "records_finalized": 100,
+          "records_pending": 0
         },
         "by_category": {
           "A_ONLY": {
@@ -27745,39 +27735,39 @@
           },
           "NONE": {
             "detection": {
-              "n": 45,
+              "n": 46,
               "reversals": 3,
               "failed": 11,
-              "no_outcome": 31,
-              "success_rate": 0.06666666666666667,
+              "no_outcome": 32,
+              "success_rate": 0.06521739130434782,
               "success_rate_ci95": [
-                0.022931616462147086,
-                0.17856874388640825
+                0.02242745446634356,
+                0.17503009103781358
               ],
-              "avg_mfe_pct": 1.0111922037621959,
-              "avg_mae_pct": -0.7675087049802114,
-              "avg_t_mfe_min": 121.33333333333333,
-              "avg_t_mae_min": 101.66666666666667,
+              "avg_mfe_pct": 1.014200927505082,
+              "avg_mae_pct": -0.7513539558263468,
+              "avg_t_mfe_min": 119.67391304347827,
+              "avg_t_mae_min": 104.02173913043478,
               "horizons": {
                 "15m": {
-                  "n": 45,
+                  "n": 46,
                   "success_rate": 0.0,
-                  "avg_ret_pct": 0.025789996632263643
+                  "avg_ret_pct": 0.03049622328730618
                 },
                 "30m": {
-                  "n": 45,
+                  "n": 46,
                   "success_rate": 0.0,
-                  "avg_ret_pct": 0.01769013208597113
+                  "avg_ret_pct": 0.030066256821465392
                 },
                 "60m": {
-                  "n": 45,
+                  "n": 46,
                   "success_rate": 0.0,
-                  "avg_ret_pct": 0.05116015364154563
+                  "avg_ret_pct": 0.059485940333325396
                 },
                 "120m": {
-                  "n": 45,
-                  "success_rate": 0.06666666666666667,
-                  "avg_ret_pct": 0.1779404866932345
+                  "n": 46,
+                  "success_rate": 0.06521739130434782,
+                  "avg_ret_pct": 0.18043488756575699
                 }
               }
             },
@@ -27795,8 +27785,8 @@
               "total_r": 0.0
             },
             "records_total": 46,
-            "records_finalized": 45,
-            "records_pending": 1
+            "records_finalized": 46,
+            "records_pending": 0
           }
         },
         "by_regime_trend": {
@@ -27918,39 +27908,39 @@
           },
           "RANGE": {
             "detection": {
-              "n": 74,
+              "n": 75,
               "reversals": 6,
               "failed": 22,
-              "no_outcome": 46,
-              "success_rate": 0.08108108108108109,
+              "no_outcome": 47,
+              "success_rate": 0.08,
               "success_rate_ci95": [
-                0.03768933680933338,
-                0.16582138239479394
+                0.03717961789436808,
+                0.16374984066557996
               ],
-              "avg_mfe_pct": 0.9547748413050183,
-              "avg_mae_pct": -0.8340604423641608,
-              "avg_t_mfe_min": 125.27027027027027,
-              "avg_t_mae_min": 99.12162162162163,
+              "avg_mfe_pct": 0.9573724233667508,
+              "avg_mae_pct": -0.8232648397180045,
+              "avg_t_mfe_min": 124.2,
+              "avg_t_mae_min": 100.6,
               "horizons": {
                 "15m": {
-                  "n": 74,
+                  "n": 75,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.020546512106607084
+                  "avg_ret_pct": -0.017042206308329384
                 },
                 "30m": {
-                  "n": 74,
+                  "n": 75,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.051388403363550175
+                  "avg_ret_pct": -0.04287666638645341
                 },
                 "60m": {
-                  "n": 74,
-                  "success_rate": 0.013513513513513514,
-                  "avg_ret_pct": -0.017225308009239427
+                  "n": 75,
+                  "success_rate": 0.013333333333333334,
+                  "avg_ret_pct": -0.011207019349604034
                 },
                 "120m": {
-                  "n": 74,
-                  "success_rate": 0.06756756756756757,
-                  "avg_ret_pct": 0.08720925489102416
+                  "n": 75,
+                  "success_rate": 0.06666666666666667,
+                  "avg_ret_pct": 0.08994890385020075
                 }
               }
             },
@@ -27971,8 +27961,8 @@
               "total_r": 0.4530105854693185
             },
             "records_total": 75,
-            "records_finalized": 74,
-            "records_pending": 1
+            "records_finalized": 75,
+            "records_pending": 0
           }
         },
         "by_regime_vol": {
@@ -28036,39 +28026,39 @@
           },
           "MID": {
             "detection": {
-              "n": 52,
+              "n": 53,
               "reversals": 3,
               "failed": 13,
-              "no_outcome": 36,
-              "success_rate": 0.057692307692307696,
+              "no_outcome": 37,
+              "success_rate": 0.05660377358490566,
               "success_rate_ci95": [
-                0.019813812690573196,
-                0.15642755575159178
+                0.019436308927314183,
+                0.15370448936126319
               ],
-              "avg_mfe_pct": 0.895062064805301,
-              "avg_mae_pct": -0.7823515666784454,
-              "avg_t_mfe_min": 116.82692307692308,
-              "avg_t_mae_min": 101.82692307692308,
+              "avg_mfe_pct": 0.8998645446379359,
+              "avg_mae_pct": -0.7680504096449359,
+              "avg_t_mfe_min": 115.47169811320755,
+              "avg_t_mae_min": 103.86792452830188,
               "horizons": {
                 "15m": {
-                  "n": 52,
+                  "n": 53,
                   "success_rate": 0.0,
-                  "avg_ret_pct": 0.009111135492786757
+                  "avg_ret_pct": 0.013510480535643996
                 },
                 "30m": {
-                  "n": 52,
+                  "n": 53,
                   "success_rate": 0.0,
-                  "avg_ret_pct": -0.04186501399170642
+                  "avg_ret_pct": -0.029999789766981633
                 },
                 "60m": {
-                  "n": 52,
+                  "n": 53,
                   "success_rate": 0.0,
-                  "avg_ret_pct": 0.036514869317302856
+                  "avg_ret_pct": 0.04401734992383327
                 },
                 "120m": {
-                  "n": 52,
-                  "success_rate": 0.057692307692307696,
-                  "avg_ret_pct": 0.08222049592439232
+                  "n": 53,
+                  "success_rate": 0.05660377358490566,
+                  "avg_ret_pct": 0.08619148518674848
                 }
               }
             },
@@ -28089,8 +28079,8 @@
               "total_r": -3.8009683483205734
             },
             "records_total": 53,
-            "records_finalized": 52,
-            "records_pending": 1
+            "records_finalized": 53,
+            "records_pending": 0
           },
           "LOW": {
             "detection": {
@@ -28925,10 +28915,10 @@
           "trend": "RANGE",
           "vol": "MID"
         },
-        "outcome": null,
+        "outcome": "none",
         "mfe_pct": 1.149593495934953,
         "mae_pct": -0.024390243902439046,
-        "finalized": false,
+        "finalized": true,
         "n_trades": 0,
         "net_r": null
       },
@@ -29124,12 +29114,12 @@
         "net_r": 0.6413323332775905
       }
     ],
-    "last_bar_time": "2026-11-27T11:15:00+00:00",
-    "updated_at": "2026-11-27T11:15:00+00:00",
+    "last_bar_time": "2026-11-27T11:30:00+00:00",
+    "updated_at": "2026-11-27T11:30:00+00:00",
     "last_error": null
   },
   "chart": {
-    "generated_at": "2026-11-27T11:30:44Z",
+    "generated_at": "2026-11-27T11:45:32Z",
     "source": "Hyperliquid candleSnapshot",
     "timeframes": {
       "1h": {
@@ -30180,9 +30170,9 @@
           [
             1795777200,
             61639.0,
-            61712.0,
+            61810.0,
             61485.0,
-            61664.0
+            61594.0
           ]
         ],
         "lines": {
@@ -31279,13 +31269,13 @@
             61650.0,
             62207.0,
             61485.0,
-            61664.0
+            61594.0
           ]
         ],
         "lines": {
           "resistance": [
-            64575.0,
-            62042.0
+            61643.0,
+            64575.0
           ],
           "support": [
             59868.0,
@@ -32364,7 +32354,7 @@
             60548.0,
             62207.0,
             60440.0,
-            61664.0
+            61594.0
           ]
         ],
         "lines": {
@@ -33460,7 +33450,7 @@
             60436.0,
             62207.0,
             59868.0,
-            61664.0
+            61594.0
           ]
         ],
         "lines": {
@@ -34111,7 +34101,7 @@
             76805.0,
             81177.0,
             55170.0,
-            61664.0
+            61594.0
           ]
         ],
         "lines": {
