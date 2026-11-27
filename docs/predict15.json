@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-27T08:32:18+00:00",
- "updated_ts": 1795768338,
+ "updated_at": "2026-11-27T08:42:15+00:00",
+ "updated_ts": 1795768935,
  "next_round": {
-  "round_start_ts": 1795768200,
-  "round_start_iso": "2026-11-27T08:30:00+00:00",
-  "predicted_at_iso": "2026-11-27T08:27:11+00:00",
-  "price_at_prediction": 61883.5,
+  "round_start_ts": 1795769100,
+  "round_start_iso": "2026-11-27T08:45:00+00:00",
+  "predicted_at_iso": "2026-11-27T08:42:15+00:00",
+  "price_at_prediction": 61748.5,
   "strategy_version": "v2.0-regime",
   "regime": "WEAK_TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795769100,
+   "round_start_iso": "2026-11-27T08:45:00+00:00",
+   "predicted_at_iso": "2026-11-27T08:42:15+00:00",
+   "price_at_prediction": 61748.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "WEAK_TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "UP",
+    "technical": "UP"
+   },
+   "traders_counts": {
+    "long": 0,
+    "short": 2,
+    "flat": 8
+   },
+   "verdict": "UP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795768200,
    "round_start_iso": "2026-11-27T08:30:00+00:00",
@@ -2628,31 +2653,6 @@
     "payout": 8.0,
     "pnl": 4.0
    }
-  },
-  {
-   "round_start_ts": 1795682700,
-   "round_start_iso": "2026-11-26T08:45:00+00:00",
-   "predicted_at_iso": "2026-11-26T08:42:13+00:00",
-   "price_at_prediction": 60673.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "UP",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 1,
-    "short": 1,
-    "flat": 8
-   },
-   "verdict": "SKIP",
-   "start_price": 60723.0,
-   "end_price": 60883.0,
-   "actual": "UP",
-   "hit": null,
-   "settled": true,
-   "sim": null
   }
  ]
 }
