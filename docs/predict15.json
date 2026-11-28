@@ -1,11 +1,11 @@
 {
- "updated_at": "2026-11-28T06:32:13+00:00",
- "updated_ts": 1795847533,
+ "updated_at": "2026-11-28T06:42:13+00:00",
+ "updated_ts": 1795848133,
  "next_round": {
-  "round_start_ts": 1795847400,
-  "round_start_iso": "2026-11-28T06:30:00+00:00",
-  "predicted_at_iso": "2026-11-28T06:27:11+00:00",
-  "price_at_prediction": 59774.5,
+  "round_start_ts": 1795848300,
+  "round_start_iso": "2026-11-28T06:45:00+00:00",
+  "predicted_at_iso": "2026-11-28T06:42:13+00:00",
+  "price_at_prediction": 59814.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795848300,
+   "round_start_iso": "2026-11-28T06:45:00+00:00",
+   "predicted_at_iso": "2026-11-28T06:42:13+00:00",
+   "price_at_prediction": 59814.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "DOWN"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 1,
+    "flat": 8
+   },
+   "verdict": "DOWN",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795847400,
    "round_start_iso": "2026-11-28T06:30:00+00:00",
@@ -2720,35 +2745,6 @@
    "verdict": "UP",
    "start_price": 61701.0,
    "end_price": 61777.0,
-   "actual": "UP",
-   "hit": true,
-   "settled": true,
-   "sim": {
-    "stake": 4.0,
-    "payout": 8.0,
-    "pnl": 4.0
-   }
-  },
-  {
-   "round_start_ts": 1795761900,
-   "round_start_iso": "2026-11-27T06:45:00+00:00",
-   "predicted_at_iso": "2026-11-27T06:42:12+00:00",
-   "price_at_prediction": 61711.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "WEAK_TREND",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "UP",
-    "technical": "UP"
-   },
-   "traders_counts": {
-    "long": 0,
-    "short": 2,
-    "flat": 8
-   },
-   "verdict": "UP",
-   "start_price": 61680.0,
-   "end_price": 61705.0,
    "actual": "UP",
    "hit": true,
    "settled": true,
