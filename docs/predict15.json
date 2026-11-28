@@ -1,17 +1,17 @@
 {
- "updated_at": "2026-11-28T00:32:13+00:00",
- "updated_ts": 1795825933,
+ "updated_at": "2026-11-28T00:42:20+00:00",
+ "updated_ts": 1795826540,
  "next_round": {
-  "round_start_ts": 1795825800,
-  "round_start_iso": "2026-11-28T00:30:00+00:00",
-  "predicted_at_iso": "2026-11-28T00:27:11+00:00",
-  "price_at_prediction": 59937.5,
+  "round_start_ts": 1795826700,
+  "round_start_iso": "2026-11-28T00:45:00+00:00",
+  "predicted_at_iso": "2026-11-28T00:42:20+00:00",
+  "price_at_prediction": 59956.5,
   "strategy_version": "v2.0-regime",
   "regime": "TREND",
   "signals": {
    "traders": "NEUTRAL",
    "trend": "DOWN",
-   "technical": "NEUTRAL"
+   "technical": "UP"
   },
   "traders_counts": {
    "long": 1,
@@ -138,6 +138,31 @@
   "strategy_version": "v2.0-regime"
  },
  "rounds": [
+  {
+   "round_start_ts": 1795826700,
+   "round_start_iso": "2026-11-28T00:45:00+00:00",
+   "predicted_at_iso": "2026-11-28T00:42:20+00:00",
+   "price_at_prediction": 59956.5,
+   "strategy_version": "v2.0-regime",
+   "regime": "TREND",
+   "signals": {
+    "traders": "NEUTRAL",
+    "trend": "DOWN",
+    "technical": "UP"
+   },
+   "traders_counts": {
+    "long": 1,
+    "short": 1,
+    "flat": 8
+   },
+   "verdict": "SKIP",
+   "start_price": null,
+   "end_price": null,
+   "actual": null,
+   "hit": null,
+   "settled": false,
+   "sim": null
+  },
   {
    "round_start_ts": 1795825800,
    "round_start_iso": "2026-11-28T00:30:00+00:00",
@@ -2725,31 +2750,6 @@
    "start_price": 60666.0,
    "end_price": 60775.0,
    "actual": "UP",
-   "hit": null,
-   "settled": true,
-   "sim": null
-  },
-  {
-   "round_start_ts": 1795740300,
-   "round_start_iso": "2026-11-27T00:45:00+00:00",
-   "predicted_at_iso": "2026-11-27T00:42:12+00:00",
-   "price_at_prediction": 60634.5,
-   "strategy_version": "v2.0-regime",
-   "regime": "RANGE",
-   "signals": {
-    "traders": "NEUTRAL",
-    "trend": "NEUTRAL",
-    "technical": "DOWN"
-   },
-   "traders_counts": {
-    "long": 2,
-    "short": 0,
-    "flat": 8
-   },
-   "verdict": "SKIP",
-   "start_price": 60707.0,
-   "end_price": 60666.0,
-   "actual": "DOWN",
    "hit": null,
    "settled": true,
    "sim": null
